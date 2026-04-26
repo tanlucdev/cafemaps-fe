@@ -1,0 +1,206 @@
+{
+  "nav": {
+    "explore": "Explore",
+    "quiz": "Quiz",
+    "saved": "Saved",
+    "contribute": "Contribute",
+    "login": "Login",
+    "register": "Register",
+    "menu": "Menu"
+  },
+  "hero": {
+    "city": "Ho Chi Minh City",
+    "line1": "Discover",
+    "line2": "the most beautiful",
+    "line3": "cafés",
+    "headlineCompact": "What kind of café are you looking for today?",
+    "subtitleCompact": "Find the best coffee spaces in Ho Chi Minh City.",
+    "subtitle": "Find the perfect space for every moment — from quiet work corners to romantic dates.",
+    "marquee": "Coffee · Space · Vibe · Experience · Memories ·",
+    "searchPlaceholder": "Search by name, address...",
+    "cta": "Search",
+    "scroll": "Scroll to explore"
+  },
+  "search": {
+    "placeholder": "Search cafés...",
+    "button": "Search",
+    "results": "{count} cafés found",
+    "noResults": "No cafés match your search",
+    "loading": "Loading...",
+    "location": "Location",
+    "vibe": "Vibe",
+    "keyword": "Keyword"
+  },
+  "filters": {
+    "all": "All",
+    "district": "District",
+    "vibe": "Vibe",
+    "price": "Price",
+    "purpose": "Purpose",
+    "clear": "Clear filters",
+    "apply": "Apply",
+    "priceRanges": {
+      "under_50k": "Under 50k",
+      "50k_100k": "50k – 100k",
+      "100k_150k": "100k – 150k",
+      "above_150k": "Above 150k"
+    },
+    "vibes": {
+      "quiet": "Quiet",
+      "lively": "Lively",
+      "vintage": "Vintage",
+      "modern": "Modern",
+      "nature": "Nature",
+      "creative": "Creative",
+      "romantic": "Romantic",
+      "minimalist": "Minimalist"
+    },
+    "purposes": {
+      "work": "Work",
+      "study": "Study",
+      "date": "Date",
+      "group": "Group meeting",
+      "solo": "Solo chill",
+      "friends": "Friends hangout"
+    }
+  },
+  "cafe": {
+    "viewDetail": "View details",
+    "openMaps": "Open Google Maps",
+    "noImage": "No image",
+    "save": "Save",
+    "saved": "Saved",
+    "unsave": "Unsave",
+    "share": "Share",
+    "nearby": "Nearby",
+    "reviews": "Reviews",
+    "openNow": "Open now",
+    "closedNow": "Closed",
+    "priceRange": "Price range",
+    "distance": "{km} km",
+    "signatureDrink": "Signature drink",
+    "amenities": "Amenities",
+    "gallery": "Gallery",
+    "location": "Location",
+    "about": "About",
+    "detail": {
+      "seeFullHours": "See full hours",
+      "collapseHours": "Collapse",
+      "similarCafes": "Similar cafés nearby",
+      "goNow": "Let's go",
+      "viewOnMap": "View on map",
+      "distanceAway": "~{km}km",
+      "openAllDay": "Open all day",
+      "closedToday": "Closed today",
+      "amenities": {
+        "wifi": "Free WiFi",
+        "ac": "Air conditioning",
+        "parking": "Free parking",
+        "outdoor": "Outdoor seating",
+        "outlet": "Power outlets",
+        "petFriendly": "Pet friendly"
+      },
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      }
+    }
+  },
+  "featured": {
+    "title": "Featured Cafés",
+    "subtitle": "Community favourites",
+    "viewAll": "View all"
+  },
+  "story": {
+    "title": "Coffee Stories",
+    "subtitle": "Every café is a world of its own — where stories are told through every cup.",
+    "cta": "Explore more"
+  },
+  "map": {
+    "title": "Find cafés near you",
+    "subtitle": "Discover coffee shops around your current location.",
+    "cta": "Open map",
+    "loading": "Loading map...",
+    "noLocation": "Could not get your location"
+  },
+  "quiz": {
+    "title": "Find your café match",
+    "subtitle": "Answer a few questions and we'll suggest the perfect café for you.",
+    "start": "Start quiz",
+    "next": "Next",
+    "back": "Back",
+    "result": "Your result",
+    "retake": "Retake",
+    "question": "Question {current} / {total}"
+  },
+  "saved": {
+    "title": "Saved Cafés",
+    "empty": "No saved cafés yet",
+    "emptySubtitle": "Explore and save your favourite spots.",
+    "explore": "Explore now"
+  },
+  "contribute": {
+    "title": "Submit a café",
+    "subtitle": "Know a great café? Share it with the community.",
+    "form": {
+      "name": "Café name",
+      "address": "Address",
+      "district": "District",
+      "description": "Short description",
+      "submit": "Submit",
+      "submitting": "Submitting..."
+    }
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginSuccess": "Logged in successfully",
+    "loginError": "Invalid email or password",
+    "loginWith": "Login with {provider}",
+    "orContinueWith": "Or continue with"
+  },
+  "footer": {
+    "tagline": "Discover perfect moments in Ho Chi Minh City.",
+    "copyright": "© {year} Cafe Finder. All rights reserved.",
+    "links": {
+      "about": "About",
+      "privacy": "Privacy policy",
+      "terms": "Terms of service"
+    }
+  },
+  "guidedFilter": {
+    "openNow": "Open Now",
+    "moreFilters": "More filters",
+    "activeCount": "{count} filters",
+    "moreDistricts": "+{count} districts",
+    "moreVibes": "+{count} vibes",
+    "allDistricts": "All districts",
+    "allVibes": "All vibes"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "showing": "Showing {from}–{to} of {total} cafés",
+    "page": "Page {current} of {total}"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "close": "Close",
+    "back": "Back",
+    "seeMore": "See more",
+    "seeLess": "See less"
+  }
+}
