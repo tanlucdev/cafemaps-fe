@@ -28,10 +28,9 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
       {cafes.map((cafe, index) => (
         <motion.article
           key={cafe.id}
-          initial={animationType === "slide" ? { opacity: 0, y: 12 } : { opacity: 0 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-4%" }}
-          transition={{ duration: animationType === "slide" ? 0.35 : 0.15, delay: animationType === "slide" ? (index % 6) * 0.05 : 0, ease: [0.33, 1, 0.68, 1] }}
+          initial={animationType === "slide" ? { opacity: 0, y: 8 } : { opacity: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: animationType === "slide" ? 0.25 : 0.15, delay: animationType === "slide" ? (index % 6) * 0.04 : 0, ease: [0.33, 1, 0.68, 1] }}
           className="group rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-0.5"
         >
           <Link href={`/${locale}/cafe/${cafe.slug}`} className="flex gap-0 h-full">

@@ -7,7 +7,8 @@ import { useTranslations } from "next-intl"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Coffee } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
-import { Button } from "@/components/ui/Button"
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher"
+import { buttonVariants } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
@@ -86,15 +87,14 @@ export default function Header({ locale }: HeaderProps) {
 
             {/* Right actions */}
             <div className="flex items-center gap-2">
+              <LocaleSwitcher />
               <ThemeToggle />
-              <Button
-                variant="default"
-                size="sm"
-                className="hidden sm:inline-flex"
-                onClick={() => {}}
+              <Link
+                href={`/${locale}/login`}
+                className={cn(buttonVariants({ variant: "default" }), "hidden sm:inline-flex")}
               >
                 {t("login")}
-              </Button>
+              </Link>
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMenuOpen((v) => !v)}
@@ -157,10 +157,14 @@ export default function Header({ locale }: HeaderProps) {
                   )
                 })}
               </nav>
-              <div className="p-4 border-t border-[var(--border)]">
-                <Button variant="default" className="w-full">
+              <div className="p-4 border-t border-[var(--border)] flex items-center gap-2">
+                <LocaleSwitcher />
+                <Link
+                  href={`/${locale}/login`}
+                  className={cn(buttonVariants({ variant: "default" }), "flex-1 justify-center")}
+                >
                   {t("login")}
-                </Button>
+                </Link>
               </div>
             </motion.div>
           </>

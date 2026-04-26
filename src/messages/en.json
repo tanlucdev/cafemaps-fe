@@ -142,7 +142,10 @@
     "title": "Saved Cafés",
     "empty": "No saved cafés yet",
     "emptySubtitle": "Explore and save your favourite spots.",
-    "explore": "Explore now"
+    "explore": "Explore now",
+    "loginRequired": "Sign in to view and manage your saved cafés.",
+    "loginCta": "Sign in",
+    "registerCta": "Register"
   },
   "contribute": {
     "title": "Submit a café",

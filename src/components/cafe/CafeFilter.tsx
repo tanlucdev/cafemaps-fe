@@ -43,12 +43,14 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
     onChange({ ...filter, [key]: next })
   }
 
-  function handleAreaChange(val: string) {
-    onChange({ ...filter, district: val || undefined, ward: undefined })
+  function handleAreaChange(val: string | null) {
+    const district = val === "" || val == null ? undefined : val
+    onChange({ ...filter, district, ward: undefined })
   }
 
-  function handleWardChange(val: string) {
-    onChange({ ...filter, ward: val || undefined })
+  function handleWardChange(val: string | null) {
+    const ward = val === "" || val == null ? undefined : val
+    onChange({ ...filter, ward })
   }
 
   const wardsForArea = filter.district ? (WARDS_BY_AREA[filter.district] ?? []) : []

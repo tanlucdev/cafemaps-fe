@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { motion } from "framer-motion"
 import { MapPin } from "lucide-react"
-import Button from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button"
 
 interface MapCtaSectionProps {
   locale: string
@@ -53,7 +53,7 @@ export default function MapCtaSection({ locale }: MapCtaSectionProps) {
                   {t("subtitle")}
                 </p>
                 <Button
-                  variant="primary"
+                  variant="link"
                   size="lg"
                   onClick={() => {
                     window.open(

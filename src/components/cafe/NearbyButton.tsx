@@ -50,7 +50,6 @@ export default function NearbyButton({ onResults }: NearbyButtonProps) {
       <Button
         variant="outline"
         size="sm"
-        loading={loading}
         onClick={handleClick}
       >
         <Navigation size={14} />

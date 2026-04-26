@@ -1,7 +1,14 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
 import Lenis from "lenis"
+
+const LenisContext = createContext<Lenis | null>(null)
+
+export function useLenis() {
+  return useContext(LenisContext)
+}
 
 export default function LenisProvider({
   children,
@@ -9,30 +16,47 @@ export default function LenisProvider({
   children: React.ReactNode
 }) {
   const lenisRef = useRef<Lenis | null>(null)
+  const [lenis, setLenis] = useState<Lenis | null>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
+    const instance = new Lenis({
+      duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
 
-    lenisRef.current = lenis
+    lenisRef.current = instance
+    setLenis(instance)
 
     let rafId: number
 
     function raf(time: number) {
-      lenis.raf(time)
+      instance.raf(time)
       rafId = requestAnimationFrame(raf)
     }
 
     rafId = requestAnimationFrame(raf)
 
+    const ro = new ResizeObserver(() => instance.resize())
+    ro.observe(document.body)
+
     return () => {
       cancelAnimationFrame(rafId)
-      lenis.destroy()
+      ro.disconnect()
+      instance.destroy()
+      setLenis(null)
     }
   }, [])
 
-  return <>{children}</>
+  useEffect(() => {
+    const id = setTimeout(() => lenisRef.current?.resize(), 100)
+    return () => clearTimeout(id)
+  }, [pathname])
+
+  return (
+    <LenisContext.Provider value={lenis}>
+      {children}
+    </LenisContext.Provider>
+  )
 }

@@ -14,10 +14,10 @@ export default function PageTransition({
     <AnimatePresence mode="wait">
       <motion.main
         key={pathname}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         className="flex-1"
       >
         {children}

@@ -142,7 +142,10 @@
     "title": "Quán đã lưu",
     "empty": "Bạn chưa lưu quán nào",
     "emptySubtitle": "Hãy khám phá và lưu những quán bạn yêu thích.",
-    "explore": "Khám phá ngay"
+    "explore": "Khám phá ngay",
+    "loginRequired": "Đăng nhập để xem và quản lý những quán cà phê bạn đã lưu.",
+    "loginCta": "Đăng nhập",
+    "registerCta": "Đăng ký"
   },
   "contribute": {
     "title": "Đóng góp quán mới",

@@ -26,13 +26,15 @@ export default function CafeCard({ cafe, locale, index = 0, animationType = "fad
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: isSlide ? 10 : 0 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: isSlide ? 0.3 : 0.2,
-        delay: isSlide ? Math.min(index, 2) * 0.05 : 0,
-        ease: [0.33, 1, 0.68, 1],
-      }}
+      {...(isSlide ? {
+        initial: { opacity: 0, y: 10 },
+        animate: { opacity: 1, y: 0 },
+        transition: {
+          duration: 0.25,
+          delay: Math.min(index, 2) * 0.05,
+          ease: [0.33, 1, 0.68, 1],
+        },
+      } : {})}
       className="group rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-1"
     >
       <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>

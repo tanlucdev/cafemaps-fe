@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
+import { useLenis } from "@/components/providers/LenisProvider"
 import CafeGrid from "@/components/cafe/CafeGrid"
 import CafeList from "@/components/cafe/CafeList"
 import GuidedFilterBar from "@/components/cafe/GuidedFilterBar"
@@ -43,6 +44,7 @@ function filterFromParams(searchParams: ReturnType<typeof useSearchParams>): Fil
 export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const lenis = useLenis()
 
   const [filter, setFilter] = useState<Filter>(() => filterFromParams(searchParams))
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
@@ -75,7 +77,8 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
   function handlePageChange(newPage: number) {
     setAnimationType("fade")
     updateUrl(filter, newPage)
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    if (lenis) lenis.scrollTo(0, { duration: 0.6 })
+    else window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const filtered = useMemo(() => {
