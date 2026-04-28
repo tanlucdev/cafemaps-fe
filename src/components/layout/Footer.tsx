@@ -11,7 +11,7 @@ export default function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--background-secondary)]">
+    <footer className="border-t border-[var(--border)] bg-[var(--background-secondary)] mb-16 md:mb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
@@ -32,16 +32,16 @@ export default function Footer({ locale }: FooterProps) {
             </p>
           </div>
 
-          {/* Links */}
+          {/* Explore links — fully localised */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-[var(--foreground)]">
-              Khám phá
+              {t("exploreTitle")}
             </h3>
             <nav className="space-y-2">
               {[
-                { href: `/${locale}`, label: "Trang chủ" },
-                { href: `/${locale}/quiz`, label: "Trắc nghiệm" },
-                { href: `/${locale}/contribute`, label: "Đóng góp quán" },
+                { href: `/${locale}`, label: t("home") },
+                { href: `/${locale}/quiz`, label: t("quiz") },
+                { href: `/${locale}/contribute`, label: t("contribute") },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -57,7 +57,7 @@ export default function Footer({ locale }: FooterProps) {
           {/* Legal + Social */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-[var(--foreground)]">
-              Liên kết
+              {t("linksTitle")}
             </h3>
             <nav className="space-y-2">
               <Link

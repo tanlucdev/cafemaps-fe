@@ -11,7 +11,7 @@ interface NearbyButtonProps {
 }
 
 export default function NearbyButton({ onResults }: NearbyButtonProps) {
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleClick() {
@@ -51,6 +51,7 @@ export default function NearbyButton({ onResults }: NearbyButtonProps) {
         variant="outline"
         size="sm"
         onClick={handleClick}
+        disabled={isLoading}
       >
         <Navigation size={14} />
         Gần đây

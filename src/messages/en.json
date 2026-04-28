@@ -19,17 +19,33 @@
     "marquee": "Coffee · Space · Vibe · Experience · Memories ·",
     "searchPlaceholder": "Search by name, address...",
     "cta": "Search",
-    "scroll": "Scroll to explore"
+    "scroll": "Scroll to explore",
+    "greetingMorning": "Morning coffee today?",
+    "greetingNoon": "Looking for a quiet lunch spot?",
+    "greetingAfternoon": "Afternoon coffee — work or relax?",
+    "greetingEvening": "Any cafés open tonight?",
+    "placeholderWork": "Find a quiet workspace...",
+    "placeholderDate": "Weekend date spot...",
+    "placeholderMorning": "Morning coffee nearby...",
+    "quickFilterQuiet": "Quiet",
+    "quickFilterNature": "Nature",
+    "quickFilterVintage": "Vintage",
+    "quickFilterWork": "Work-friendly"
   },
   "search": {
     "placeholder": "Search cafés...",
     "button": "Search",
     "results": "{count} cafés found",
     "noResults": "No cafés match your search",
+    "noResultsMessage": "No cafés found... try a different vibe? ☕",
     "loading": "Loading...",
     "location": "Location",
     "vibe": "Vibe",
-    "keyword": "Keyword"
+    "keyword": "Keyword",
+    "sortLabel": "Sort by",
+    "sortDefault": "Default",
+    "sortRating": "Highest rated",
+    "sortNewest": "Newest"
   },
   "filters": {
     "all": "All",
@@ -176,11 +192,22 @@
   "footer": {
     "tagline": "Discover perfect moments in Ho Chi Minh City.",
     "copyright": "© {year} Cafe Finder. All rights reserved.",
+    "exploreTitle": "Explore",
+    "linksTitle": "Links",
+    "home": "Home",
+    "quiz": "Quiz",
+    "contribute": "Submit a café",
     "links": {
       "about": "About",
       "privacy": "Privacy policy",
       "terms": "Terms of service"
     }
+  },
+  "bottomNav": {
+    "home": "Home",
+    "search": "Search",
+    "saved": "Saved",
+    "profile": "Profile"
   },
   "guidedFilter": {
     "openNow": "Open Now",

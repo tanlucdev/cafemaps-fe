@@ -27,9 +27,8 @@ export default function Header({ locale }: HeaderProps) {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname])
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setMenuOpen(false) }, [pathname])
 
   const navLinks = [
     { href: `/${locale}`, label: t("explore") },
@@ -87,15 +86,19 @@ export default function Header({ locale }: HeaderProps) {
 
             {/* Right actions */}
             <div className="flex items-center gap-2">
-              <LocaleSwitcher />
-              <ThemeToggle />
-              <Link
-                href={`/${locale}/login`}
-                className={cn(buttonVariants({ variant: "default" }), "hidden sm:inline-flex")}
-              >
-                {t("login")}
-              </Link>
-              {/* Mobile hamburger */}
+              {/* Desktop: show locale + theme + login */}
+              <div className="hidden md:flex items-center gap-2">
+                <LocaleSwitcher />
+                <ThemeToggle />
+                <Link
+                  href={`/${locale}/login`}
+                  className={cn(buttonVariants({ variant: "default" }))}
+                >
+                  {t("login")}
+                </Link>
+              </div>
+
+              {/* Mobile: only hamburger */}
               <button
                 onClick={() => setMenuOpen((v) => !v)}
                 className="md:hidden w-9 h-9 rounded-full flex items-center justify-center text-[var(--foreground-muted)] hover:bg-[var(--background-secondary)] transition-colors"
@@ -157,11 +160,14 @@ export default function Header({ locale }: HeaderProps) {
                   )
                 })}
               </nav>
-              <div className="p-4 border-t border-[var(--border)] flex items-center gap-2">
-                <LocaleSwitcher />
+              <div className="p-4 border-t border-[var(--border)] space-y-3">
+                <div className="flex items-center gap-2">
+                  <LocaleSwitcher />
+                  <ThemeToggle />
+                </div>
                 <Link
                   href={`/${locale}/login`}
-                  className={cn(buttonVariants({ variant: "default" }), "flex-1 justify-center")}
+                  className={cn(buttonVariants({ variant: "default" }), "w-full justify-center")}
                 >
                   {t("login")}
                 </Link>

@@ -19,17 +19,33 @@
     "marquee": "Cà phê · Không gian · Phong cách · Trải nghiệm · Ký ức ·",
     "searchPlaceholder": "Tìm quán theo tên, địa chỉ...",
     "cta": "Tìm kiếm",
-    "scroll": "Cuộn để khám phá"
+    "scroll": "Cuộn để khám phá",
+    "greetingMorning": "Cà phê sáng hôm nay?",
+    "greetingNoon": "Tìm chỗ nghỉ trưa yên tĩnh?",
+    "greetingAfternoon": "Cà phê chiều, làm việc hay thư giãn?",
+    "greetingEvening": "Còn quán nào mở tối nay không nhỉ?",
+    "placeholderWork": "Tìm chỗ làm việc yên tĩnh...",
+    "placeholderDate": "Hẹn hò cuối tuần...",
+    "placeholderMorning": "Cà phê sáng gần nhà...",
+    "quickFilterQuiet": "Yên tĩnh",
+    "quickFilterNature": "Thiên nhiên",
+    "quickFilterVintage": "Vintage",
+    "quickFilterWork": "Work-friendly"
   },
   "search": {
     "placeholder": "Tìm quán cà phê...",
     "button": "Tìm kiếm",
     "results": "{count} quán được tìm thấy",
     "noResults": "Không tìm thấy quán nào phù hợp",
+    "noResultsMessage": "Hết quán rồi... thử vibe khác xem sao? ☕",
     "loading": "Đang tải...",
     "location": "Khu vực",
     "vibe": "Phong cách",
-    "keyword": "Từ khoá"
+    "keyword": "Từ khoá",
+    "sortLabel": "Sắp xếp",
+    "sortDefault": "Mặc định",
+    "sortRating": "Đánh giá cao nhất",
+    "sortNewest": "Mới nhất"
   },
   "filters": {
     "all": "Tất cả",
@@ -176,11 +192,22 @@
   "footer": {
     "tagline": "Khám phá những khoảnh khắc hoàn hảo tại TP.HCM.",
     "copyright": "© {year} Cafe Finder. Mọi quyền được bảo lưu.",
+    "exploreTitle": "Khám phá",
+    "linksTitle": "Liên kết",
+    "home": "Trang chủ",
+    "quiz": "Trắc nghiệm",
+    "contribute": "Đóng góp quán",
     "links": {
       "about": "Về chúng tôi",
       "privacy": "Chính sách bảo mật",
       "terms": "Điều khoản sử dụng"
     }
+  },
+  "bottomNav": {
+    "home": "Trang chủ",
+    "search": "Tìm kiếm",
+    "saved": "Đã lưu",
+    "profile": "Cá nhân"
   },
   "guidedFilter": {
     "openNow": "Đang mở cửa",

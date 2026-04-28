@@ -7,6 +7,7 @@ import LenisProvider from "@/components/providers/LenisProvider"
 import PageTransition from "@/components/providers/PageTransition"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
+import MobileBottomNav from "@/components/layout/MobileBottomNav"
 
 interface LocaleLayoutProps {
   children: React.ReactNode
@@ -32,6 +33,7 @@ export default async function LocaleLayout({
           <Header locale={locale} />
           <PageTransition>{children}</PageTransition>
           <Footer locale={locale} />
+          <MobileBottomNav locale={locale} />
         </LenisProvider>
       </ThemeProvider>
     </NextIntlClientProvider>

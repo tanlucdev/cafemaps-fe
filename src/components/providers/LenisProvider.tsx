@@ -27,6 +27,7 @@ export default function LenisProvider({
     })
 
     lenisRef.current = instance
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLenis(instance)
 
     let rafId: number

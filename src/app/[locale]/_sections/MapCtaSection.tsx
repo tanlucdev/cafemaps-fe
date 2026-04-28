@@ -6,11 +6,7 @@ import { motion } from "framer-motion"
 import { MapPin } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 
-interface MapCtaSectionProps {
-  locale: string
-}
-
-export default function MapCtaSection({ locale }: MapCtaSectionProps) {
+export default function MapCtaSection() {
   const t = useTranslations("map")
 
   return (

@@ -11,75 +11,82 @@
   --font-lora: var(--font-lora), "Lora", Georgia, serif;
 }
 
-/* ─── Color tokens — Olive Green palette ─── */
+/* ─── Color tokens — Warm Coffee palette ─── */
 :root {
   /* Core */
-  --background:           #faf7f2;
-  --background-secondary: #f2ede6;
-  --foreground:           #091307;
-  --foreground-muted:     #4a5248;
+  --background:           #FDF6EC;
+  --background-secondary: #F5EDD8;
+  --foreground:           #2C1A0E;
+  --foreground-muted:     #8C6D4F;
 
-  /* Brand — deep olive green */
-  --accent:               #5c6e4e;
-  --accent-hover:         #4a5a3d;
-  --accent-light:         #eef1ea;
+  /* Brand — amber coffee */
+  --accent:               #C8842A;
+  --accent-hover:         #A86D1E;
+  --accent-light:         #FEF3E2;
   --accent-foreground:    #ffffff;
 
+  /* Sage green — secondary accent for nature/vibe tags */
+  --sage:                 #7A9E7E;
+  --sage-light:           #EAF2EB;
+
   /* Surface */
-  --card:                 #faf7f2;
-  --card-foreground:      #091307;
-  --border:               #e3dfd9;
-  --input:                #e3dfd9;
+  --card:                 #FDF6EC;
+  --card-foreground:      #2C1A0E;
+  --border:               #E8D8C0;
+  --input:                #E8D8C0;
 
   /* Shadcn semantic aliases */
-  --primary:              #5c6e4e;
+  --primary:              #C8842A;
   --primary-foreground:   #ffffff;
-  --secondary:            #f2ede6;
-  --secondary-foreground: #091307;
-  --muted:                #f2ede6;
-  --muted-foreground:     #4a5248;
-  --popover:              #faf7f2;
-  --popover-foreground:   #091307;
+  --secondary:            #F5EDD8;
+  --secondary-foreground: #2C1A0E;
+  --muted:                #F5EDD8;
+  --muted-foreground:     #8C6D4F;
+  --popover:              #FDF6EC;
+  --popover-foreground:   #2C1A0E;
   --destructive:          oklch(0.577 0.245 27.325);
-  --ring:                 #5c6e4e;
+  --ring:                 #C8842A;
 
   /* Shadows */
-  --shadow-warm:          0 8px 32px rgba(92, 110, 78, 0.10);
-  --shadow-warm-hover:    0 16px 48px rgba(92, 110, 78, 0.18);
-  --shadow-sm:            0 2px 8px rgba(26, 26, 26, 0.06);
+  --shadow-warm:          0 8px 32px rgba(200, 132, 42, 0.12);
+  --shadow-warm-hover:    0 16px 48px rgba(200, 132, 42, 0.20);
+  --shadow-sm:            0 2px 8px rgba(44, 26, 14, 0.06);
 
   --radius: 0.625rem;
 }
 
 .dark {
-  --background:           #0f110e;
-  --background-secondary: #1a1e18;
-  --foreground:           #f0f2ee;
-  --foreground-muted:     #9a9e98;
+  --background:           #1A1009;
+  --background-secondary: #231508;
+  --foreground:           #F5EDD8;
+  --foreground-muted:     #B08060;
 
-  --accent:               #7a9668;
-  --accent-hover:         #8aaa76;
-  --accent-light:         #1e2a1b;
+  --accent:               #D4973B;
+  --accent-hover:         #E5A843;
+  --accent-light:         #2A1E08;
   --accent-foreground:    #ffffff;
 
-  --card:                 #1a1e18;
-  --card-foreground:      #f0f2ee;
-  --border:               #2a2e28;
-  --input:                #2a2e28;
+  --sage:                 #8AB38E;
+  --sage-light:           #1A2C1B;
 
-  --primary:              #7a9668;
+  --card:                 #231508;
+  --card-foreground:      #F5EDD8;
+  --border:               #3A2810;
+  --input:                #3A2810;
+
+  --primary:              #D4973B;
   --primary-foreground:   #ffffff;
-  --secondary:            #1e2a1b;
-  --secondary-foreground: #f0f2ee;
-  --muted:                #1a1e18;
-  --muted-foreground:     #9a9e98;
-  --popover:              #1a1e18;
-  --popover-foreground:   #f0f2ee;
-  --ring:                 #7a9668;
+  --secondary:            #2A1E08;
+  --secondary-foreground: #F5EDD8;
+  --muted:                #231508;
+  --muted-foreground:     #B08060;
+  --popover:              #231508;
+  --popover-foreground:   #F5EDD8;
+  --ring:                 #D4973B;
 
-  --shadow-warm:          0 8px 32px rgba(122, 150, 104, 0.12);
-  --shadow-warm-hover:    0 16px 48px rgba(122, 150, 104, 0.22);
-  --shadow-sm:            0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-warm:          0 8px 32px rgba(212, 151, 59, 0.15);
+  --shadow-warm-hover:    0 16px 48px rgba(212, 151, 59, 0.25);
+  --shadow-sm:            0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* ─── Base ─── */
@@ -163,11 +170,22 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent) 0%, #7a9668 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #E5A843 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ─── Coffee steam animation ─── */
+@keyframes steam-rise {
+  0%   { opacity: 0;   transform: translateY(0)     scaleX(1);   }
+  20%  { opacity: 0.7;                                             }
+  100% { opacity: 0;   transform: translateY(-28px) scaleX(1.4); }
+}
+
+.steam-1 { animation: steam-rise 2.8s ease-in-out infinite; }
+.steam-2 { animation: steam-rise 2.8s ease-in-out 0.9s infinite; }
+.steam-3 { animation: steam-rise 2.8s ease-in-out 1.8s infinite; }
 
 .aspect-cafe {
   aspect-ratio: 3 / 2;
@@ -229,6 +247,8 @@ body::after {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-sage: var(--sage);
+  --color-sage-light: var(--sage-light);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
