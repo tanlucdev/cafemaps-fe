@@ -56,37 +56,37 @@
 }
 
 .dark {
-  --background:           #1A1009;
-  --background-secondary: #231508;
-  --foreground:           #F5EDD8;
-  --foreground-muted:     #B08060;
+  --background:           #1C1208;
+  --background-secondary: #2A1A0A;
+  --foreground:           #F5E6D0;
+  --foreground-muted:     #C4A882;
 
-  --accent:               #D4973B;
-  --accent-hover:         #E5A843;
-  --accent-light:         #2A1E08;
+  --accent:               #C8842A;
+  --accent-hover:         #A86D1E;
+  --accent-light:         #2A1A0A;
   --accent-foreground:    #ffffff;
 
-  --sage:                 #8AB38E;
+  --sage:                 #7A9E7E;
   --sage-light:           #1A2C1B;
 
-  --card:                 #231508;
-  --card-foreground:      #F5EDD8;
-  --border:               #3A2810;
-  --input:                #3A2810;
+  --card:                 #2A1A0A;
+  --card-foreground:      #F5E6D0;
+  --border:               #3D2510;
+  --input:                #3D2510;
 
-  --primary:              #D4973B;
+  --primary:              #C8842A;
   --primary-foreground:   #ffffff;
-  --secondary:            #2A1E08;
-  --secondary-foreground: #F5EDD8;
-  --muted:                #231508;
-  --muted-foreground:     #B08060;
-  --popover:              #231508;
-  --popover-foreground:   #F5EDD8;
-  --ring:                 #D4973B;
+  --secondary:            #2A1A0A;
+  --secondary-foreground: #F5E6D0;
+  --muted:                #2A1A0A;
+  --muted-foreground:     #C4A882;
+  --popover:              #2A1A0A;
+  --popover-foreground:   #F5E6D0;
+  --ring:                 #C8842A;
 
-  --shadow-warm:          0 8px 32px rgba(212, 151, 59, 0.15);
-  --shadow-warm-hover:    0 16px 48px rgba(212, 151, 59, 0.25);
-  --shadow-sm:            0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-warm:          0 8px 32px rgba(200, 132, 42, 0.18);
+  --shadow-warm-hover:    0 16px 48px rgba(200, 132, 42, 0.28);
+  --shadow-sm:            0 2px 8px rgba(0, 0, 0, 0.40);
 }
 
 /* ─── Base ─── */
@@ -186,6 +186,35 @@ body {
 .steam-1 { animation: steam-rise 2.8s ease-in-out infinite; }
 .steam-2 { animation: steam-rise 2.8s ease-in-out 0.9s infinite; }
 .steam-3 { animation: steam-rise 2.8s ease-in-out 1.8s infinite; }
+
+@keyframes float-bean {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50%       { transform: rotate(5deg); }
+}
+
+.bean-1 {
+  animation: float-bean 3s ease-in-out infinite;
+  animation-fill-mode: both;
+}
+.bean-2 {
+  animation: float-bean 3s ease-in-out 1.5s infinite;
+  animation-fill-mode: both;
+}
+.leaf-1 {
+  animation: leaf-sway 4s ease-in-out infinite;
+  animation-fill-mode: both;
+  transform-origin: center bottom;
+}
+.leaf-2 {
+  animation: leaf-sway 4s ease-in-out 2s infinite;
+  animation-fill-mode: both;
+  transform-origin: center bottom;
+}
 
 .aspect-cafe {
   aspect-ratio: 3 / 2;

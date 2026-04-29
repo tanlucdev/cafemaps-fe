@@ -7,6 +7,7 @@ import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
+import { useRef, useState, useCallback } from "react"
 
 interface FeaturedCafesSectionProps {
   cafes: Cafe[]
@@ -54,7 +55,12 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay, ease: [0.33, 1, 0.68, 1] }}
-      className="group relative rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-64 sm:w-auto"
+      className={cn(
+        "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-auto",
+        rank === 1
+          ? "border-2 border-amber-400/60 sm:border-border"
+          : "border border-border"
+      )}
     >
       <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
         {/* Image */}
@@ -148,9 +154,23 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
 
 export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSectionProps) {
   const featured = cafes.slice(0, 3)
+  const [activeDot, setActiveDot] = useState(0)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const cardWidth = el.scrollWidth / featured.length
+    const idx = Math.min(Math.round(el.scrollLeft / cardWidth), featured.length - 1)
+    setActiveDot(idx)
+  }, [featured.length])
 
   if (featured.length === 0) return null
 
+  // Mobile: show in ranking order (01 → 02 → 03)
+  const mobileOrder = featured
+
+  // Desktop podium: rank 2 left, rank 1 center, rank 3 right
   const podiumOrder =
     featured.length >= 3
       ? [featured[1], featured[0], featured[2]]
@@ -181,8 +201,12 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
 
       {/* Mobile: horizontal scroll — Desktop: 3-column podium */}
       <div className="sm:hidden -mx-4 px-4">
-        <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory">
-          {podiumOrder.map((cafe) => {
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory"
+        >
+          {mobileOrder.map((cafe) => {
             const originalRank = featured.indexOf(cafe) + 1
             const config = RANK_CONFIG.find((c) => c.rank === originalRank) ?? RANK_CONFIG[0]
             return (
@@ -198,7 +222,26 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
               </div>
             )
           })}
+          {/* Spacer so last card doesn't stick to edge */}
+          <div className="flex-none w-4" aria-hidden />
         </div>
+
+        {/* Dot pagination indicator */}
+        {featured.length > 1 && (
+          <div className="flex justify-center gap-1.5 mt-2">
+            {featured.map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "rounded-full transition-all duration-300",
+                  i === activeDot
+                    ? "w-4 h-1.5 bg-accent"
+                    : "w-1.5 h-1.5 bg-border"
+                )}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Desktop podium grid */}

@@ -83,6 +83,32 @@ export default function GuidedFilterBar({ filter, onChange }: GuidedFilterBarPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 py-2.5 overflow-x-auto scrollbar-hide">
 
+          {/* Bộ lọc — always visible first */}
+          <Sheet>
+            <SheetTrigger
+              className={cn(
+                "flex-none flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-2 transition-all duration-150 whitespace-nowrap",
+                activeCount > 0
+                  ? "bg-accent text-white border-accent"
+                  : "border-accent text-accent bg-(--accent-light) hover:bg-accent hover:text-white"
+              )}
+            >
+              <SlidersHorizontal size={12} />
+              {activeCount > 0 ? t("activeCount", { count: activeCount }) : "Bộ lọc"}
+            </SheetTrigger>
+            <SheetContent side="right" className="w-80 overflow-y-auto">
+              <SheetHeader className="border-b border-border pb-4">
+                <SheetTitle className="text-base font-display">Bộ lọc thêm</SheetTitle>
+              </SheetHeader>
+              <div className="px-4 py-5">
+                <CafeFilter filter={filter} onChange={onChange} />
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          {/* Divider */}
+          <div className="flex-none w-px h-5 bg-border mx-1" />
+
           {/* Open Now toggle */}
           <button
             onClick={toggleOpenNow}
@@ -162,32 +188,6 @@ export default function GuidedFilterBar({ filter, onChange }: GuidedFilterBarPro
               {t("moreVibes", { count: extraVibes })}
             </span>
           )}
-
-          {/* Divider */}
-          <div className="flex-none w-px h-5 bg-border mx-1" />
-
-          {/* More filters sheet */}
-          <Sheet>
-            <SheetTrigger
-              className={cn(
-                "flex-none flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 whitespace-nowrap",
-                activeCount > 0
-                  ? "bg-(--accent-light) text-accent border-accent"
-                  : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
-              )}
-            >
-              <SlidersHorizontal size={12} />
-              {activeCount > 0 ? t("activeCount", { count: activeCount }) : t("moreFilters")}
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80 overflow-y-auto">
-              <SheetHeader className="border-b border-border pb-4">
-                <SheetTitle className="text-base font-display">Bộ lọc thêm</SheetTitle>
-              </SheetHeader>
-              <div className="px-4 py-5">
-                <CafeFilter filter={filter} onChange={onChange} />
-              </div>
-            </SheetContent>
-          </Sheet>
 
           {/* Clear all */}
           {(activeCount > 0 || filter.nearMe) && (

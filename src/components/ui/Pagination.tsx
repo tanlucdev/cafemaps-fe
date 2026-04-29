@@ -46,19 +46,19 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
           className={cn(
-            "flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all",
+            "flex items-center gap-1.5 min-h-[44px] px-4 rounded-xl text-sm font-medium border transition-all",
             page === 1
               ? "border-border text-(--foreground-muted) opacity-40 cursor-not-allowed"
               : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
           )}
         >
-          <ChevronLeft size={14} />
-          {t("prev")}
+          <ChevronLeft size={16} />
+          <span className="hidden sm:inline">{t("prev")}</span>
         </button>
 
         {getPages().map((p, i) =>
           p === "…" ? (
-            <span key={`ellipsis-${i}`} className="w-8 text-center text-xs text-(--foreground-muted)">
+            <span key={`ellipsis-${i}`} className="w-8 text-center text-sm text-(--foreground-muted)">
               …
             </span>
           ) : (
@@ -66,7 +66,7 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
               key={p}
               onClick={() => onPageChange(p)}
               className={cn(
-                "w-8 h-8 rounded-lg text-xs font-medium transition-all border",
+                "min-w-[44px] min-h-[44px] rounded-xl text-sm font-medium transition-all border",
                 p === page
                   ? "bg-accent text-white border-accent"
                   : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
@@ -81,14 +81,14 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
           className={cn(
-            "flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all",
+            "flex items-center gap-1.5 min-h-[44px] px-4 rounded-xl text-sm font-medium border transition-all",
             page === totalPages
               ? "border-border text-(--foreground-muted) opacity-40 cursor-not-allowed"
               : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
           )}
         >
-          {t("next")}
-          <ChevronRight size={14} />
+          <span className="hidden sm:inline">{t("next")}</span>
+          <ChevronRight size={16} />
         </button>
       </div>
     </div>

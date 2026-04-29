@@ -10,15 +10,18 @@ interface BadgeProps {
   active?: boolean
 }
 
+const WARM_TAG = "bg-[#F0E8DC] text-[#2C1A0E] dark:bg-[#2A1A0A] dark:text-[#C4A882]"
+const SAGE_TAG = "bg-[#EAF2EB] text-[#4A7A4E] dark:bg-[#1A2C1B] dark:text-[#7A9E7E]"
+
 const vibeColors: Record<string, string> = {
-  "yên tĩnh": "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "nhộn nhịp": "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
-  vintage: "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-  "hiện đại": "bg-slate-50 text-slate-700 dark:bg-slate-900/30 dark:text-slate-300",
-  "thiên nhiên": "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-  "sáng tạo": "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-  "lãng mạn": "bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",
-  minimalist: "bg-neutral-50 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-300",
+  "yên tĩnh":   WARM_TAG,
+  "nhộn nhịp":  WARM_TAG,
+  vintage:      WARM_TAG,
+  "hiện đại":   WARM_TAG,
+  "thiên nhiên": SAGE_TAG,
+  "sáng tạo":   WARM_TAG,
+  "lãng mạn":   WARM_TAG,
+  minimalist:   WARM_TAG,
 }
 
 export default function Badge({

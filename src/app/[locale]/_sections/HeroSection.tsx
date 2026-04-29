@@ -33,63 +33,85 @@ function getGreetingKey() {
 
 function CoffeeSteamIcon() {
   return (
-    <svg
-      width="72"
-      height="88"
-      viewBox="0 0 72 88"
-      fill="none"
-      aria-hidden
-      className="mx-auto mb-4"
-    >
-      {/* Steam wisps */}
-      <path
-        className="steam-1"
-        d="M26 28 Q22 20 26 12 Q30 4 26 0"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
+    <div className="relative inline-block mx-auto mb-4">
+      {/* Floating bean — left */}
+      <svg
+        className="bean-1 absolute text-accent opacity-60"
+        style={{ left: "-26px", top: "38px" }}
+        width="14" height="20" viewBox="0 0 14 20"
+        fill="currentColor" aria-hidden
+      >
+        <ellipse cx="7" cy="10" rx="6" ry="9" />
+        <path d="M7 2 Q4 10 7 18" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.45" />
+      </svg>
+      {/* Floating bean — right */}
+      <svg
+        className="bean-2 absolute text-accent opacity-60"
+        style={{ right: "-22px", top: "50px" }}
+        width="12" height="17" viewBox="0 0 12 17"
+        fill="currentColor" aria-hidden
+      >
+        <ellipse cx="6" cy="8.5" rx="5" ry="7.5" />
+        <path d="M6 1.5 Q3 8.5 6 15.5" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.45" />
+      </svg>
+      {/* Main cup */}
+      <svg
+        width="72"
+        height="88"
+        viewBox="0 0 72 88"
         fill="none"
-        opacity="0"
-      />
-      <path
-        className="steam-2"
-        d="M36 26 Q32 18 36 10 Q40 2 36 -2"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0"
-      />
-      <path
-        className="steam-3"
-        d="M46 28 Q42 20 46 12 Q50 4 46 0"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0"
-      />
-      {/* Saucer */}
-      <ellipse cx="36" cy="80" rx="30" ry="6" fill="currentColor" opacity="0.18" />
-      {/* Cup body */}
-      <path
-        d="M14 42 L18 76 Q18 80 22 80 L50 80 Q54 80 54 76 L58 42 Z"
-        fill="currentColor"
-        opacity="0.85"
-      />
-      {/* Cup rim */}
-      <rect x="12" y="36" width="48" height="10" rx="5" fill="currentColor" />
-      {/* Handle */}
-      <path
-        d="M58 48 Q72 50 72 60 Q72 70 58 70"
-        stroke="currentColor"
-        strokeWidth="5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      {/* Coffee surface */}
-      <ellipse cx="36" cy="41" rx="19" ry="3.5" fill="currentColor" opacity="0.35" />
-    </svg>
+        aria-hidden
+      >
+        {/* Steam wisps */}
+        <path
+          className="steam-1"
+          d="M26 28 Q22 20 26 12 Q30 4 26 0"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0"
+        />
+        <path
+          className="steam-2"
+          d="M36 26 Q32 18 36 10 Q40 2 36 -2"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0"
+        />
+        <path
+          className="steam-3"
+          d="M46 28 Q42 20 46 12 Q50 4 46 0"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0"
+        />
+        {/* Saucer */}
+        <ellipse cx="36" cy="80" rx="30" ry="6" fill="currentColor" opacity="0.18" />
+        {/* Cup body */}
+        <path
+          d="M14 42 L18 76 Q18 80 22 80 L50 80 Q54 80 54 76 L58 42 Z"
+          fill="currentColor"
+          opacity="0.85"
+        />
+        {/* Cup rim */}
+        <rect x="12" y="36" width="48" height="10" rx="5" fill="currentColor" />
+        {/* Handle */}
+        <path
+          d="M58 48 Q72 50 72 60 Q72 70 58 70"
+          stroke="currentColor"
+          strokeWidth="5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {/* Coffee surface */}
+        <ellipse cx="36" cy="41" rx="19" ry="3.5" fill="currentColor" opacity="0.35" />
+      </svg>
+    </div>
   )
 }
 
@@ -124,6 +146,26 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
   return (
     <section className="bg-(--background-secondary) border-b border-border pt-16 relative overflow-hidden">
+      {/* Leaf accent — top left */}
+      <svg
+        className="leaf-1 absolute top-6 left-4 sm:left-10 text-accent opacity-[0.18] pointer-events-none"
+        width="28" height="36" viewBox="0 0 28 36"
+        fill="currentColor" aria-hidden
+      >
+        <path d="M14 2 C6 8 2 18 6 28 C8 34 14 36 14 36 C14 36 20 34 22 28 C26 18 22 8 14 2Z" />
+        <path d="M14 4 L14 34" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.4" />
+      </svg>
+      {/* Leaf accent — bottom right */}
+      <svg
+        className="leaf-2 absolute bottom-8 right-6 sm:right-12 text-sage opacity-[0.22] pointer-events-none"
+        width="22" height="30" viewBox="0 0 22 30"
+        fill="currentColor" aria-hidden
+        style={{ transform: "rotate(20deg)" }}
+      >
+        <path d="M11 2 C5 7 2 15 5 23 C7 28 11 30 11 30 C11 30 15 28 17 23 C20 15 17 7 11 2Z" />
+        <path d="M11 3 L11 28" stroke="white" strokeWidth="0.8" fill="none" strokeLinecap="round" opacity="0.35" />
+      </svg>
+
       {/* Subtle background grain overlay for hero */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
