@@ -4,11 +4,29 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Search } from "lucide-react"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface HeroSectionProps {
   locale: string
 }
+
+const KEYWORD_TO_FILTER: Array<{ keywords: string[]; vibe?: string; purpose?: string }> = [
+  { keywords: ["làm việc", "work", "workspace"],  purpose: "làm việc" },
+  { keywords: ["học tập", "học", "study"],         purpose: "học tập" },
+  { keywords: ["hẹn hò", "date", "romantic"],      purpose: "hẹn hò" },
+  { keywords: ["họp nhóm", "meeting", "group"],    purpose: "họp nhóm" },
+  { keywords: ["chill", "một mình"],               purpose: "chill một mình" },
+  { keywords: ["bạn bè", "gặp bạn", "friend"],     purpose: "gặp bạn bè" },
+  { keywords: ["yên tĩnh", "quiet", "yên"],        vibe: "yên tĩnh" },
+  { keywords: ["vintage", "cổ điển"],              vibe: "vintage" },
+  { keywords: ["thiên nhiên", "nature", "cây"],    vibe: "thiên nhiên" },
+  { keywords: ["hiện đại", "modern"],              vibe: "hiện đại" },
+  { keywords: ["minimalist", "tối giản"],          vibe: "minimalist" },
+  { keywords: ["lãng mạn", "romantic"],            vibe: "lãng mạn" },
+  { keywords: ["sáng tạo", "creative"],            vibe: "sáng tạo" },
+  { keywords: ["nhộn nhịp", "vibrant", "náo nhiệt"], vibe: "nhộn nhịp" },
+]
 
 const QUICK_FILTERS = [
   { emoji: "☁️", vibe: "yên tĩnh", labelKey: "quickFilterQuiet" as const },
@@ -31,86 +49,113 @@ function getGreetingKey() {
   return "greetingEvening"
 }
 
-function CoffeeSteamIcon() {
+function ChibiWalkAnimation() {
   return (
-    <div className="relative inline-block mx-auto mb-4">
-      {/* Floating bean — left */}
-      <svg
-        className="bean-1 absolute text-accent opacity-60"
-        style={{ left: "-26px", top: "38px" }}
-        width="14" height="20" viewBox="0 0 14 20"
-        fill="currentColor" aria-hidden
+    <div className="relative mx-auto mb-6 h-28 w-64 overflow-hidden" aria-hidden>
+      {/* Ground line */}
+      <div className="absolute bottom-3 left-0 right-0 h-px bg-accent opacity-20" />
+
+      {/* Coffee cup — static, centered background element */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-3">
+        <svg width="36" height="44" viewBox="0 0 72 88" fill="none" className="text-accent opacity-70">
+          <path className="steam-1" d="M26 28 Q22 20 26 12 Q30 4 26 0" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.6" />
+          <path className="steam-2" d="M36 26 Q32 18 36 10 Q40 2 36 -2" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.6" />
+          <path className="steam-3" d="M46 28 Q42 20 46 12 Q50 4 46 0" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.6" />
+          <ellipse cx="36" cy="80" rx="30" ry="6" fill="currentColor" opacity="0.18" />
+          <path d="M14 42 L18 76 Q18 80 22 80 L50 80 Q54 80 54 76 L58 42 Z" fill="currentColor" opacity="0.85" />
+          <rect x="12" y="36" width="48" height="10" rx="5" fill="currentColor" />
+          <path d="M58 48 Q72 50 72 60 Q72 70 58 70" stroke="currentColor" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <ellipse cx="36" cy="41" rx="19" ry="3.5" fill="currentColor" opacity="0.35" />
+        </svg>
+      </div>
+
+      {/* Chibi character walking back and forth */}
+      <motion.div
+        className="absolute bottom-3"
+        animate={{ x: [0, 160, 0], y: [0, -4, 0] }}
+        transition={{
+          x: { duration: 5, repeat: Infinity, ease: "linear", times: [0, 0.5, 1] },
+          y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+        }}
       >
-        <ellipse cx="7" cy="10" rx="6" ry="9" />
-        <path d="M7 2 Q4 10 7 18" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.45" />
-      </svg>
-      {/* Floating bean — right */}
-      <svg
-        className="bean-2 absolute text-accent opacity-60"
-        style={{ right: "-22px", top: "50px" }}
-        width="12" height="17" viewBox="0 0 12 17"
-        fill="currentColor" aria-hidden
+        {/* Flip direction when going right→left */}
+        <motion.div
+          animate={{ scaleX: [1, 1, -1, -1, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear", times: [0, 0.49, 0.5, 0.99, 1] }}
+          style={{ originX: "50%" }}
+        >
+          <svg width="38" height="62" viewBox="0 0 32 52" fill="none">
+            {/* Head */}
+            <circle cx="16" cy="11" r="9" fill="#C8842A" />
+            {/* Eyes */}
+            <circle cx="12.5" cy="10" r="1.5" fill="white" />
+            <circle cx="19.5" cy="10" r="1.5" fill="white" />
+            <circle cx="13" cy="10.5" r="0.8" fill="#3D2510" />
+            <circle cx="20" cy="10.5" r="0.8" fill="#3D2510" />
+            {/* Smile */}
+            <path d="M12.5 14 Q16 17 19.5 14" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            {/* Body */}
+            <rect x="10" y="20" width="12" height="14" rx="4" fill="#E8A84E" />
+            {/* Arms — left holding cup */}
+            <path d="M10 24 Q4 26 5 30" stroke="#C8842A" strokeWidth="3" strokeLinecap="round" fill="none" />
+            {/* Mini coffee cup in hand */}
+            <rect x="2" y="27" width="6" height="5" rx="1.5" fill="#C8842A" />
+            <path d="M8 29 Q10 29.5 10 31 Q10 32.5 8 32.5" stroke="#C8842A" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            {/* Right arm */}
+            <path d="M22 24 Q27 26 26 30" stroke="#C8842A" strokeWidth="3" strokeLinecap="round" fill="none" />
+            {/* Legs — alternating walk cycle */}
+            <motion.path
+              d="M13 34 Q12 40 10 46"
+              stroke="#C8842A" strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M13 34 Q12 40 10 46", "M13 34 Q14 40 16 46", "M13 34 Q12 40 10 46"] }}
+              transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.path
+              d="M19 34 Q20 40 22 46"
+              stroke="#C8842A" strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M19 34 Q20 40 22 46", "M19 34 Q18 40 16 46", "M19 34 Q20 40 22 46"] }}
+              transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
+            />
+            {/* Shoes */}
+            <motion.ellipse
+              cx="10" cy="47" rx="4" ry="2.5" fill="#3D2510"
+              animate={{ cx: [10, 16, 10] }}
+              transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.ellipse
+              cx="22" cy="47" rx="4" ry="2.5" fill="#3D2510"
+              animate={{ cx: [22, 16, 22] }}
+              transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
+            />
+            {/* Hair tuft */}
+            <path d="M16 2 Q18 -1 20 2" stroke="#3D2510" strokeWidth="2" fill="none" strokeLinecap="round" />
+          </svg>
+        </motion.div>
+      </motion.div>
+
+      {/* Floating coffee beans */}
+      <motion.div
+        className="absolute text-accent opacity-40"
+        style={{ right: "24px", bottom: "28px" }}
+        animate={{ y: [0, -6, 0], rotate: [0, 15, 0] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
       >
-        <ellipse cx="6" cy="8.5" rx="5" ry="7.5" />
-        <path d="M6 1.5 Q3 8.5 6 15.5" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.45" />
-      </svg>
-      {/* Main cup */}
-      <svg
-        width="72"
-        height="88"
-        viewBox="0 0 72 88"
-        fill="none"
-        aria-hidden
+        <svg width="10" height="14" viewBox="0 0 14 20" fill="currentColor">
+          <ellipse cx="7" cy="10" rx="6" ry="9" />
+          <path d="M7 2 Q4 10 7 18" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5" />
+        </svg>
+      </motion.div>
+      <motion.div
+        className="absolute text-accent opacity-30"
+        style={{ left: "18px", bottom: "32px" }}
+        animate={{ y: [0, -4, 0], rotate: [0, -12, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
       >
-        {/* Steam wisps */}
-        <path
-          className="steam-1"
-          d="M26 28 Q22 20 26 12 Q30 4 26 0"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0"
-        />
-        <path
-          className="steam-2"
-          d="M36 26 Q32 18 36 10 Q40 2 36 -2"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0"
-        />
-        <path
-          className="steam-3"
-          d="M46 28 Q42 20 46 12 Q50 4 46 0"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0"
-        />
-        {/* Saucer */}
-        <ellipse cx="36" cy="80" rx="30" ry="6" fill="currentColor" opacity="0.18" />
-        {/* Cup body */}
-        <path
-          d="M14 42 L18 76 Q18 80 22 80 L50 80 Q54 80 54 76 L58 42 Z"
-          fill="currentColor"
-          opacity="0.85"
-        />
-        {/* Cup rim */}
-        <rect x="12" y="36" width="48" height="10" rx="5" fill="currentColor" />
-        {/* Handle */}
-        <path
-          d="M58 48 Q72 50 72 60 Q72 70 58 70"
-          stroke="currentColor"
-          strokeWidth="5"
-          fill="none"
-          strokeLinecap="round"
-        />
-        {/* Coffee surface */}
-        <ellipse cx="36" cy="41" rx="19" ry="3.5" fill="currentColor" opacity="0.35" />
-      </svg>
+        <svg width="8" height="11" viewBox="0 0 14 20" fill="currentColor">
+          <ellipse cx="7" cy="10" rx="6" ry="9" />
+          <path d="M7 2 Q4 10 7 18" stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5" />
+        </svg>
+      </motion.div>
     </div>
   )
 }
@@ -131,10 +176,22 @@ export default function HeroSection({ locale }: HeroSectionProps) {
   }, [])
 
   function handleSearch() {
+    const q = search.trim().toLowerCase()
     const params = new URLSearchParams()
-    if (search.trim()) params.set("search", search.trim())
-    const qs = params.toString()
-    router.push(`/${locale}/search${qs ? `?${qs}` : ""}`)
+
+    let matched = false
+    for (const mapping of KEYWORD_TO_FILTER) {
+      if (mapping.keywords.some((k) => q.includes(k))) {
+        if (mapping.vibe) params.append("vibe", mapping.vibe)
+        if (mapping.purpose) params.append("purpose", mapping.purpose)
+        matched = true
+      }
+    }
+
+    if (q.includes("gần")) params.set("nearMe", "true")
+    if (!matched && q) params.set("search", q)
+
+    router.push(`/${locale}/search${params.size ? `?${params}` : ""}`)
   }
 
   function handleQuickFilter({ vibe, purpose }: { vibe?: string; purpose?: string }) {
@@ -155,17 +212,6 @@ export default function HeroSection({ locale }: HeroSectionProps) {
         <path d="M14 2 C6 8 2 18 6 28 C8 34 14 36 14 36 C14 36 20 34 22 28 C26 18 22 8 14 2Z" />
         <path d="M14 4 L14 34" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.4" />
       </svg>
-      {/* Leaf accent — bottom right */}
-      <svg
-        className="leaf-2 absolute bottom-8 right-6 sm:right-12 text-sage opacity-[0.22] pointer-events-none"
-        width="22" height="30" viewBox="0 0 22 30"
-        fill="currentColor" aria-hidden
-        style={{ transform: "rotate(20deg)" }}
-      >
-        <path d="M11 2 C5 7 2 15 5 23 C7 28 11 30 11 30 C11 30 15 28 17 23 C20 15 17 7 11 2Z" />
-        <path d="M11 3 L11 28" stroke="white" strokeWidth="0.8" fill="none" strokeLinecap="round" opacity="0.35" />
-      </svg>
-
       {/* Subtle background grain overlay for hero */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -178,20 +224,18 @@ export default function HeroSection({ locale }: HeroSectionProps) {
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 text-center relative">
-        {/* Animated coffee icon */}
-        <div className="text-accent">
-          <CoffeeSteamIcon />
-        </div>
+        {/* Chibi walking animation */}
+        <ChibiWalkAnimation />
 
         {/* Time-based greeting */}
-        <p className="text-sm font-semibold text-accent mb-2 tracking-wide uppercase">
+        <p className="text-sm font-semibold text-accent mb-3 tracking-wide uppercase">
           {t(greetingKey)}
         </p>
 
         <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-foreground mb-3 tracking-tight leading-tight">
           {t("headlineCompact")}
         </h1>
-        <p className="text-(--foreground-muted) text-base mb-7 max-w-xl mx-auto">
+        <p className="text-(--foreground-muted) text-base mb-5 max-w-xl mx-auto">
           {t("subtitleCompact")}
         </p>
 

@@ -80,11 +80,16 @@ export default function Header({ locale }: HeaderProps) {
             </nav>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2">
-              {/* Desktop: show locale + theme + login */}
-              <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              {/* Always visible: locale + theme (minimal, no background) */}
+              <span className="text-[#2C1A0E] dark:text-[var(--foreground-muted)] bg-transparent hover:bg-transparent">
                 <LocaleSwitcher />
+              </span>
+              <span className="text-[#2C1A0E] dark:text-[var(--foreground-muted)] bg-transparent hover:bg-transparent hover:text-[var(--foreground)]">
                 <ThemeToggle />
+              </span>
+              {/* Desktop only: login */}
+              <div className="hidden md:block ml-1">
                 <Link
                   href={`/${locale}/login`}
                   className={cn(buttonVariants({ variant: "default" }))}
@@ -92,7 +97,6 @@ export default function Header({ locale }: HeaderProps) {
                   {t("login")}
                 </Link>
               </div>
-
             </div>
           </div>
         </div>

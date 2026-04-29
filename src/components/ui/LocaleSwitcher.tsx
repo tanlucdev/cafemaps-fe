@@ -2,8 +2,14 @@
 
 import { useLocale } from "next-intl"
 import { usePathname, useRouter } from "next/navigation"
+import { Globe } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-export default function LocaleSwitcher() {
+interface LocaleSwitcherProps {
+  className?: string
+}
+
+export default function LocaleSwitcher({ className }: LocaleSwitcherProps) {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
@@ -17,10 +23,14 @@ export default function LocaleSwitcher() {
   return (
     <button
       onClick={toggle}
-      className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold text-(--foreground-muted) hover:bg-(--background-secondary) transition-colors"
+      className={cn(
+        "flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent p-0 transition-colors hover:bg-transparent",
+        "text-[var(--foreground-muted)] hover:text-[var(--foreground)]",
+        className
+      )}
       aria-label="Switch language"
     >
-      {locale === "vi" ? "EN" : "VI"}
+      <Globe size={18} />
     </button>
   )
 }

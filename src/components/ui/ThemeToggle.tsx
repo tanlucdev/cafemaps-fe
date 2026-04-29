@@ -18,7 +18,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
 
   if (!mounted) {
     return (
-      <div className={cn("w-9 h-9 rounded-full bg-[var(--background-secondary)]", className)} />
+      <div className={cn("h-8 w-8 bg-transparent", className)} />
     )
   }
 
@@ -27,14 +27,14 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       aria-label="Toggle theme"
       className={cn(
-        "w-9 h-9 rounded-full flex items-center justify-center",
+        "flex h-8 w-8 items-center justify-center rounded-none border-0 p-0",
         "text-[var(--foreground-muted)] hover:text-[var(--foreground)]",
-        "bg-[var(--background-secondary)] hover:bg-[var(--accent-light)]",
+        "bg-transparent hover:bg-transparent",
         "transition-all duration-200",
         className
       )}
     >
-      {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
     </button>
   )
 }
