@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params
-  const cafes = await getCafes({ city: "Ho Chi Minh City" })
+  const cafes = await getCafes()
 
   return (
     <>

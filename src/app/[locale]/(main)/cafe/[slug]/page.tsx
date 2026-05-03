@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { cache } from "react"
 import { getCafeBySlug } from "@/lib/api"
 import CafeDetailContent from "./_components/CafeDetailContent"
 
@@ -7,18 +8,20 @@ interface PageProps {
   params: Promise<{ locale: string; slug: string }>
 }
 
+const getCafe = cache((slug: string) => getCafeBySlug(slug))
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params
-  const cafe = await getCafeBySlug(slug)
+  const cafe = await getCafe(slug)
 
   if (!cafe) return { title: "Không tìm thấy quán" }
 
   return {
     title: cafe.name,
-    description: cafe.oneLiner ?? cafe.description,
+    description: cafe.oneLiner ?? cafe.description ?? undefined,
     openGraph: {
       title: cafe.name,
-      description: cafe.oneLiner ?? cafe.description,
+      description: cafe.oneLiner ?? cafe.description ?? undefined,
       images: cafe.coverImage
         ? [{ url: cafe.coverImage, width: 1200, height: 630, alt: cafe.name }]
         : [],
@@ -30,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CafeDetailPage({ params }: PageProps) {
   const { locale, slug } = await params
-  const cafe = await getCafeBySlug(slug)
+  const cafe = await getCafe(slug)
 
   if (!cafe) notFound()
 
@@ -45,19 +48,9 @@ export default async function CafeDetailPage({ params }: PageProps) {
       addressRegion: "TP.HCM",
       addressCountry: "VN",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: cafe.lat,
-      longitude: cafe.lng,
-    },
-    ...(cafe.rating && {
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: cafe.rating,
-        reviewCount: cafe.reviewCount ?? 0,
-      },
+    ...(cafe.openingTime && cafe.closingTime && {
+      openingHours: `${cafe.openingTime.slice(0, 5)}-${cafe.closingTime.slice(0, 5)}`,
     }),
-    ...(cafe.openingHours && { openingHours: cafe.openingHours }),
     image: cafe.images,
     url: `https://cafefinder.vn/${locale}/cafe/${cafe.slug}`,
   }

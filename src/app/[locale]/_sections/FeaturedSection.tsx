@@ -10,7 +10,7 @@ import GuidedFilterBar from "@/components/cafe/GuidedFilterBar"
 import Pagination from "@/components/ui/Pagination"
 import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { Cafe, CafeFilter as Filter, PriceRange } from "@/types/cafe"
+import type { Cafe, CafeFilter as Filter } from "@/types/cafe"
 
 type ViewMode = "grid" | "list"
 type SortMode = "default" | "rating" | "newest"
@@ -35,11 +35,9 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
 function filterFromParams(searchParams: ReturnType<typeof useSearchParams>): Filter {
   return {
     search: searchParams.get("search") ?? undefined,
-    vibe: searchParams.get("vibe") ? searchParams.get("vibe")!.split(",") : undefined,
-    purpose: searchParams.get("purpose") ? searchParams.get("purpose")!.split(",") : undefined,
+    vibes: searchParams.get("vibes") ? searchParams.get("vibes")!.split(",") : undefined,
+    purposes: searchParams.get("purposes") ? searchParams.get("purposes")!.split(",") : undefined,
     district: searchParams.get("district") ?? undefined,
-    ward: searchParams.get("ward") ?? undefined,
-    priceRange: (searchParams.get("price") as PriceRange) ?? undefined,
   }
 }
 
@@ -62,11 +60,9 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
     (newFilter: Filter, newPage: number) => {
       const params = new URLSearchParams()
       if (newFilter.search) params.set("search", newFilter.search)
-      if (newFilter.vibe?.length) params.set("vibe", newFilter.vibe.join(","))
-      if (newFilter.purpose?.length) params.set("purpose", newFilter.purpose.join(","))
+      if (newFilter.vibes?.length) params.set("vibes", newFilter.vibes.join(","))
+      if (newFilter.purposes?.length) params.set("purposes", newFilter.purposes.join(","))
       if (newFilter.district) params.set("district", newFilter.district)
-      if (newFilter.ward) params.set("ward", newFilter.ward)
-      if (newFilter.priceRange) params.set("price", newFilter.priceRange)
       if (newPage > 1) params.set("page", String(newPage))
       const query = params.toString()
       router.replace(query ? `?${query}` : "?", { scroll: false })
@@ -94,32 +90,27 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
   const filtered = useMemo(() => {
     let result = cafes
-    const { search, district, ward, vibe, purpose, priceRange, nearMe, lat, lng, radiusKm } = filter
+    const { search, district, vibes, purposes } = filter
 
     if (search?.trim()) {
       const q = search.toLowerCase()
       result = result.filter(
         (c) =>
           c.name.toLowerCase().includes(q) ||
-          c.address.toLowerCase().includes(q) ||
-          c.district.toLowerCase().includes(q)
+          (c.address ?? "").toLowerCase().includes(q) ||
+          (c.district ?? "").toLowerCase().includes(q)
       )
     }
     if (district) result = result.filter((c) => c.district === district)
-    if (ward) result = result.filter((c) => (c as Cafe & { ward?: string }).ward === ward)
-    if (vibe?.length) result = result.filter((c) => vibe.some((v) => c.vibe.includes(v)))
-    if (purpose?.length) result = result.filter((c) => purpose.some((p) => c.purpose.includes(p)))
-    if (priceRange) result = result.filter((c) => c.priceRange === priceRange)
-    if (nearMe && lat != null && lng != null && radiusKm) {
-      result = result.filter((c) => haversineKm(lat, lng, c.lat, c.lng) <= radiusKm)
-    }
+    if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)))
+    if (purposes?.length) result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)))
 
     return result
   }, [cafes, filter])
 
   const sorted = useMemo(() => {
     if (sortMode === "rating") {
-      return [...filtered].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+      return filtered
     }
     if (sortMode === "newest") {
       return [...filtered].sort((a, b) => {

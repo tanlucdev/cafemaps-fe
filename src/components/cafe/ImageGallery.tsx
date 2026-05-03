@@ -19,7 +19,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
 
   if (!images || images.length === 0) {
     return (
-      <div className="aspect-3/2 rounded-2xl bg-(--background-secondary) flex items-center justify-center">
+      <div className="aspect-3/2 lg:aspect-video rounded-2xl bg-(--background-secondary) flex items-center justify-center">
         <span className="text-(--foreground-muted) text-sm">Chưa có ảnh</span>
       </div>
     )
@@ -32,7 +32,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
     <>
       {/* Main image */}
       <div
-        className="relative aspect-3/2 rounded-2xl overflow-hidden cursor-zoom-in bg-(--background-secondary) group"
+        className="relative aspect-3/2 lg:aspect-video rounded-2xl overflow-hidden cursor-zoom-in bg-(--background-secondary) group"
         onClick={openLightbox}
       >
         <AnimatePresence mode="wait">
@@ -48,7 +48,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
               src={images[active]}
               alt={`${altPrefix} ${active + 1}`}
               fill
-              sizes="(max-width: 768px) 100vw, 860px"
+              sizes="(max-width: 768px) 100vw, 900px"
               className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               priority={active === 0}
             />
@@ -76,7 +76,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
               key={i}
               onClick={() => setActive(i)}
               className={[
-                "relative aspect-square w-18 shrink-0 rounded-xl overflow-hidden transition-all duration-200",
+                "relative aspect-square lg:aspect-[90/68] w-18 lg:w-[90px] shrink-0 rounded-xl overflow-hidden transition-all duration-200",
                 active === i
                   ? "ring-2 ring-accent ring-offset-2"
                   : "opacity-60 hover:opacity-90",
@@ -96,7 +96,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
           {extraCount > 0 && (
             <button
               onClick={openLightbox}
-              className="relative aspect-square w-18 shrink-0 rounded-xl overflow-hidden bg-(--background-secondary) border border-border flex items-center justify-center hover:bg-(--accent-light) transition-colors"
+              className="relative aspect-square lg:aspect-[90/68] w-18 lg:w-[90px] shrink-0 rounded-xl overflow-hidden bg-(--background-secondary) border border-border flex items-center justify-center hover:bg-(--accent-light) transition-colors"
             >
               <Image
                 src={images[THUMB_VISIBLE]}

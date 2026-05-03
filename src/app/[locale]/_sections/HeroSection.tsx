@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Search } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { MOCK_CAFES } from "@/lib/mock-data"
 
 interface HeroSectionProps {
   locale: string
@@ -41,12 +42,113 @@ const PLACEHOLDER_KEYS = [
   "placeholderMorning",
 ] as const
 
-function getGreetingKey() {
+const VIBE_MAP: Record<string, string> = {
+  "yên": "yên tĩnh", "tĩnh": "yên tĩnh", "yên tĩnh": "yên tĩnh",
+  "quiet": "yên tĩnh", "calming": "yên tĩnh", "yen tinh": "yên tĩnh",
+  "thiên nhiên": "thiên nhiên", "cây": "thiên nhiên", "vườn": "thiên nhiên", "nature": "thiên nhiên",
+  "vintage": "vintage", "cổ điển": "vintage", "retro": "vintage",
+  "làm việc": "làm việc", "work": "làm việc", "làm": "làm việc",
+  "hẹn hò": "hẹn hò", "date": "hẹn hò", "lãng mạn": "hẹn hò",
+  "hiện đại": "hiện đại", "modern": "hiện đại",
+  "sáng tạo": "sáng tạo", "creative": "sáng tạo",
+  "minimalist": "minimalist", "tối giản": "minimalist",
+}
+
+type Greeting = { sub: string; text: string }
+
+function getGreeting(lang: string): Greeting {
   const h = new Date().getHours()
-  if (h >= 6 && h < 11) return "greetingMorning"
-  if (h >= 11 && h < 14) return "greetingNoon"
-  if (h >= 14 && h < 18) return "greetingAfternoon"
-  return "greetingEvening"
+
+  const content: Record<string, { morning: Greeting; noon: Greeting; afternoon: Greeting; evening: Greeting }> = {
+    vi: {
+      morning:   { text: "Mình là Lực — mình lập trang này vì mê cà phê 🙈 Sáng nay đi đâu?", sub: "CÀ PHÊ SÁNG" },
+      noon:      { text: "Mình là Lực — giờ này chắc đang tìm chỗ trốn nắng nhỉ ☀️", sub: "TRỐN NẮNG TRƯA" },
+      afternoon: { text: "Mình là Lực — chiều rồi, làm thêm ly nữa không? ☕", sub: "CÀ PHÊ CHIỀU" },
+      evening:   { text: "Mình là Lực — tối rồi vẫn còn quán mở, mình tìm cho nhé 🌙", sub: "CÒN QUÁN MỞ TỐI NAY" },
+    },
+    en: {
+      morning:   { text: "I'm Luc — built this because I'm obsessed with cafés 🙈 Where to this morning?", sub: "MORNING COFFEE" },
+      noon:      { text: "I'm Luc — hiding from the midday sun? Same. Let's find somewhere ☀️", sub: "LUNCH BREAK" },
+      afternoon: { text: "I'm Luc — afternoon slump? One more coffee fixes that ☕", sub: "AFTERNOON COFFEE" },
+      evening:   { text: "I'm Luc — still up, still caffeinating. Let me find you a spot 🌙", sub: "NIGHT OWL" },
+    },
+  }
+
+  const set = content[lang] ?? content.vi
+  if (h >= 5  && h < 11) return set.morning
+  if (h >= 11 && h < 14) return set.noon
+  if (h >= 14 && h < 19) return set.afternoon
+  return set.evening
+}
+
+function normalize(str: string) {
+  return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+}
+
+function getNameSuggestions(input: string, cafes: typeof MOCK_CAFES) {
+  if (input.length < 2) return []
+  const q = normalize(input)
+  return cafes
+    .filter(
+      (c) =>
+        normalize(c.name).includes(q) ||
+        c.name.toLowerCase().includes(input.toLowerCase())
+    )
+    .slice(0, 4)
+}
+
+function getSmartSuggestions(input: string, lang: string) {
+  if (input.length < 2) return []
+  const lower = input.toLowerCase()
+  const suggestions: Array<{ label: string; query: string }> = []
+
+  let detectedVibe: string | null = null
+  for (const [keyword, vibe] of Object.entries(VIBE_MAP)) {
+    if (lower.includes(normalize(keyword)) || lower.includes(keyword)) {
+      detectedVibe = vibe
+      break
+    }
+  }
+
+  let detectedDistrict: string | null = null
+  const districtMatch = lower.match(/qu[aậ]n\s*(\d+|[a-zÀ-ɏ\s]+)/i)
+  if (districtMatch) {
+    detectedDistrict = districtMatch[0]
+      .replace(/qu[aậ]n/i, "Quận")
+      .replace(/\s+/g, " ")
+      .trim()
+  }
+
+  const isVi = lang === "vi"
+
+  if (detectedVibe && !detectedDistrict) {
+    const popular = ["Quận 1", "Quận 3", "Bình Thạnh", "Phú Nhuận", "Quận 7"]
+    popular.forEach((d) => {
+      suggestions.push({
+        label: isVi ? `Quán ${detectedVibe} ở ${d}` : `${detectedVibe} cafés in ${d}`,
+        query: `${detectedVibe} ${d}`,
+      })
+    })
+  } else if (detectedVibe && detectedDistrict) {
+    suggestions.push({
+      label: isVi
+        ? `Quán ${detectedVibe} ở ${detectedDistrict}`
+        : `${detectedVibe} cafés in ${detectedDistrict}`,
+      query: `${detectedVibe} ${detectedDistrict}`,
+    })
+  } else if (detectedDistrict && !detectedVibe) {
+    const vibes = ["yên tĩnh", "làm việc", "thiên nhiên"]
+    vibes.forEach((v) => {
+      suggestions.push({
+        label: isVi
+          ? `Quán ${v} ở ${detectedDistrict}`
+          : `${v} cafés in ${detectedDistrict}`,
+        query: `${v} ${detectedDistrict}`,
+      })
+    })
+  }
+
+  return suggestions.slice(0, 3)
 }
 
 function ChibiWalkAnimation() {
@@ -165,14 +267,36 @@ export default function HeroSection({ locale }: HeroSectionProps) {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [placeholderIdx, setPlaceholderIdx] = useState(0)
-  const [greetingKey] = useState(getGreetingKey)
   const [focused, setFocused] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const greeting = useMemo(() => getGreeting(locale), [locale])
+  const nameSuggestions = useMemo(() => getNameSuggestions(search, MOCK_CAFES), [search])
+  const smartSuggestions = useMemo(() => getSmartSuggestions(search, locale), [search, locale])
+  const showDropdown = focused && search.length >= 2 && (nameSuggestions.length > 0 || smartSuggestions.length > 0)
 
   useEffect(() => {
     const id = setInterval(() => {
       setPlaceholderIdx((i) => (i + 1) % PLACEHOLDER_KEYS.length)
     }, 3200)
     return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setFocused(false)
+    }
+    function onMouseDown(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setFocused(false)
+      }
+    }
+    document.addEventListener("keydown", onKeyDown)
+    document.addEventListener("mousedown", onMouseDown)
+    return () => {
+      document.removeEventListener("keydown", onKeyDown)
+      document.removeEventListener("mousedown", onMouseDown)
+    }
   }, [])
 
   function handleSearch() {
@@ -191,6 +315,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
     if (q.includes("gần")) params.set("nearMe", "true")
     if (!matched && q) params.set("search", q)
 
+    setFocused(false)
     router.push(`/${locale}/search${params.size ? `?${params}` : ""}`)
   }
 
@@ -199,6 +324,27 @@ export default function HeroSection({ locale }: HeroSectionProps) {
     if (vibe) params.set("vibe", vibe)
     if (purpose) params.set("purpose", purpose)
     router.push(`/${locale}/search?${params.toString()}`)
+  }
+
+  function handleSmartSearch(query: string) {
+    setFocused(false)
+    setSearch(query)
+    const params = new URLSearchParams()
+    const lower = query.toLowerCase()
+
+    for (const mapping of KEYWORD_TO_FILTER) {
+      if (mapping.keywords.some((k) => lower.includes(k))) {
+        if (mapping.vibe) params.append("vibe", mapping.vibe)
+        if (mapping.purpose) params.append("purpose", mapping.purpose)
+      }
+    }
+
+    const districtMatch = lower.match(/qu[aậ]n\s*(\d+|[a-zÀ-ɏ\s]+)/i)
+    if (districtMatch) {
+      params.set("district", districtMatch[0].replace(/qu[aậ]n/i, "Quận").trim())
+    }
+
+    router.push(`/${locale}/search${params.size ? `?${params}` : ""}`)
   }
 
   return (
@@ -227,9 +373,12 @@ export default function HeroSection({ locale }: HeroSectionProps) {
         {/* Chibi walking animation */}
         <ChibiWalkAnimation />
 
-        {/* Time-based greeting */}
-        <p className="text-sm font-semibold text-accent mb-3 tracking-wide uppercase">
-          {t(greetingKey)}
+        {/* Personalised time-based greeting */}
+        <p className="text-[11px] font-semibold tracking-[0.1em] text-[var(--accent)] mb-1 uppercase">
+          {greeting.sub}
+        </p>
+        <p className="text-[13px] text-[var(--foreground-muted)] mb-3 font-normal">
+          {greeting.text}
         </p>
 
         <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-foreground mb-3 tracking-tight leading-tight">
@@ -239,8 +388,8 @@ export default function HeroSection({ locale }: HeroSectionProps) {
           {t("subtitleCompact")}
         </p>
 
-        {/* Search bar */}
-        <div className="flex gap-2 max-w-xl mx-auto">
+        {/* Search bar with autocomplete dropdown */}
+        <div ref={containerRef} className="relative flex gap-2 max-w-xl mx-auto">
           <div className="flex-1 relative">
             <Search
               size={15}
@@ -255,7 +404,6 @@ export default function HeroSection({ locale }: HeroSectionProps) {
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
               placeholder={!search ? t(PLACEHOLDER_KEYS[placeholderIdx]) : undefined}
               className="w-full h-11 rounded-xl border border-border bg-background text-foreground text-sm pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all"
             />
@@ -266,6 +414,57 @@ export default function HeroSection({ locale }: HeroSectionProps) {
           >
             {t("cta")}
           </button>
+
+          {/* Autocomplete dropdown */}
+          {showDropdown && (
+            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_24px_rgba(44,26,14,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.32)] z-[200] overflow-hidden text-left">
+              {nameSuggestions.length > 0 && (
+                <div className="py-2 border-b border-[var(--border)] last:border-b-0">
+                  <div className="px-4 pb-1 pt-1 text-[11px] font-semibold tracking-[0.08em] text-[var(--foreground-muted)] uppercase">
+                    {locale === "vi" ? "Quán cà phê" : "Cafés"}
+                  </div>
+                  {nameSuggestions.map((cafe) => (
+                    <button
+                      key={cafe.id}
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        setFocused(false)
+                        router.push(`/${locale}/cafe/${cafe.slug}`)
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-left bg-transparent hover:bg-[var(--background-secondary)] transition-colors"
+                    >
+                      <span className="text-base shrink-0">☕</span>
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-[var(--foreground)] truncate">{cafe.name}</div>
+                        <div className="text-xs text-[var(--foreground-muted)] truncate">{cafe.district}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {smartSuggestions.length > 0 && (
+                <div className="py-2 last:border-b-0">
+                  <div className="px-4 pb-1 pt-1 text-[11px] font-semibold tracking-[0.08em] text-[var(--foreground-muted)] uppercase">
+                    {locale === "vi" ? "Tìm kiếm" : "Search"}
+                  </div>
+                  {smartSuggestions.map((s, i) => (
+                    <button
+                      key={i}
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        handleSmartSearch(s.query)
+                      }}
+                      className="flex items-center gap-3 w-full px-4 py-2.5 text-left bg-transparent hover:bg-[var(--background-secondary)] transition-colors"
+                    >
+                      <span className="text-base shrink-0">🔍</span>
+                      <div className="text-sm font-medium text-[var(--foreground)] truncate">{s.label}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Quick filter chips */}

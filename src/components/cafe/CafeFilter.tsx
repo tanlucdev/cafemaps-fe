@@ -13,29 +13,26 @@ import {
 import {
   VIBES,
   PURPOSES,
-  PRICE_RANGES,
   AREAS,
-  WARDS_BY_AREA,
   type CafeFilter as Filter,
-  type PriceRange,
 } from "@/types/cafe"
+
+const PRICE_OPTIONS = [
+  { label: "< 50k", value: "under_50k" },
+  { label: "50–100k", value: "price_50k_100k" },
+  { label: "100–150k", value: "price_100k_150k" },
+  { label: "> 150k", value: "above_150k" },
+]
 
 interface CafeFilterProps {
   filter: Filter
   onChange: (filter: Filter) => void
 }
 
-const PRICE_LABELS: Record<PriceRange, string> = {
-  under_50k: "< 50k",
-  "50k_100k": "50–100k",
-  "100k_150k": "100–150k",
-  above_150k: "> 150k",
-}
-
 export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
   const t = useTranslations("filters")
 
-  function toggleArray<T extends string>(key: "vibe" | "purpose", value: T) {
+  function toggleArray<T extends string>(key: "vibes" | "purposes", value: T) {
     const current = (filter[key] ?? []) as T[]
     const next = current.includes(value)
       ? current.filter((v) => v !== value)
@@ -45,20 +42,13 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
 
   function handleAreaChange(val: string | null) {
     const district = val === "" || val == null ? undefined : val
-    onChange({ ...filter, district, ward: undefined })
+    onChange({ ...filter, district })
   }
-
-  function handleWardChange(val: string | null) {
-    const ward = val === "" || val == null ? undefined : val
-    onChange({ ...filter, ward })
-  }
-
-  const wardsForArea = filter.district ? (WARDS_BY_AREA[filter.district] ?? []) : []
 
   const hasFilters =
-    filter.vibe?.length ||
-    filter.purpose?.length ||
-    filter.priceRange ||
+    filter.vibes?.length ||
+    filter.purposes?.length ||
+    filter.priceRange != null ||
     filter.district
 
   return (
@@ -74,8 +64,8 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
               key={vibe}
               label={vibe}
               variant="vibe"
-              active={filter.vibe?.includes(vibe)}
-              onClick={() => toggleArray("vibe", vibe)}
+              active={filter.vibes?.includes(vibe)}
+              onClick={() => toggleArray("vibes", vibe)}
               className="text-sm px-4 py-2 cursor-pointer"
             />
           ))}
@@ -92,8 +82,8 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
             <Badge
               key={purpose}
               label={purpose}
-              active={filter.purpose?.includes(purpose)}
-              onClick={() => toggleArray("purpose", purpose)}
+              active={filter.purposes?.includes(purpose)}
+              onClick={() => toggleArray("purposes", purpose)}
               className="text-sm px-4 py-2 cursor-pointer"
             />
           ))}
@@ -106,22 +96,25 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
           {t("price")}
         </h3>
         <div className="flex flex-wrap gap-2">
-          {PRICE_RANGES.map((price) => (
-            <button
-              key={price}
-              onClick={() =>
-                onChange({ ...filter, priceRange: filter.priceRange === price ? undefined : price })
-              }
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150",
-                filter.priceRange === price
-                  ? "bg-accent text-white border-accent"
-                  : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
-              )}
-            >
-              {PRICE_LABELS[price]}
-            </button>
-          ))}
+          {PRICE_OPTIONS.map((opt) => {
+            const active = filter.priceRange === opt.value
+            return (
+              <button
+                key={opt.label}
+                onClick={() =>
+                  onChange({ ...filter, priceRange: active ? undefined : opt.value })
+                }
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150",
+                  active
+                    ? "bg-accent text-white border-accent"
+                    : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
+                )}
+              >
+                {opt.label}
+              </button>
+            )
+          })}
         </div>
       </section>
 
@@ -147,25 +140,6 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
               ))}
             </SelectContent>
           </Select>
-
-          {wardsForArea.length > 0 && (
-            <Select
-              value={filter.ward ?? ""}
-              onValueChange={handleWardChange}
-            >
-              <SelectTrigger className="w-full h-10 rounded-xl text-sm">
-                <SelectValue placeholder="Tất cả phường" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Tất cả phường</SelectItem>
-                {wardsForArea.map((ward) => (
-                  <SelectItem key={ward} value={ward}>
-                    {ward}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
         </div>
       </section>
 

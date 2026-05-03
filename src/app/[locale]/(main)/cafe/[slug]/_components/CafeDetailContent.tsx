@@ -6,7 +6,6 @@ import { motion } from "framer-motion"
 import {
   MapPin,
   Clock,
-  Star,
   Coffee,
   ChevronLeft,
   Share2,
@@ -18,9 +17,9 @@ import {
   Zap,
   PawPrint,
 } from "lucide-react"
-import ImageGallery from "@/components/cafe/ImageGallery"
+import SmartGallery from "@/components/SmartGallery"
 import Badge from "@/components/ui/Badge"
-import { formatPriceRange } from "@/lib/utils"
+import { formatPrice } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 import { useTranslations } from "next-intl"
 import { toggleSaveCafe } from "@/lib/api"
@@ -53,7 +52,7 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
   const [saved, setSaved] = useState(false)
   const [loadingSave, setLoadingSave] = useState(false)
 
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${cafe.lat},${cafe.lng}`
+  const mapsUrl = cafe.googleMapsUrl ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cafe.name + " " + (cafe.address ?? ""))}`
 
   async function handleSave() {
     setLoadingSave(true)
@@ -70,9 +69,9 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
   }
 
   return (
-    <article className="min-h-screen pt-16 pb-36 md:pb-24">
+    <article className="min-h-screen pt-16 pb-36 md:pb-24 lg:pb-8">
       {/* Top bar */}
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-6 pb-4 flex items-center justify-between">
+      <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-4 flex items-center justify-between">
         <button
           onClick={() => {
             const returnUrl = typeof window !== "undefined"
@@ -96,14 +95,18 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
         </button>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-4 space-y-6">
+      <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10 pb-4 space-y-6">
         {/* 1. Gallery */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <ImageGallery images={cafe.images} altPrefix={cafe.name} />
+          <SmartGallery
+            images={cafe.images ?? []}
+            orientations={cafe.image_orientations ?? []}
+            cafeName={cafe.name}
+          />
         </motion.div>
 
         <motion.div
@@ -131,21 +134,8 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
             </button>
           </div>
 
-          {/* 3. Rating + open status badge */}
+          {/* 3. Open status badge */}
           <div className="flex flex-wrap items-center gap-3">
-            {cafe.rating && (
-              <span className="flex items-center gap-1.5">
-                <Star size={14} className="text-accent fill-accent" />
-                <span className="font-lora font-medium text-foreground">
-                  {cafe.rating.toFixed(1)}
-                </span>
-                {cafe.reviewCount && (
-                  <span className="text-(--foreground-muted) text-sm">
-                    ({cafe.reviewCount} {t("reviews")})
-                  </span>
-                )}
-              </span>
-            )}
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-900/60">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
               <span className="text-green-700 dark:text-green-400 font-medium text-xs">
@@ -160,19 +150,19 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
               <MapPin size={14} className="shrink-0 mt-0.5 text-accent" />
               {cafe.address}
             </span>
-            {cafe.openingHours && (
+            {(cafe.openingTime || cafe.closingTime) && (
               <span className="flex items-center gap-1.5">
                 <Clock size={14} className="shrink-0 text-accent" />
-                {cafe.openingHours}
+                {[cafe.openingTime, cafe.closingTime].filter(Boolean).map(t => t!.slice(0, 5)).join(" – ")}
               </span>
             )}
           </div>
 
           {/* 5. Vibe + Purpose tags */}
-          {(cafe.vibe.length > 0 || cafe.purpose.length > 0) && (
+          {(cafe.vibes.length > 0 || cafe.purposes.length > 0) && (
             <div className="flex flex-wrap gap-2">
-              {cafe.vibe.map((v) => <Badge key={v} label={v} variant="vibe" />)}
-              {cafe.purpose.map((p) => <Badge key={p} label={p} />)}
+              {cafe.vibes.map((v) => <Badge key={v} label={v} variant="vibe" />)}
+              {cafe.purposes.map((p) => <Badge key={p} label={p} />)}
             </div>
           )}
 
@@ -215,23 +205,23 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
           )}
 
           {/* 9. Price range */}
-          {cafe.priceRange && (
+          {formatPrice(cafe.priceMin, cafe.priceMax) && (
             <div className="flex items-center gap-2 text-sm">
               <span className="text-(--foreground-muted)">Khoảng giá:</span>
               <span className="px-3 py-1 rounded-full bg-(--accent-light) text-accent font-medium">
-                {formatPriceRange(cafe.priceRange)}
+                {formatPrice(cafe.priceMin, cafe.priceMax)}
               </span>
             </div>
           )}
         </motion.div>
       </div>
 
-      {/* 10. Sticky bottom CTA — above mobile bottom nav */}
+      {/* 10. CTA — sticky on mobile, static on desktop */}
       <div
-        className="fixed bottom-14 md:bottom-0 left-0 right-0 z-30 bg-(--background)/95 backdrop-blur-md border-t border-border"
+        className="fixed lg:static bottom-14 md:bottom-0 left-0 right-0 z-30 lg:z-auto bg-(--background)/95 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-t lg:border-0 border-border"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="max-w-2xl mx-auto px-4 py-3 flex gap-3">
+        <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 lg:px-10 py-3 lg:py-0 lg:mt-6 flex gap-3">
           <button
             onClick={handleSave}
             disabled={loadingSave}

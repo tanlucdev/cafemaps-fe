@@ -29,17 +29,16 @@ export default function GuidedFilterBar({ filter, onChange }: GuidedFilterBarPro
   const extraVibes = VIBES.length - TOP_VIBES.length
 
   const activeCount =
-    (filter.vibe?.length ?? 0) +
-    (filter.purpose?.length ?? 0) +
-    (filter.priceRange ? 1 : 0) +
-    (filter.district ? 1 : 0) +
-    (filter.ward ? 1 : 0)
+    (filter.vibes?.length ?? 0) +
+    (filter.purposes?.length ?? 0) +
+    (filter.priceRange != null ? 1 : 0) +
+    (filter.district ? 1 : 0)
 
   function toggleVibe(v: Vibe) {
-    const current = filter.vibe ?? []
+    const current = filter.vibes ?? []
     onChange({
       ...filter,
-      vibe: current.includes(v) ? current.filter((x) => x !== v) : [...current, v],
+      vibes: current.includes(v) ? current.filter((x) => x !== v) : [...current, v],
     })
   }
 
@@ -174,7 +173,7 @@ export default function GuidedFilterBar({ filter, onChange }: GuidedFilterBarPro
               onClick={() => toggleVibe(v)}
               className={cn(
                 "flex-none px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150 whitespace-nowrap capitalize",
-                filter.vibe?.includes(v)
+                filter.vibes?.includes(v)
                   ? "bg-accent text-white border-accent"
                   : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
               )}

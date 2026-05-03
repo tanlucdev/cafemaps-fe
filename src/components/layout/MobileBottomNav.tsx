@@ -23,10 +23,13 @@ export default function MobileBottomNav({ locale }: MobileBottomNavProps) {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[var(--background)]/95 backdrop-blur-md border-t border-[var(--border)]"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[var(--background)] border-t border-[var(--border)]"
+      style={{
+        paddingTop: "10px",
+        paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
+      }}
     >
-      <div className="flex items-center justify-around h-14 px-2">
+      <div className="flex items-center justify-around px-2">
         {tabs.map(({ href, icon: Icon, label }) => {
           const isActive = pathname === href
           return (

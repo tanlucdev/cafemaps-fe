@@ -1,5 +1,3 @@
-export type PriceRange = "under_50k" | "50k_100k" | "100k_150k" | "above_150k"
-
 export type Vibe =
   | "yên tĩnh"
   | "nhộn nhịp"
@@ -22,40 +20,45 @@ export interface Cafe {
   id: string
   name: string
   slug: string
-  address: string
-  district: string
-  ward?: string
-  city: string
-  lat: number
-  lng: number
-  googlePlaceId?: string
-  openingHours?: string
-  priceRange?: PriceRange
-  oneLiner?: string
-  description?: string
-  vibe: string[]
-  purpose: string[]
-  amenities?: string[]
-  signatureDrink?: string
-  rating?: number
-  reviewCount?: number
+  address?: string | null
+  district?: string | null
+  district_legacy?: string | null
+  googlePlaceId?: string | null
+  googleMapsUrl?: string | null
+  openingTime?: string | null
+  closingTime?: string | null
+  priceMin?: number | null
+  priceMax?: number | null
+  oneLiner?: string | null
+  description?: string | null
+  vibes: string[]
+  purposes: string[]
+  amenities: string[]
+  signatureDrink?: string | null
+  parking_location?: string | null
   images: string[]
+  image_orientations: string[] | null
   coverImage?: string | null
+  instagramUrl?: string | null
+  isFeatured?: boolean | null
+  featuredOrder?: number | null
   isPublished: boolean
   distanceKm?: number
   createdAt?: string
+  updatedAt?: string
 }
 
 export interface CafeFilter {
   district?: string
-  ward?: string
+  city?: string
+  vibes?: string[]
   vibe?: string[]
+  purposes?: string[]
   purpose?: string[]
-  priceRange?: PriceRange
+  priceRange?: string
   search?: string
   openNow?: boolean
   nearMe?: boolean
-  city?: string
   lat?: number
   lng?: number
   radiusKm?: number
@@ -131,11 +134,4 @@ export const PURPOSES: Purpose[] = [
   "họp nhóm",
   "chill một mình",
   "gặp bạn bè",
-]
-
-export const PRICE_RANGES: PriceRange[] = [
-  "under_50k",
-  "50k_100k",
-  "100k_150k",
-  "above_150k",
 ]

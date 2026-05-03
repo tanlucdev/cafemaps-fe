@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Star, MapPin, ArrowRight, Circle } from "lucide-react"
+import { MapPin, ArrowRight, Circle } from "lucide-react"
 import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -15,20 +15,18 @@ interface FeaturedCafesSectionProps {
 }
 
 const RANK_CONFIG = [
-  { rank: 1, label: "01", heightClass: "h-64 sm:h-80", order: "order-first sm:order-none" },
-  { rank: 2, label: "02", heightClass: "h-56 sm:h-64", order: "sm:order-first" },
-  { rank: 3, label: "03", heightClass: "h-52 sm:h-56", order: "" },
+  { rank: 1, label: "01", heightClass: "h-64 sm:h-80 lg:h-72", order: "order-first sm:order-none" },
+  { rank: 2, label: "02", heightClass: "h-56 sm:h-64 lg:h-72", order: "sm:order-first" },
+  { rank: 3, label: "03", heightClass: "h-52 sm:h-56 lg:h-72", order: "" },
 ]
 
-function isOpenNow(openingHours?: string): boolean | null {
-  if (!openingHours) return null
-  const match = openingHours.match(/(\d{1,2}):(\d{2})\s*[–\-–]\s*(\d{1,2}):(\d{2})/)
-  if (!match) return null
+function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean | null {
+  if (!openingTime || !closingTime) return null
   const now = new Date()
   const current = now.getHours() * 60 + now.getMinutes()
-  const open = parseInt(match[1]) * 60 + parseInt(match[2])
-  const close = parseInt(match[3]) * 60 + parseInt(match[4])
-  return current >= open && current < close
+  const [oh, om] = openingTime.split(":").map(Number)
+  const [ch, cm] = closingTime.split(":").map(Number)
+  return current >= oh * 60 + om && current < ch * 60 + cm
 }
 
 interface PodiumCardProps {
@@ -41,7 +39,7 @@ interface PodiumCardProps {
 }
 
 function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCardProps) {
-  const openStatus = isOpenNow(cafe.openingHours)
+  const openStatus = isOpenNow(cafe.openingTime, cafe.closingTime)
 
   function saveReturnUrl() {
     if (typeof window !== "undefined") {
@@ -58,7 +56,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
       className={cn(
         "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-auto",
         rank === 1
-          ? "border-2 border-amber-400/60 sm:border-border"
+          ? "border-2 border-amber-400/60 sm:border-border lg:border-2 lg:border-[#C8842A]"
           : "border border-border"
       )}
     >
@@ -121,14 +119,6 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
                   <span className="truncate">{cafe.district}</span>
                 </p>
               </div>
-              {cafe.rating && (
-                <span className="flex items-center gap-0.5 shrink-0 bg-black/30 backdrop-blur-sm rounded-lg px-2 py-1">
-                  <Star size={10} className="text-yellow-400 fill-yellow-400" />
-                  <span className="font-lora text-xs font-medium text-white">
-                    {cafe.rating.toFixed(1)}
-                  </span>
-                </span>
-              )}
             </div>
 
             {/* Tagline from oneLiner */}
@@ -138,9 +128,9 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
               </p>
             )}
 
-            {cafe.vibe.length > 0 && (
+            {cafe.vibes.length > 0 && (
               <div className="flex gap-1 flex-wrap mt-1.5">
-                {cafe.vibe.slice(0, 2).map((v) => (
+                {cafe.vibes.slice(0, 2).map((v) => (
                   <Badge key={v} label={v} variant="vibe" className="text-[10px] px-2 py-0.5 opacity-90" />
                 ))}
               </div>
@@ -245,7 +235,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       </div>
 
       {/* Desktop podium grid */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4 sm:items-end">
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-6 sm:items-end lg:items-start">
         {podiumOrder.map((cafe, displayIdx) => {
           const originalRank = featured.indexOf(cafe) + 1
           const config = RANK_CONFIG.find((c) => c.rank === originalRank) ?? RANK_CONFIG[0]

@@ -3,9 +3,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { MapPin, Star } from "lucide-react"
+import { MapPin } from "lucide-react"
 import Badge from "@/components/ui/Badge"
-import { formatPriceRange } from "@/lib/utils"
+import { formatPrice } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 
 interface CafeCardProps {
@@ -55,9 +55,9 @@ export default function CafeCard({ cafe, locale, index = 0, animationType = "fad
               </span>
             </div>
           )}
-          {cafe.priceRange && (
+          {formatPrice(cafe.priceMin, cafe.priceMax) && (
             <span className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-black/35 backdrop-blur-sm text-white text-xs font-medium">
-              {formatPriceRange(cafe.priceRange)}
+              {formatPrice(cafe.priceMin, cafe.priceMax)}
             </span>
           )}
         </div>
@@ -68,24 +68,16 @@ export default function CafeCard({ cafe, locale, index = 0, animationType = "fad
             <h3 className="font-semibold text-foreground text-sm leading-snug line-clamp-1">
               {cafe.name}
             </h3>
-            {cafe.rating && (
-              <span className="flex items-center gap-0.5 shrink-0">
-                <Star size={11} className="text-accent fill-accent" />
-                <span className="font-lora text-xs font-medium text-foreground">
-                  {cafe.rating.toFixed(1)}
-                </span>
-              </span>
-            )}
           </div>
 
           <p className="flex items-center gap-1 text-xs text-(--foreground-muted)">
             <MapPin size={11} className="shrink-0" />
-            <span className="truncate">{cafe.district}, {cafe.city}</span>
+            <span className="truncate">{cafe.district ?? cafe.address}</span>
           </p>
 
-          {cafe.vibe.length > 0 && (
+          {cafe.vibes.length > 0 && (
             <div className="flex gap-1.5 flex-wrap">
-              {cafe.vibe.slice(0, 2).map((v) => (
+              {cafe.vibes.slice(0, 2).map((v) => (
                 <Badge key={v} label={v} variant="vibe" />
               ))}
             </div>

@@ -4,17 +4,44 @@ import { MOCK_CAFES } from "./mock-data"
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"
 
+const READ_REVALIDATE_SECONDS = 300
+const API_TIMEOUT_MS = 12000
+
+type NextRequestInit = RequestInit & {
+  next?: {
+    revalidate?: number
+    tags?: string[]
+  }
+}
+
 async function apiFetch<T>(
   path: string,
-  options?: RequestInit
+  options?: NextRequestInit
 ): Promise<T> {
+  const method = options?.method?.toUpperCase() ?? "GET"
+  const isPublicRead =
+    method === "GET" && !(options?.headers && "Authorization" in options.headers)
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+
   const res = await fetch(`${BASE_URL}${path}`, {
+    ...(isPublicRead
+      ? {
+          cache: "force-cache",
+          next: {
+            revalidate: READ_REVALIDATE_SECONDS,
+            tags: ["cafes"],
+            ...options?.next,
+          },
+        }
+      : {}),
     ...options,
+    signal: options?.signal ?? controller.signal,
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,
     },
-  })
+  }).finally(() => clearTimeout(timeout))
 
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`)
@@ -30,15 +57,37 @@ function buildQuery(filter?: CafeFilter): string {
   if (filter.district) params.set("district", filter.district)
   if (filter.city) params.set("city", filter.city)
   if (filter.priceRange) params.set("priceRange", filter.priceRange)
-  if (filter.vibe?.length) filter.vibe.forEach((v) => params.append("vibe", v))
-  if (filter.purpose?.length) filter.purpose.forEach((p) => params.append("purpose", p))
-  if (filter.lat) params.set("lat", String(filter.lat))
-  if (filter.lng) params.set("lng", String(filter.lng))
-  if (filter.radiusKm) params.set("radiusKm", String(filter.radiusKm))
-  if (filter.page) params.set("page", String(filter.page))
-  if (filter.limit) params.set("limit", String(filter.limit))
+  const vibes = filter.vibes ?? filter.vibe
+  const purposes = filter.purposes ?? filter.purpose
+  if (vibes?.length) vibes.forEach((v) => params.append("vibe", v))
+  if (purposes?.length) purposes.forEach((p) => params.append("purpose", p))
+  if (filter.openNow !== undefined) params.set("openNow", String(filter.openNow))
+  if (filter.nearMe !== undefined) params.set("nearMe", String(filter.nearMe))
+  if (filter.lat !== undefined) params.set("lat", String(filter.lat))
+  if (filter.lng !== undefined) params.set("lng", String(filter.lng))
+  if (filter.radiusKm !== undefined) params.set("radiusKm", String(filter.radiusKm))
+  if (filter.page !== undefined) params.set("page", String(filter.page))
+  if (filter.limit !== undefined) params.set("limit", String(filter.limit))
   const q = params.toString()
   return q ? `?${q}` : ""
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapApiCafe(raw: any): Cafe {
+  return {
+    ...raw,
+    vibes: raw.vibes ?? raw.vibe ?? [],
+    purposes: raw.purposes ?? raw.purpose ?? [],
+    amenities: raw.amenities ?? [],
+    images: raw.images ?? [],
+    image_orientations:
+      raw.image_orientations ??
+      raw.imageOrientations ??
+      raw.image_orientation ??
+      raw.imageOrientation ??
+      null,
+    isPublished: raw.isPublished ?? true,
+  }
 }
 
 export async function getCafes(filter?: CafeFilter): Promise<Cafe[]> {
@@ -46,16 +95,20 @@ export async function getCafes(filter?: CafeFilter): Promise<Cafe[]> {
     const data = await apiFetch<CafesResponse | Cafe[]>(
       `/cafes${buildQuery(filter)}`
     )
-    return Array.isArray(data) ? data : data.data
-  } catch {
+    const raw = Array.isArray(data) ? data : data.data
+    return raw.map(mapApiCafe)
+  } catch (err) {
+    console.error("getCafes failed:", err)
     return MOCK_CAFES
   }
 }
 
 export async function getCafeBySlug(slug: string): Promise<Cafe | null> {
   try {
-    return await apiFetch<Cafe>(`/cafes/${slug}`)
-  } catch {
+    const raw = await apiFetch<Cafe>(`/cafes/${slug}`)
+    return mapApiCafe(raw)
+  } catch (err) {
+    console.error("getCafeBySlug failed:", err)
     return MOCK_CAFES.find((c) => c.slug === slug) ?? null
   }
 }

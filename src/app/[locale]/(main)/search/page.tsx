@@ -13,8 +13,7 @@ export const metadata: Metadata = {
 
 export default async function SearchPage({ params }: SearchPageProps) {
   const { locale } = await params
-  const cafes = await getCafes({ city: "Ho Chi Minh City" })
-  console.log("Fetched cafes:", cafes)
+  const cafes = await getCafes()
   return (
     <div className="pt-16">
       <FeaturedSection cafes={cafes} locale={locale} />

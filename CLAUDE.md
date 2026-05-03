@@ -42,8 +42,6 @@ src/
 └── messages/vi.json|en.json
 ```
 
-> **Lưu ý:** `src/src/` là thư mục trùng lặp cũ — đã bị ignore trong ESLint. Không sửa code ở đó.
-
 ## Stack & Dependencies
 
 | Mục | Thư viện |

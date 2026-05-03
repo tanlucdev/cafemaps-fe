@@ -3,9 +3,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { MapPin, Star, Clock } from "lucide-react"
+import { MapPin, Clock } from "lucide-react"
 import Badge from "@/components/ui/Badge"
-import { formatPriceRange } from "@/lib/utils"
+import { formatPrice, formatOpeningHours } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 
 interface CafeListProps {
@@ -47,9 +47,9 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
               ) : (
                 <div className="absolute inset-0 bg-linear-to-br from-accent to-(--accent-hover)" />
               )}
-              {cafe.priceRange && (
+              {formatPrice(cafe.priceMin, cafe.priceMax) && (
                 <span className="absolute bottom-2 left-2 px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-sm text-white text-[10px] font-medium">
-                  {formatPriceRange(cafe.priceRange)}
+                  {formatPrice(cafe.priceMin, cafe.priceMax)}
                 </span>
               )}
             </div>
@@ -61,14 +61,6 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
                   <h3 className="font-display font-semibold text-sm sm:text-base text-foreground leading-snug line-clamp-1">
                     {cafe.name}
                   </h3>
-                  {cafe.rating && (
-                    <span className="flex items-center gap-0.5 shrink-0">
-                      <Star size={12} className="text-accent fill-accent" />
-                      <span className="font-lora text-xs sm:text-sm font-medium text-foreground">
-                        {cafe.rating.toFixed(1)}
-                      </span>
-                    </span>
-                  )}
                 </div>
 
                 <p className="flex items-center gap-1 text-xs text-(--foreground-muted)">
@@ -76,17 +68,17 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
                   <span className="truncate">{cafe.address}, {cafe.district}</span>
                 </p>
 
-                {cafe.openingHours && (
+                {formatOpeningHours(cafe.openingTime, cafe.closingTime) && (
                   <p className="flex items-center gap-1 text-xs text-(--foreground-muted)">
                     <Clock size={10} className="shrink-0" />
-                    <span>{cafe.openingHours}</span>
+                    <span>{formatOpeningHours(cafe.openingTime, cafe.closingTime)}</span>
                   </p>
                 )}
               </div>
 
-              {cafe.vibe.length > 0 && (
+              {cafe.vibes.length > 0 && (
                 <div className="flex gap-1.5 flex-wrap mt-2.5">
-                  {cafe.vibe.slice(0, 3).map((v) => (
+                  {cafe.vibes.slice(0, 3).map((v) => (
                     <Badge key={v} label={v} variant="vibe" />
                   ))}
                 </div>

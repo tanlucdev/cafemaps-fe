@@ -17,6 +17,12 @@ const lora = Lora({
   display: "swap",
 })
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+}
+
 export const metadata: Metadata = {
   title: {
     default: "Cafe Finder — Khám phá quán cà phê TP.HCM",
