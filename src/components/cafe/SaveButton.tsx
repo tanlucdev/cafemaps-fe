@@ -1,40 +1,52 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Bookmark } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { toggleSaveCafe } from "@/lib/api"
+import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api"
+import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client"
 
 interface SaveButtonProps {
   cafeId: string
+  locale: string
   initialSaved?: boolean
-  token?: string
   className?: string
 }
 
 export default function SaveButton({
   cafeId,
+  locale,
   initialSaved = false,
-  token,
   className,
 }: SaveButtonProps) {
+  const router = useRouter()
   const [saved, setSaved] = useState(initialSaved)
   const [loading, setLoading] = useState(false)
 
   async function handleToggle() {
+    if (loading) return
+
+    const token = await getCurrentAccessToken()
     if (!token) {
-      // TODO: open auth modal
+      saveAuthReturnUrl()
+      router.push(`/${locale}/login`)
       return
     }
+
     setLoading(true)
     const prev = saved
     setSaved((s) => !s) // optimistic
     try {
       const result = await toggleSaveCafe(cafeId, token)
       setSaved(result.saved)
-    } catch {
+    } catch (error) {
       setSaved(prev) // rollback
+      if (isUnauthorizedError(error)) {
+        saveAuthReturnUrl()
+        router.push(`/${locale}/login`)
+      }
     } finally {
       setLoading(false)
     }

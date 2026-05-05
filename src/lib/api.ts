@@ -2,10 +2,22 @@ import type { Cafe, CafeFilter, CafesResponse } from "@/types/cafe"
 import { MOCK_CAFES } from "./mock-data"
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"
+  typeof window === "undefined"
+    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api")
+    : "/api-proxy"
 
 const READ_REVALIDATE_SECONDS = 300
 const API_TIMEOUT_MS = 12000
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number
+  ) {
+    super(message)
+    this.name = "ApiError"
+  }
+}
 
 type NextRequestInit = RequestInit & {
   next?: {
@@ -44,10 +56,14 @@ async function apiFetch<T>(
   }).finally(() => clearTimeout(timeout))
 
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`)
+    throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status)
   }
 
   return res.json() as Promise<T>
+}
+
+export function isUnauthorizedError(error: unknown) {
+  return error instanceof ApiError && (error.status === 401 || error.status === 403)
 }
 
 function buildQuery(filter?: CafeFilter): string {
@@ -155,5 +171,25 @@ export async function submitCafe(
     method: "POST",
     body: JSON.stringify(data),
     headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function loginUser(
+  email: string,
+  password: string
+): Promise<{ token: string }> {
+  return apiFetch<{ token: string }>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  })
+}
+
+export async function registerUser(
+  email: string,
+  password: string
+): Promise<{ token?: string; message?: string }> {
+  return apiFetch<{ token?: string; message?: string }>("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
   })
 }

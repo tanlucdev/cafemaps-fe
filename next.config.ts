@@ -3,7 +3,18 @@ import createNextIntlPlugin from "next-intl/plugin"
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
 
+const BACKEND_URL =
+  process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api"
+
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api-proxy/:path*",
+        destination: `${BACKEND_URL}/:path*`,
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       {

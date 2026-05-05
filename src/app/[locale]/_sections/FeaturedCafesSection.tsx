@@ -54,7 +54,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay, ease: [0.33, 1, 0.68, 1] }}
       className={cn(
-        "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-auto",
+        "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-full",
         rank === 1
           ? "border-2 border-amber-400/60 sm:border-border lg:border-2 lg:border-[#C8842A]"
           : "border border-border"
@@ -169,9 +169,9 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       : [featured[0]]
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
       {/* Section header */}
-      <div className="flex items-end justify-between mb-6 sm:mb-8">
+      <div className="flex items-end justify-between mb-6 sm:mb-7">
         <div>
           <p className="text-xs font-semibold text-(--foreground-muted) uppercase tracking-widest mb-1">
             Được yêu thích tuần này
@@ -235,7 +235,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       </div>
 
       {/* Desktop podium grid */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-6 sm:items-end lg:items-start">
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-5 sm:items-end lg:items-start max-w-4xl mx-auto">
         {podiumOrder.map((cafe, displayIdx) => {
           const originalRank = featured.indexOf(cafe) + 1
           const config = RANK_CONFIG.find((c) => c.rank === originalRank) ?? RANK_CONFIG[0]

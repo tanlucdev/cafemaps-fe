@@ -186,6 +186,10 @@
     "hasAccount": "Already have an account?",
     "loginSuccess": "Logged in successfully",
     "loginError": "Invalid email or password",
+    "registerError": "Could not register right now",
+    "validationError": "Please enter a valid email and a password with at least 6 characters.",
+    "confirmEmail": "Registration successful. Please check your email to confirm your account.",
+    "loading": "Processing...",
     "loginWith": "Login with {provider}",
     "orContinueWith": "Or continue with"
   },

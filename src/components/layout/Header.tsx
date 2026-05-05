@@ -8,6 +8,8 @@ import { Coffee } from "lucide-react"
 import ThemeToggle from "@/components/ui/ThemeToggle"
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher"
 import { buttonVariants } from "@/components/ui/Button"
+import UserMenu from "@/components/layout/UserMenu"
+import { getAuthUser } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
@@ -18,12 +20,18 @@ export default function Header({ locale }: HeaderProps) {
   const t = useTranslations("nav")
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const user = getAuthUser();
+    return !!user;
+  });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
+
+
 
   const navLinks = [
     { href: `/${locale}`, label: t("explore") },
@@ -89,14 +97,18 @@ export default function Header({ locale }: HeaderProps) {
               <span className="text-[#2C1A0E] dark:text-[var(--foreground-muted)] bg-transparent hover:bg-transparent hover:text-[var(--foreground)]">
                 <ThemeToggle />
               </span>
-              {/* Desktop only: login */}
-              <div className="hidden md:block ml-1">
-                <Link
-                  href={`/${locale}/login`}
-                  className={cn(buttonVariants({ variant: "default" }))}
-                >
-                  {t("login")}
-                </Link>
+              {/* Desktop only: login / user menu */}
+              <div className="hidden md:flex items-center ml-1">
+                {isLoggedIn ? (
+                  <UserMenu locale={locale} />
+                ) : (
+                  <Link
+                    href={`/${locale}/login`}
+                    className={cn(buttonVariants({ variant: "default" }))}
+                  >
+                    {t("login")}
+                  </Link>
+                )}
               </div>
             </div>
           </div>

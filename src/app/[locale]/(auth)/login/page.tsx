@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { Coffee } from "lucide-react"
+import LoginForm from "./LoginForm"
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -29,34 +30,7 @@ export default async function LoginPage({ params }: PageProps) {
           </h1>
         </div>
 
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-[var(--foreground-muted)] block">
-              {t("email")}
-            </label>
-            <input
-              type="email"
-              className="w-full h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm text-[var(--foreground)] px-4 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-[var(--foreground-muted)] block">
-                {t("password")}
-              </label>
-              <Link href="#" className="text-xs text-[var(--accent)] hover:underline">
-                {t("forgotPassword")}
-              </Link>
-            </div>
-            <input
-              type="password"
-              className="w-full h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm text-[var(--foreground)] px-4 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <button className="w-full h-11 rounded-full bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity mt-2">
-            {t("login")}
-          </button>
-        </div>
+        <LoginForm locale={locale} />
 
         <p className="text-center text-sm text-[var(--foreground-muted)] mt-5">
           {t("noAccount")}{" "}

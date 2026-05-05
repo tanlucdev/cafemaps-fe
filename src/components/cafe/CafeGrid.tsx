@@ -37,13 +37,10 @@ export default function CafeGrid({
   }
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {cafes.map((cafe, i) => (
-          <CafeCard key={cafe.id} cafe={cafe} locale={locale} index={i} animationType={animationType} />
-        ))}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-background to-transparent pointer-events-none" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {cafes.map((cafe, i) => (
+        <CafeCard key={cafe.id} cafe={cafe} locale={locale} index={i} animationType={animationType} />
+      ))}
     </div>
   )
 }

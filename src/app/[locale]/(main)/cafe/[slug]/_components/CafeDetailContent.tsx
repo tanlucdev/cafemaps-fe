@@ -22,7 +22,8 @@ import Badge from "@/components/ui/Badge"
 import { formatPrice } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 import { useTranslations } from "next-intl"
-import { toggleSaveCafe } from "@/lib/api"
+import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api"
+import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client"
 
 interface CafeDetailContentProps {
   cafe: Cafe
@@ -45,7 +46,7 @@ function getAmenityIcon(amenity: string) {
   return key ? AMENITY_ICONS[key] : <Wifi size={14} />
 }
 
-export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
+export default function CafeDetailContent({ cafe, locale }: CafeDetailContentProps) {
   const t = useTranslations("cafe")
   const tc = useTranslations("common")
   const router = useRouter()
@@ -55,14 +56,27 @@ export default function CafeDetailContent({ cafe }: CafeDetailContentProps) {
   const mapsUrl = cafe.googleMapsUrl ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cafe.name + " " + (cafe.address ?? ""))}`
 
   async function handleSave() {
+    if (loadingSave) return
+
+    const token = await getCurrentAccessToken()
+    if (!token) {
+      saveAuthReturnUrl()
+      router.push(`/${locale}/login`)
+      return
+    }
+
     setLoadingSave(true)
     const prev = saved
     setSaved((s) => !s)
     try {
-      const result = await toggleSaveCafe(cafe.id, "")
+      const result = await toggleSaveCafe(cafe.id, token)
       setSaved(result.saved)
-    } catch {
+    } catch (error) {
       setSaved(prev)
+      if (isUnauthorizedError(error)) {
+        saveAuthReturnUrl()
+        router.push(`/${locale}/login`)
+      }
     } finally {
       setLoadingSave(false)
     }

@@ -417,7 +417,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
           {/* Autocomplete dropdown */}
           {showDropdown && (
-            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_24px_rgba(44,26,14,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.32)] z-[200] overflow-hidden text-left">
+            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_8px_24px_rgba(44,26,14,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.32)] z-[200] max-h-[min(60vh,320px)] overflow-y-auto text-left">
               {nameSuggestions.length > 0 && (
                 <div className="py-2 border-b border-[var(--border)] last:border-b-0">
                   <div className="px-4 pb-1 pt-1 text-[11px] font-semibold tracking-[0.08em] text-[var(--foreground-muted)] uppercase">

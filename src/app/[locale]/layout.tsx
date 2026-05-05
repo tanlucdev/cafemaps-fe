@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes"
 import { routing } from "@/i18n/routing"
 import LenisProvider from "@/components/providers/LenisProvider"
 import PageTransition from "@/components/providers/PageTransition"
+import QueryProvider from "@/components/providers/QueryProvider"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import MobileBottomNav from "@/components/layout/MobileBottomNav"
@@ -29,12 +30,14 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-        <LenisProvider>
-          <Header locale={locale} />
-          <PageTransition>{children}</PageTransition>
-          <Footer locale={locale} />
-          <MobileBottomNav locale={locale} />
-        </LenisProvider>
+        <QueryProvider>
+          <LenisProvider>
+            <Header locale={locale} />
+            <PageTransition>{children}</PageTransition>
+            <Footer locale={locale} />
+            <MobileBottomNav locale={locale} />
+          </LenisProvider>
+        </QueryProvider>
       </ThemeProvider>
     </NextIntlClientProvider>
   )

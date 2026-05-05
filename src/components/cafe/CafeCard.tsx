@@ -5,6 +5,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { MapPin } from "lucide-react"
 import Badge from "@/components/ui/Badge"
+import SaveButton from "@/components/cafe/SaveButton"
 import { formatPrice } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 
@@ -35,33 +36,42 @@ export default function CafeCard({ cafe, locale, index = 0, animationType = "fad
           ease: [0.33, 1, 0.68, 1],
         },
       } : {})}
-      className="group rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-1"
+      className="group relative rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-1"
     >
-      <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
-        {/* Image — 3:2 ratio */}
-        <div className="relative aspect-3/2 overflow-hidden bg-(--background-secondary)">
-          {cafe.coverImage ? (
-            <Image
-              src={cafe.coverImage}
-              alt={cafe.name}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-104"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-linear-to-br from-accent to-(--accent-hover) flex items-end p-4">
-              <span className="font-display text-2xl font-bold text-white/90 leading-tight">
-                {cafe.name}
+      <div className="relative">
+        <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
+          {/* Image — 3:2 ratio */}
+          <div className="relative aspect-3/2 overflow-hidden bg-(--background-secondary)">
+            {cafe.coverImage ? (
+              <Image
+                src={cafe.coverImage}
+                alt={cafe.name}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-104"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-linear-to-br from-accent to-(--accent-hover) flex items-end p-4">
+                <span className="font-display text-2xl font-bold text-white/90 leading-tight">
+                  {cafe.name}
+                </span>
+              </div>
+            )}
+            {formatPrice(cafe.priceMin, cafe.priceMax) && (
+              <span className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-black/35 backdrop-blur-sm text-white text-xs font-medium">
+                {formatPrice(cafe.priceMin, cafe.priceMax)}
               </span>
-            </div>
-          )}
-          {formatPrice(cafe.priceMin, cafe.priceMax) && (
-            <span className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-black/35 backdrop-blur-sm text-white text-xs font-medium">
-              {formatPrice(cafe.priceMin, cafe.priceMax)}
-            </span>
-          )}
-        </div>
+            )}
+          </div>
+        </Link>
+        <SaveButton
+          cafeId={cafe.id}
+          locale={locale}
+          className="absolute bottom-3 right-3 z-10 bg-white/90 text-[#3D2510] shadow-sm hover:bg-white dark:bg-black/55 dark:text-white dark:hover:bg-black/70"
+        />
+      </div>
 
+      <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
         {/* Content */}
         <div className="p-4 space-y-2">
           <div className="flex items-start justify-between gap-2">

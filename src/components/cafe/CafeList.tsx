@@ -5,6 +5,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { MapPin, Clock } from "lucide-react"
 import Badge from "@/components/ui/Badge"
+import SaveButton from "@/components/cafe/SaveButton"
 import { formatPrice, formatOpeningHours } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 
@@ -31,8 +32,13 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
           initial={animationType === "slide" ? { opacity: 0, y: 8 } : { opacity: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: animationType === "slide" ? 0.25 : 0.15, delay: animationType === "slide" ? (index % 6) * 0.04 : 0, ease: [0.33, 1, 0.68, 1] }}
-          className="group rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-0.5"
+          className="group relative rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-0.5"
         >
+          <SaveButton
+            cafeId={cafe.id}
+            locale={locale}
+            className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/90 text-[#3D2510] shadow-sm hover:bg-white dark:bg-black/55 dark:text-white dark:hover:bg-black/70"
+          />
           <Link href={`/${locale}/cafe/${cafe.slug}`} className="flex gap-0 h-full">
             {/* Image */}
             <div className="relative w-28 sm:w-36 md:w-44 shrink-0 overflow-hidden bg-(--background-secondary)">
@@ -55,7 +61,7 @@ export default function CafeList({ cafes, locale, animationType = "slide" }: Caf
             </div>
 
             {/* Content */}
-            <div className="flex-1 px-4 py-3.5 flex flex-col justify-between min-w-0">
+            <div className="flex-1 pl-4 pr-14 py-3.5 flex flex-col justify-between min-w-0">
               <div className="space-y-1.5">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-display font-semibold text-sm sm:text-base text-foreground leading-snug line-clamp-1">

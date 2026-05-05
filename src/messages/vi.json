@@ -186,6 +186,10 @@
     "hasAccount": "Đã có tài khoản?",
     "loginSuccess": "Đăng nhập thành công",
     "loginError": "Email hoặc mật khẩu không đúng",
+    "registerError": "Không thể đăng ký lúc này",
+    "validationError": "Vui lòng nhập email hợp lệ và mật khẩu ít nhất 6 ký tự.",
+    "confirmEmail": "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận tài khoản.",
+    "loading": "Đang xử lý...",
     "loginWith": "Đăng nhập với {provider}",
     "orContinueWith": "Hoặc tiếp tục với"
   },
