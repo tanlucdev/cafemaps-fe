@@ -1,8 +1,68 @@
 "use client"
 
 import Image from "next/image"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Images, X, ZoomIn } from "lucide-react"
+
+interface MobileMainImageProps {
+  images: string[]
+  activeIndex: number
+  setActiveIndex: (i: number) => void
+  isPortrait: (i: number) => boolean
+  cafeName: string
+  onTap: () => void
+}
+
+function MobileMainImage({ images, activeIndex, setActiveIndex, isPortrait, cafeName, onTap }: MobileMainImageProps) {
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+
+  function onTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null || touchStartY.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    touchStartX.current = null
+    touchStartY.current = null
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+      onTap()
+      return
+    }
+    if (Math.abs(dx) < Math.abs(dy) || Math.abs(dx) < 40) return
+    if (dx < 0) {
+      setActiveIndex((activeIndex + 1) % images.length)
+    } else {
+      setActiveIndex((activeIndex - 1 + images.length) % images.length)
+    }
+  }
+
+  return (
+    <div
+      className="relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-(--background-secondary) select-none"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <Image
+        src={images[activeIndex]}
+        alt={`${cafeName} ${activeIndex + 1}`}
+        fill
+        sizes="100vw"
+        className="object-cover"
+        style={{ objectPosition: isPortrait(activeIndex) ? "center 42%" : "center" }}
+        priority={activeIndex === 0}
+      />
+      {images.length > 1 && (
+        <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+          {activeIndex + 1} / {images.length}
+        </div>
+      )}
+    </div>
+  )
+}
 
 interface SmartGalleryProps {
   images: string[]
@@ -105,54 +165,48 @@ export default function SmartGallery({
 
   const mobileGallery = (
     <div className="md:hidden">
-      <button
-        type="button"
-        className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-(--background-secondary)"
-        onClick={() => openLightbox(activeIndex)}
-        aria-label={`Xem rõ ảnh ${activeIndex + 1} của ${cafeName}`}
-      >
-        <Image
-          src={images[activeIndex]}
-          alt={`${cafeName} ${activeIndex + 1}`}
-          fill
-          sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: isPortrait(activeIndex) ? "center 42%" : "center" }}
-          priority={activeIndex === 0}
-        />
-        {images.length > 1 && (
-          <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-            {activeIndex + 1} / {images.length}
-          </div>
-        )}
-      </button>
+      <MobileMainImage
+        images={images}
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+        isPortrait={isPortrait}
+        cafeName={cafeName}
+        onTap={() => openLightbox(activeIndex)}
+      />
 
       {images.length > 1 && (
-        <div className="flex gap-2 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide px-0.5">
           {images.map((url, i) => (
             <button
               key={`${url}-${i}`}
               type="button"
               onClick={() => setActiveIndex(i)}
               aria-label={`Xem ảnh ${i + 1}`}
-              className={`flex-shrink-0 rounded-lg overflow-hidden transition-all ${
-                i === activeIndex
-                  ? "ring-2 ring-amber-500 opacity-100"
-                  : "opacity-55 hover:opacity-80"
+              className={`shrink-0 transition-all rounded-xl ${
+                i === activeIndex ? "opacity-100" : "opacity-50 hover:opacity-75"
               }`}
               style={{
-                width: isPortrait(i) ? "40px" : "56px",
-                height: "40px",
+                width: isPortrait(i) ? "44px" : "60px",
+                height: "44px",
+                padding: i === activeIndex ? "2px" : "0",
+                border: i === activeIndex ? "2px solid #D97706" : "2px solid transparent",
+                borderRadius: "10px",
+                boxSizing: "border-box",
               }}
             >
-              <Image
-                src={url}
-                alt=""
-                width={56}
-                height={40}
-                sizes="56px"
-                className="w-full h-full object-cover"
-              />
+              <span
+                className="block w-full h-full overflow-hidden"
+                style={{ borderRadius: "8px" }}
+              >
+                <Image
+                  src={url}
+                  alt=""
+                  width={60}
+                  height={44}
+                  sizes="60px"
+                  className="w-full h-full object-cover"
+                />
+              </span>
             </button>
           ))}
         </div>
@@ -226,7 +280,8 @@ export default function SmartGallery({
           aria-modal="true"
           aria-label={`Ảnh ${lightboxIndex + 1} của ${cafeName}`}
         >
-          <div className="flex items-center justify-between px-4 py-3 text-white">
+          {/* Header */}
+          <div className="shrink-0 flex items-center justify-between px-4 py-3 text-white">
             <span className="text-sm font-medium">
               {lightboxIndex + 1} / {images.length}
             </span>
@@ -240,7 +295,8 @@ export default function SmartGallery({
             </button>
           </div>
 
-          <div className="relative min-h-0 flex-1 px-4 pb-4" onClick={(event) => event.stopPropagation()}>
+          {/* Main image — fills remaining space between header and thumbnails */}
+          <div className="relative min-h-0 flex-1" onClick={(event) => event.stopPropagation()}>
             <Image
               src={images[lightboxIndex]}
               alt={`${cafeName} ${lightboxIndex + 1}`}
@@ -271,9 +327,10 @@ export default function SmartGallery({
             )}
           </div>
 
+          {/* Thumbnail strip — always anchored to bottom */}
           {images.length > 1 && (
             <div
-              className="flex gap-2 overflow-x-auto px-4 pb-4"
+              className="shrink-0 flex gap-2 overflow-x-auto px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] scrollbar-hide"
               onClick={(event) => event.stopPropagation()}
             >
               {images.map((url, index) => (

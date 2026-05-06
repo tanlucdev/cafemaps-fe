@@ -1,10 +1,10 @@
-import type { NextConfig } from "next"
-import createNextIntlPlugin from "next-intl/plugin"
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const BACKEND_URL =
-  process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api"
+  process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api";
 
 const nextConfig: NextConfig = {
   async rewrites() {
@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         source: "/api-proxy/:path*",
         destination: `${BACKEND_URL}/:path*`,
       },
-    ]
+    ];
   },
   images: {
     remotePatterns: [
@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ["192.168.110.116"],
-}
+  allowedDevOrigins: ["192.168.2.89:3000"],
+};
 
-export default withNextIntl(nextConfig)
+export default withNextIntl(nextConfig);
