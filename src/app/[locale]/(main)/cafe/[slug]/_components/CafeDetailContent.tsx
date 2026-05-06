@@ -9,7 +9,7 @@ import {
   Coffee,
   ChevronLeft,
   Share2,
-  Heart,
+  Bookmark,
   Wifi,
   AirVent,
   Car,
@@ -37,6 +37,17 @@ const AMENITY_ICONS: Record<string, React.ReactNode> = {
   "ngoài trời": <TreePine size={14} />,
   "ổ cắm": <Zap size={14} />,
   "thú cưng": <PawPrint size={14} />,
+}
+
+function formatTime(time: string | null | undefined): string {
+  if (!time) return ""
+  // HH:MM or HH:MM:SS
+  const hhMm = time.match(/^(\d{1,2}):(\d{2})/)
+  if (hhMm) return `${hhMm[1].padStart(2, "0")}:${hhMm[2]}`
+  // ISO datetime e.g. "1970-01-01T07:00:00.000Z"
+  const iso = time.match(/T(\d{2}):(\d{2})/)
+  if (iso) return `${iso[1]}:${iso[2]}`
+  return ""
 }
 
 function getAmenityIcon(amenity: string) {
@@ -83,7 +94,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   }
 
   return (
-    <article className="min-h-screen pt-16 pb-36 md:pb-24 lg:pb-8">
+    <article className="min-h-screen pt-16 pb-24 lg:pb-8">
       {/* Top bar */}
       <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-4 flex items-center justify-between">
         <button
@@ -144,7 +155,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
                   : "border-border bg-(--background-secondary) text-(--foreground-muted) hover:text-accent hover:border-accent hover:bg-(--accent-light)"
               }`}
             >
-              <Heart size={20} className={saved ? "fill-white" : ""} />
+              <Bookmark size={20} className={saved ? "fill-white" : ""} />
             </button>
           </div>
 
@@ -167,7 +178,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             {(cafe.openingTime || cafe.closingTime) && (
               <span className="flex items-center gap-1.5">
                 <Clock size={14} className="shrink-0 text-accent" />
-                {[cafe.openingTime, cafe.closingTime].filter(Boolean).map(t => t!.slice(0, 5)).join(" – ")}
+                {[formatTime(cafe.openingTime), formatTime(cafe.closingTime)].filter(Boolean).join(" – ")}
               </span>
             )}
           </div>
@@ -232,10 +243,9 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
 
       {/* 10. CTA — sticky on mobile, static on desktop */}
       <div
-        className="fixed lg:static bottom-14 md:bottom-0 left-0 right-0 z-30 lg:z-auto bg-(--background)/95 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-t lg:border-0 border-border"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        className="fixed lg:static bottom-0 left-0 right-0 z-30 lg:z-auto bg-(--background)/95 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-t lg:border-0 border-border pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:pt-0 lg:pb-0"
       >
-        <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 lg:px-10 py-3 lg:py-0 lg:mt-6 flex gap-3">
+        <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 lg:px-10 lg:mt-6 flex gap-3">
           <button
             onClick={handleSave}
             disabled={loadingSave}
@@ -246,7 +256,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
                 : "border-border text-(--foreground-muted) hover:border-accent hover:text-accent"
             }`}
           >
-            <Heart size={16} className={saved ? "fill-white" : ""} />
+            <Bookmark size={16} className={saved ? "fill-white" : ""} />
             Lưu
           </button>
           <a
