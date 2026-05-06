@@ -4,13 +4,18 @@
 
 Next.js 16 app với App Router, React 19, TypeScript strict mode.
 
+## Package Manager
+
+**Chỉ dùng `yarn`** — không dùng `npm` hay `npx` để cài package. Không commit `package-lock.json`.
+
 ## Scripts
 
 ```bash
-npm run dev        # dev server
-npm run build      # production build
-npm run lint       # ESLint check
-npm run lint:fix   # ESLint auto-fix
+yarn dev        # dev server
+yarn build      # production build
+yarn lint       # ESLint check
+yarn lint:fix   # ESLint auto-fix
+yarn format     # Prettier format
 ```
 
 ## Cấu trúc thư mục
