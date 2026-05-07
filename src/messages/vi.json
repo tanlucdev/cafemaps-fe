@@ -131,19 +131,40 @@
   "featured": {
     "title": "Quán nổi bật",
     "subtitle": "Được cộng đồng yêu thích nhất",
-    "viewAll": "Xem tất cả"
+    "weeklyFavourite": "Được yêu thích tuần này",
+    "mustVisit": "Những quán không thể bỏ lỡ",
+    "viewAll": "Xem tất cả",
+    "viewAllMobile": "Xem tất cả quán"
   },
   "story": {
     "title": "Câu chuyện về cà phê",
     "subtitle": "Mỗi quán là một thế giới riêng — nơi những câu chuyện được kể qua mỗi tách cà phê.",
-    "cta": "Khám phá thêm"
+    "cta": "Khám phá thêm",
+    "label": "Stories",
+    "items": {
+      "vintage": {
+        "title": "Vintage & Retro",
+        "description": "Những không gian đưa bạn trở về thập niên 80–90 với đồ nội thất cổ điển và âm nhạc hoài cổ."
+      },
+      "nature": {
+        "title": "Thiên nhiên xanh mát",
+        "description": "Thoát khỏi nhịp sống đô thị ồn ào, tận hưởng cà phê giữa vườn cây và ánh sáng tự nhiên."
+      },
+      "minimalist": {
+        "title": "Minimalist & Hiện đại",
+        "description": "Thiết kế tối giản, không gian yên tĩnh — lý tưởng để làm việc tập trung hay suy nghĩ sâu."
+      }
+    }
   },
   "map": {
     "title": "Tìm quán gần bạn",
     "subtitle": "Khám phá những quán cà phê xung quanh vị trí của bạn.",
     "cta": "Mở bản đồ",
     "loading": "Đang tải bản đồ...",
-    "noLocation": "Không thể lấy vị trí của bạn"
+    "noLocation": "Không thể lấy vị trí của bạn",
+    "city": "TP. Hồ Chí Minh",
+    "statCafes": "Quán được liệt kê",
+    "statDistricts": "Quận / Huyện"
   },
   "quiz": {
     "title": "Tìm quán theo tính cách",
@@ -233,10 +254,25 @@
   "common": {
     "loading": "Đang tải...",
     "error": "Có lỗi xảy ra",
+    "errorDescription": "Xin lỗi, có điều gì đó không ổn. Hãy thử lại.",
     "retry": "Thử lại",
     "close": "Đóng",
     "back": "Quay lại",
     "seeMore": "Xem thêm",
-    "seeLess": "Thu gọn"
+    "seeLess": "Thu gọn",
+    "goHome": "Về trang chủ",
+    "copied": "Đã sao chép",
+    "copy": "Sao chép",
+    "share": "Chia sẻ quán"
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "description": "Trang bạn tìm kiếm không tồn tại hoặc đã bị xoá."
+  },
+  "nearby": {
+    "button": "Gần đây",
+    "noSupport": "Trình duyệt không hỗ trợ định vị",
+    "loadError": "Không thể tải quán gần đây",
+    "locationError": "Không thể lấy vị trí của bạn"
   }
 }

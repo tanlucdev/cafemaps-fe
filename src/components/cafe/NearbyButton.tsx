@@ -5,18 +5,20 @@ import { Navigation } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { getNearbyCafes } from "@/lib/api"
 import type { Cafe } from "@/types/cafe"
+import { useTranslations } from "next-intl"
 
 interface NearbyButtonProps {
   onResults: (cafes: Cafe[]) => void
 }
 
 export default function NearbyButton({ onResults }: NearbyButtonProps) {
+  const t = useTranslations("nearby")
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleClick() {
     if (!navigator.geolocation) {
-      setError("Trình duyệt không hỗ trợ định vị")
+      setError(t("noSupport"))
       return
     }
 
@@ -33,13 +35,13 @@ export default function NearbyButton({ onResults }: NearbyButtonProps) {
           )
           onResults(cafes)
         } catch {
-          setError("Không thể tải quán gần đây")
+          setError(t("loadError"))
         } finally {
           setLoading(false)
         }
       },
       () => {
-        setError("Không thể lấy vị trí của bạn")
+        setError(t("locationError"))
         setLoading(false)
       }
     )
@@ -54,7 +56,7 @@ export default function NearbyButton({ onResults }: NearbyButtonProps) {
         disabled={isLoading}
       >
         <Navigation size={14} />
-        Gần đây
+        {t("button")}
       </Button>
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>

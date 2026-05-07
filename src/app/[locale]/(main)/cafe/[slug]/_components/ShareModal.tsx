@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Copy, Check } from "lucide-react"
 import Modal from "@/components/ui/Modal"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 
 interface SharePlatform {
   name: string
@@ -83,6 +84,7 @@ function buildPlatforms(shareText: string, shareUrl: string): SharePlatform[] {
 }
 
 export default function ShareModal({ open, onClose, cafeName, oneLiner, url }: ShareModalProps) {
+  const t = useTranslations("common")
   const [copied, setCopied] = useState(false)
 
   const shareText = encodeURIComponent(`${cafeName}${oneLiner ? ` — ${oneLiner}` : ""}`)
@@ -100,7 +102,7 @@ export default function ShareModal({ open, onClose, cafeName, oneLiner, url }: S
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Chia sẻ quán" size="sm">
+    <Modal open={open} onClose={onClose} title={t("share")} size="sm">
       <div className="px-6 py-5 space-y-5">
         <p className="text-sm text-(--foreground-muted) leading-snug line-clamp-2">
           {cafeName}
@@ -137,7 +139,7 @@ export default function ShareModal({ open, onClose, cafeName, oneLiner, url }: S
             )}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
-            {copied ? "Đã sao chép" : "Sao chép"}
+            {copied ? t("copied") : t("copy")}
           </button>
         </div>
       </div>

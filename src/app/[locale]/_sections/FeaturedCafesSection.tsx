@@ -2,12 +2,13 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { MapPin, ArrowRight, Circle } from "lucide-react"
+import { MapPin, ArrowRight } from "lucide-react"
 import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 import { useRef, useState, useCallback } from "react"
+import { useTranslations } from "next-intl"
 
 interface FeaturedCafesSectionProps {
   cafes: Cafe[]
@@ -39,6 +40,7 @@ interface PodiumCardProps {
 }
 
 function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCardProps) {
+  const t = useTranslations("cafe")
   const openStatus = isOpenNow(cafe.openingTime, cafe.closingTime)
 
   function saveReturnUrl() {
@@ -96,8 +98,8 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
                 ? "bg-green-500/90 text-white"
                 : "bg-black/40 text-white/80"
             )}>
-              <Circle size={5} className={cn("fill-current", openStatus ? "text-white" : "text-white/60")} />
-              {openStatus ? "Đang mở" : "Đã đóng"}
+              <span className={cn("w-1.5 h-1.5 rounded-full", openStatus ? "bg-white" : "bg-white/60")} />
+              {openStatus ? t("openNow") : t("closedNow")}
             </span>
           )}
 
@@ -143,6 +145,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
 }
 
 export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSectionProps) {
+  const t = useTranslations("featured")
   const featured = cafes.slice(0, 3)
   const [activeDot, setActiveDot] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -174,17 +177,17 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       <div className="flex items-end justify-between mb-6 sm:mb-7">
         <div>
           <p className="text-xs font-semibold text-(--foreground-muted) uppercase tracking-widest mb-1">
-            Được yêu thích tuần này
+            {t("weeklyFavourite")}
           </p>
           <h2 className="font-display font-bold text-2xl sm:text-3xl text-foreground tracking-tight">
-            Những quán không thể bỏ lỡ
+            {t("mustVisit")}
           </h2>
         </div>
         <Link
           href={`/${locale}/search`}
           className="hidden sm:flex items-center gap-1.5 text-sm text-accent hover:text-(--accent-hover) transition-colors font-medium"
         >
-          Xem tất cả
+          {t("viewAll")}
           <ArrowRight size={15} />
         </Link>
       </div>
@@ -260,7 +263,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
           href={`/${locale}/search`}
           className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-(--accent-hover) transition-colors font-medium"
         >
-          Xem tất cả quán
+          {t("viewAllMobile")}
           <ArrowRight size={15} />
         </Link>
       </div>

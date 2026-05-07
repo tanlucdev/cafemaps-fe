@@ -40,7 +40,7 @@ export default function MapCtaSection() {
               >
                 <p className="flex items-center gap-2 text-[var(--accent)] text-sm font-medium mb-3">
                   <MapPin size={16} />
-                  TP. Hồ Chí Minh
+                  {t("city")}
                 </p>
                 <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
                   {t("title")}
@@ -74,8 +74,8 @@ export default function MapCtaSection() {
             className="absolute top-6 right-6 hidden md:flex flex-col gap-3"
           >
             {[
-              { num: "500+", label: "Quán được liệt kê" },
-              { num: "19", label: "Quận / Huyện" },
+              { num: "500+", label: t("statCafes") },
+              { num: "19", label: t("statDistricts") },
             ].map(({ num, label }) => (
               <div
                 key={label}

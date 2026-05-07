@@ -1,6 +1,9 @@
+"use client"
+
 import CafeCard from "./CafeCard"
 import { CafeCardSkeleton } from "@/components/ui/Skeleton"
 import type { Cafe } from "@/types/cafe"
+import { useTranslations } from "next-intl"
 
 interface CafeGridProps {
   cafes: Cafe[]
@@ -15,6 +18,8 @@ export default function CafeGrid({
   loading = false,
   animationType = "slide",
 }: CafeGridProps) {
+  const t = useTranslations("search")
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
@@ -30,7 +35,7 @@ export default function CafeGrid({
       <div className="text-center py-20">
         <p className="text-4xl mb-3">☕</p>
         <p className="text-[var(--foreground-muted)] text-sm">
-          Không tìm thấy quán nào phù hợp
+          {t("noResults")}
         </p>
       </div>
     )

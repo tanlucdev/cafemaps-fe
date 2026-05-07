@@ -131,19 +131,40 @@
   "featured": {
     "title": "Featured Cafés",
     "subtitle": "Community favourites",
-    "viewAll": "View all"
+    "weeklyFavourite": "Favourites this week",
+    "mustVisit": "Must-visit spots",
+    "viewAll": "View all",
+    "viewAllMobile": "View all cafés"
   },
   "story": {
     "title": "Coffee Stories",
     "subtitle": "Every café is a world of its own — where stories are told through every cup.",
-    "cta": "Explore more"
+    "cta": "Explore more",
+    "label": "Stories",
+    "items": {
+      "vintage": {
+        "title": "Vintage & Retro",
+        "description": "Spaces that take you back to the 80s–90s with classic furniture and nostalgic music."
+      },
+      "nature": {
+        "title": "Lush & Natural",
+        "description": "Escape the urban rush and enjoy coffee surrounded by greenery and natural light."
+      },
+      "minimalist": {
+        "title": "Minimalist & Modern",
+        "description": "Clean design, quiet spaces — ideal for focused work or deep thinking."
+      }
+    }
   },
   "map": {
     "title": "Find cafés near you",
     "subtitle": "Discover coffee shops around your current location.",
     "cta": "Open map",
     "loading": "Loading map...",
-    "noLocation": "Could not get your location"
+    "noLocation": "Could not get your location",
+    "city": "Ho Chi Minh City",
+    "statCafes": "Cafés listed",
+    "statDistricts": "Districts"
   },
   "quiz": {
     "title": "Find your café match",
@@ -233,10 +254,25 @@
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",
+    "errorDescription": "Sorry, something went wrong. Please try again.",
     "retry": "Try again",
     "close": "Close",
     "back": "Back",
     "seeMore": "See more",
-    "seeLess": "See less"
+    "seeLess": "See less",
+    "goHome": "Go home",
+    "copied": "Copied",
+    "copy": "Copy",
+    "share": "Share café"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been removed."
+  },
+  "nearby": {
+    "button": "Nearby",
+    "noSupport": "Geolocation is not supported by your browser",
+    "loadError": "Could not load nearby cafés",
+    "locationError": "Could not get your location"
   }
 }

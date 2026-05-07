@@ -8,6 +8,7 @@ import Badge from "@/components/ui/Badge"
 import SaveButton from "@/components/cafe/SaveButton"
 import { formatPrice, formatOpeningHours } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
+import { useTranslations } from "next-intl"
 
 interface CafeListProps {
   cafes: Cafe[]
@@ -16,10 +17,12 @@ interface CafeListProps {
 }
 
 export default function CafeList({ cafes, locale, animationType = "slide" }: CafeListProps) {
+  const t = useTranslations("search")
+
   if (cafes.length === 0) {
     return (
       <div className="py-16 text-center text-(--foreground-muted) text-sm">
-        Không tìm thấy quán nào
+        {t("noResults")}
       </div>
     )
   }
