@@ -51,7 +51,7 @@ export default function Modal({
     <AnimatePresence>
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-label={title}
@@ -74,7 +74,7 @@ export default function Modal({
             exit={{ opacity: 0, y: 10, scale: 0.97 }}
             transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
             className={cn(
-              "relative z-10 w-full bg-[var(--card)] rounded-t-2xl sm:rounded-2xl",
+              "relative z-10 w-full bg-[var(--card)] rounded-2xl",
               "border border-[var(--border)] shadow-2xl overflow-hidden",
               "max-h-[90vh] flex flex-col",
               sizeMap[size],
