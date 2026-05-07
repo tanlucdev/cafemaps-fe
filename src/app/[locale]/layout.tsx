@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl"
 import { getMessages } from "next-intl/server"
 import { notFound } from "next/navigation"
 import { ThemeProvider } from "next-themes"
+import { Toaster } from "sonner"
 import { routing } from "@/i18n/routing"
 import LenisProvider from "@/components/providers/LenisProvider"
 import PageTransition from "@/components/providers/PageTransition"
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
             <Header locale={locale} />
             <PageTransition>{children}</PageTransition>
             <Footer locale={locale} />
+            <Toaster richColors position="top-right" />
           </LenisProvider>
         </QueryProvider>
       </ThemeProvider>

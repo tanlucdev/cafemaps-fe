@@ -1,107 +1,112 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "@/i18n/navigation"
-import { useTranslations } from "next-intl"
-import { Mail, Lock } from "lucide-react"
-import { Button } from "@/components/ui/Button"
-import Input from "@/components/ui/Input"
-import { useLoginMutation } from "@/api/auth/hooks"
-import { setAccessToken, setAuthUser, getAuthReturnUrl } from "@/lib/auth-client"
+import { useState } from "react";
+import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Lock, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import { useLoginMutation } from "@/api/auth/hooks";
+import { setAccessToken, setAuthUser, getAuthReturnUrl } from "@/lib/auth-client";
+import { LoginFormValues, loginSchema } from "@/lib/schemas/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface LoginFormProps {
-  locale: string
+  locale: string;
 }
 
 export default function LoginForm({ locale }: LoginFormProps) {
-  const t = useTranslations("auth")
-  const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [message, setMessage] = useState<string | null>(null)
+  const t = useTranslations("auth");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { mutate, isPending } = useLoginMutation()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  function submit() {
-    setMessage(null)
+  const { mutate, isPending } = useLoginMutation();
 
-    if (!email.trim() || password.length < 6) {
-      setMessage(t("validationError"))
-      return
-    }
-
-    mutate(
-      { email: email.trim(), password },
-      {
-        onSuccess({ token, user }) {
-          setAccessToken(token)
-          if (user) setAuthUser(user)
-          router.replace(getAuthReturnUrl(`/${locale}`))
-          router.refresh()
-        },
-        onError(err) {
-          setMessage(err.message || t("loginError"))
-        },
-      }
-    )
-  }
+  const onSubmit = handleSubmit((data) => {
+    setServerError(null);
+    mutate(data, {
+      onSuccess: (result) => {
+        setAccessToken(result.token);
+        if (result.user) setAuthUser(result.user);
+        toast.success(t("loginSuccess"));
+        const returnUrl = searchParams.get("returnUrl") || getAuthReturnUrl("/");
+        router.push(returnUrl);
+      },
+      onError: (error: unknown) => {
+        const msg = error instanceof Error ? error.message : "Đăng nhập thất bại, thử lại.";
+        setServerError(msg);
+      },
+    });
+  });
 
   return (
-    <form
-      onSubmit={(e) => { e.preventDefault(); submit() }}
-      className="bg-card border border-border rounded-2xl p-6 space-y-4"
-    >
+    <form onSubmit={onSubmit} className="bg-card border-border space-y-4 rounded-2xl border p-6">
       <div className="space-y-1.5">
-        <label className="text-xs font-medium text-(--foreground-muted) block">
-          {t("email")}
-        </label>
+        <label className="block text-xs font-medium text-(--foreground-muted)">{t("email")}</label>
         <Input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email")}
           autoComplete="email"
-          required
           disabled={isPending}
           placeholder="you@example.com"
-          leftIcon={<Mail size={15} />}
         />
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
       </div>
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-(--foreground-muted) block">
+          <label className="block text-xs font-medium text-(--foreground-muted)">
             {t("password")}
           </label>
-          <span className="text-xs text-(--foreground-muted)">
-            {t("forgotPassword")}
-          </span>
+          <span className="text-xs text-(--foreground-muted)">{t("forgotPassword")}</span>
         </div>
         <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type={showPassword ? "text" : "password"}
+          {...register("password")}
           autoComplete="current-password"
-          required
-          minLength={6}
           disabled={isPending}
           placeholder="••••••"
           leftIcon={<Lock size={15} />}
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="hover:text-foreground text-(--foreground-muted) transition-colors"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          }
         />
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
 
-      {message && (
+      {serverError && (
         <p className="text-sm text-red-600 dark:text-red-400" role="alert">
-          {message}
+          {serverError}
         </p>
       )}
 
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full h-11 rounded-full text-sm font-medium mt-2"
+        className="mt-2 h-11 w-full rounded-full text-sm font-medium"
       >
         {isPending ? t("loading") : t("login")}
       </Button>
     </form>
-  )
+  );
 }

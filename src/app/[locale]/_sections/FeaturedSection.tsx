@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
-import { useState, useMemo, useCallback, useRef } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
-import { useLenis } from "@/components/providers/LenisProvider"
-import { useTranslations } from "next-intl"
-import CafeGrid from "@/components/cafe/CafeGrid"
-import CafeList from "@/components/cafe/CafeList"
-import GuidedFilterBar from "@/components/cafe/GuidedFilterBar"
-import Pagination from "@/components/ui/Pagination"
-import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react"
-import { cn } from "@/lib/utils"
-import type { Cafe, CafeFilter as Filter } from "@/types/cafe"
+import { useState, useMemo, useCallback, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useLenis } from "@/components/providers/LenisProvider";
+import { useTranslations } from "next-intl";
+import CafeGrid from "@/components/cafe/CafeGrid";
+import CafeList from "@/components/cafe/CafeList";
+import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
+import Pagination from "@/components/ui/Pagination";
+import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
 
-type ViewMode = "grid" | "list"
-type SortMode = "default" | "rating" | "newest"
+type ViewMode = "grid" | "list";
+type SortMode = "default" | "rating" | "newest";
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 10;
 
 interface FeaturedSectionProps {
-  cafes: Cafe[]
-  locale: string
+  cafes: Cafe[];
+  locale: string;
 }
 
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371
-  const dLat = (lat2 - lat1) * (Math.PI / 180)
-  const dLng = (lng2 - lng1) * (Math.PI / 180)
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) ** 2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-}
+// function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+//   const R = 6371
+//   const dLat = (lat2 - lat1) * (Math.PI / 180)
+//   const dLng = (lng2 - lng1) * (Math.PI / 180)
+//   const a =
+//     Math.sin(dLat / 2) ** 2 +
+//     Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) ** 2
+//   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+// }
 
 function filterFromParams(searchParams: ReturnType<typeof useSearchParams>): Filter {
   return {
@@ -38,103 +38,104 @@ function filterFromParams(searchParams: ReturnType<typeof useSearchParams>): Fil
     vibes: searchParams.get("vibes") ? searchParams.get("vibes")!.split(",") : undefined,
     purposes: searchParams.get("purposes") ? searchParams.get("purposes")!.split(",") : undefined,
     district: searchParams.get("district") ?? undefined,
-  }
+  };
 }
 
 export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps) {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const lenis = useLenis()
-  const ts = useTranslations("search")
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const lenis = useLenis();
+  const ts = useTranslations("search");
 
-  const [filter, setFilter] = useState<Filter>(() => filterFromParams(searchParams))
-  const [viewMode, setViewMode] = useState<ViewMode>("grid")
-  const [sortMode, setSortMode] = useState<SortMode>("default")
-  const [animationType, setAnimationType] = useState<"slide" | "fade">("fade")
-  const [searchInput, setSearchInput] = useState(filter.search ?? "")
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const [filter, setFilter] = useState<Filter>(() => filterFromParams(searchParams));
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [sortMode, setSortMode] = useState<SortMode>("default");
+  const [animationType, setAnimationType] = useState<"slide" | "fade">("fade");
+  const [searchInput, setSearchInput] = useState(filter.search ?? "");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const page = Number(searchParams.get("page") ?? "1")
+  const page = Number(searchParams.get("page") ?? "1");
 
   const updateUrl = useCallback(
     (newFilter: Filter, newPage: number) => {
-      const params = new URLSearchParams()
-      if (newFilter.search) params.set("search", newFilter.search)
-      if (newFilter.vibes?.length) params.set("vibes", newFilter.vibes.join(","))
-      if (newFilter.purposes?.length) params.set("purposes", newFilter.purposes.join(","))
-      if (newFilter.district) params.set("district", newFilter.district)
-      if (newPage > 1) params.set("page", String(newPage))
-      const query = params.toString()
-      router.replace(query ? `?${query}` : "?", { scroll: false })
+      const params = new URLSearchParams();
+      if (newFilter.search) params.set("search", newFilter.search);
+      if (newFilter.vibes?.length) params.set("vibes", newFilter.vibes.join(","));
+      if (newFilter.purposes?.length) params.set("purposes", newFilter.purposes.join(","));
+      if (newFilter.district) params.set("district", newFilter.district);
+      if (newPage > 1) params.set("page", String(newPage));
+      const query = params.toString();
+      router.replace(query ? `?${query}` : "?", { scroll: false });
     },
-    [router]
-  )
+    [router],
+  );
 
   function handleFilterChange(newFilter: Filter) {
-    setFilter(newFilter)
-    setAnimationType("slide")
-    updateUrl(newFilter, 1)
+    setFilter(newFilter);
+    setAnimationType("slide");
+    updateUrl(newFilter, 1);
   }
 
   function handleSearchSubmit() {
-    const newFilter = { ...filter, search: searchInput.trim() || undefined }
-    handleFilterChange(newFilter)
+    const newFilter = { ...filter, search: searchInput.trim() || undefined };
+    handleFilterChange(newFilter);
   }
 
   function handlePageChange(newPage: number) {
-    setAnimationType("fade")
-    updateUrl(filter, newPage)
-    if (lenis) lenis.scrollTo(0, { duration: 0.6 })
-    else window.scrollTo({ top: 0, behavior: "smooth" })
+    setAnimationType("fade");
+    updateUrl(filter, newPage);
+    if (lenis) lenis.scrollTo(0, { duration: 0.6 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const filtered = useMemo(() => {
-    let result = cafes
-    const { search, district, vibes, purposes } = filter
+    let result = cafes;
+    const { search, district, vibes, purposes } = filter;
 
     if (search?.trim()) {
-      const q = search.toLowerCase()
+      const q = search.toLowerCase();
       result = result.filter(
         (c) =>
           c.name.toLowerCase().includes(q) ||
           (c.address ?? "").toLowerCase().includes(q) ||
-          (c.district ?? "").toLowerCase().includes(q)
-      )
+          (c.district ?? "").toLowerCase().includes(q),
+      );
     }
-    if (district) result = result.filter((c) => c.district === district)
-    if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)))
-    if (purposes?.length) result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)))
+    if (district) result = result.filter((c) => c.district === district);
+    if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)));
+    if (purposes?.length)
+      result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)));
 
-    return result
-  }, [cafes, filter])
+    return result;
+  }, [cafes, filter]);
 
   const sorted = useMemo(() => {
     if (sortMode === "rating") {
-      return filtered
+      return filtered;
     }
     if (sortMode === "newest") {
       return [...filtered].sort((a, b) => {
-        const da = a.createdAt ? new Date(a.createdAt).getTime() : 0
-        const db = b.createdAt ? new Date(b.createdAt).getTime() : 0
-        return db - da
-      })
+        const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return db - da;
+      });
     }
-    return filtered
-  }, [filtered, sortMode])
+    return filtered;
+  }, [filtered, sortMode]);
 
-  const total = sorted.length
-  const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const total = sorted.length;
+  const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <>
       {/* Search bar at top of search page */}
-      <div className="bg-(--background-secondary) border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-4">
-          <div className="flex gap-2 max-w-xl">
-            <div className="flex-1 relative">
+      <div className="border-border border-b bg-(--background-secondary)">
+        <div className="mx-auto max-w-7xl px-4 pt-2 pb-4 sm:px-6 lg:px-8">
+          <div className="flex max-w-xl gap-2">
+            <div className="relative flex-1">
               <Search
                 size={15}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-(--foreground-muted)"
+                className="absolute top-1/2 left-3.5 -translate-y-1/2 text-(--foreground-muted)"
               />
               <input
                 ref={searchInputRef}
@@ -143,12 +144,12 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
                 placeholder={ts("placeholder")}
-                className="w-full h-10 rounded-xl border border-border bg-background text-foreground text-sm pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+                className="border-border bg-background text-foreground focus:ring-accent h-10 w-full rounded-xl border pr-4 pl-10 text-sm transition-all focus:ring-2 focus:outline-none"
               />
             </div>
             <button
               onClick={handleSearchSubmit}
-              className="h-10 px-5 rounded-xl bg-accent text-white text-sm font-medium hover:bg-(--accent-hover) transition-colors shrink-0"
+              className="bg-accent h-10 shrink-0 rounded-xl px-5 text-sm font-medium text-white transition-colors hover:bg-(--accent-hover)"
             >
               {ts("button")}
             </button>
@@ -158,21 +159,17 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
       <GuidedFilterBar filter={filter} onChange={handleFilterChange} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         {/* Toolbar: results count + sort + view toggle */}
-        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <p className="text-sm text-(--foreground-muted)">
-            {total > 0
-              ? `${total} quán`
-              : null}
-          </p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-(--foreground-muted)">{total > 0 ? `${total} quán` : null}</p>
 
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="ml-auto flex items-center gap-2">
             {/* Sort selector */}
             <select
               value={sortMode}
               onChange={(e) => setSortMode(e.target.value as SortMode)}
-              className="h-8 px-2 rounded-lg border border-border bg-background text-foreground text-xs focus:outline-none focus:ring-1 focus:ring-accent cursor-pointer"
+              className="border-border bg-background text-foreground focus:ring-accent h-8 cursor-pointer rounded-lg border px-2 text-xs focus:ring-1 focus:outline-none"
               aria-label={ts("sortLabel")}
             >
               <option value="default">{ts("sortDefault")}</option>
@@ -181,7 +178,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
             </select>
 
             {/* View toggle */}
-            <div className="flex items-center border border-border rounded-lg overflow-hidden">
+            <div className="border-border flex items-center overflow-hidden rounded-lg border">
               <button
                 onClick={() => setViewMode("grid")}
                 title="Grid view"
@@ -189,7 +186,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
                   "p-1.5 transition-colors",
                   viewMode === "grid"
                     ? "bg-accent text-white"
-                    : "text-(--foreground-muted) hover:text-accent"
+                    : "hover:text-accent text-(--foreground-muted)",
                 )}
               >
                 <LayoutGrid size={15} />
@@ -201,7 +198,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
                   "p-1.5 transition-colors",
                   viewMode === "list"
                     ? "bg-accent text-white"
-                    : "text-(--foreground-muted) hover:text-accent"
+                    : "hover:text-accent text-(--foreground-muted)",
                 )}
               >
                 <LayoutList size={15} />
@@ -211,9 +208,9 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
         </div>
 
         {total === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+          <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
             <Coffee size={40} className="text-(--foreground-muted) opacity-40" />
-            <p className="text-(--foreground-muted) text-base font-medium">
+            <p className="text-base font-medium text-(--foreground-muted)">
               {ts("noResultsMessage")}
             </p>
           </div>
@@ -245,5 +242,5 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
         )}
       </main>
     </>
-  )
+  );
 }

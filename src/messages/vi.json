@@ -182,6 +182,7 @@
     "logout": "Đăng xuất",
     "email": "Email",
     "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
     "forgotPassword": "Quên mật khẩu?",
     "noAccount": "Chưa có tài khoản?",
     "hasAccount": "Đã có tài khoản?",

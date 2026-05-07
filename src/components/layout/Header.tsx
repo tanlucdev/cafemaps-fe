@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useTranslations } from "next-intl"
-import { Coffee, Menu, Home, Search, Bookmark, PenLine, User } from "lucide-react"
-import ThemeToggle from "@/components/ui/ThemeToggle"
-import LocaleSwitcher from "@/components/ui/LocaleSwitcher"
-import { buttonVariants } from "@/components/ui/Button"
-import UserMenu from "@/components/layout/UserMenu"
-import { getAuthUser } from "@/lib/auth-client"
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Coffee, Menu, Home, Search, Bookmark, PenLine, User } from "lucide-react";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
+import { buttonVariants } from "@/components/ui/Button";
+import UserMenu from "@/components/layout/UserMenu";
+import { getAuthUser } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import {
   Sheet,
   SheetContent,
@@ -18,101 +18,105 @@ import {
   SheetClose,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 
 interface HeaderProps {
-  locale: string
+  locale: string;
 }
 
 export default function Header({ locale }: HeaderProps) {
-  const t = useTranslations("nav")
-  const pathname = usePathname()
-  const [scrolled, setScrolled] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const user = getAuthUser();
-    return !!user;
-  });
+  const t = useTranslations("nav");
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [authState, setAuthState] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-
+  useEffect(() => {
+    setAuthState(!!getAuthUser());
+    const onAuthChange = () => setAuthState(!!getAuthUser());
+    window.addEventListener("cafe-auth-change", onAuthChange);
+    return () => window.removeEventListener("cafe-auth-change", onAuthChange);
+  }, []);
 
   const navLinks = [
     { href: `/${locale}`, label: t("explore"), icon: Home },
     { href: `/${locale}/quiz`, label: t("quiz"), icon: Search },
     { href: `/${locale}/saved`, label: t("saved"), icon: Bookmark },
     { href: `/${locale}/contribute`, label: t("contribute"), icon: PenLine },
-  ]
+  ];
 
   const mobileNavLinks = [
     ...navLinks,
     { href: `/${locale}/login`, label: t("profile"), icon: User },
-  ]
+  ];
 
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-40 transition-all duration-300",
+          "fixed top-0 right-0 left-0 z-40 transition-all duration-300",
           scrolled
-            ? "bg-(--background)/95 backdrop-blur-md border-b border-border shadow-(--shadow-sm)"
-            : "bg-transparent"
+            ? "border-border border-b bg-(--background)/95 shadow-(--shadow-sm) backdrop-blur-md"
+            : "bg-transparent",
         )}
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link
               href={`/${locale}`}
-              className="flex items-center gap-2 group"
+              className="group flex items-center gap-2"
               aria-label="Cafe Finder"
             >
-              <span className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center text-white group-hover:scale-105 transition-transform">
+              <span className="bg-accent flex h-8 w-8 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105">
                 <Coffee size={16} />
               </span>
-              <span className="font-display text-lg font-semibold text-foreground hidden sm:block">
+              <span className="font-display text-foreground hidden text-lg font-semibold sm:block">
                 Cafe Finder
               </span>
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden items-center gap-1 md:flex">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href
+                const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                      "rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
                       isActive
-                        ? "bg-(--accent-light) text-accent"
-                        : "text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary)"
+                        ? "text-accent bg-(--accent-light)"
+                        : "hover:text-foreground text-(--foreground-muted) hover:bg-(--background-secondary)",
                     )}
                   >
                     {link.label}
                   </Link>
-                )
+                );
               })}
             </nav>
 
             {/* Right actions */}
             <div className="flex items-center gap-1">
               {/* Always visible: locale + theme */}
-              <span className="text-[#2C1A0E] dark:text-(--foreground-muted) bg-transparent hover:bg-transparent">
+              <span className="bg-transparent text-[#2C1A0E] hover:bg-transparent dark:text-(--foreground-muted)">
                 <LocaleSwitcher />
               </span>
-              <span className="text-[#2C1A0E] dark:text-(--foreground-muted) bg-transparent hover:bg-transparent hover:text-foreground">
+              <span className="hover:text-foreground bg-transparent text-[#2C1A0E] hover:bg-transparent dark:text-(--foreground-muted)">
                 <ThemeToggle />
               </span>
               {/* Desktop only: login / user menu */}
-              <div className="hidden md:flex items-center ml-1">
-                {isLoggedIn ? (
+              <div className="ml-1 hidden items-center md:flex">
+                {authState === null ? (
+                  <div className="h-9 w-20 animate-pulse rounded-full bg-(--background-secondary)" />
+                ) : authState ? (
                   <UserMenu locale={locale} />
                 ) : (
                   <Link
@@ -124,41 +128,41 @@ export default function Header({ locale }: HeaderProps) {
                 )}
               </div>
               {/* Mobile: hamburger */}
-              <div className="md:hidden ml-1">
+              <div className="ml-1 md:hidden">
                 <Sheet>
                   <SheetTrigger
                     aria-label={t("menu")}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary) transition-colors"
+                    className="hover:text-foreground inline-flex h-9 w-9 items-center justify-center rounded-lg text-(--foreground-muted) transition-colors hover:bg-(--background-secondary)"
                   >
                     <Menu size={20} />
                   </SheetTrigger>
                   <SheetContent side="right" className="w-72 p-0">
-                    <SheetHeader className="px-5 pt-5 pb-3 border-b border-border">
+                    <SheetHeader className="border-border border-b px-5 pt-5 pb-3">
                       <SheetTitle className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-white">
+                        <span className="bg-accent flex h-7 w-7 items-center justify-center rounded-lg text-white">
                           <Coffee size={14} />
                         </span>
                         Cafe Finder
                       </SheetTitle>
                     </SheetHeader>
-                    <nav className="flex flex-col px-3 py-4 gap-1">
+                    <nav className="flex flex-col gap-1 px-3 py-4">
                       {mobileNavLinks.map(({ href, label, icon: Icon }) => {
-                        const isActive = pathname === href
+                        const isActive = pathname === href;
                         return (
                           <SheetClose key={href} render={<Link href={href} />}>
                             <span
                               className={cn(
-                                "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors w-full",
+                                "flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
                                 isActive
-                                  ? "bg-(--accent-light) text-accent"
-                                  : "text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary)"
+                                  ? "text-accent bg-(--accent-light)"
+                                  : "hover:text-foreground text-(--foreground-muted) hover:bg-(--background-secondary)",
                               )}
                             >
                               <Icon size={18} strokeWidth={isActive ? 2.2 : 1.6} />
                               {label}
                             </span>
                           </SheetClose>
-                        )
+                        );
                       })}
                     </nav>
                   </SheetContent>
@@ -169,5 +173,5 @@ export default function Header({ locale }: HeaderProps) {
         </div>
       </header>
     </>
-  )
+  );
 }

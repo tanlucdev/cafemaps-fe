@@ -182,6 +182,7 @@
     "logout": "Log out",
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Confirm password",
     "forgotPassword": "Forgot password?",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
