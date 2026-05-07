@@ -1,6 +1,7 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
-import { getCafes } from "@/lib/api"
-import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection"
+import SearchLoader from "./_components/SearchLoader"
+import SearchLoading from "./loading"
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>
@@ -13,10 +14,11 @@ export const metadata: Metadata = {
 
 export default async function SearchPage({ params }: SearchPageProps) {
   const { locale } = await params
-  const cafes = await getCafes()
   return (
     <div className="pt-16">
-      <FeaturedSection cafes={cafes} locale={locale} />
+      <Suspense fallback={<SearchLoading />}>
+        <SearchLoader locale={locale} />
+      </Suspense>
     </div>
   )
 }

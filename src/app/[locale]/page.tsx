@@ -1,16 +1,17 @@
-import type { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
-import { getCafes } from "@/lib/api"
-import HeroSection from "./_sections/HeroSection"
-import FeaturedCafesSection from "./_sections/FeaturedCafesSection"
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import HeroSection from "./_sections/HeroSection";
+import FeaturedCafesSectionLoader from "./_sections/FeaturedCafesSectionLoader";
+import FeaturedCafesSkeleton from "./_sections/FeaturedCafesSkeleton";
 
 interface HomePageProps {
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale: string }>;
 }
 
 export async function generateMetadata({ params }: HomePageProps): Promise<Metadata> {
-  const { locale } = await params
-  const t = await getTranslations({ locale, namespace: "hero" })
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "hero" });
 
   return {
     title: "Cafe Finder — Khám phá quán cà phê TP.HCM",
@@ -25,17 +26,18 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
         },
       ],
     },
-  }
+  };
 }
 
 export default async function HomePage({ params }: HomePageProps) {
-  const { locale } = await params
-  const cafes = await getCafes()
+  const { locale } = await params;
 
   return (
     <>
       <HeroSection locale={locale} />
-      <FeaturedCafesSection cafes={cafes} locale={locale} />
+      <Suspense fallback={<FeaturedCafesSkeleton />}>
+        <FeaturedCafesSectionLoader locale={locale} />
+      </Suspense>
     </>
-  )
+  );
 }
