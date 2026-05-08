@@ -178,12 +178,24 @@
   },
   "saved": {
     "title": "Quán đã lưu",
+    "collection": "Collection",
+    "heroSubtitle": "Bộ sưu tập quán bạn đã lưu, giữ đúng nhịp ấm áp và tối giản của collection mẫu.",
     "empty": "Bạn chưa lưu quán nào",
     "emptySubtitle": "Hãy khám phá và lưu những quán bạn yêu thích.",
     "explore": "Khám phá ngay",
     "loginRequired": "Đăng nhập để xem và quản lý những quán cà phê bạn đã lưu.",
     "loginCta": "Đăng nhập",
-    "registerCta": "Đăng ký"
+    "registerCta": "Đăng ký",
+    "total": "Tổng",
+    "warmPicks": "Quán ấm",
+    "quiet": "Yên tĩnh",
+    "currentMode": "Chế độ hiện tại",
+    "updating": "Đang cập nhật",
+    "live": "Đang tải ổn định",
+    "warmMinimalismTitle": "Warm minimalism",
+    "warmMinimalismDesc": "Soft cream surfaces, warm shadows, generous radius.",
+    "savedFlowTitle": "Saved cafés flow",
+    "savedFlowDesc": "Card-first layout, clear saved-state, calm spacing."
   },
   "contribute": {
     "title": "Đóng góp quán mới",

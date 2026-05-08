@@ -64,7 +64,15 @@ export function logout() {
 
 export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
-  return localStorage.getItem(TOKEN_KEY)
+  const localToken = localStorage.getItem(TOKEN_KEY)
+  if (localToken) return localToken
+
+  const cookieToken = document.cookie
+    .split("; ")
+    .find((entry) => entry.startsWith(`${AUTH_COOKIE}=`))
+    ?.split("=")[1]
+
+  return cookieToken ? decodeURIComponent(cookieToken) : null
 }
 
 export function saveAuthReturnUrl() {

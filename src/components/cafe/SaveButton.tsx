@@ -14,6 +14,7 @@ interface SaveButtonProps {
   locale: string;
   initialSaved?: boolean;
   className?: string;
+  onSavedChange?: (saved: boolean) => void;
 }
 
 export default function SaveButton({
@@ -21,6 +22,7 @@ export default function SaveButton({
   locale,
   initialSaved = false,
   className,
+  onSavedChange,
 }: SaveButtonProps) {
   const t = useTranslations("cafe");
   const router = useRouter();
@@ -41,8 +43,9 @@ export default function SaveButton({
     const prev = saved;
     setSaved((s) => !s); // optimistic
     try {
-      const result = await toggleSaveCafe(cafeId, token);
+      const result = await toggleSaveCafe(cafeId, token, prev);
       setSaved(result.saved);
+      onSavedChange?.(result.saved);
     } catch (error) {
       setSaved(prev); // rollback
       if (isUnauthorizedError(error)) {

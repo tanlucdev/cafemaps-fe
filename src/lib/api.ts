@@ -145,9 +145,14 @@ export async function getNearbyCafes(
 
 export async function getSavedCafes(token: string): Promise<Cafe[]> {
   try {
-    return await apiFetch<Cafe[]>("/cafes/saved", {
+    const raw = await apiFetch<Array<{
+      cafe: Cafe
+      collectionName?: string
+      createdAt?: string
+    }>>("/saved", {
       headers: { Authorization: `Bearer ${token}` },
     })
+    return raw.map(({ cafe }) => mapApiCafe(cafe))
   } catch {
     return []
   }
@@ -155,12 +160,30 @@ export async function getSavedCafes(token: string): Promise<Cafe[]> {
 
 export async function toggleSaveCafe(
   cafeId: string,
-  token: string
+  token: string,
+  currentlySaved?: boolean
 ): Promise<{ saved: boolean }> {
-  return apiFetch<{ saved: boolean }>(`/cafes/${cafeId}/save`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  if (currentlySaved) {
+    await apiFetch(`/saved/${cafeId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return { saved: false }
+  }
+
+  try {
+    await apiFetch(`/saved`, {
+      method: "POST",
+      body: JSON.stringify({ cafeId }),
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return { saved: true }
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 409) {
+      return { saved: true }
+    }
+    throw error
+  }
 }
 
 export async function submitCafe(

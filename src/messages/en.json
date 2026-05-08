@@ -178,12 +178,24 @@
   },
   "saved": {
     "title": "Saved Cafés",
+    "collection": "Collection",
+    "heroSubtitle": "Your saved café collection, keeping the warm and minimalist rhythm of the reference design.",
     "empty": "No saved cafés yet",
     "emptySubtitle": "Explore and save your favourite spots.",
     "explore": "Explore now",
     "loginRequired": "Sign in to view and manage your saved cafés.",
     "loginCta": "Sign in",
-    "registerCta": "Register"
+    "registerCta": "Register",
+    "total": "Total",
+    "warmPicks": "Warm picks",
+    "quiet": "Quiet",
+    "currentMode": "Current mode",
+    "updating": "Updating",
+    "live": "Live",
+    "warmMinimalismTitle": "Warm minimalism",
+    "warmMinimalismDesc": "Soft cream surfaces, warm shadows, generous radius.",
+    "savedFlowTitle": "Saved cafés flow",
+    "savedFlowDesc": "Card-first layout, clear saved-state, calm spacing."
   },
   "contribute": {
     "title": "Submit a café",

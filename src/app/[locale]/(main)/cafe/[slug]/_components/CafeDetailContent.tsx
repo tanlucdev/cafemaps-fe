@@ -87,7 +87,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     const prev = saved;
     setSaved((s) => !s);
     try {
-      const result = await toggleSaveCafe(cafe.id, token);
+      const result = await toggleSaveCafe(cafe.id, token, prev);
       setSaved(result.saved);
     } catch (error) {
       setSaved(prev);

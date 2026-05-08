@@ -14,9 +14,18 @@ interface CafeCardProps {
   locale: string
   index?: number
   animationType?: "slide" | "fade"
+  initialSaved?: boolean
+  onSavedChange?: (saved: boolean) => void
 }
 
-export default function CafeCard({ cafe, locale, index = 0, animationType = "fade" }: CafeCardProps) {
+export default function CafeCard({
+  cafe,
+  locale,
+  index = 0,
+  animationType = "fade",
+  initialSaved = false,
+  onSavedChange,
+}: CafeCardProps) {
   const isSlide = animationType === "slide"
 
   function saveReturnUrl() {
@@ -67,6 +76,8 @@ export default function CafeCard({ cafe, locale, index = 0, animationType = "fad
         <SaveButton
           cafeId={cafe.id}
           locale={locale}
+          initialSaved={initialSaved}
+          onSavedChange={onSavedChange}
           className="absolute bottom-3 right-3 z-10 bg-white/90 text-[#3D2510] shadow-sm hover:bg-white dark:bg-black/55 dark:text-white dark:hover:bg-black/70"
         />
       </div>
