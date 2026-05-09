@@ -1,4 +1,4 @@
-import type { Cafe, CafeFilter, CafesResponse } from "@/types/cafe"
+import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry } from "@/types/cafe"
 import { MOCK_CAFES } from "./mock-data"
 
 const BASE_URL =
@@ -143,7 +143,7 @@ export async function getNearbyCafes(
   }
 }
 
-export async function getSavedCafes(token: string): Promise<Cafe[]> {
+export async function getSavedCafeEntries(token: string): Promise<SavedCafeEntry[]> {
   try {
     const raw = await apiFetch<Array<{
       cafe: Cafe
@@ -152,10 +152,19 @@ export async function getSavedCafes(token: string): Promise<Cafe[]> {
     }>>("/saved", {
       headers: { Authorization: `Bearer ${token}` },
     })
-    return raw.map(({ cafe }) => mapApiCafe(cafe))
+    return raw.map(({ cafe, collectionName, createdAt }) => ({
+      cafe: mapApiCafe(cafe),
+      collectionName: collectionName ?? "Yeu thich",
+      createdAt,
+    }))
   } catch {
     return []
   }
+}
+
+export async function getSavedCafes(token: string): Promise<Cafe[]> {
+  const entries = await getSavedCafeEntries(token)
+  return entries.map((entry) => entry.cafe)
 }
 
 export async function toggleSaveCafe(

@@ -73,6 +73,12 @@ export interface CafesResponse {
   limit: number
 }
 
+export interface SavedCafeEntry {
+  cafe: Cafe
+  collectionName?: string | null
+  createdAt?: string
+}
+
 export const AREAS = [
   "Quận 1",
   "Quận 3",

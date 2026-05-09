@@ -1,112 +1,251 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { Bookmark, ChevronRight, Heart, Lock, Sparkles } from "lucide-react"
+import {
+  Bookmark,
+  Car,
+  Filter,
+  FolderPlus,
+  MapPin,
+  Star,
+} from "lucide-react"
 import { useTranslations } from "next-intl"
-import type { Cafe } from "@/types/cafe"
+import type { Cafe, SavedCafeEntry } from "@/types/cafe"
 import { getCurrentAccessToken } from "@/lib/auth-client"
-import { getSavedCafes } from "@/lib/api"
-import CafeCard from "@/components/cafe/CafeCard"
+import { getSavedCafeEntries } from "@/lib/api"
+import SaveButton from "@/components/cafe/SaveButton"
 import { formatPrice } from "@/lib/utils"
-import type { ReactNode } from "react"
 
 interface SavedCafesClientProps {
   locale: string
   initialIsLoggedIn: boolean
-  initialCafes: Cafe[]
+  initialEntries: SavedCafeEntry[]
   previewMode?: boolean
 }
 
-function SectionCard({
-  title,
-  subtitle,
-  children,
+type FilterKey = "all" | "district-1" | "district-3" | "open" | "parking"
+
+interface CollectionGroup {
+  name: string
+  cafes: Cafe[]
+}
+
+const FILTER_ORDER: FilterKey[] = [
+  "all",
+  "district-1",
+  "district-3",
+  "open",
+  "parking",
+]
+
+function isOpenNow(cafe: Cafe) {
+  if (!cafe.openingTime || !cafe.closingTime) return false
+
+  const now = new Date()
+  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+  const [openHour, openMinute] = cafe.openingTime.slice(0, 5).split(":").map(Number)
+  const [closeHour, closeMinute] = cafe.closingTime.slice(0, 5).split(":").map(Number)
+
+  const openMinutes = openHour * 60 + openMinute
+  const closeMinutes = closeHour * 60 + closeMinute
+
+  if (closeMinutes < openMinutes) {
+    return currentMinutes >= openMinutes || currentMinutes <= closeMinutes
+  }
+
+  return currentMinutes >= openMinutes && currentMinutes <= closeMinutes
+}
+
+function FolderCard({
+  group,
+  active,
+  onClick,
 }: {
-  title: string
-  subtitle: string
-  children: ReactNode
+  group: CollectionGroup
+  active: boolean
+  onClick: () => void
 }) {
+  const previewCafes = group.cafes.slice(0, 4)
+  const remainder = Math.max(group.cafes.length - 3, 0)
+
   return (
-    <div className="rounded-[28px] border border-[#e6dacd] bg-white p-6 shadow-[0_18px_40px_rgba(44,26,14,0.06)]">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b6f58]">
-        {title}
-      </p>
-      <p className="mt-2 text-sm leading-6 text-[#6b5a4a]">{subtitle}</p>
-      <div className="mt-5">{children}</div>
-    </div>
+    <button
+      onClick={onClick}
+      className="group min-w-[180px] flex-shrink-0 text-left"
+      type="button"
+    >
+      <div
+        className={`relative mb-3 aspect-[4/3] overflow-hidden rounded-2xl border transition-all ${
+          active
+            ? "border-[#c8842a] shadow-[0_12px_30px_rgba(41,23,12,0.12)]"
+            : "border-[#d7c3b1] shadow-[0_10px_24px_rgba(41,23,12,0.06)]"
+        }`}
+      >
+        {previewCafes.length >= 3 ? (
+          <div className="grid h-full grid-cols-2 grid-rows-2 gap-[2px] bg-[#d7c3b1]">
+            {previewCafes.slice(0, 3).map((cafe) => (
+              <div key={cafe.id} className="relative h-full w-full bg-[#ffeadf]">
+                {cafe.coverImage && (
+                  <Image
+                    src={cafe.coverImage}
+                    alt={cafe.name}
+                    fill
+                    sizes="180px"
+                    className="object-cover"
+                  />
+                )}
+              </div>
+            ))}
+            <div className="flex items-center justify-center bg-[#c8842a] text-white">
+              <span className="text-lg font-bold">
+                +{remainder > 0 ? remainder : 1}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="relative h-full w-full bg-[#ffeadf]">
+            {group.cafes[0]?.coverImage ? (
+              <Image
+                src={group.cafes[0].coverImage}
+                alt={group.name}
+                fill
+                sizes="180px"
+                className="object-cover"
+              />
+            ) : null}
+          </div>
+        )}
+      </div>
+      <span className="block text-sm font-semibold text-[#29170c]">{group.name}</span>
+      <span className="block text-xs text-[#6b5a4a]">{group.cafes.length} quán</span>
+    </button>
   )
 }
 
-function AuthGate({
-  locale,
-  title,
-  subtitle,
-  loginCta,
-  registerCta,
+function FilterChip({
+  active,
+  onClick,
+  children,
+  icon,
 }: {
-  locale: string
-  title: string
-  subtitle: string
-  loginCta: string
-  registerCta: string
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+  icon?: React.ReactNode
 }) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-      <div className="rounded-[28px] border border-[#e6dacd] bg-[#fff8f2] p-7 shadow-[0_18px_40px_rgba(44,26,14,0.06)]">
-        <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f0e0cf] text-[#875200]">
-          <Lock size={24} />
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight text-[#2C1A0E] sm:text-4xl">
-          {title}
-        </h1>
-        <p className="mt-3 max-w-xl text-sm leading-7 text-[#6b5a4a]">
-          {subtitle}
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href={`/${locale}/login`}
-            className="inline-flex items-center justify-center rounded-full bg-[#C8842A] px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-          >
-            {loginCta}
-          </Link>
-          <Link
-            href={`/${locale}/register`}
-            className="inline-flex items-center justify-center rounded-full border border-[#d6c4b3] bg-white px-5 py-3 text-sm font-medium text-[#2C1A0E] transition-colors hover:bg-[#fff2e7]"
-          >
-            {registerCta}
-          </Link>
-        </div>
-      </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors ${
+        active
+          ? "border-[#875200] bg-[#875200] text-white"
+          : "border-[#d7c3b1] bg-[#fff1ea] text-[#29170c] hover:bg-[#ffeadf]"
+      }`}
+    >
+      {icon}
+      {children}
+    </button>
+  )
+}
 
-      <div className="rounded-[28px] border border-[#e6dacd] bg-[#fff2e8] p-7 shadow-[0_18px_40px_rgba(44,26,14,0.06)]">
-        <div className="mb-4 flex items-center gap-2 text-[#875200]">
-          <Sparkles size={18} />
-          <span className="text-xs font-semibold uppercase tracking-[0.18em]">
-            Collection
-          </span>
-        </div>
-        <div className="space-y-3">
-          <div className="rounded-2xl bg-white/70 p-4">
-            <p className="text-sm font-medium text-[#2C1A0E]">
-              Warm minimalism
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[#6b5a4a]">
-              Soft cream surfaces, warm shadows, generous radius.
-            </p>
+function SavedGridCard({
+  cafe,
+  locale,
+  featured = false,
+  badge,
+  onSavedChange,
+}: {
+  cafe: Cafe
+  locale: string
+  featured?: boolean
+  badge?: string
+  onSavedChange: (saved: boolean) => void
+}) {
+  return (
+    <article
+      className={`group overflow-hidden rounded-2xl border border-[#d7c3b1] bg-[#fff1ea] shadow-[0_10px_24px_rgba(41,23,12,0.06)] transition-all hover:-translate-y-1 ${
+        featured ? "lg:col-span-2" : ""
+      }`}
+    >
+      <div className={`flex h-full ${featured ? "flex-col md:flex-row" : "flex-col"}`}>
+        <div className={`relative ${featured ? "md:w-1/2" : ""} aspect-[4/3] overflow-hidden`}>
+          {cafe.coverImage ? (
+            <Image
+              src={cafe.coverImage}
+              alt={cafe.name}
+              fill
+              sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 33vw"}
+              className="object-cover"
+            />
+          ) : null}
+
+          <div className="absolute right-4 top-4">
+            <SaveButton
+              cafeId={cafe.id}
+              locale={locale}
+              initialSaved
+              onSavedChange={onSavedChange}
+              className="bg-white/90 text-[#875200] shadow-sm hover:bg-white"
+            />
           </div>
-          <div className="rounded-2xl bg-white/70 p-4">
-            <p className="text-sm font-medium text-[#2C1A0E]">
-              Saved cafés flow
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[#6b5a4a]">
-              Card-first layout, clear saved-state, calm spacing.
-            </p>
+
+          {featured && badge ? (
+            <div className="absolute bottom-4 left-4 rounded-lg bg-black/35 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+              {badge}
+            </div>
+          ) : null}
+        </div>
+
+        <div className={`flex flex-1 flex-col ${featured ? "justify-between p-6" : "p-4"}`}>
+          <div>
+            <div className="mb-2 flex items-center gap-1 text-sm">
+              <Star size={16} className="fill-amber-400 text-amber-400" />
+              <span className="font-bold text-[#29170c]">4.7</span>
+              {featured ? (
+                <span className="text-xs text-[#6b5a4a]">(124 đánh giá)</span>
+              ) : null}
+            </div>
+
+            <h3 className={`text-[#29170c] ${featured ? "text-2xl font-bold" : "text-lg font-semibold"}`}>
+              {cafe.name}
+            </h3>
+
+            <div className="mt-2 flex items-center gap-1 text-sm text-[#6b5a4a]">
+              <MapPin size={16} />
+              <span>{cafe.district ? `${cafe.district}, TP.HCM` : cafe.address}</span>
+            </div>
+
+            {cafe.vibes.length > 0 ? (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {cafe.vibes.slice(0, featured ? 2 : 1).map((vibe) => (
+                  <span
+                    key={vibe}
+                    className="rounded-lg bg-[#ffdcc1] px-2.5 py-1 text-xs text-[#653e17]"
+                  >
+                    {vibe}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className={`mt-5 flex items-center justify-between ${featured ? "pt-6" : ""}`}>
+            <span className={`font-medium ${featured ? "text-[#875200]" : "text-sm text-[#6b5a4a]"}`}>
+              {formatPrice(cafe.priceMin, cafe.priceMax)}
+            </span>
+            <Link
+              href={`/${locale}/cafe/${cafe.slug}`}
+              className={`${featured ? "text-sm font-medium text-[#875200]" : "text-sm text-red-600 opacity-0 transition-opacity group-hover:opacity-100"}`}
+            >
+              {featured ? "Xem chi tiết" : "Gỡ"}
+            </Link>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 
@@ -122,43 +261,38 @@ function EmptyState({
   cta: string
 }) {
   return (
-    <div className="rounded-[28px] border border-[#e6dacd] bg-[#fff8f2] p-6 shadow-[0_18px_40px_rgba(44,26,14,0.06)] sm:p-8">
-      <div className="mx-auto flex max-w-md flex-col items-center text-center">
-        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f0e0cf] text-[#875200]">
-          <Bookmark size={24} />
-        </div>
-        <h2 className="text-2xl font-bold tracking-tight text-[#2C1A0E]">
-          {title}
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-[#6b5a4a]">{subtitle}</p>
-        <Link
-          href={`/${locale}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#C8842A] px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-        >
-          {cta}
-          <ChevronRight size={16} />
-        </Link>
+    <section className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="mb-6 flex h-44 w-44 items-center justify-center rounded-full bg-[#ffeadf]">
+        <Bookmark size={72} className="text-[#847465]" />
       </div>
-    </div>
+      <h2 className="text-2xl font-bold text-[#29170c]">{title}</h2>
+      <p className="mt-2 max-w-sm text-[#6b5a4a]">{subtitle}</p>
+      <Link
+        href={`/${locale}`}
+        className="mt-8 rounded-xl bg-[#875200] px-6 py-3 text-sm font-medium text-white"
+      >
+        {cta}
+      </Link>
+    </section>
   )
 }
 
 export default function SavedCafesClient({
   locale,
   initialIsLoggedIn,
-  initialCafes,
+  initialEntries,
   previewMode = false,
 }: SavedCafesClientProps) {
   const t = useTranslations("saved")
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn)
-  const [cafes, setCafes] = useState(initialCafes)
-  const [refreshing, setRefreshing] = useState(false)
+  const [entries, setEntries] = useState(initialEntries)
+  const [activeCollection, setActiveCollection] = useState<string>("all")
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all")
 
   useEffect(() => {
     if (previewMode) return
 
     let alive = true
-
     const syncAuth = async () => {
       const token = await getCurrentAccessToken()
       if (alive) setIsLoggedIn(Boolean(token))
@@ -166,6 +300,7 @@ export default function SavedCafesClient({
 
     void syncAuth()
     window.addEventListener("cafe-auth-change", syncAuth)
+
     return () => {
       alive = false
       window.removeEventListener("cafe-auth-change", syncAuth)
@@ -173,142 +308,207 @@ export default function SavedCafesClient({
   }, [previewMode])
 
   useEffect(() => {
-    if (previewMode) return
-    if (!isLoggedIn) return
+    if (previewMode || !isLoggedIn) return
 
     let alive = true
-    setRefreshing(true)
-
     ;(async () => {
       const token = await getCurrentAccessToken()
       if (!token) {
-        if (alive) setCafes([])
+        if (alive) setEntries([])
         return
       }
 
-      const nextCafes = await getSavedCafes(token)
-      if (alive) setCafes(nextCafes)
-    })().finally(() => {
-      if (alive) setRefreshing(false)
-    })
+      const nextEntries = await getSavedCafeEntries(token)
+      if (alive) setEntries(nextEntries)
+    })()
 
     return () => {
       alive = false
     }
   }, [isLoggedIn, previewMode])
 
-  const stats = useMemo(
-    () => ({
-      total: cafes.length,
-      warm: cafes.filter((cafe) => formatPrice(cafe.priceMin, cafe.priceMax)).length,
-      quiet: cafes.filter(
-        (cafe) => cafe.vibes.includes("yên tĩnh") || cafe.vibes.includes("minimalist")
-      ).length,
-    }),
-    [cafes]
-  )
+  const collections = useMemo<CollectionGroup[]>(() => {
+    const map = new Map<string, Cafe[]>()
+    for (const entry of entries) {
+      const key = entry.collectionName?.trim() || "Yeu thich"
+      const current = map.get(key) ?? []
+      current.push(entry.cafe)
+      map.set(key, current)
+    }
+    return Array.from(map.entries()).map(([name, cafes]) => ({ name, cafes }))
+  }, [entries])
 
-  function removeSavedCafe(cafeId: string, saved: boolean) {
+  useEffect(() => {
+    if (collections.length === 0) {
+      setActiveCollection("all")
+      return
+    }
+
+    if (activeCollection === "all") return
+    if (!collections.some((collection) => collection.name === activeCollection)) {
+      setActiveCollection(collections[0].name)
+    }
+  }, [activeCollection, collections])
+
+  const visibleCafes = useMemo(() => {
+    const selectedCollection =
+      activeCollection === "all"
+        ? entries.map((entry) => entry.cafe)
+        : collections.find((collection) => collection.name === activeCollection)?.cafes ?? []
+
+    switch (activeFilter) {
+      case "district-1":
+        return selectedCollection.filter((cafe) => cafe.district === "Quận 1")
+      case "district-3":
+        return selectedCollection.filter((cafe) => cafe.district === "Quận 3")
+      case "open":
+        return selectedCollection.filter(isOpenNow)
+      case "parking":
+        return selectedCollection.filter((cafe) =>
+          cafe.amenities.some((amenity) => amenity.toLowerCase().includes("đậu xe"))
+        )
+      default:
+        return selectedCollection
+    }
+  }, [activeCollection, activeFilter, collections, entries])
+
+  function handleSavedChange(cafeId: string, saved: boolean) {
     if (!saved) {
-      setCafes((current) => current.filter((cafe) => cafe.id !== cafeId))
+      setEntries((current) => current.filter((entry) => entry.cafe.id !== cafeId))
     }
   }
 
   if (!previewMode && !isLoggedIn) {
     return (
-      <section className="mx-auto max-w-7xl px-4 pb-12 pt-24 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
-        <AuthGate
-          locale={locale}
-          title={t("title")}
-          subtitle={t("loginRequired")}
-          loginCta={t("loginCta")}
-          registerCta={t("registerCta")}
-        />
+      <section className="mx-auto max-w-[1280px] px-6 pb-12 pt-24">
+        <div className="rounded-2xl border border-[#d7c3b1] bg-[#fff1ea] p-8 text-[#29170c] shadow-[0_10px_40px_rgba(41,23,12,0.06)]">
+          <h1 className="text-3xl font-bold">{t("title")}</h1>
+          <p className="mt-3 max-w-xl text-[#6b5a4a]">{t("loginRequired")}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href={`/${locale}/login`}
+              className="rounded-xl bg-[#875200] px-5 py-3 text-sm font-medium text-white"
+            >
+              {t("loginCta")}
+            </Link>
+            <Link
+              href={`/${locale}/register`}
+              className="rounded-xl border border-[#d7c3b1] bg-white px-5 py-3 text-sm font-medium text-[#29170c]"
+            >
+              {t("registerCta")}
+            </Link>
+          </div>
+        </div>
       </section>
     )
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8 lg:pt-32">
-      <div className="mb-8 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: [0.33, 1, 0.68, 1] }}
-          className="relative overflow-hidden rounded-[28px] border border-[#e6dacd] bg-[linear-gradient(135deg,#fff8f2_0%,#fff1e4_55%,#f7e0cc_100%)] p-6 shadow-[0_22px_48px_rgba(44,26,14,0.08)] sm:rounded-[32px] sm:p-8 lg:p-9"
-        >
-          <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[#C8842A]/10 blur-2xl" />
-          <div className="relative">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-[#6b5a4a]">
-              <Heart size={14} className="text-[#C8842A]" />
-              {t("collection")}
-            </div>
-            <h1 className="max-w-2xl text-[2.4rem] leading-none font-bold tracking-tight text-[#2C1A0E] sm:text-5xl">
-              {t("title")}
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#6b5a4a]">
-              {cafes.length ? t("heroSubtitle") : t("emptySubtitle")}
-            </p>
+    <section className="mx-auto max-w-[1280px] px-4 pb-16 pt-24 sm:px-6 sm:pt-28 lg:px-6 lg:pt-32">
+      <section className="mb-10">
+        <h1 className="mb-4 text-[2.5rem] font-bold leading-none tracking-[-0.02em] text-[#29170c] sm:text-[3.5rem]">
+          Bộ sưu tập của bạn
+        </h1>
+        <p className="max-w-2xl text-lg leading-7 text-[#524437]">
+          Lưu lại những không gian yêu thích để dễ dàng ghé thăm sau này. Mỗi quán cafe là một câu chuyện chờ bạn khám phá.
+        </p>
+      </section>
 
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-              <div className="rounded-2xl bg-white/75 px-4 py-3">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#8b6f58]">
-                  {t("total")}
-                </p>
-                <p className="mt-1 text-xl font-semibold text-[#2C1A0E]">
-                  {stats.total}
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white/75 px-4 py-3">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#8b6f58]">
-                  {t("warmPicks")}
-                </p>
-                <p className="mt-1 text-xl font-semibold text-[#2C1A0E]">
-                  {stats.warm}
-                </p>
-              </div>
-              <div className="col-span-2 rounded-2xl bg-white/75 px-4 py-3 sm:col-span-1">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-[#8b6f58]">
-                  {t("quiet")}
-                </p>
-                <p className="mt-1 text-xl font-semibold text-[#2C1A0E]">
-                  {stats.quiet}
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="grid gap-4">
-          <SectionCard title={t("title")} subtitle={t("emptySubtitle")}>
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#fff8f2] px-4 py-3">
-              <span className="text-sm text-[#2C1A0E]">{t("currentMode")}</span>
-              <span className="text-sm font-medium text-[#875200]">
-                {previewMode ? "Preview" : refreshing ? t("updating") : t("live")}
-              </span>
-            </div>
-          </SectionCard>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            {[
-              t("warmMinimalismTitle"),
-              t("savedFlowTitle"),
-            ].map((label, index) => (
-              <div
-                key={label}
-                className="rounded-[28px] border border-[#e6dacd] bg-[#fffaf6] p-5 shadow-[0_18px_40px_rgba(44,26,14,0.05)]"
-              >
-                <p className="text-sm font-medium text-[#2C1A0E]">{label}</p>
-                <p className="mt-1 text-xs leading-5 text-[#6b5a4a]">
-                  {index === 0 ? t("warmMinimalismDesc") : t("savedFlowDesc")}
-                </p>
-              </div>
-            ))}
-          </div>
+      <section className="mb-10 overflow-hidden">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold text-[#29170c]">Thư mục đã lưu</h2>
+          <button
+            type="button"
+            className="hidden items-center gap-2 text-sm font-medium text-[#875200] transition-all hover:underline sm:inline-flex"
+          >
+            <FolderPlus size={18} />
+            Tạo thư mục mới
+          </button>
         </div>
-      </div>
 
-      {cafes.length === 0 ? (
+        <div className="-mx-1 flex gap-5 overflow-x-auto px-1 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <FolderCard
+            group={{ name: "Tất cả", cafes: entries.map((entry) => entry.cafe) }}
+            active={activeCollection === "all"}
+            onClick={() => setActiveCollection("all")}
+          />
+          {collections.map((collection) => (
+            <FolderCard
+              key={collection.name}
+              group={collection}
+              active={activeCollection === collection.name}
+              onClick={() => setActiveCollection(collection.name)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="mb-6 flex flex-wrap items-center gap-2">
+        {FILTER_ORDER.map((filter) => {
+          if (filter === "all") {
+            return (
+              <FilterChip
+                key={filter}
+                active={activeFilter === filter}
+                onClick={() => setActiveFilter(filter)}
+                icon={<Filter size={16} />}
+              >
+                Tất cả
+              </FilterChip>
+            )
+          }
+
+          if (filter === "district-1") {
+            return (
+              <FilterChip
+                key={filter}
+                active={activeFilter === filter}
+                onClick={() => setActiveFilter(filter)}
+              >
+                Quận 1
+              </FilterChip>
+            )
+          }
+
+          if (filter === "district-3") {
+            return (
+              <FilterChip
+                key={filter}
+                active={activeFilter === filter}
+                onClick={() => setActiveFilter(filter)}
+              >
+                Quận 3
+              </FilterChip>
+            )
+          }
+
+          if (filter === "open") {
+            return (
+              <FilterChip
+                key={filter}
+                active={activeFilter === filter}
+                onClick={() => setActiveFilter(filter)}
+                icon={<span className="h-2 w-2 rounded-full bg-emerald-500" />}
+              >
+                Mở cửa
+              </FilterChip>
+            )
+          }
+
+          return (
+            <FilterChip
+              key={filter}
+              active={activeFilter === filter}
+              onClick={() => setActiveFilter(filter)}
+              icon={<Car size={16} />}
+            >
+              Có chỗ đậu xe
+            </FilterChip>
+          )
+        })}
+      </section>
+
+      {visibleCafes.length === 0 ? (
         <EmptyState
           locale={locale}
           title={t("empty")}
@@ -316,19 +516,18 @@ export default function SavedCafesClient({
           cta={t("explore")}
         />
       ) : (
-        <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {cafes.map((cafe, index) => (
-            <CafeCard
+        <section className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {visibleCafes.map((cafe, index) => (
+            <SavedGridCard
               key={cafe.id}
               cafe={cafe}
               locale={locale}
-              index={index}
-              animationType="slide"
-              initialSaved
-              onSavedChange={(saved) => removeSavedCafe(cafe.id, saved)}
+              featured={index === 0}
+              badge={index === 0 ? "Sáng nay đi đâu?" : undefined}
+              onSavedChange={(saved) => handleSavedChange(cafe.id, saved)}
             />
           ))}
-        </div>
+        </section>
       )}
     </section>
   )

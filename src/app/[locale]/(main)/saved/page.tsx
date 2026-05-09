@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { getTranslations } from "next-intl/server"
-import { getSavedCafes } from "@/lib/api"
+import { getSavedCafeEntries } from "@/lib/api"
 import SavedCafesClient from "./_components/SavedCafesClient"
+import type { SavedCafeEntry } from "@/types/cafe"
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -22,13 +23,13 @@ export default async function SavedPage({ params }: PageProps) {
   const cookieStore = await cookies()
   const token = cookieStore.get("cafe-auth-token")?.value ?? null
   const initialIsLoggedIn = Boolean(token)
-  const initialCafes = token ? await getSavedCafes(token) : []
+  const initialEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token) : []
 
   return (
     <SavedCafesClient
       locale={locale}
       initialIsLoggedIn={initialIsLoggedIn}
-      initialCafes={initialCafes}
+      initialEntries={initialEntries}
     />
   )
 }
