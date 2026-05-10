@@ -45,8 +45,11 @@
     "keyword": "Keyword",
     "sortLabel": "Sort by",
     "sortDefault": "Default",
+    "sortPopular": "Most popular",
     "sortRating": "Highest rated",
-    "sortNewest": "Newest"
+    "sortNewest": "Newest",
+    "sortPrefix": "Sort by",
+    "defaultResultsLabel": "Showing all {count} cafés · Sort by: Most popular"
   },
   "filters": {
     "all": "All",
@@ -230,7 +233,7 @@
   },
   "footer": {
     "tagline": "Discover perfect moments in Ho Chi Minh City.",
-    "copyright": "© {year} Cafe Finder. All rights reserved.",
+    "copyright": "© {year} Cafe Maps. All rights reserved.",
     "exploreTitle": "Explore",
     "linksTitle": "Links",
     "home": "Home",

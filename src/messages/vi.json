@@ -45,8 +45,11 @@
     "keyword": "Từ khoá",
     "sortLabel": "Sắp xếp",
     "sortDefault": "Mặc định",
+    "sortPopular": "Phổ biến nhất",
     "sortRating": "Đánh giá cao nhất",
-    "sortNewest": "Mới nhất"
+    "sortNewest": "Mới nhất",
+    "sortPrefix": "Sắp xếp theo",
+    "defaultResultsLabel": "Hiển thị tất cả {count} quán · Sắp xếp theo: Phổ biến nhất"
   },
   "filters": {
     "all": "Tất cả",
@@ -230,7 +233,7 @@
   },
   "footer": {
     "tagline": "Khám phá những khoảnh khắc hoàn hảo tại TP.HCM.",
-    "copyright": "© {year} Cafe Finder. Mọi quyền được bảo lưu.",
+    "copyright": "© {year} Cafe Maps. Mọi quyền được bảo lưu.",
     "exploreTitle": "Khám phá",
     "linksTitle": "Liên kết",
     "home": "Trang chủ",

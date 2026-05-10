@@ -7,6 +7,13 @@ import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MOCK_CAFES } from "@/lib/mock-data";
+import {
+  buildSearchParams,
+  clearLastSearchState,
+  getLastSearchState,
+  setLastSearchState,
+  type LastSearchState,
+} from "@/lib/search-state";
 
 interface HeroSectionProps {
   locale: string;
@@ -406,7 +413,9 @@ export default function HeroSection({ locale }: HeroSectionProps) {
   const [search, setSearch] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
+  const [lastSearch, setLastSearch] = useState<LastSearchState | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const greeting = useMemo(() => getGreeting(locale), [locale]);
   const nameSuggestions = useMemo(() => getNameSuggestions(search, MOCK_CAFES), [search]);
@@ -419,6 +428,13 @@ export default function HeroSection({ locale }: HeroSectionProps) {
       setPlaceholderIdx((i) => (i + 1) % PLACEHOLDER_KEYS.length);
     }, 3200);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) {
+      inputRef.current?.focus();
+    }
+    setLastSearch(getLastSearchState());
   }, []);
 
   useEffect(() => {
@@ -440,50 +456,108 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
   function handleSearch() {
     const q = search.trim().toLowerCase();
-    const params = new URLSearchParams();
+    const filter = {
+      search: undefined as string | undefined,
+      vibes: [] as string[],
+      purposes: [] as string[],
+      nearMe: undefined as boolean | undefined,
+    };
 
     let matched = false;
     for (const mapping of KEYWORD_TO_FILTER) {
       if (mapping.keywords.some((k) => q.includes(k))) {
-        if (mapping.vibe) params.append("vibe", mapping.vibe);
-        if (mapping.purpose) params.append("purpose", mapping.purpose);
+        if (mapping.vibe) filter.vibes.push(mapping.vibe);
+        if (mapping.purpose) filter.purposes.push(mapping.purpose);
         matched = true;
       }
     }
 
-    if (q.includes("gần")) params.set("nearMe", "true");
-    if (!matched && q) params.set("search", q);
+    if (q.includes("gần")) filter.nearMe = true;
+    if (!matched && q) filter.search = q;
 
     setFocused(false);
-    router.push(`/${locale}/search${params.size ? `?${params}` : ""}`);
+    const query = buildSearchParams(
+      {
+        search: filter.search,
+        vibes: filter.vibes.length ? filter.vibes : undefined,
+        purposes: filter.purposes.length ? filter.purposes : undefined,
+        nearMe: filter.nearMe,
+      },
+      "popular",
+    ).toString();
+    if (query) {
+      setLastSearchState({
+        query: q,
+        filter: {
+          search: filter.search,
+          vibes: filter.vibes.length ? filter.vibes : undefined,
+          purposes: filter.purposes.length ? filter.purposes : undefined,
+          nearMe: filter.nearMe,
+        },
+        sort: "popular",
+        params: query,
+      });
+    }
+    router.push(`/${locale}/search${query ? `?${query}` : ""}`);
   }
 
   function handleQuickFilter({ vibe, purpose }: { vibe?: string; purpose?: string }) {
-    const params = new URLSearchParams();
-    if (vibe) params.set("vibe", vibe);
-    if (purpose) params.set("purpose", purpose);
-    router.push(`/${locale}/search?${params.toString()}`);
+    const filter = {
+      vibes: vibe ? [vibe] : undefined,
+      purposes: purpose ? [purpose] : undefined,
+    };
+    const query = buildSearchParams(filter, "popular").toString();
+    setLastSearchState({
+      filter,
+      sort: "popular",
+      params: query,
+    });
+    router.push(`/${locale}/search?${query}`);
   }
 
-  function handleSmartSearch(query: string) {
+  function handleSmartSearch(searchQuery: string) {
     setFocused(false);
-    setSearch(query);
-    const params = new URLSearchParams();
-    const lower = query.toLowerCase();
+    setSearch(searchQuery);
+    const lower = searchQuery.toLowerCase();
+    const filter = {
+      vibes: [] as string[],
+      purposes: [] as string[],
+      district: undefined as string | undefined,
+    };
 
     for (const mapping of KEYWORD_TO_FILTER) {
       if (mapping.keywords.some((k) => lower.includes(k))) {
-        if (mapping.vibe) params.append("vibe", mapping.vibe);
-        if (mapping.purpose) params.append("purpose", mapping.purpose);
+        if (mapping.vibe) filter.vibes.push(mapping.vibe);
+        if (mapping.purpose) filter.purposes.push(mapping.purpose);
       }
     }
 
     const districtMatch = lower.match(/qu[aậ]n\s*(\d+|[a-zÀ-ɏ\s]+)/i);
     if (districtMatch) {
-      params.set("district", districtMatch[0].replace(/qu[aậ]n/i, "Quận").trim());
+      filter.district = districtMatch[0].replace(/qu[aậ]n/i, "Quận").trim();
     }
 
-    router.push(`/${locale}/search${params.size ? `?${params}` : ""}`);
+    const query = buildSearchParams(
+      {
+        vibes: filter.vibes.length ? filter.vibes : undefined,
+        purposes: filter.purposes.length ? filter.purposes : undefined,
+        district: filter.district,
+      },
+      "popular",
+    ).toString();
+    if (query) {
+      setLastSearchState({
+        query: searchQuery,
+        filter: {
+          vibes: filter.vibes.length ? filter.vibes : undefined,
+          purposes: filter.purposes.length ? filter.purposes : undefined,
+          district: filter.district,
+        },
+        sort: "popular",
+        params: query,
+      });
+    }
+    router.push(`/${locale}/search${query ? `?${query}` : ""}`);
   }
 
   return (
@@ -519,6 +593,35 @@ export default function HeroSection({ locale }: HeroSectionProps) {
       />
 
       <div className="relative mx-auto max-w-4xl px-4 py-10 text-center sm:px-6 sm:py-14 lg:px-8">
+        {lastSearch ? (
+          <div className="mx-auto mb-5 flex max-w-xl items-center justify-between gap-3 rounded-2xl border border-accent/35 bg-background/85 px-4 py-3 text-left shadow-sm">
+            <div className="min-w-0 text-sm text-(--foreground-muted)">
+              <span className="font-medium text-foreground">Tiếp tục tìm kiếm:</span>{" "}
+              <span className="truncate">
+                {lastSearch.query || lastSearch.filter.vibes?.join(", ") || "tìm kiếm trước"}?
+              </span>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                onClick={() => router.push(`/${locale}/search?${lastSearch.params}`)}
+                className="rounded-full bg-accent px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-(--accent-hover)"
+              >
+                Xem kết quả
+              </button>
+              <button
+                onClick={() => {
+                  clearLastSearchState();
+                  setLastSearch(null);
+                }}
+                className="text-(--foreground-muted) transition-colors hover:text-accent"
+                aria-label="Đóng"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        ) : null}
+
         {/* Chibi walking animation */}
         <ChibiWalkAnimation />
 
@@ -548,6 +651,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
               )}
             />
             <input
+              ref={inputRef}
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -637,15 +741,14 @@ export default function HeroSection({ locale }: HeroSectionProps) {
         </div>
 
         {/* Explore CTA */}
-        <p className="mt-5 text-sm text-(--foreground-muted)">
-          hoặc{" "}
+        <div className="mt-4 flex justify-center">
           <a
             href={`/${locale}/search`}
-            className="text-accent underline underline-offset-2 transition-colors hover:text-(--accent-hover)"
+            className="border-border bg-background/80 hover:border-accent hover:text-accent inline-flex min-w-48 items-center justify-center rounded-full border px-5 py-2 text-sm font-semibold text-(--foreground-muted) transition-all duration-150 hover:bg-(--accent-light)"
           >
-            khám phá tất cả quán →
+            Xem tất cả quán café →
           </a>
-        </p>
+        </div>
       </div>
     </section>
   );

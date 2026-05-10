@@ -64,6 +64,7 @@ export interface CafeFilter {
   radiusKm?: number
   page?: number
   limit?: number
+  sort?: string
 }
 
 export interface CafesResponse {

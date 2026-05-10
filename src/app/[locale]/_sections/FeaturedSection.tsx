@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLenis } from "@/components/providers/LenisProvider";
 import { useTranslations } from "next-intl";
@@ -11,9 +11,16 @@ import Pagination from "@/components/ui/Pagination";
 import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
+import {
+  buildSearchParams,
+  filterFromSearchParams,
+  hasActiveSearchFilters,
+  setLastSearchState,
+  sortFromSearchParams,
+  type SearchSort,
+} from "@/lib/search-state";
 
 type ViewMode = "grid" | "list";
-type SortMode = "default" | "rating" | "newest";
 
 const PAGE_SIZE = 10;
 
@@ -32,24 +39,15 @@ interface FeaturedSectionProps {
 //   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 // }
 
-function filterFromParams(searchParams: ReturnType<typeof useSearchParams>): Filter {
-  return {
-    search: searchParams.get("search") ?? undefined,
-    vibes: searchParams.get("vibes") ? searchParams.get("vibes")!.split(",") : undefined,
-    purposes: searchParams.get("purposes") ? searchParams.get("purposes")!.split(",") : undefined,
-    district: searchParams.get("district") ?? undefined,
-  };
-}
-
 export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const lenis = useLenis();
   const ts = useTranslations("search");
 
-  const [filter, setFilter] = useState<Filter>(() => filterFromParams(searchParams));
+  const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(searchParams));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [sortMode, setSortMode] = useState<SortMode>("default");
+  const [sortMode, setSortMode] = useState<SearchSort>(() => sortFromSearchParams(searchParams));
   const [animationType, setAnimationType] = useState<"slide" | "fade">("fade");
   const [searchInput, setSearchInput] = useState(filter.search ?? "");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -57,23 +55,34 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
   const page = Number(searchParams.get("page") ?? "1");
 
   const updateUrl = useCallback(
-    (newFilter: Filter, newPage: number) => {
-      const params = new URLSearchParams();
-      if (newFilter.search) params.set("search", newFilter.search);
-      if (newFilter.vibes?.length) params.set("vibes", newFilter.vibes.join(","));
-      if (newFilter.purposes?.length) params.set("purposes", newFilter.purposes.join(","));
-      if (newFilter.district) params.set("district", newFilter.district);
-      if (newPage > 1) params.set("page", String(newPage));
+    (newFilter: Filter, newSort: SearchSort, newPage: number) => {
+      const params = buildSearchParams(newFilter, newSort, newPage);
       const query = params.toString();
-      router.replace(query ? `?${query}` : "?", { scroll: false });
+      router.push(query ? `?${query}` : "?", { scroll: false });
+      if (query && hasActiveSearchFilters(newFilter)) {
+        setLastSearchState({
+          query: newFilter.search,
+          filter: newFilter,
+          sort: newSort,
+          params: query,
+        });
+      }
     },
     [router],
   );
 
+  useEffect(() => {
+    const nextFilter = filterFromSearchParams(searchParams);
+    const nextSort = sortFromSearchParams(searchParams);
+    setFilter(nextFilter);
+    setSortMode(nextSort);
+    setSearchInput(nextFilter.search ?? "");
+  }, [searchParams]);
+
   function handleFilterChange(newFilter: Filter) {
     setFilter(newFilter);
     setAnimationType("slide");
-    updateUrl(newFilter, 1);
+    updateUrl(newFilter, sortMode, 1);
   }
 
   function handleSearchSubmit() {
@@ -83,14 +92,32 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
   function handlePageChange(newPage: number) {
     setAnimationType("fade");
-    updateUrl(filter, newPage);
+    updateUrl(filter, sortMode, newPage);
     if (lenis) lenis.scrollTo(0, { duration: 0.6 });
     else window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function handleSortChange(newSort: SearchSort) {
+    setSortMode(newSort);
+    updateUrl(filter, newSort, 1);
+  }
+
+  function isOpenNow(cafe: Cafe) {
+    if (!cafe.openingTime || !cafe.closingTime) return true;
+    const now = new Date();
+    const current = now.getHours() * 60 + now.getMinutes();
+    const [openHour = "0", openMinute = "0"] = cafe.openingTime.split(":");
+    const [closeHour = "0", closeMinute = "0"] = cafe.closingTime.split(":");
+    const open = Number(openHour) * 60 + Number(openMinute);
+    const close = Number(closeHour) * 60 + Number(closeMinute);
+
+    if (close < open) return current >= open || current <= close;
+    return current >= open && current <= close;
+  }
+
   const filtered = useMemo(() => {
     let result = cafes;
-    const { search, district, vibes, purposes } = filter;
+    const { search, district, vibes, purposes, priceRange, openNow } = filter;
 
     if (search?.trim()) {
       const q = search.toLowerCase();
@@ -105,12 +132,24 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
     if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)));
     if (purposes?.length)
       result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)));
+    if (priceRange) {
+      result = result.filter((c) => {
+        const min = c.priceMin ?? 0;
+        const max = c.priceMax ?? min;
+        if (priceRange === "under_50k") return min < 50000;
+        if (priceRange === "price_50k_100k" || priceRange === "50k_100k") return min <= 100000 && max >= 50000;
+        if (priceRange === "price_100k_150k" || priceRange === "100k_150k") return min <= 150000 && max >= 100000;
+        if (priceRange === "above_150k") return max > 150000;
+        return true;
+      });
+    }
+    if (openNow) result = result.filter(isOpenNow);
 
     return result;
   }, [cafes, filter]);
 
   const sorted = useMemo(() => {
-    if (sortMode === "rating") {
+    if (sortMode === "rating" || sortMode === "popular") {
       return filtered;
     }
     if (sortMode === "newest") {
@@ -125,6 +164,9 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
   const total = sorted.length;
   const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const hasFilters = hasActiveSearchFilters(filter);
+  const sortLabel =
+    sortMode === "newest" ? ts("sortNewest") : sortMode === "rating" ? ts("sortRating") : ts("sortPopular");
 
   return (
     <>
@@ -162,17 +204,23 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         {/* Toolbar: results count + sort + view toggle */}
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-(--foreground-muted)">{total > 0 ? `${total} quán` : null}</p>
+          <p className="text-sm text-(--foreground-muted)">
+            {!hasFilters && sortMode === "popular"
+              ? ts("defaultResultsLabel", { count: total })
+              : total > 0
+                ? `${total} quán · ${ts("sortPrefix")}: ${sortLabel}`
+                : null}
+          </p>
 
           <div className="ml-auto flex items-center gap-2">
             {/* Sort selector */}
             <select
               value={sortMode}
-              onChange={(e) => setSortMode(e.target.value as SortMode)}
+              onChange={(e) => handleSortChange(e.target.value as SearchSort)}
               className="border-border bg-background text-foreground focus:ring-accent h-8 cursor-pointer rounded-lg border px-2 text-xs focus:ring-1 focus:outline-none"
               aria-label={ts("sortLabel")}
             >
-              <option value="default">{ts("sortDefault")}</option>
+              <option value="popular">{ts("sortPopular")}</option>
               <option value="rating">{ts("sortRating")}</option>
               <option value="newest">{ts("sortNewest")}</option>
             </select>

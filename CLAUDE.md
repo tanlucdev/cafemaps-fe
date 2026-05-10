@@ -1,6 +1,6 @@
 @AGENTS.md
 
-# Cafe Finder — Frontend (fe-uiux)
+# Cafe Maps — Frontend (fe-uiux)
 
 Next.js 16 app với App Router, React 19, TypeScript strict mode.
 
@@ -49,16 +49,16 @@ src/
 
 ## Stack & Dependencies
 
-| Mục | Thư viện |
-|-----|----------|
-| Framework | Next.js 16.2.4, React 19 |
-| i18n | next-intl ^4.9.1 |
-| Theming | next-themes ^0.4.6 |
-| Animation | framer-motion ^12.38.0, lenis ^1.3.23 |
-| UI Base | @base-ui/react ^1.4.1, shadcn ^4.5.0 |
-| Styling | Tailwind CSS v4, CVA, clsx, tailwind-merge |
-| Icons | lucide-react ^1.11.0 |
-| Auth/DB | @supabase/ssr + @supabase/supabase-js |
+| Mục       | Thư viện                                   |
+| --------- | ------------------------------------------ |
+| Framework | Next.js 16.2.4, React 19                   |
+| i18n      | next-intl ^4.9.1                           |
+| Theming   | next-themes ^0.4.6                         |
+| Animation | framer-motion ^12.38.0, lenis ^1.3.23      |
+| UI Base   | @base-ui/react ^1.4.1, shadcn ^4.5.0       |
+| Styling   | Tailwind CSS v4, CVA, clsx, tailwind-merge |
+| Icons     | lucide-react ^1.11.0                       |
+| Auth/DB   | @supabase/ssr + @supabase/supabase-js      |
 
 ## Quy ước code
 
@@ -97,6 +97,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ## Lưu ý ESLint
 
 Các pattern sau bị flag bởi `react-hooks/set-state-in-effect` nhưng là hợp lệ — dùng `// eslint-disable-next-line react-hooks/set-state-in-effect`:
+
 - Hydration guard: `useEffect(() => { setMounted(true) }, [])`
 - Đóng menu khi navigate: `useEffect(() => { setMenuOpen(false) }, [pathname])`
 - Sync external lib state: `setLenis(instance)` trong Lenis setup effect

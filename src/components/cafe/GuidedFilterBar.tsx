@@ -32,7 +32,8 @@ export default function GuidedFilterBar({ filter, onChange }: GuidedFilterBarPro
     (filter.vibes?.length ?? 0) +
     (filter.purposes?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
-    (filter.district ? 1 : 0)
+    (filter.district ? 1 : 0) +
+    (filter.openNow ? 1 : 0)
 
   function toggleVibe(v: Vibe) {
     const current = filter.vibes ?? []
