@@ -25,8 +25,8 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Cafe Finder — Khám phá quán cà phê TP.HCM",
-    template: "%s | Cafe Finder",
+    default: "Cafe Maps — Khám phá quán cà phê TP.HCM",
+    template: "%s | Cafe Maps",
   },
   description:
     "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm.",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL ?? "https://cafefinder.vn"
   ),
   openGraph: {
-    siteName: "Cafe Finder",
+    siteName: "Cafe Maps",
     locale: "vi_VN",
     type: "website",
   },

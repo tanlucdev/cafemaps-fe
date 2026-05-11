@@ -8,7 +8,7 @@ interface SearchPageProps {
 }
 
 export const metadata: Metadata = {
-  title: "Tìm quán — Cafe Finder",
+  title: "Tìm quán — Cafe Maps",
   description: "Tìm kiếm và lọc quán cà phê tại TP.HCM theo vibe, quận, giá cả.",
 }
 

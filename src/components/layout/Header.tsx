@@ -72,13 +72,13 @@ export default function Header({ locale }: HeaderProps) {
             <Link
               href={`/${locale}`}
               className="group flex items-center gap-2"
-              aria-label="Cafe Finder"
+              aria-label="Cafe Maps"
             >
               <span className="bg-accent flex h-8 w-8 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105">
                 <Coffee size={16} />
               </span>
               <span className="font-display text-foreground hidden text-lg font-semibold sm:block">
-                Cafe Finder
+                Cafe Maps
               </span>
             </Link>
 
@@ -142,7 +142,7 @@ export default function Header({ locale }: HeaderProps) {
                         <span className="bg-accent flex h-7 w-7 items-center justify-center rounded-lg text-white">
                           <Coffee size={14} />
                         </span>
-                        Cafe Finder
+                        Cafe Maps
                       </SheetTitle>
                     </SheetHeader>
                     <nav className="flex flex-col gap-1 px-3 py-4">

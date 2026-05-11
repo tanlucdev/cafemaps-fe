@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const t = await getTranslations({ locale, namespace: "hero" });
 
   return {
-    title: "Cafe Finder — Khám phá quán cà phê TP.HCM",
+    title: "Cafe Maps — Khám phá quán cà phê TP.HCM",
     description: t("subtitleCompact"),
     openGraph: {
       images: [
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
           url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1200&q=80",
           width: 1200,
           height: 630,
-          alt: "Cafe Finder",
+          alt: "Cafe Maps",
         },
       ],
     },

@@ -24,7 +24,7 @@ export default function Footer({ locale }: FooterProps) {
                 <Coffee size={16} />
               </span>
               <span className="font-display text-lg font-semibold text-[var(--foreground)]">
-                Cafe Finder
+                Cafe Maps
               </span>
             </Link>
             <p className="text-sm text-[var(--foreground-muted)] leading-relaxed max-w-xs">

@@ -40,21 +40,33 @@ function MobileMainImage({ images, activeIndex, setActiveIndex, isPortrait, cafe
     }
   }
 
+  const prevIndex = (activeIndex - 1 + images.length) % images.length
+  const nextIndex = (activeIndex + 1) % images.length
+  const preloadIndices = new Set([prevIndex, activeIndex, nextIndex])
+
   return (
     <div
       className="relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-(--background-secondary) select-none"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <Image
-        src={images[activeIndex]}
-        alt={`${cafeName} ${activeIndex + 1}`}
-        fill
-        sizes="100vw"
-        className="object-cover"
-        style={{ objectPosition: isPortrait(activeIndex) ? "center 42%" : "center" }}
-        priority={activeIndex === 0}
-      />
+      {images.map((src, i) => {
+        if (!preloadIndices.has(i)) return null
+        const isActive = i === activeIndex
+        return (
+          <Image
+            key={i}
+            src={src}
+            alt={isActive ? `${cafeName} ${i + 1}` : ""}
+            fill
+            sizes="100vw"
+            className={`object-cover transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            style={{ objectPosition: isPortrait(i) ? "center 42%" : "center" }}
+            priority={i === 0}
+            aria-hidden={!isActive}
+          />
+        )
+      })}
       {images.length > 1 && (
         <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
           {activeIndex + 1} / {images.length}
@@ -77,6 +89,9 @@ export default function SmartGallery({
 }: SmartGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  // Track which indices have been rendered so preloaded images stay mounted
+  const [renderedIndices, setRenderedIndices] = useState<Set<number>>(new Set([0]))
+  const lightboxTouchX = useRef<number | null>(null)
 
   const getO = useCallback(
     (i: number) => orientations[i] || "landscape",
@@ -119,6 +134,18 @@ export default function SmartGallery({
       window.removeEventListener("keydown", handleKeyDown)
     }
   }, [closeLightbox, lightboxIndex, moveLightbox])
+
+  // Preload current ± 1 images so navigation is instant
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    setRenderedIndices((prev) => {
+      const next = new Set(prev)
+      next.add(lightboxIndex)
+      next.add((lightboxIndex - 1 + images.length) % images.length)
+      next.add((lightboxIndex + 1) % images.length)
+      return next
+    })
+  }, [lightboxIndex, images.length])
 
   if (!images || images.length === 0) return null
 
@@ -296,14 +323,34 @@ export default function SmartGallery({
           </div>
 
           {/* Main image — fills remaining space between header and thumbnails */}
-          <div className="relative min-h-0 flex-1" onClick={(event) => event.stopPropagation()}>
-            <Image
-              src={images[lightboxIndex]}
-              alt={`${cafeName} ${lightboxIndex + 1}`}
-              fill
-              sizes="100vw"
-              className="object-contain"
-            />
+          <div
+            className="relative min-h-0 flex-1"
+            onClick={(event) => event.stopPropagation()}
+            onTouchStart={(e) => { lightboxTouchX.current = e.touches[0].clientX }}
+            onTouchEnd={(e) => {
+              if (lightboxTouchX.current === null) return
+              const dx = e.changedTouches[0].clientX - lightboxTouchX.current
+              lightboxTouchX.current = null
+              if (Math.abs(dx) < 40) return
+              moveLightbox(dx < 0 ? 1 : -1)
+            }}
+          >
+            {images.map((url, index) => {
+              if (!renderedIndices.has(index)) return null
+              const isActive = index === lightboxIndex
+              return (
+                <Image
+                  key={index}
+                  src={url}
+                  alt={isActive ? `${cafeName} ${index + 1}` : ""}
+                  fill
+                  sizes="100vw"
+                  className={`object-contain transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                  aria-hidden={!isActive}
+                  priority={isActive && index === 0}
+                />
+              )
+            })}
 
             {images.length > 1 && (
               <>
