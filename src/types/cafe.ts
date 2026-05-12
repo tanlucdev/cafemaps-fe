@@ -43,6 +43,8 @@ export interface Cafe {
   isFeatured?: boolean | null
   featuredOrder?: number | null
   isPublished: boolean
+  lat?: number | null
+  lng?: number | null
   distanceKm?: number
   createdAt?: string
   updatedAt?: string
@@ -64,7 +66,7 @@ export interface CafeFilter {
   radiusKm?: number
   page?: number
   limit?: number
-  sort?: string
+  sort?: "popular" | "rating" | "newest"
 }
 
 export interface CafesResponse {

@@ -28,6 +28,11 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
     splitParam(searchParams.get("vibes")) ??
     searchParams.getAll("vibe")
   const purposes = splitParam(searchParams.get("purposes")) ?? searchParams.getAll("purpose")
+  const rawSort = searchParams.get("sort")
+  const sort: SearchSort | undefined =
+    rawSort === "rating" || rawSort === "newest" || rawSort === "popular" ? rawSort : undefined
+  const rawPage = searchParams.get("page")
+  const page = rawPage ? Number(rawPage) : undefined
 
   return {
     search: searchParams.get("search") ?? undefined,
@@ -41,6 +46,8 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
     lat: searchParams.get("lat") ? Number(searchParams.get("lat")) : undefined,
     lng: searchParams.get("lng") ? Number(searchParams.get("lng")) : undefined,
     radiusKm: searchParams.get("radiusKm") ? Number(searchParams.get("radiusKm")) : undefined,
+    sort,
+    page: page && page > 0 ? page : undefined,
   }
 }
 

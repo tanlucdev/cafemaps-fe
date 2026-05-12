@@ -82,16 +82,68 @@ function buildQuery(filter?: CafeFilter): string {
   if (filter.lat !== undefined) params.set("lat", String(filter.lat))
   if (filter.lng !== undefined) params.set("lng", String(filter.lng))
   if (filter.radiusKm !== undefined) params.set("radiusKm", String(filter.radiusKm))
+  if (filter.sort) params.set("sort", filter.sort)
   if (filter.page !== undefined) params.set("page", String(filter.page))
   if (filter.limit !== undefined) params.set("limit", String(filter.limit))
   const q = params.toString()
   return q ? `?${q}` : ""
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapApiCafe(raw: any): Cafe {
+// Parse PostGIS EWKB hex → { lat, lng }
+function parseEwkbPoint(hex: string): { lat: number; lng: number } | null {
+  try {
+    // EWKB little-endian: 1B order + 4B type + 4B SRID (if present) + 8B x + 8B y
+    const bytes = new Uint8Array(hex.length / 2)
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16)
+    }
+    const view = new DataView(bytes.buffer)
+    const littleEndian = view.getUint8(0) === 1
+    const wkbType = view.getUint32(1, littleEndian)
+    const hasSrid = (wkbType & 0x20000000) !== 0
+    const offset = 5 + (hasSrid ? 4 : 0)
+    const lng = view.getFloat64(offset, littleEndian)
+    const lat = view.getFloat64(offset + 8, littleEndian)
+    if (!isFinite(lat) || !isFinite(lng)) return null
+    return { lat, lng }
+  } catch {
+    return null
+  }
+}
+
+type RawCafe = Omit<Cafe, "vibes" | "purposes" | "amenities" | "images" | "image_orientations" | "isPublished"> & {
+  vibes?: string[]
+  vibe?: string[]
+  purposes?: string[]
+  purpose?: string[]
+  amenities?: string[]
+  images?: string[]
+  image_orientations?: string[] | null
+  imageOrientations?: string[] | null
+  image_orientation?: string[] | null
+  imageOrientation?: string[] | null
+  isPublished?: boolean
+  location?: string
+  distance_km?: number
+  distanceKm?: number
+}
+
+function mapApiCafe(raw: RawCafe): Cafe {
+  let lat = raw.lat ?? null
+  let lng = raw.lng ?? null
+
+  if ((lat == null || lng == null) && typeof raw.location === "string" && raw.location.length > 0) {
+    const point = parseEwkbPoint(raw.location)
+    if (point) {
+      lat = point.lat
+      lng = point.lng
+    }
+  }
+
   return {
     ...raw,
+    lat,
+    lng,
     vibes: raw.vibes ?? raw.vibe ?? [],
     purposes: raw.purposes ?? raw.purpose ?? [],
     amenities: raw.amenities ?? [],
@@ -135,9 +187,10 @@ export async function getNearbyCafes(
   radiusKm = 2
 ): Promise<Cafe[]> {
   try {
-    return await apiFetch<Cafe[]>(
-      `/cafes/nearby?lat=${lat}&lng=${lng}&radiusKm=${radiusKm}`
+    const raw = await apiFetch<RawCafe[]>(
+      `/cafes/nearby?lat=${lat}&lng=${lng}&radius=${radiusKm}`
     )
+    return raw.map((item) => mapApiCafe({ ...item, distanceKm: item.distance_km ?? item.distanceKm }))
   } catch {
     return MOCK_CAFES.slice(0, 4)
   }

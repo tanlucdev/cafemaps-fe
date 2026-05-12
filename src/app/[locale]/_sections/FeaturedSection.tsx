@@ -12,6 +12,13 @@ import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   buildSearchParams,
   filterFromSearchParams,
   hasActiveSearchFilters,
@@ -29,15 +36,15 @@ interface FeaturedSectionProps {
   locale: string;
 }
 
-// function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-//   const R = 6371
-//   const dLat = (lat2 - lat1) * (Math.PI / 180)
-//   const dLng = (lng2 - lng1) * (Math.PI / 180)
-//   const a =
-//     Math.sin(dLat / 2) ** 2 +
-//     Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) ** 2
-//   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-// }
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLng = (lng2 - lng1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
@@ -137,13 +144,27 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
         const min = c.priceMin ?? 0;
         const max = c.priceMax ?? min;
         if (priceRange === "under_50k") return min < 50000;
-        if (priceRange === "price_50k_100k" || priceRange === "50k_100k") return min <= 100000 && max >= 50000;
-        if (priceRange === "price_100k_150k" || priceRange === "100k_150k") return min <= 150000 && max >= 100000;
+        if (priceRange === "price_50k_100k" || priceRange === "50k_100k")
+          return min <= 100000 && max >= 50000;
+        if (priceRange === "price_100k_150k" || priceRange === "100k_150k")
+          return min <= 150000 && max >= 100000;
         if (priceRange === "above_150k") return max > 150000;
         return true;
       });
     }
     if (openNow) result = result.filter(isOpenNow);
+    // When nearMe is active, server already filtered via PostGIS — skip client-side haversine.
+    // Only apply client-side as fallback when cafes have lat/lng but weren't server-filtered.
+    if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
+      const hasCoords = result.some((c) => c.lat != null && c.lng != null);
+      if (hasCoords) {
+        const radius = filter.radiusKm ?? 2;
+        result = result.filter((c) => {
+          if (c.lat == null || c.lng == null) return false;
+          return haversineKm(filter.lat!, filter.lng!, c.lat, c.lng) <= radius;
+        });
+      }
+    }
 
     return result;
   }, [cafes, filter]);
@@ -166,7 +187,11 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
   const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const hasFilters = hasActiveSearchFilters(filter);
   const sortLabel =
-    sortMode === "newest" ? ts("sortNewest") : sortMode === "rating" ? ts("sortRating") : ts("sortPopular");
+    sortMode === "newest"
+      ? ts("sortNewest")
+      : sortMode === "rating"
+        ? ts("sortRating")
+        : ts("sortPopular");
 
   return (
     <>
@@ -214,16 +239,22 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
           <div className="ml-auto flex items-center gap-2">
             {/* Sort selector */}
-            <select
+            <Select
               value={sortMode}
-              onChange={(e) => handleSortChange(e.target.value as SearchSort)}
-              className="border-border bg-background text-foreground focus:ring-accent h-8 cursor-pointer rounded-lg border px-2 text-xs focus:ring-1 focus:outline-none"
-              aria-label={ts("sortLabel")}
+              onValueChange={(value) => handleSortChange(value as SearchSort)}
             >
-              <option value="popular">{ts("sortPopular")}</option>
-              <option value="rating">{ts("sortRating")}</option>
-              <option value="newest">{ts("sortNewest")}</option>
-            </select>
+              <SelectTrigger
+                className="border-border bg-background text-foreground focus:ring-accent h-8 w-32 rounded-lg border px-2 text-xs focus:ring-1 focus:ring-offset-0 focus:outline-none"
+                aria-label={ts("sortLabel")}
+              >
+                <SelectValue placeholder={ts("sortLabel")} />
+              </SelectTrigger>
+              <SelectContent sideOffset={4} align="end">
+                <SelectItem value="popular">{ts("sortPopular")}</SelectItem>
+                <SelectItem value="rating">{ts("sortRating")}</SelectItem>
+                <SelectItem value="newest">{ts("sortNewest")}</SelectItem>
+              </SelectContent>
+            </Select>
 
             {/* View toggle */}
             <div className="border-border flex items-center overflow-hidden rounded-lg border">
