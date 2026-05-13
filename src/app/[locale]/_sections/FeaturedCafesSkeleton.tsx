@@ -31,21 +31,21 @@ export default function FeaturedCafesSkeleton() {
       </div>
 
       {/* Desktop skeleton: 3-column podium */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-5 sm:items-end max-w-4xl mx-auto">
-        {/* Rank 2 — shorter left */}
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-5 sm:items-end">
+        {/* Rank 2 */}
         <div
           className="rounded-2xl bg-(--background-secondary) animate-pulse"
-          style={{ height: 256, animationDelay: "80ms" }}
+          style={{ height: 320, animationDelay: "80ms" }}
         />
-        {/* Rank 1 — tallest center */}
+        {/* Rank 1 */}
         <div
           className="rounded-2xl bg-(--background-secondary) animate-pulse"
           style={{ height: 320 }}
         />
-        {/* Rank 3 — shortest right */}
+        {/* Rank 3 */}
         <div
           className="rounded-2xl bg-(--background-secondary) animate-pulse"
-          style={{ height: 224, animationDelay: "160ms" }}
+          style={{ height: 320, animationDelay: "160ms" }}
         />
       </div>
     </section>

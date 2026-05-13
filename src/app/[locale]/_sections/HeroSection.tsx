@@ -594,9 +594,9 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
       <div className="relative mx-auto max-w-4xl px-4 py-10 text-center sm:px-6 sm:py-14 lg:px-8">
         {lastSearch ? (
-          <div className="mx-auto mb-5 flex max-w-xl items-center justify-between gap-3 rounded-2xl border border-accent/35 bg-background/85 px-4 py-3 text-left shadow-sm">
+          <div className="border-accent/35 bg-background/85 mx-auto mb-5 flex max-w-xl items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left shadow-sm">
             <div className="min-w-0 text-sm text-(--foreground-muted)">
-              <span className="font-medium text-foreground">Tiếp tục tìm kiếm:</span>{" "}
+              <span className="text-foreground font-medium">Tiếp tục tìm kiếm:</span>{" "}
               <span className="truncate">
                 {lastSearch.query || lastSearch.filter.vibes?.join(", ") || "tìm kiếm trước"}?
               </span>
@@ -604,7 +604,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
             <div className="flex shrink-0 items-center gap-2">
               <button
                 onClick={() => router.push(`/${locale}/search?${lastSearch.params}`)}
-                className="rounded-full bg-accent px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-(--accent-hover)"
+                className="bg-accent rounded-full px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-(--accent-hover)"
               >
                 Xem kết quả
               </button>
@@ -613,7 +613,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
                   clearLastSearchState();
                   setLastSearch(null);
                 }}
-                className="text-(--foreground-muted) transition-colors hover:text-accent"
+                className="hover:text-accent text-(--foreground-muted) transition-colors"
                 aria-label="Đóng"
               >
                 ×
@@ -658,12 +658,12 @@ export default function HeroSection({ locale }: HeroSectionProps) {
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               onFocus={() => setFocused(true)}
               placeholder={!search ? t(PLACEHOLDER_KEYS[placeholderIdx]) : undefined}
-              className="border-border bg-background text-foreground focus:border-accent h-11 w-full rounded-xl border pr-4 pl-10 text-sm transition-all focus:outline-none"
+              className="border-border bg-background text-foreground focus:border-accent h-11 w-full appearance-none rounded-xl border pr-4 pl-10 text-sm ring-0 transition-colors outline-none focus:rounded-xl! focus:shadow-none focus:ring-0 focus:outline-none! focus-visible:ring-0 focus-visible:outline-none"
             />
           </div>
           <button
             onClick={handleSearch}
-            className="bg-accent h-11 shrink-0 rounded-xl px-6 text-sm font-semibold text-white transition-all hover:bg-(--accent-hover) active:scale-95"
+            className="bg-accent h-11 shrink-0 cursor-pointer rounded-xl px-6 text-sm font-semibold text-white transition-all hover:bg-(--accent-hover) active:scale-95"
           >
             {t("cta")}
           </button>
@@ -732,7 +732,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
             <button
               key={labelKey}
               onClick={() => handleQuickFilter({ vibe, purpose })}
-              className="border-border bg-background/80 hover:border-accent hover:text-accent flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm text-(--foreground-muted) transition-all duration-150 hover:bg-(--accent-light)"
+              className="border-border bg-background/80 hover:border-accent hover:text-accent flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm text-(--foreground-muted) transition-all duration-150 hover:bg-(--accent-light)"
             >
               <span>{emoji}</span>
               {t(labelKey)}

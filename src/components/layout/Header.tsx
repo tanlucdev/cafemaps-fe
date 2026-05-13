@@ -19,6 +19,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import Image from "next/image";
 
 interface HeaderProps {
   locale: string;
@@ -69,17 +70,8 @@ export default function Header({ locale }: HeaderProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link
-              href={`/${locale}`}
-              className="group flex items-center gap-2"
-              aria-label="Cafe Maps"
-            >
-              <span className="bg-accent flex h-8 w-8 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105">
-                <Coffee size={16} />
-              </span>
-              <span className="font-display text-foreground hidden text-lg font-semibold sm:block">
-                Cafe Maps
-              </span>
+            <Link href={`/${locale}`} className="group flex items-center" aria-label="Cafe Maps">
+              <Image src="/image/logo.png" alt="Cafe Maps" width={40} height={40} loading="lazy" />
             </Link>
 
             {/* Desktop nav */}

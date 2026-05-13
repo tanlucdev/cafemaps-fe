@@ -16,9 +16,9 @@ interface FeaturedCafesSectionProps {
 }
 
 const RANK_CONFIG = [
-  { rank: 1, label: "01", heightClass: "h-64 sm:h-80 lg:h-72", order: "order-first sm:order-none" },
-  { rank: 2, label: "02", heightClass: "h-56 sm:h-64 lg:h-72", order: "sm:order-first" },
-  { rank: 3, label: "03", heightClass: "h-52 sm:h-56 lg:h-72", order: "" },
+  { rank: 1, label: "01", heightClass: "h-64 sm:h-80 lg:h-[360px]", order: "order-first sm:order-none" },
+  { rank: 2, label: "02", heightClass: "h-56 sm:h-80 lg:h-[360px]", order: "sm:order-first" },
+  { rank: 3, label: "03", heightClass: "h-52 sm:h-80 lg:h-[360px]", order: "" },
 ]
 
 function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean | null {
@@ -56,7 +56,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay, ease: [0.33, 1, 0.68, 1] }}
       className={cn(
-        "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-full",
+        "group relative rounded-2xl overflow-hidden bg-card card-shadow hover:-translate-y-1 transition-transform duration-200 flex-none w-[72vw] max-w-[280px] sm:w-full sm:max-w-none",
         rank === 1
           ? "border-2 border-amber-400/60 sm:border-border lg:border-2 lg:border-[#C8842A]"
           : "border border-border"
@@ -238,7 +238,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       </div>
 
       {/* Desktop podium grid */}
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-5 sm:items-end lg:items-start max-w-4xl mx-auto">
+      <div className="hidden sm:grid sm:grid-cols-3 gap-4 lg:gap-5 sm:items-end lg:items-start">
         {podiumOrder.map((cafe, displayIdx) => {
           const originalRank = featured.indexOf(cafe) + 1
           const config = RANK_CONFIG.find((c) => c.rank === originalRank) ?? RANK_CONFIG[0]

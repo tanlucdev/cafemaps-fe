@@ -13,13 +13,16 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "hero" });
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
   return {
     title: "Cafe Maps — Khám phá quán cà phê TP.HCM",
     description: t("subtitleCompact"),
+    metadataBase: new URL(siteUrl),
     openGraph: {
       images: [
         {
-          url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1200&q=80",
+          url: "/image/meta-image.png",
           width: 1200,
           height: 630,
           alt: "Cafe Maps",
