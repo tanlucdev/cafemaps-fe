@@ -46,7 +46,6 @@ export default function Header({ locale }: HeaderProps) {
 
   const navLinks = [
     { href: `/${locale}`, label: t("explore"), icon: Home },
-    { href: `/${locale}/quiz`, label: t("quiz"), icon: Search },
     { href: `/${locale}/saved`, label: t("saved"), icon: Bookmark },
     { href: `/${locale}/contribute`, label: t("contribute"), icon: PenLine },
   ];

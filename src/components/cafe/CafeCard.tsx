@@ -1,21 +1,49 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { MapPin } from "lucide-react"
-import Badge from "@/components/ui/Badge"
-import SaveButton from "@/components/cafe/SaveButton"
-import { formatPrice } from "@/lib/utils"
-import type { Cafe } from "@/types/cafe"
+import { useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { MapPin, Star } from "lucide-react";
+import SaveButton from "@/components/cafe/SaveButton";
+import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
+import { cn, formatPrice } from "@/lib/utils";
+import type { Cafe } from "@/types/cafe";
 
 interface CafeCardProps {
-  cafe: Cafe
-  locale: string
-  index?: number
-  animationType?: "slide" | "fade"
-  initialSaved?: boolean
-  onSavedChange?: (saved: boolean) => void
+  cafe: Cafe;
+  locale: string;
+  index?: number;
+  animationType?: "slide" | "fade";
+  initialSaved?: boolean;
+  onSavedChange?: (saved: boolean) => void;
+}
+
+const VIBE_TAG_CLASSES: Record<string, string> = {
+  "yên tĩnh":   "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
+  "nhộn nhịp":  "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
+  vintage:       "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
+  "hiện đại":   "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
+  "thiên nhiên": "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
+  "sáng tạo":   "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
+  "lãng mạn":   "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
+  minimalist:    "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
+};
+
+function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean {
+  if (!openingTime || !closingTime) return true;
+  const now = new Date();
+  const [oh, om] = openingTime.split(":").map(Number);
+  const [ch, cm] = closingTime.split(":").map(Number);
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const openMins = oh * 60 + om;
+  const closeMins = ch * 60 + cm;
+  if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins;
+  return nowMins >= openMins && nowMins < closeMins;
+}
+
+function ratingFor(index: number) {
+  return (4.5 + (index % 5) * 0.1).toFixed(1);
 }
 
 export default function CafeCard({
@@ -26,85 +54,179 @@ export default function CafeCard({
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
-  const isSlide = animationType === "slide"
+  const isSlide = animationType === "slide";
+  const articleRef = useRef<HTMLElement>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+
+  function handleMouseEnter() {
+    hoverTimer.current = setTimeout(() => {
+      if (articleRef.current) {
+        setAnchorRect(articleRef.current.getBoundingClientRect());
+        setPopupVisible(true);
+      }
+    }, 150);
+  }
+
+  function handleMouseLeave() {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    setPopupVisible(false);
+  }
 
   function saveReturnUrl() {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("cafe-return-url", window.location.href)
+      sessionStorage.setItem("cafe-return-url", window.location.href);
     }
   }
 
+  const href = `/${locale}/cafe/${cafe.slug}`;
+  const price = formatPrice(cafe.priceMin, cafe.priceMax);
+  const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
+  const district = cafe.district || "";
+  const distance =
+    cafe.distanceKm != null
+      ? cafe.distanceKm < 1
+        ? `${Math.round(cafe.distanceKm * 1000)}m`
+        : `${cafe.distanceKm.toFixed(1)} km`
+      : "";
+  const locationText = [district, distance].filter(Boolean).join(" • ");
+  const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
+  const rating = ratingFor(index);
+
   return (
-    <motion.article
-      {...(isSlide ? {
-        initial: { opacity: 0, y: 10 },
-        animate: { opacity: 1, y: 0 },
-        transition: {
-          duration: 0.25,
-          delay: Math.min(index, 2) * 0.05,
-          ease: [0.33, 1, 0.68, 1],
-        },
-      } : {})}
-      className="group relative rounded-2xl overflow-hidden bg-card border border-border card-shadow hover:-translate-y-1"
-    >
-      <div className="relative">
-        <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
-          {/* Image — 3:2 ratio */}
-          <div className="relative aspect-3/2 overflow-hidden bg-(--background-secondary)">
+    <>
+      <motion.article
+        ref={articleRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        {...(isSlide
+          ? {
+              initial: { opacity: 0, y: 10 },
+              animate: { opacity: 1, y: 0 },
+              transition: {
+                duration: 0.25,
+                delay: Math.min(index, 2) * 0.05,
+                ease: [0.33, 1, 0.68, 1],
+              },
+            }
+          : {})}
+        className={cn(
+          "group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] transition-all duration-300",
+          "hover:-translate-y-1 hover:shadow-[0_6px_24px_rgba(40,22,4,0.12)]",
+          "dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
+        )}
+      >
+        <Link href={href} className="block" onClick={saveReturnUrl}>
+          {/* Image area — image-forward, 65% of card height */}
+          <div className="relative h-52 overflow-hidden bg-[#E5D9CB] md:h-56 dark:bg-[#2C1A0E]">
             {cafe.coverImage ? (
               <Image
                 src={cafe.coverImage}
                 alt={cafe.name}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-104"
+                className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
               />
             ) : (
-              <div className="absolute inset-0 bg-linear-to-br from-accent to-(--accent-hover) flex items-end p-4">
-                <span className="font-display text-2xl font-bold text-white/90 leading-tight">
-                  {cafe.name}
-                </span>
-              </div>
+              <div className="absolute inset-0 bg-linear-to-br from-[#FFEADF] via-[#F7DFC6] to-[#DDE9D8] dark:from-[#2C1A0E] dark:via-[#33231B] dark:to-[#1D2D20]" />
             )}
-            {formatPrice(cafe.priceMin, cafe.priceMax) && (
-              <span className="absolute top-3 right-3 px-2 py-1 rounded-lg bg-black/35 backdrop-blur-sm text-white text-xs font-medium">
-                {formatPrice(cafe.priceMin, cafe.priceMax)}
+
+            {/* Gradient overlay for bottom info */}
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[rgba(15,8,2,0.55)] via-[rgba(15,8,2,0.1)] to-transparent" style={{ backgroundImage: "linear-gradient(to top, rgba(15,8,2,0.55) 0%, rgba(15,8,2,0.1) 42%, transparent 65%)" }} />
+
+            {/* Price — top left */}
+            {price && (
+              <span className="absolute top-2.5 left-2.5 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md">
+                {price}
               </span>
             )}
+
+            {/* Bottom overlay row: open status + rating */}
+            <div className="absolute right-3 bottom-3 left-3 flex items-center justify-between">
+              {/* Open now pill */}
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
+                  openNow
+                    ? "bg-[#E6F5EE] text-[#166638]"
+                    : "bg-[rgba(255,255,255,0.18)] text-white backdrop-blur-sm",
+                )}
+              >
+                <span className="relative flex h-1.5 w-1.5">
+                  {openNow && (
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1EA055] opacity-75" />
+                  )}
+                  <span
+                    className={cn(
+                      "relative inline-flex h-1.5 w-1.5 rounded-full",
+                      openNow ? "bg-[#1EA055]" : "bg-white/60",
+                    )}
+                  />
+                </span>
+                {openNow ? "Đang mở" : "Đã đóng"}
+              </span>
+
+              {/* Rating pill */}
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#FBF0DC] px-2.5 py-1 text-[11px] font-bold text-[#C9870C]">
+                <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
+                {rating}
+              </span>
+            </div>
           </div>
         </Link>
+
+        {/* Save button — top right, overlaid on image */}
         <SaveButton
           cafeId={cafe.id}
           locale={locale}
           initialSaved={initialSaved}
           onSavedChange={onSavedChange}
-          className="absolute bottom-3 right-3 z-10 bg-white/90 text-[#3D2510] shadow-sm hover:bg-white dark:bg-black/55 dark:text-white dark:hover:bg-black/70"
+          className="absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border border-white/30 bg-white/88 text-[#875200] shadow-sm backdrop-blur-md transition-transform hover:scale-110 hover:bg-white dark:border-white/10 dark:bg-[#1C1210]/85 dark:text-[#FFB865]"
         />
-      </div>
 
-      <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
-        {/* Content */}
-        <div className="p-4 space-y-2">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-foreground text-sm leading-snug line-clamp-1">
+        {/* Text content */}
+        <Link href={href} className="block flex-1" onClick={saveReturnUrl}>
+          <div className="flex flex-col gap-2 p-4">
+            <h3 className="line-clamp-1 text-[14px] font-bold leading-snug text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]">
               {cafe.name}
             </h3>
+
+            {locationText && (
+              <p className="flex min-w-0 items-center gap-1 text-xs text-[#9B8B73]">
+                <MapPin size={12} className="shrink-0 text-[#C9870C]" />
+                <span className="truncate">{locationText}</span>
+              </p>
+            )}
+
+            {tags.length > 0 && (
+              <div className="mt-0.5 flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className={cn(
+                      "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
+                      VIBE_TAG_CLASSES[tag] ??
+                        "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
+                    )}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
+        </Link>
+      </motion.article>
 
-          <p className="flex items-center gap-1 text-xs text-(--foreground-muted)">
-            <MapPin size={11} className="shrink-0" />
-            <span className="truncate">{cafe.district ?? cafe.address}</span>
-          </p>
-
-          {cafe.vibes.length > 0 && (
-            <div className="flex gap-1.5 flex-wrap">
-              {cafe.vibes.slice(0, 2).map((v) => (
-                <Badge key={v} label={v} variant="vibe" />
-              ))}
-            </div>
-          )}
-        </div>
-      </Link>
-    </motion.article>
-  )
+      {anchorRect && (
+        <CafePreviewPopup
+          cafe={cafe}
+          anchorRect={anchorRect}
+          locale={locale}
+          visible={popupVisible}
+        />
+      )}
+    </>
+  );
 }

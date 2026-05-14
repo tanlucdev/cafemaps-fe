@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,7 @@ const lora = Lora({
   display: "swap",
 });
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -37,9 +37,16 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/favicon.ico",
+        url: "/image/meta-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Cafe Maps — Khám phá quán cà phê TP.HCM",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/image/meta-image.png"],
   },
 };
 

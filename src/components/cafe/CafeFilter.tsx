@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
@@ -65,23 +66,30 @@ interface CafeFilterProps {
 
 export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
   const t = useTranslations("filters");
+  const [staged, setStaged] = useState<Filter>(filter);
 
   function toggleArray<T extends string>(key: "vibes" | "purposes", value: T) {
-    const current = (filter[key] ?? []) as T[];
+    const current = (staged[key] ?? []) as T[];
     const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
-    onChange({ ...filter, [key]: next });
+    setStaged((s) => ({ ...s, [key]: next }));
   }
 
   function handleAreaChange(val: string | null) {
     const district = val === "" || val == null ? undefined : val;
-    onChange({ ...filter, district });
+    setStaged((s) => ({ ...s, district }));
   }
 
-  const hasFilters =
-    filter.vibes?.length || filter.purposes?.length || filter.priceRange != null || filter.district;
+  function handleApply() {
+    onChange(staged);
+  }
+
+  // Sync staged when filter is reset externally (e.g. "Clear all" in sidebar header)
+  useEffect(() => {
+    setStaged(filter);
+  }, [filter]);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Vibe */}
       <section>
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
@@ -95,7 +103,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 key={vibe}
                 label={vibe}
                 variant="vibe"
-                active={filter.vibes?.includes(vibe)}
+                active={staged.vibes?.includes(vibe)}
                 onClick={() => toggleArray("vibes", vibe)}
                 className="flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm"
               >
@@ -120,7 +128,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 key={purpose}
                 label={purpose}
                 variant="default"
-                active={filter.purposes?.includes(purpose)}
+                active={staged.purposes?.includes(purpose)}
                 onClick={() => toggleArray("purposes", purpose)}
                 className="flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm"
               >
@@ -139,11 +147,13 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         </h3>
         <div className="flex flex-wrap gap-2">
           {PRICE_OPTIONS.map((opt) => {
-            const active = filter.priceRange === opt.value;
+            const active = staged.priceRange === opt.value;
             return (
               <button
                 key={opt.label}
-                onClick={() => onChange({ ...filter, priceRange: active ? undefined : opt.value })}
+                onClick={() =>
+                  setStaged((s) => ({ ...s, priceRange: active ? undefined : opt.value }))
+                }
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
                   active
@@ -158,33 +168,33 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         </div>
       </section>
 
-      {/* Khu vực + Phường */}
+      {/* Khu vực */}
       <section>
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
           KHU VỰC
         </h3>
-        <div className="space-y-2">
-          <Select value={filter.district ?? ""} onValueChange={handleAreaChange}>
-            <SelectTrigger className="h-10 w-full rounded-xl text-sm">
-              <SelectValue placeholder="Tất cả khu vực" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">Tất cả khu vực</SelectItem>
-              {AREAS.map((area) => (
-                <SelectItem key={area} value={area}>
-                  {area}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={staged.district ?? ""} onValueChange={handleAreaChange}>
+          <SelectTrigger className="h-10 w-full rounded-xl text-sm">
+            <SelectValue placeholder="Tất cả khu vực" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">Tất cả khu vực</SelectItem>
+            {AREAS.map((area) => (
+              <SelectItem key={area} value={area}>
+                {area}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </section>
 
-      {hasFilters ? (
-        <button onClick={() => onChange({})} className="text-accent text-sm hover:underline">
-          {t("clear")}
-        </button>
-      ) : null}
+      {/* Apply button */}
+      <button
+        onClick={handleApply}
+        className="bg-accent hover:bg-(--accent-hover) mt-2 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold text-white transition-all active:scale-95"
+      >
+        {t("apply")}
+      </button>
     </div>
   );
 }

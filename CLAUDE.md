@@ -65,7 +65,7 @@ src/
 - **Path alias**: `@/*` → `./src/*`
 - **Utility**: Dùng `cn()` từ `@/lib/utils` cho conditional classnames
 - **Button**: `buttonVariants({ variant, size })` hoặc `<Button>` component với CVA
-- **Routing**: Luôn prefix locale, dùng `useRouter` từ `next-intl` (không phải `next/navigation`) trong client components
+- **Routing**: Luôn prefix locale, dùng `useRouter` và `usePathname` từ `@/i18n/navigation` (không phải `next/navigation` hay `next-intl` trực tiếp) trong client components — đây là locale-aware router được tạo bởi `createNavigation(routing)`
 - **Translations**: `useTranslations()` (client) / `getTranslations()` (server)
 - **Dark mode**: CSS variables `var(--background)`, `var(--foreground)`, `var(--accent)`, v.v.
 - **Images**: Dùng `next/image` với `sizes` prop; remote patterns: `*.supabase.co`, `images.unsplash.com`, `lh3.googleusercontent.com`

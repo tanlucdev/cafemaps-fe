@@ -49,7 +49,9 @@
     "sortRating": "Đánh giá cao nhất",
     "sortNewest": "Mới nhất",
     "sortPrefix": "Sắp xếp theo",
-    "defaultResultsLabel": "Hiển thị tất cả {count} quán · Sắp xếp theo: Phổ biến nhất"
+    "defaultResultsLabel": "Hiển thị tất cả {count} quán · Sắp xếp theo: Phổ biến nhất",
+    "openNow": "Đang mở cửa",
+    "closed": "Đã đóng"
   },
   "filters": {
     "all": "Tất cả",

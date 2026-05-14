@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
-import CafeCard from "./CafeCard"
-import { CafeCardSkeleton } from "@/components/ui/Skeleton"
-import type { Cafe } from "@/types/cafe"
-import { useTranslations } from "next-intl"
+import CafeCard from "./CafeCard";
+import { CafeCardSkeleton } from "@/components/ui/Skeleton";
+import type { Cafe } from "@/types/cafe";
+import { useTranslations } from "next-intl";
 
 interface CafeGridProps {
-  cafes: Cafe[]
-  locale: string
-  loading?: boolean
-  animationType?: "slide" | "fade"
+  cafes: Cafe[];
+  locale: string;
+  loading?: boolean;
+  animationType?: "slide" | "fade";
+  desktopColumns?: "two" | "three";
 }
 
 export default function CafeGrid({
@@ -17,35 +18,45 @@ export default function CafeGrid({
   locale,
   loading = false,
   animationType = "slide",
+  desktopColumns = "three",
 }: CafeGridProps) {
-  const t = useTranslations("search")
+  const t = useTranslations("search");
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 8 }).map((_, i) => (
           <CafeCardSkeleton key={i} />
         ))}
       </div>
-    )
+    );
   }
 
   if (cafes.length === 0) {
     return (
-      <div className="text-center py-20">
-        <p className="text-4xl mb-3">☕</p>
-        <p className="text-[var(--foreground-muted)] text-sm">
-          {t("noResults")}
-        </p>
+      <div className="py-20 text-center">
+        <p className="mb-3 text-4xl">☕</p>
+        <p className="text-sm text-[var(--foreground-muted)]">{t("noResults")}</p>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div
+      className={[
+        "grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8",
+        desktopColumns === "two" ? "xl:grid-cols-2" : "xl:grid-cols-3",
+      ].join(" ")}
+    >
       {cafes.map((cafe, i) => (
-        <CafeCard key={cafe.id} cafe={cafe} locale={locale} index={i} animationType={animationType} />
+        <CafeCard
+          key={cafe.id}
+          cafe={cafe}
+          locale={locale}
+          index={i}
+          animationType={animationType}
+        />
       ))}
     </div>
-  )
+  );
 }

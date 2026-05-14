@@ -49,7 +49,9 @@
     "sortRating": "Highest rated",
     "sortNewest": "Newest",
     "sortPrefix": "Sort by",
-    "defaultResultsLabel": "Showing all {count} cafés · Sort by: Most popular"
+    "defaultResultsLabel": "Showing all {count} cafés · Sort by: Most popular",
+    "openNow": "Open now",
+    "closed": "Closed"
   },
   "filters": {
     "all": "All",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLenis } from "@/components/providers/LenisProvider";
 import { useTranslations } from "next-intl";
@@ -8,7 +8,7 @@ import CafeGrid from "@/components/cafe/CafeGrid";
 import CafeList from "@/components/cafe/CafeList";
 import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
 import Pagination from "@/components/ui/Pagination";
-import { LayoutGrid, LayoutList, Search, Coffee } from "lucide-react";
+import { Coffee, LayoutGrid, LayoutList, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
 import {
@@ -117,7 +117,6 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
     const [closeHour = "0", closeMinute = "0"] = cafe.closingTime.split(":");
     const open = Number(openHour) * 60 + Number(openMinute);
     const close = Number(closeHour) * 60 + Number(closeMinute);
-
     if (close < open) return current >= open || current <= close;
     return current >= open && current <= close;
   }
@@ -153,8 +152,6 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
       });
     }
     if (openNow) result = result.filter(isOpenNow);
-    // When nearMe is active, server already filtered via PostGIS — skip client-side haversine.
-    // Only apply client-side as fallback when cafes have lat/lng but weren't server-filtered.
     if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
       const hasCoords = result.some((c) => c.lat != null && c.lng != null);
       if (hasCoords) {
@@ -165,14 +162,11 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
         });
       }
     }
-
     return result;
   }, [cafes, filter]);
 
   const sorted = useMemo(() => {
-    if (sortMode === "rating" || sortMode === "popular") {
-      return filtered;
-    }
+    if (sortMode === "rating" || sortMode === "popular") return filtered;
     if (sortMode === "newest") {
       return [...filtered].sort((a, b) => {
         const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -195,28 +189,25 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
 
   return (
     <>
-      {/* Search bar at top of search page */}
+      {/* ── Pill search bar ── */}
       <div className="border-border border-b bg-(--background-secondary)">
-        <div className="mx-auto max-w-7xl px-4 pt-2 pb-4 sm:px-6 lg:px-8">
-          <div className="flex max-w-xl gap-2">
-            <div className="relative flex-1">
-              <Search
-                size={15}
-                className="absolute top-1/2 left-3.5 -translate-y-1/2 text-(--foreground-muted)"
-              />
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
-                placeholder={ts("placeholder")}
-                className="border-border bg-background text-foreground focus:ring-accent h-10 w-full rounded-xl border pr-4 pl-10 text-sm transition-all focus:ring-2 focus:outline-none"
-              />
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex max-w-2xl items-center overflow-hidden rounded-full border border-[#E0D3C0] bg-white shadow-[0_2px_10px_rgba(40,22,4,0.08)] dark:border-[#3A2A20] dark:bg-[#1C1210]">
+            <div className="flex shrink-0 items-center pl-4 text-(--foreground-muted)">
+              <Search size={16} />
             </div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
+              placeholder={ts("placeholder")}
+              className="flex-1 border-none bg-transparent py-3 pl-3 pr-2 text-sm outline-none"
+            />
             <button
               onClick={handleSearchSubmit}
-              className="bg-accent h-10 shrink-0 rounded-xl px-5 text-sm font-medium text-white transition-colors hover:bg-(--accent-hover)"
+              className="bg-accent hover:bg-(--accent-hover) m-1.5 shrink-0 cursor-pointer rounded-full px-5 py-2 text-sm font-bold text-white transition-colors active:scale-95"
             >
               {ts("button")}
             </button>
@@ -224,7 +215,12 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
         </div>
       </div>
 
-      <GuidedFilterBar filter={filter} onChange={handleFilterChange} />
+      <GuidedFilterBar
+        filter={filter}
+        onChange={handleFilterChange}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         {/* Toolbar: results count + sort + view toggle */}
@@ -238,13 +234,9 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
           </p>
 
           <div className="ml-auto flex items-center gap-2">
-            {/* Sort selector */}
-            <Select
-              value={sortMode}
-              onValueChange={(value) => handleSortChange(value as SearchSort)}
-            >
+            <Select value={sortMode} onValueChange={(v) => handleSortChange(v as SearchSort)}>
               <SelectTrigger
-                className="border-border bg-background text-foreground focus:ring-accent h-8 w-32 rounded-lg border px-2 text-xs focus:ring-1 focus:ring-offset-0 focus:outline-none"
+                className="border-border bg-background text-foreground focus:ring-accent h-8 w-36 rounded-lg border px-2 text-xs focus:ring-1 focus:ring-offset-0 focus:outline-none"
                 aria-label={ts("sortLabel")}
               >
                 <SelectValue placeholder={ts("sortLabel")} />
@@ -256,8 +248,8 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
               </SelectContent>
             </Select>
 
-            {/* View toggle */}
-            <div className="border-border flex items-center overflow-hidden rounded-lg border">
+            {/* View toggle — desktop only (mobile is in GuidedFilterBar) */}
+            <div className="border-border hidden items-center overflow-hidden rounded-lg border md:flex">
               <button
                 onClick={() => setViewMode("grid")}
                 title="Grid view"
@@ -301,6 +293,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
                 cafes={paginated}
                 locale={locale}
                 animationType={animationType}
+                desktopColumns="three"
               />
             ) : (
               <CafeList
