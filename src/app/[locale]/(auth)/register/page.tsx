@@ -30,7 +30,7 @@ export default async function RegisterPage({ params }: PageProps) {
           </h1>
         </div>
 
-        <RegisterForm locale={locale} />
+        <RegisterForm />
 
         <p className="text-center text-sm text-[var(--foreground-muted)] mt-5">
           {t("hasAccount")}{" "}

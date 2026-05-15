@@ -192,7 +192,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
       {/* ── Pill search bar ── */}
       <div className="border-border border-b bg-(--background-secondary)">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex max-w-2xl items-center overflow-hidden rounded-full border border-[#E0D3C0] bg-white shadow-[0_2px_10px_rgba(40,22,4,0.08)] dark:border-[#3A2A20] dark:bg-[#1C1210]">
+          <div className="flex max-w-2xl items-center overflow-hidden rounded-full bg-white shadow-[0_2px_12px_rgba(40,22,4,0.10)] outline-none dark:bg-[#1C1210]">
             <div className="flex shrink-0 items-center pl-4 text-(--foreground-muted)">
               <Search size={16} />
             </div>
@@ -203,7 +203,8 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
               placeholder={ts("placeholder")}
-              className="flex-1 border-none bg-transparent py-3 pl-3 pr-2 text-sm outline-none"
+              className="flex-1 appearance-none border-0 bg-transparent py-3 pl-3 pr-2 shadow-none outline-0 ring-0 focus:border-0 focus:outline-none focus:ring-0 focus:shadow-none"
+              style={{ fontSize: "16px" }}
             />
             <button
               onClick={handleSearchSubmit}

@@ -212,7 +212,8 @@
       "description": "Short description",
       "submit": "Submit",
       "submitting": "Submitting..."
-    }
+    },
+    "heading": "Tell us about a café you love"
   },
   "auth": {
     "login": "Log in",

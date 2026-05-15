@@ -212,7 +212,8 @@
       "description": "Mô tả ngắn",
       "submit": "Gửi đề xuất",
       "submitting": "Đang gửi..."
-    }
+    },
+    "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
   },
   "auth": {
     "login": "Đăng nhập",

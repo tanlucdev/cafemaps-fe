@@ -24,7 +24,7 @@ export default async function LoginPage({ params }: PageProps) {
           <h1 className="font-display text-2xl font-bold text-[var(--foreground)]">{t("login")}</h1>
         </div>
 
-        <LoginForm locale={locale} />
+        <LoginForm />
 
         <p className="mt-5 text-center text-sm text-[var(--foreground-muted)]">
           {t("noAccount")}{" "}

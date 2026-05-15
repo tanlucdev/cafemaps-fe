@@ -14,11 +14,7 @@ import { LoginFormValues, loginSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface LoginFormProps {
-  locale: string;
-}
-
-export default function LoginForm({ locale }: LoginFormProps) {
+export default function LoginForm() {
   const t = useTranslations("auth");
   const router = useRouter();
   const searchParams = useSearchParams();

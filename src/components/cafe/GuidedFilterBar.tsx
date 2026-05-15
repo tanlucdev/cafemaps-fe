@@ -1,10 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { LayoutGrid, LayoutList, Loader2, Navigation, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import {
+  LayoutGrid, LayoutList, Loader2, Navigation, SlidersHorizontal, X, ChevronDown,
+  Leaf, Zap, Sparkles, Heart, Minus, Coffee, Palette,
+  Briefcase, BookOpen, Users, User, MapPin,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { VIBES, PURPOSES, AREAS, type CafeFilter as Filter, type Vibe } from "@/types/cafe";
+import { VIBES, PURPOSES, AREAS, type CafeFilter as Filter, type Vibe, type Purpose } from "@/types/cafe";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface GuidedFilterBarProps {
   filter: Filter;
@@ -25,6 +36,30 @@ const DISTANCE_OPTIONS = [
   { label: "< 5km", km: 5 },
   { label: "< 10km", km: 10 },
 ];
+
+const VIBE_ICONS: Record<Vibe, ReactNode> = {
+  "yên tĩnh":   <Minus size={11} />,
+  "nhộn nhịp":  <Zap size={11} />,
+  "vintage":    <Coffee size={11} />,
+  "hiện đại":   <Sparkles size={11} />,
+  "thiên nhiên": <Leaf size={11} />,
+  "sáng tạo":   <Palette size={11} />,
+  "lãng mạn":   <Heart size={11} />,
+  "minimalist": <Minus size={11} />,
+};
+
+const PURPOSE_ICONS: Record<Purpose, ReactNode> = {
+  "làm việc":     <Briefcase size={11} />,
+  "học tập":      <BookOpen size={11} />,
+  "hẹn hò":       <Heart size={11} />,
+  "họp nhóm":     <Users size={11} />,
+  "chill một mình": <User size={11} />,
+  "gặp bạn bè":  <Users size={11} />,
+};
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 function ChipFilter({
   active,
@@ -73,13 +108,21 @@ export default function GuidedFilterBar({
   }
 
   function toggleDropdown() {
-    if (dropdownMounted) closeDropdown();
+    if (dropdownMounted && dropdownOpen) closeDropdown();
     else openDropdown();
   }
+
+  // "+N phong cách" button: if panel already open, close it; otherwise open
+  function handleExtraVibesClick() {
+    if (dropdownMounted && dropdownOpen) closeDropdown();
+    else openDropdown();
+  }
+
   const [geoLoading, setGeoLoading] = useState(false);
   const [geoError, setGeoError] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
+  const extraVibeBtnRef = useRef<HTMLButtonElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
   const extraVibes = VIBES.length - TOP_VIBES.length;
@@ -91,7 +134,6 @@ export default function GuidedFilterBar({
     (filter.district ? 1 : 0) +
     (filter.openNow ? 1 : 0);
 
-  // Active filter chips for display
   const activeChips: { label: string; remove: () => void }[] = [
     ...(filter.vibes ?? []).map((v) => ({
       label: v,
@@ -125,7 +167,8 @@ export default function GuidedFilterBar({
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node) &&
-        !toggleBtnRef.current?.contains(e.target as Node)
+        !toggleBtnRef.current?.contains(e.target as Node) &&
+        !extraVibeBtnRef.current?.contains(e.target as Node)
       ) {
         closeDropdown();
       }
@@ -221,7 +264,7 @@ export default function GuidedFilterBar({
               ) : (
                 <ChevronDown
                   size={12}
-                  className={cn("transition-transform duration-150", dropdownMounted && "rotate-180")}
+                  className={cn("transition-transform duration-150", dropdownMounted && dropdownOpen && "rotate-180")}
                 />
               )}
             </button>
@@ -294,23 +337,30 @@ export default function GuidedFilterBar({
             {/* Divider */}
             <div className="border-border mx-0.5 h-4 w-px flex-none border-l" />
 
-            {/* Quick vibes */}
+            {/* Quick vibes — with icon + capitalized */}
             {TOP_VIBES.map((v) => (
               <ChipFilter
                 key={v}
                 active={filter.vibes?.includes(v) ?? false}
                 onClick={() => toggleVibe(v)}
               >
-                {v}
+                {VIBE_ICONS[v]}
+                {capitalize(v)}
               </ChipFilter>
             ))}
 
             {extraVibes > 0 && (
               <button
-                onClick={openDropdown}
-                className="border-border flex-none cursor-pointer rounded-full border border-dashed px-3 py-1.5 text-xs whitespace-nowrap text-(--foreground-muted) transition-colors hover:border-accent hover:text-accent"
+                ref={extraVibeBtnRef}
+                onClick={handleExtraVibesClick}
+                className={cn(
+                  "border-border flex-none cursor-pointer rounded-full border border-dashed px-3 py-1.5 text-xs whitespace-nowrap transition-colors hover:border-accent hover:text-accent",
+                  dropdownMounted && dropdownOpen
+                    ? "border-accent text-accent bg-[rgba(201,135,12,0.08)]"
+                    : "text-(--foreground-muted)",
+                )}
               >
-                +{extraVibes} phong cách
+                {dropdownMounted && dropdownOpen ? `Ẩn bộ lọc` : `+${extraVibes} phong cách`}
               </button>
             )}
 
@@ -376,13 +426,14 @@ export default function GuidedFilterBar({
                           key={v}
                           onClick={() => toggleVibe(v)}
                           className={cn(
-                            "cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                            "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
                             filter.vibes?.includes(v)
                               ? "border-accent bg-[rgba(201,135,12,0.13)] text-accent"
                               : "border-[#E0D3C0] text-[#5C4A2F] hover:border-accent hover:text-accent",
                           )}
                         >
-                          {v}
+                          {VIBE_ICONS[v]}
+                          {capitalize(v)}
                         </button>
                       ))}
                     </div>
@@ -399,13 +450,14 @@ export default function GuidedFilterBar({
                           key={p}
                           onClick={() => togglePurpose(p)}
                           className={cn(
-                            "cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                            "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
                             filter.purposes?.includes(p)
                               ? "border-accent bg-[rgba(201,135,12,0.13)] text-accent"
                               : "border-[#E0D3C0] text-[#5C4A2F] hover:border-accent hover:text-accent",
                           )}
                         >
-                          {p}
+                          {PURPOSE_ICONS[p]}
+                          {capitalize(p)}
                         </button>
                       ))}
                     </div>
@@ -439,24 +491,23 @@ export default function GuidedFilterBar({
                       <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.09em] text-[#9B8B73]">
                         Khu vực
                       </p>
-                      <div className="relative">
-                        <select
-                          value={filter.district ?? ""}
-                          onChange={(e) => setDistrict(e.target.value)}
-                          className="w-full cursor-pointer appearance-none rounded-lg border border-[#E0D3C0] bg-[#FAF6F1] px-3 py-2 pr-8 text-xs font-medium text-[#1C1209] outline-none transition-colors focus:border-accent dark:border-[#3A2A20] dark:bg-[#2C1A0E] dark:text-[#FFE3D3]"
-                        >
-                          <option value="">Tất cả khu vực</option>
+                      <Select
+                        value={filter.district ?? ""}
+                        onValueChange={(val) => setDistrict(val ?? "")}
+                      >
+                        <SelectTrigger className="h-9 w-full rounded-lg border border-[#E0D3C0] bg-[#FAF6F1] px-3 text-xs font-medium text-[#1C1209] focus-visible:border-accent dark:border-[#3A2A20] dark:bg-[#2C1A0E] dark:text-[#FFE3D3]">
+                          <MapPin size={12} className="shrink-0 text-[#9B8B73]" />
+                          <SelectValue placeholder="Tất cả khu vực" />
+                        </SelectTrigger>
+                        <SelectContent align="start" sideOffset={4}>
+                          <SelectItem value="">Tất cả khu vực</SelectItem>
                           {AREAS.map((area) => (
-                            <option key={area} value={area}>
+                            <SelectItem key={area} value={area}>
                               {area}
-                            </option>
+                            </SelectItem>
                           ))}
-                        </select>
-                        <ChevronDown
-                          size={13}
-                          className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-[#9B8B73]"
-                        />
-                      </div>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
@@ -491,7 +542,7 @@ export default function GuidedFilterBar({
                 onClick={chip.remove}
                 className="border-accent text-accent bg-[rgba(201,135,12,0.13)] inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-all active:scale-95"
               >
-                {chip.label}
+                {capitalize(chip.label)}
                 <X size={11} />
               </button>
             ))}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Coffee, Menu, Home, Search, Bookmark, PenLine, User } from "lucide-react";
+import { Coffee, Menu, Home, Bookmark, PenLine, User } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import { buttonVariants } from "@/components/ui/Button";

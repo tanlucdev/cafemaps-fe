@@ -13,11 +13,7 @@ import { RegisterFormValues, registerSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface RegisterFormProps {
-  locale: string;
-}
-
-export default function RegisterForm({ locale }: RegisterFormProps) {
+export default function RegisterForm() {
   const t = useTranslations("auth");
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState<string | null>(null);
