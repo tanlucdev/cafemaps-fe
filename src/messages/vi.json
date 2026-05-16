@@ -55,17 +55,20 @@
   },
   "filters": {
     "all": "Tất cả",
-    "district": "Quận / Huyện",
-    "vibe": "Phong cách",
+    "district": "Khu vực",
+    "vibe": "Bộ lọc",
     "price": "Giá",
     "purpose": "Mục đích",
     "clear": "Xoá bộ lọc",
+    "clearAll": "Xoá tất cả",
     "apply": "Áp dụng",
+    "cancel": "Huỷ",
+    "activeLabel": "Đang lọc",
     "priceRanges": {
-      "under_50k": "Dưới 50k",
-      "50k_100k": "50k – 100k",
-      "100k_150k": "100k – 150k",
-      "above_150k": "Trên 150k"
+      "under_50k": "< 50k",
+      "50k_100k": "50–100k",
+      "100k_150k": "100–150k",
+      "above_150k": "> 150k"
     },
     "vibes": {
       "quiet": "Yên tĩnh",

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useLenis } from "@/components/providers/LenisProvider";
 import { useTranslations } from "next-intl";
 import CafeGrid from "@/components/cafe/CafeGrid";
 import CafeList from "@/components/cafe/CafeList";
 import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
 import Pagination from "@/components/ui/Pagination";
-import { Coffee, LayoutGrid, LayoutList, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Coffee, Search } from "lucide-react";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
 import {
   Select,
@@ -203,12 +203,12 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
               placeholder={ts("placeholder")}
-              className="flex-1 appearance-none border-0 bg-transparent py-3 pl-3 pr-2 shadow-none outline-0 ring-0 focus:border-0 focus:outline-none focus:ring-0 focus:shadow-none"
+              className="flex-1 appearance-none border-0 bg-transparent py-3 pr-2 pl-3 shadow-none ring-0 outline-0 focus:border-0 focus:shadow-none focus:ring-0 focus:outline-none"
               style={{ fontSize: "16px" }}
             />
             <button
               onClick={handleSearchSubmit}
-              className="bg-accent hover:bg-(--accent-hover) m-1.5 shrink-0 cursor-pointer rounded-full px-5 py-2 text-sm font-bold text-white transition-colors active:scale-95"
+              className="bg-accent m-1.5 shrink-0 cursor-pointer rounded-full px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-(--accent-hover) active:scale-95"
             >
               {ts("button")}
             </button>
@@ -240,42 +240,14 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
                 className="border-border bg-background text-foreground focus:ring-accent h-8 w-36 rounded-lg border px-2 text-xs focus:ring-1 focus:ring-offset-0 focus:outline-none"
                 aria-label={ts("sortLabel")}
               >
-                <SelectValue placeholder={ts("sortLabel")} />
+                <SelectValue placeholder={ts("sortLabel")}>{ts("sortLabel")} </SelectValue>
               </SelectTrigger>
-              <SelectContent sideOffset={4} align="end">
+              <SelectContent sideOffset={4} align="end" alignItemWithTrigger={false}>
                 <SelectItem value="popular">{ts("sortPopular")}</SelectItem>
                 <SelectItem value="rating">{ts("sortRating")}</SelectItem>
                 <SelectItem value="newest">{ts("sortNewest")}</SelectItem>
               </SelectContent>
             </Select>
-
-            {/* View toggle — desktop only (mobile is in GuidedFilterBar) */}
-            <div className="border-border hidden items-center overflow-hidden rounded-lg border md:flex">
-              <button
-                onClick={() => setViewMode("grid")}
-                title="Grid view"
-                className={cn(
-                  "p-1.5 transition-colors",
-                  viewMode === "grid"
-                    ? "bg-accent text-white"
-                    : "hover:text-accent text-(--foreground-muted)",
-                )}
-              >
-                <LayoutGrid size={15} />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                title="List view"
-                className={cn(
-                  "p-1.5 transition-colors",
-                  viewMode === "list"
-                    ? "bg-accent text-white"
-                    : "hover:text-accent text-(--foreground-muted)",
-                )}
-              >
-                <LayoutList size={15} />
-              </button>
-            </div>
           </div>
         </div>
 

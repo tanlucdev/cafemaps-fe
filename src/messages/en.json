@@ -55,17 +55,20 @@
   },
   "filters": {
     "all": "All",
-    "district": "District",
-    "vibe": "Vibe",
+    "district": "Area",
+    "vibe": "Filters",
     "price": "Price",
     "purpose": "Purpose",
     "clear": "Clear filters",
+    "clearAll": "Clear all",
     "apply": "Apply",
+    "cancel": "Cancel",
+    "activeLabel": "Filtering by",
     "priceRanges": {
-      "under_50k": "Under 50k",
-      "50k_100k": "50k – 100k",
-      "100k_150k": "100k – 150k",
-      "above_150k": "Above 150k"
+      "under_50k": "< 50k",
+      "50k_100k": "50–100k",
+      "100k_150k": "100–150k",
+      "above_150k": "> 150k"
     },
     "vibes": {
       "quiet": "Quiet",

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { cn, formatPrice } from "@/lib/utils";
@@ -19,15 +20,25 @@ interface CafeCardProps {
   onSavedChange?: (saved: boolean) => void;
 }
 
+// Normalize raw vibe values (Vietnamese or English key) → canonical key
+const VIBE_KEY_MAP: Record<string, string> = {
+  "yên tĩnh": "quiet",
+  "nhộn nhịp": "lively",
+  "hiện đại": "modern",
+  "thiên nhiên": "nature",
+  "sáng tạo": "creative",
+  "lãng mạn": "romantic",
+};
+
 const VIBE_TAG_CLASSES: Record<string, string> = {
-  "yên tĩnh":   "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
-  "nhộn nhịp":  "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
-  vintage:       "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
-  "hiện đại":   "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
-  "thiên nhiên": "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
-  "sáng tạo":   "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
-  "lãng mạn":   "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
-  minimalist:    "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
+  quiet:      "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
+  lively:     "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
+  vintage:    "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
+  modern:     "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
+  nature:     "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
+  creative:   "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
+  romantic:   "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
+  minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
 
 function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean {
@@ -54,6 +65,7 @@ export default function CafeCard({
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
+  const tFilters = useTranslations("filters");
   const isSlide = animationType === "slide";
   const articleRef = useRef<HTMLElement>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -201,18 +213,24 @@ export default function CafeCard({
 
             {tags.length > 0 && (
               <div className="mt-0.5 flex flex-wrap gap-1.5">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className={cn(
-                      "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                      VIBE_TAG_CLASSES[tag] ??
-                        "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
-                    )}
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {tags.map((tag) => {
+                  const key = VIBE_KEY_MAP[tag] ?? tag;
+                  const label = key in VIBE_TAG_CLASSES
+                    ? tFilters(`vibes.${key}` as Parameters<typeof tFilters>[0])
+                    : tag;
+                  return (
+                    <span
+                      key={tag}
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
+                        VIBE_TAG_CLASSES[key] ??
+                          "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
+                      )}
+                    >
+                      {label}
+                    </span>
+                  );
+                })}
               </div>
             )}
           </div>
