@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -71,8 +71,20 @@ export default function CafeCard({
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+  const [hovered, setHovered] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   function handleMouseEnter() {
+    if (!isDesktop) return;
+    setHovered(true);
     hoverTimer.current = setTimeout(() => {
       if (articleRef.current) {
         setAnchorRect(articleRef.current.getBoundingClientRect());
@@ -82,6 +94,8 @@ export default function CafeCard({
   }
 
   function handleMouseLeave() {
+    if (!isDesktop) return;
+    setHovered(false);
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     setPopupVisible(false);
   }
@@ -147,6 +161,24 @@ export default function CafeCard({
             {/* Gradient overlay for bottom info */}
             <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[rgba(15,8,2,0.55)] via-[rgba(15,8,2,0.1)] to-transparent" style={{ backgroundImage: "linear-gradient(to top, rgba(15,8,2,0.55) 0%, rgba(15,8,2,0.1) 42%, transparent 65%)" }} />
 
+            {/* Hover: description slides up from image bottom */}
+            {cafe.oneLiner && (
+              <div
+                className="pointer-events-none absolute inset-0 flex items-end p-3.5 transition-opacity duration-200"
+                style={{
+                  background: "linear-gradient(to top, rgba(10,5,1,0.80) 0%, rgba(10,5,1,0.12) 52%, transparent 72%)",
+                  opacity: hovered ? 1 : 0,
+                }}
+              >
+                <p
+                  className="text-[12.5px] leading-[1.55] text-white/90 italic transition-transform duration-250"
+                  style={{ transform: hovered ? "translateY(0)" : "translateY(6px)" }}
+                >
+                  &ldquo;{cafe.oneLiner}&rdquo;
+                </p>
+              </div>
+            )}
+
             {/* Price — top left */}
             {price && (
               <span className="absolute top-2.5 left-2.5 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md">
@@ -154,37 +186,6 @@ export default function CafeCard({
               </span>
             )}
 
-            {/* Bottom overlay row: open status + rating */}
-            <div className="absolute right-3 bottom-3 left-3 flex items-center justify-between">
-              {/* Open now pill */}
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold",
-                  openNow
-                    ? "bg-[#E6F5EE] text-[#166638]"
-                    : "bg-[rgba(255,255,255,0.18)] text-white backdrop-blur-sm",
-                )}
-              >
-                <span className="relative flex h-1.5 w-1.5">
-                  {openNow && (
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1EA055] opacity-75" />
-                  )}
-                  <span
-                    className={cn(
-                      "relative inline-flex h-1.5 w-1.5 rounded-full",
-                      openNow ? "bg-[#1EA055]" : "bg-white/60",
-                    )}
-                  />
-                </span>
-                {openNow ? "Đang mở" : "Đã đóng"}
-              </span>
-
-              {/* Rating pill */}
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#FBF0DC] px-2.5 py-1 text-[11px] font-bold text-[#C9870C]">
-                <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
-                {rating}
-              </span>
-            </div>
           </div>
         </Link>
 
@@ -200,19 +201,46 @@ export default function CafeCard({
         {/* Text content */}
         <Link href={href} className="block flex-1" onClick={saveReturnUrl}>
           <div className="flex flex-col gap-2 p-4">
-            <h3 className="line-clamp-1 text-[14px] font-bold leading-snug text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]">
-              {cafe.name}
-            </h3>
+            {/* Name + rating */}
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="line-clamp-1 text-[14px] font-bold leading-snug text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]">
+                {cafe.name}
+              </h3>
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#FBF0DC] px-2.5 py-0.5 text-[11px] font-bold text-[#C9870C] dark:bg-[#2C1A08] dark:text-[#F0A830]">
+                <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
+                {rating}
+              </span>
+            </div>
 
-            {locationText && (
-              <p className="flex min-w-0 items-center gap-1 text-xs text-[#9B8B73]">
-                <MapPin size={12} className="shrink-0 text-[#C9870C]" />
-                <span className="truncate">{locationText}</span>
-              </p>
-            )}
+            {/* Open status + location */}
+            <div className="flex min-w-0 items-center gap-1.5 text-xs">
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center gap-1 font-semibold",
+                  openNow ? "text-[#1EA055]" : "text-[#9B8B73]",
+                )}
+              >
+                <span className="relative flex h-1.5 w-1.5">
+                  {openNow && (
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1EA055] opacity-75" />
+                  )}
+                  <span className={cn("relative inline-flex h-1.5 w-1.5 rounded-full", openNow ? "bg-[#1EA055]" : "bg-[#9B8B73]")} />
+                </span>
+                {openNow ? "Đang mở" : "Đã đóng"}
+              </span>
+              {locationText && (
+                <>
+                  <span className="text-[#C9C0B3]">·</span>
+                  <span className="flex min-w-0 items-center gap-0.5 text-[#9B8B73]">
+                    <MapPin size={11} className="shrink-0 text-[#C9870C]" />
+                    <span className="truncate">{locationText}</span>
+                  </span>
+                </>
+              )}
+            </div>
 
             {tags.length > 0 && (
-              <div className="mt-0.5 flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5">
                 {tags.map((tag) => {
                   const key = VIBE_KEY_MAP[tag] ?? tag;
                   const label = key in VIBE_TAG_CLASSES
@@ -237,7 +265,7 @@ export default function CafeCard({
         </Link>
       </motion.article>
 
-      {anchorRect && (
+      {isDesktop && anchorRect && (
         <CafePreviewPopup
           cafe={cafe}
           anchorRect={anchorRect}

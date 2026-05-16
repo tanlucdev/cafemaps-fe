@@ -14,9 +14,10 @@ const LOCALES = [
 
 interface LocaleSwitcherProps {
   className?: string;
+  align?: "right" | "center";
 }
 
-export default function LocaleSwitcher({ className }: LocaleSwitcherProps) {
+export default function LocaleSwitcher({ className, align = "right" }: LocaleSwitcherProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -67,29 +68,39 @@ export default function LocaleSwitcher({ className }: LocaleSwitcherProps) {
       {open && (
         <div
           className={cn(
-            "absolute right-0 top-full z-50 mt-1.5 w-40 overflow-hidden rounded-xl",
-            "border border-(--border) bg-(--background) shadow-lg",
+            "absolute top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl",
+            "border border-(--border) bg-(--background)",
+            "shadow-[0_8px_32px_rgba(40,22,4,0.14)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+            "animate-in fade-in-0 zoom-in-95 duration-150",
+            align === "center"
+              ? "left-1/2 -translate-x-1/2"
+              : "right-0",
           )}
         >
-          {LOCALES.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => switchLocale(l.code)}
-              className={cn(
-                "flex w-full items-center gap-2.5 px-3 py-2.5 text-sm transition-colors",
-                l.code === locale
-                  ? "text-accent bg-(--accent-light) font-medium"
-                  : "text-(--foreground-muted) hover:text-(--foreground) hover:bg-(--background-secondary)",
-              )}
-            >
-              <ReactCountryFlag
-                countryCode={l.countryCode}
-                style={{ width: "1.1rem", height: "1.1rem" }}
-                svg
-              />
-              {l.label}
-            </button>
-          ))}
+          <div className="p-1.5">
+            {LOCALES.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => switchLocale(l.code)}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
+                  l.code === locale
+                    ? "bg-[rgba(201,135,12,0.12)] font-semibold text-[#C9870C] dark:bg-[rgba(240,168,48,0.12)] dark:text-[#F0A830]"
+                    : "text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary)",
+                )}
+              >
+                <ReactCountryFlag
+                  countryCode={l.countryCode}
+                  style={{ width: "1.2rem", height: "1.2rem" }}
+                  svg
+                />
+                <span>{l.label}</span>
+                {l.code === locale && (
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#C9870C] dark:bg-[#F0A830]" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

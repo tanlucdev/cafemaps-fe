@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { SlidersHorizontal, X, ChevronDown, LayoutGrid, LayoutList } from "lucide-react";
-import { motion, useSpring, useTransform } from "framer-motion";
+import { X, ChevronDown } from "lucide-react";
 import NearMeButton from "@/components/cafe/NearMeButton";
 import { cn } from "@/lib/utils";
 import type { CafeFilter as Filter, Vibe } from "@/types/cafe";
@@ -14,7 +12,6 @@ import {
   VIBE_ICONS,
   VIBE_TRANSLATION_KEYS,
 } from "@/components/cafe/constants/filter-constants";
-
 interface FilterChipsRowProps {
   filter: Filter;
   onChange: (filter: Filter) => void;
@@ -29,8 +26,6 @@ interface FilterChipsRowProps {
   toggleOpenNow: () => void;
   setDistance: (km: number) => void;
   clearAll: () => void;
-  viewMode?: "grid" | "list";
-  onViewModeChange?: (mode: "grid" | "list") => void;
 }
 
 function ChipFilter({
@@ -46,7 +41,7 @@ function ChipFilter({
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-150 active:scale-95",
+        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-all duration-150 active:scale-95",
         active
           ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
           : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
@@ -71,40 +66,40 @@ export function FilterChipsRow({
   toggleOpenNow,
   setDistance,
   clearAll,
-  viewMode = "grid",
-  onViewModeChange,
 }: FilterChipsRowProps) {
   const tf = useTranslations("filters");
   const tg = useTranslations("guidedFilter");
 
   const extraVibes = VIBES.length - TOP_VIBES.length;
 
-  // Stretchy toggle indicator
-  const indicatorX = useSpring(viewMode === "list" ? 28 : 0, {
-    stiffness: 280,
-    damping: 18,
-    mass: 0.5,
-  });
-  const scaleX = useTransform(indicatorX, [0, 14, 28], [1, 1.45, 1]);
-
-  useEffect(() => {
-    indicatorX.set(viewMode === "list" ? 28 : 0);
-  }, [viewMode, indicatorX]);
-
   return (
-    <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-2.5">
+    <div className="scrollbar-hide flex items-center gap-1.75 overflow-x-auto pt-2.75 pb-3">
       {/* Bộ lọc dropdown toggle */}
       <button
         ref={toggleBtnRef}
         onClick={onToggleDropdown}
         className={cn(
-          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95",
+          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-bold whitespace-nowrap transition-all duration-150 active:scale-95",
           dropdownMounted || activeCount > 0
             ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
             : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
         )}
       >
-        <SlidersHorizontal size={12} />
+        {/* 3-line funnel icon matching design */}
+        <svg
+          width={14}
+          height={14}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+          <line x1="11" y1="18" x2="13" y2="18" />
+        </svg>
         {tf("vibe")}
         {activeCount > 0 ? (
           <span className="bg-accent flex h-4 min-w-4 items-center justify-center rounded-full px-0.5 text-[10px] font-extrabold text-white">
@@ -128,7 +123,7 @@ export function FilterChipsRow({
       <button
         onClick={toggleOpenNow}
         className={cn(
-          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-150 active:scale-95",
+          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-all duration-150 active:scale-95",
           filter.openNow
             ? "border-[#1EA055] bg-[#E6F5EE] text-[#166638]"
             : "border-border bg-white text-(--foreground-muted) hover:border-[#1EA055] hover:text-[#166638] dark:bg-[#1C1210]",
@@ -182,7 +177,7 @@ export function FilterChipsRow({
           ref={extraVibeBtnRef}
           onClick={dropdownMounted && dropdownOpen ? onToggleDropdown : onOpenDropdown}
           className={cn(
-            "border-border hover:border-accent hover:text-accent flex-none cursor-pointer rounded-full border border-dashed px-3 py-1.5 text-xs whitespace-nowrap transition-colors",
+            "border-border hover:border-accent hover:text-accent flex-none cursor-pointer rounded-full border-[1.5px] border-dashed px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-colors",
             dropdownMounted && dropdownOpen
               ? "border-accent text-accent bg-[rgba(201,135,12,0.08)]"
               : "text-(--foreground-muted)",
@@ -204,35 +199,6 @@ export function FilterChipsRow({
           {tf("clear")}
         </button>
       )}
-
-      {/* View toggle — desktop only, right side */}
-      <div className="ml-auto hidden items-center rounded-lg border border-[#FEDCC8]/60 bg-[#FFF1EA] p-0.5 md:flex dark:border-[#3A2A20] dark:bg-[#2C1A0E]">
-        {/* Sliding indicator — always in DOM, spring x + stretch scaleX */}
-        <div className="relative flex items-center">
-          <motion.div
-            className="absolute h-7 w-7 origin-left rounded-md bg-white shadow-sm dark:bg-[#1C1210]"
-            style={{ x: indicatorX, scaleX }}
-          />
-          {(["grid", "list"] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => {
-                indicatorX.set(mode === "list" ? 28 : 0);
-                onViewModeChange?.(mode);
-              }}
-              className="relative z-10 flex h-7 w-7 items-center justify-center rounded-md"
-              aria-label={mode === "grid" ? "Grid view" : "List view"}
-            >
-              <motion.span
-                animate={{ color: viewMode === mode ? "var(--accent)" : "#847465" }}
-                transition={{ duration: 0.15 }}
-              >
-                {mode === "grid" ? <LayoutGrid size={15} /> : <LayoutList size={15} />}
-              </motion.span>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

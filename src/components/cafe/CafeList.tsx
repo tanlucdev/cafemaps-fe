@@ -60,9 +60,11 @@ function CafeListRow({
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+  const [hovered, setHovered] = useState(false);
   const t = useTranslations("search");
 
   function handleMouseEnter() {
+    setHovered(true);
     hoverTimer.current = setTimeout(() => {
       const target = imageRef.current ?? articleRef.current;
       if (target) {
@@ -73,6 +75,7 @@ function CafeListRow({
   }
 
   function handleMouseLeave() {
+    setHovered(false);
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     setPopupVisible(false);
   }
@@ -134,6 +137,24 @@ function CafeListRow({
               <span className="absolute top-2 left-2 rounded-full bg-[rgba(18,10,2,0.68)] px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
                 {price}
               </span>
+            )}
+
+            {/* Hover: description slides up from image bottom */}
+            {cafe.oneLiner && (
+              <div
+                className="pointer-events-none absolute inset-0 flex items-end p-2.5 transition-opacity duration-200"
+                style={{
+                  background: "linear-gradient(to top, rgba(10,5,1,0.88) 0%, rgba(10,5,1,0.20) 55%, transparent 80%)",
+                  opacity: hovered ? 1 : 0,
+                }}
+              >
+                <p
+                  className="text-[11px] leading-normal text-white/92 italic transition-transform duration-250"
+                  style={{ transform: hovered ? "translateY(0)" : "translateY(5px)" }}
+                >
+                  &ldquo;{cafe.oneLiner}&rdquo;
+                </p>
+              </div>
             )}
           </div>
 

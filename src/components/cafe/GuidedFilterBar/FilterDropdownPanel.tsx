@@ -38,7 +38,6 @@ interface FilterDropdownPanelProps {
   onSetPriceStaged: (val: string) => void;
   onSetDistrictStaged: (val: string) => void;
   onApply: () => void;
-  onCancel: () => void;
   onClearAll: () => void;
 }
 
@@ -51,7 +50,6 @@ export function FilterDropdownPanel({
   onSetPriceStaged,
   onSetDistrictStaged,
   onApply,
-  onCancel,
   onClearAll,
 }: FilterDropdownPanelProps) {
   const tf = useTranslations("filters");
@@ -180,20 +178,12 @@ export function FilterDropdownPanel({
           >
             {tf("clear")}
           </button>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onCancel}
-              className="cursor-pointer rounded-xl px-4 py-2 text-xs font-medium text-[#9B8B73] transition-colors hover:text-[#5C4A2F]"
-            >
-              {tf("cancel")}
-            </button>
-            <button
-              onClick={onApply}
-              className="bg-accent cursor-pointer rounded-xl px-6 py-2 text-xs font-bold text-white transition-colors hover:bg-(--accent-hover)"
-            >
-              {stagedActiveCount > 0 ? `${tf("apply")} (${stagedActiveCount})` : tf("apply")}
-            </button>
-          </div>
+          <button
+            onClick={onApply}
+            className="bg-accent cursor-pointer rounded-xl px-6 py-2 text-xs font-bold text-white transition-colors hover:bg-(--accent-hover)"
+          >
+            {stagedActiveCount > 0 ? `${tf("apply")} (${stagedActiveCount})` : tf("apply")}
+          </button>
         </div>
       </div>
     </div>

@@ -96,7 +96,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ## Lưu ý ESLint
 
-Các pattern sau bị flag bởi `react-hooks/set-state-in-effect` nhưng là hợp lệ — dùng `// eslint-disable-next-line react-hooks/set-state-in-effect`:
+`react-hooks/set-state-in-effect` **không tồn tại** — đừng dùng. Các pattern sau hoàn toàn hợp lệ và không cần eslint-disable:
 
 - Hydration guard: `useEffect(() => { setMounted(true) }, [])`
 - Đóng menu khi navigate: `useEffect(() => { setMenuOpen(false) }, [pathname])`

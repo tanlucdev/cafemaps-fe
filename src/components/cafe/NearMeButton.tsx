@@ -48,12 +48,12 @@ export default function NearMeButton({ filter, onChange }: NearMeButtonProps) {
       disabled={loading}
       title={error ? "Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập." : undefined}
       className={cn(
-        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-150 active:scale-95",
+        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium whitespace-nowrap transition-all duration-150 active:scale-95",
         filter.nearMe
-          ? "border-accent bg-[rgba(201,135,12,0.13)] text-accent"
+          ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
           : error
             ? "border-red-300 text-red-500"
-            : "border-border hover:border-accent hover:text-accent text-(--foreground-muted) bg-white dark:bg-[#1C1210]",
+            : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
         loading && "cursor-not-allowed opacity-60",
       )}
     >
