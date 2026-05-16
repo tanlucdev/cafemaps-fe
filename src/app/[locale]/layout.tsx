@@ -5,10 +5,7 @@ import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { routing } from "@/i18n/routing"
 import LenisProvider from "@/components/providers/LenisProvider"
-import PageTransition from "@/components/providers/PageTransition"
 import QueryProvider from "@/components/providers/QueryProvider"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
 
 interface LocaleLayoutProps {
   children: React.ReactNode
@@ -32,9 +29,7 @@ export default async function LocaleLayout({
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
         <QueryProvider>
           <LenisProvider>
-            <Header locale={locale} />
-            <PageTransition>{children}</PageTransition>
-            <Footer locale={locale} />
+            {children}
             <Toaster richColors position="top-right" />
           </LenisProvider>
         </QueryProvider>

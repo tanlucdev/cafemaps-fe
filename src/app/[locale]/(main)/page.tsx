@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import HeroSection from "./_sections/HeroSection";
-import FeaturedCafesSectionLoader from "./_sections/FeaturedCafesSectionLoader";
-import FeaturedCafesSkeleton from "./_sections/FeaturedCafesSkeleton";
+import HeroSection from "../_sections/HeroSection";
+import FeaturedCafesSectionLoader from "../_sections/FeaturedCafesSectionLoader";
+import FeaturedCafesSkeleton from "../_sections/FeaturedCafesSkeleton";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;

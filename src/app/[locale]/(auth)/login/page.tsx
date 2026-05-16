@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import AuthShell from "../AuthShell";
 import LoginForm from "./LoginForm";
 
 interface PageProps {
@@ -18,24 +18,26 @@ export default async function LoginPage({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: "auth" });
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 pt-16">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="font-display text-2xl font-bold text-[var(--foreground)]">{t("login")}</h1>
-        </div>
-
-        <LoginForm />
-
-        <p className="mt-5 text-center text-sm text-[var(--foreground-muted)]">
-          {t("noAccount")}{" "}
-          <Link
-            href={`/${locale}/register`}
-            className="font-medium text-[var(--accent)] hover:underline"
-          >
-            {t("register")}
-          </Link>
-        </p>
-      </div>
-    </div>
+    <AuthShell
+      locale={locale}
+      mode="login"
+      copy={{
+        backHome: t("backHome"),
+        brand: t("brand"),
+        footerLine: t("footerLine"),
+        loginGreetingTitle: t("loginGreetingTitle"),
+        loginGreetingSub: t("loginGreetingSub"),
+        registerGreetingTitle: t("registerGreetingTitle"),
+        registerGreetingSub: t("registerGreetingSub"),
+        loginTab: t("loginTab"),
+        registerTab: t("registerTab"),
+        noAccount: t("noAccount"),
+        hasAccount: t("hasAccount"),
+        switchToRegister: t("switchToRegister"),
+        switchToLogin: t("switchToLogin"),
+      }}
+    >
+      <LoginForm />
+    </AuthShell>
   );
 }
