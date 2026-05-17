@@ -164,6 +164,38 @@ export async function getCafes(filter?: CafeFilter): Promise<Cafe[]> {
   }
 }
 
+export async function getCafesWithMeta(filter?: CafeFilter): Promise<{
+  cafes: Cafe[]
+  meta: { total: number; page: number; limit: number; totalPages: number }
+}> {
+  try {
+    const data = await apiFetch<CafesResponse | Cafe[]>(
+      `/cafes${buildQuery(filter)}`
+    )
+    if (Array.isArray(data)) {
+      return {
+        cafes: data.map(mapApiCafe),
+        meta: { total: data.length, page: 1, limit: data.length, totalPages: 1 },
+      }
+    }
+    return {
+      cafes: data.data.map(mapApiCafe),
+      meta: {
+        total: data.meta?.total ?? data.total ?? data.data.length,
+        page: data.meta?.page ?? data.page ?? 1,
+        limit: data.meta?.limit ?? data.limit ?? 12,
+        totalPages: data.meta?.totalPages ?? Math.ceil((data.meta?.total ?? data.total ?? data.data.length) / (data.meta?.limit ?? data.limit ?? 12)),
+      },
+    }
+  } catch (err) {
+    console.error("getCafesWithMeta failed:", err)
+    return {
+      cafes: MOCK_CAFES,
+      meta: { total: MOCK_CAFES.length, page: 1, limit: MOCK_CAFES.length, totalPages: 1 },
+    }
+  }
+}
+
 export async function getCafeBySlug(slug: string): Promise<Cafe | null> {
   try {
     const raw = await apiFetch<Cafe>(`/cafes/${slug}`)
@@ -239,6 +271,18 @@ export async function toggleSaveCafe(
     }
     throw error
   }
+}
+
+export async function moveToCollection(
+  cafeId: string,
+  collectionName: string,
+  token: string
+): Promise<void> {
+  await apiFetch(`/saved/${cafeId}/collection`, {
+    method: "PATCH",
+    body: JSON.stringify({ collectionName }),
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }
 
 export async function submitCafe(

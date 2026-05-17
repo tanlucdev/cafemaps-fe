@@ -21,17 +21,15 @@ export default async function ContributePage({ params }: PageProps) {
 
   return (
     <div
-      className="min-h-screen pt-24 pb-16 px-6"
+      className="h-screen overflow-hidden flex flex-col pt-20 pb-4 px-6"
       style={{ background: "#F5EFE6", fontFamily: "Be Vietnam Pro, sans-serif" }}
     >
-      <div className="max-w-165 mx-auto">
-        <div className="text-center mb-8">
-          <h1
-            className="text-[26px] italic text-[#1C1209] leading-snug font-lora"
-          >
+      <div className="max-w-lg mx-auto w-full flex flex-col min-h-0 flex-1">
+        <div className="text-center mb-5">
+          <h1 className="text-[22px] italic text-[#1C1209] leading-snug font-lora">
             {t("heading")}
           </h1>
-          <p className="text-[14px] text-[#9B8B73] mt-2">{t("subtitle")}</p>
+          <p className="text-[13px] text-[#9B8B73] mt-1">{t("subtitle")}</p>
         </div>
 
         <ContributeForm />

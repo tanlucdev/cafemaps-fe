@@ -82,14 +82,14 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
       <div className="mx-auto flex max-w-2xl items-center justify-between px-4 pt-6 pb-4 sm:px-6 lg:max-w-[900px] lg:px-10">
         <button
           onClick={handleBack}
-          className="hover:text-foreground inline-flex items-center gap-1.5 text-sm text-(--foreground-muted) transition-colors"
+          className="hover:text-foreground inline-flex cursor-pointer items-center gap-1.5 text-sm text-(--foreground-muted) transition-colors"
         >
           <ChevronLeft size={16} />
           {tc("back")}
         </button>
         <button
           onClick={() => setShareOpen(true)}
-          className="hover:text-foreground border-border hover:border-accent inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-(--foreground-muted) transition-colors"
+          className="hover:text-foreground border-border hover:border-accent inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-(--foreground-muted) transition-colors"
         >
           <Share2 size={14} />
           {t("share")}

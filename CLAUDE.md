@@ -62,6 +62,7 @@ src/
 
 ## Quy ước code
 
+- **Cursor pointer**: Mọi element có action (button, role="button", clickable div) **phải có `cursor-pointer`** — kể cả `<button>` (browser default không đủ tin cậy với Tailwind reset) và `motion.button`. Bao gồm: modal close, confirm, cancel; folder card, context menu items; filter chips, dropdown options; icon-only buttons.
 - **Path alias**: `@/*` → `./src/*`
 - **Utility**: Dùng `cn()` từ `@/lib/utils` cho conditional classnames
 - **Button**: `buttonVariants({ variant, size })` hoặc `<Button>` component với CVA

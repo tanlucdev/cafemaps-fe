@@ -26,7 +26,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       aria-label="Toggle theme"
       className={cn(
-        "flex h-8 w-8 items-center justify-center rounded-none border-0 p-0",
+        "flex h-8 w-8 cursor-pointer items-center justify-center rounded-none border-0 p-0",
         "text-[var(--foreground-muted)] hover:text-[var(--foreground)]",
         "bg-transparent hover:bg-transparent",
         "transition-all duration-200",

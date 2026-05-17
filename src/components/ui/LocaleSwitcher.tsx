@@ -47,7 +47,7 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
       <button
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-8 items-center gap-1.5 rounded-full px-2 py-1 transition-colors",
+          "flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 py-1 transition-colors",
           "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-(--background-secondary)",
         )}
         aria-label="Switch language"
@@ -83,7 +83,7 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
                 key={l.code}
                 onClick={() => switchLocale(l.code)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
+                  "flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
                   l.code === locale
                     ? "bg-[rgba(201,135,12,0.12)] font-semibold text-[#C9870C] dark:bg-[rgba(240,168,48,0.12)] dark:text-[#F0A830]"
                     : "text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary)",

@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star } from "lucide-react";
 import type { Cafe } from "@/types/cafe";
-import { formatPrice } from "@/lib/utils";
 
 const POPUP_WIDTH = 320;
 const IMG_H = 220;
@@ -39,7 +37,6 @@ function computePosition(rect: DOMRect): { left: number; top: number } {
 
 function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible">) {
   const pos = computePosition(anchorRect);
-  const price = formatPrice(cafe.priceMin, cafe.priceMax);
 
   return (
     <motion.div
@@ -78,19 +75,6 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
           className="pointer-events-none absolute inset-0"
           style={{ background: "linear-gradient(to top, rgba(10,5,1,0.55) 0%, transparent 55%)" }}
         />
-
-        {/* Price — top left */}
-        {price && (
-          <span className="absolute top-2.5 left-2.5 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md">
-            {price}
-          </span>
-        )}
-
-        {/* Rating — bottom right on image */}
-        <span className="absolute right-2.5 bottom-2.5 inline-flex items-center gap-1 rounded-full bg-[rgba(18,10,2,0.72)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md">
-          <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
-          {"4.5"}
-        </span>
       </div>
 
       {/* Info */}

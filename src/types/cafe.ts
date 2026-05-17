@@ -74,6 +74,12 @@ export interface CafesResponse {
   total: number
   page: number
   limit: number
+  meta?: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
 }
 
 export interface SavedCafeEntry {

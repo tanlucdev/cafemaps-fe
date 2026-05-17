@@ -48,7 +48,7 @@ export default function UserMenu({ locale }: UserMenuProps) {
       <button
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold",
+          "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-xs font-semibold",
           "bg-[var(--accent)] text-white transition-opacity hover:opacity-90",
         )}
         aria-label="Tài khoản"
@@ -63,7 +63,7 @@ export default function UserMenu({ locale }: UserMenuProps) {
               setOpen(false);
               router.push(`/${locale}/profile`);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--background-secondary)]"
+            className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-foreground transition-colors hover:bg-(--background-secondary)"
           >
             <User size={14} />
             {t("bottomNav.profile")}
@@ -71,7 +71,7 @@ export default function UserMenu({ locale }: UserMenuProps) {
           <div className="my-1 border-t border-[var(--border)]" />
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:bg-[var(--background-secondary)] dark:text-red-400"
+            className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:bg-(--background-secondary) dark:text-red-400"
           >
             <LogOut size={14} />
             {t("auth.logout")}

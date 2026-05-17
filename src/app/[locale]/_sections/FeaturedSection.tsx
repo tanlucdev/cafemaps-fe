@@ -31,9 +31,17 @@ type ViewMode = "grid" | "list";
 
 const PAGE_SIZE = 10;
 
+interface ServerMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 interface FeaturedSectionProps {
   cafes: Cafe[];
   locale: string;
+  serverMeta?: ServerMeta;
 }
 
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -46,7 +54,7 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps) {
+export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const lenis = useLenis();
@@ -122,6 +130,23 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
   }
 
   const filtered = useMemo(() => {
+    // Server already filtered — only apply client-only filters (openNow, nearMe)
+    if (serverMeta) {
+      let result = cafes;
+      if (filter.openNow) result = result.filter(isOpenNow);
+      if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
+        const hasCoords = result.some((c) => c.lat != null && c.lng != null);
+        if (hasCoords) {
+          const radius = filter.radiusKm ?? 2;
+          result = result.filter((c) => {
+            if (c.lat == null || c.lng == null) return false;
+            return haversineKm(filter.lat!, filter.lng!, c.lat, c.lng) <= radius;
+          });
+        }
+      }
+      return result;
+    }
+
     let result = cafes;
     const { search, district, vibes, purposes, priceRange, openNow } = filter;
 
@@ -163,7 +188,7 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
       }
     }
     return result;
-  }, [cafes, filter]);
+  }, [cafes, filter, serverMeta]);
 
   const sorted = useMemo(() => {
     if (sortMode === "rating" || sortMode === "popular") return filtered;
@@ -177,8 +202,9 @@ export default function FeaturedSection({ cafes, locale }: FeaturedSectionProps)
     return filtered;
   }, [filtered, sortMode]);
 
-  const total = sorted.length;
-  const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  // When serverMeta is present, API already paginated the data — use server total and render cafes as-is
+  const total = serverMeta ? serverMeta.total : sorted.length;
+  const paginated = serverMeta ? sorted : sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <>

@@ -205,20 +205,20 @@ function DetailActions({
         onClick={onSave}
         disabled={loadingSave}
         aria-label={saved ? "Bỏ lưu" : "Lưu quán"}
-        className={`flex h-11 w-[112px] shrink-0 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-all duration-200 sm:w-[96px] ${
+        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl border px-5 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed sm:w-32 ${
           saved
-            ? "border-amber-500 bg-amber-500 text-white"
+            ? "border-amber-500 bg-amber-500 text-white shadow-[0_2px_8px_rgba(245,158,11,0.35)]"
             : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)"
         }`}
       >
-        <Bookmark size={16} className={saved ? "fill-white" : ""} />
+        <Bookmark size={15} className={saved ? "fill-white" : ""} />
         {saveLabel}
       </button>
       <a
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-accent flex h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-white transition-colors hover:bg-(--accent-hover)"
+        className="bg-accent flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 text-sm font-bold text-white transition-colors hover:bg-(--accent-hover)"
       >
         <Navigation size={16} className="shrink-0" />
         <span className="truncate">{directionsLabel}</span>
