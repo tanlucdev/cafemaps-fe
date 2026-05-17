@@ -1,29 +1,14 @@
-import Link from "next/link";
+"use client";
+
+import { Link, usePathname } from "@/i18n/navigation";
 import { ChevronLeft, Coffee } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface AuthShellProps {
   children: React.ReactNode;
-  locale: string;
-  mode: "login" | "register";
-  copy: {
-    backHome: string;
-    brand: string;
-    footerLine: string;
-    loginGreetingTitle: string;
-    loginGreetingSub: string;
-    registerGreetingTitle: string;
-    registerGreetingSub: string;
-    loginTab: string;
-    registerTab: string;
-    noAccount: string;
-    hasAccount: string;
-    switchToRegister: string;
-    switchToLogin: string;
-  };
 }
 
-function CupMark({ mode }: { mode: AuthShellProps["mode"] }) {
-  const isRegister = mode === "register";
+function CupMark({ isRegister }: { isRegister: boolean }) {
 
   return (
     <div className="relative mb-1 inline-block">
@@ -51,10 +36,12 @@ function CupMark({ mode }: { mode: AuthShellProps["mode"] }) {
   );
 }
 
-export default function AuthShell({ children, locale, mode, copy }: AuthShellProps) {
-  const isLogin = mode === "login";
-  const title = isLogin ? copy.loginGreetingTitle : copy.registerGreetingTitle;
-  const subtitle = isLogin ? copy.loginGreetingSub : copy.registerGreetingSub;
+export default function AuthShell({ children }: AuthShellProps) {
+  const t = useTranslations("auth");
+  const pathname = usePathname();
+  const isLogin = pathname === "/login";
+  const title = isLogin ? t("loginGreetingTitle") : t("registerGreetingTitle");
+  const subtitle = isLogin ? t("loginGreetingSub") : t("registerGreetingSub");
 
   return (
     <main
@@ -64,11 +51,11 @@ export default function AuthShell({ children, locale, mode, copy }: AuthShellPro
       <div className="flex w-full flex-1 flex-col items-center justify-center">
         <div className="mb-2 w-full max-w-[420px]">
           <Link
-            href={`/${locale}`}
+            href="/"
             className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#9B8B73] transition-colors hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
           >
             <ChevronLeft size={14} />
-            {copy.backHome}
+            {t("backHome")}
           </Link>
         </div>
 
@@ -77,17 +64,17 @@ export default function AuthShell({ children, locale, mode, copy }: AuthShellPro
             <div className="absolute -top-8 -right-6 h-24 w-24 rounded-full bg-[rgba(201,135,12,0.08)]" />
             <div className="absolute -bottom-5 -left-5 h-20 w-20 rounded-full bg-[rgba(201,135,12,0.06)]" />
 
-            <Link href={`/${locale}`} className="relative mb-2.5 inline-flex items-center gap-2">
+            <Link href="/" className="relative mb-2.5 inline-flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[#C9870C] text-white">
                 <Coffee size={18} />
               </span>
               <span className="text-[15px] font-extrabold tracking-tight text-[#C9870C]">
-                {copy.brand}
+                {t("brand")}
               </span>
             </Link>
 
             <div className="relative">
-              <CupMark mode={mode} />
+              <CupMark isRegister={!isLogin} />
               <h1 className="font-lora mt-0.5 text-[18px] leading-snug font-semibold text-[#1C1209] italic max-[520px]:text-[17px] dark:text-[#F0EBE3]">
                 &ldquo;{title}&rdquo;
               </h1>
@@ -100,43 +87,43 @@ export default function AuthShell({ children, locale, mode, copy }: AuthShellPro
           <div className="px-8 pt-[18px] pb-6 max-[520px]:px-5 max-[520px]:pt-4 max-[520px]:pb-5">
             <div className="mb-4 flex gap-0.5 rounded-full bg-[#EDE4D6] p-1 dark:bg-[#242220]">
               <Link
-                href={`/${locale}/login`}
-                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all ${
+                href="/login"
+                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
                   isLogin
                     ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
                     : "text-[#9B8B73] hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
                 }`}
               >
-                {copy.loginTab}
+                {t("loginTab")}
               </Link>
               <Link
-                href={`/${locale}/register`}
-                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all ${
+                href="/register"
+                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
                   !isLogin
                     ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
                     : "text-[#9B8B73] hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
                 }`}
               >
-                {copy.registerTab}
+                {t("registerTab")}
               </Link>
             </div>
 
             {children}
 
             <p className="mt-4 text-center text-[13px] text-[#9B8B73] dark:text-[#B8AFA6]">
-              {isLogin ? copy.noAccount : copy.hasAccount}{" "}
+              {isLogin ? t("noAccount") : t("hasAccount")}{" "}
               <Link
-                href={isLogin ? `/${locale}/register` : `/${locale}/login`}
-                className="font-bold text-[#C9870C] hover:underline"
+                href={isLogin ? "/register" : "/login"}
+                className="font-bold text-[#C9870C] hover:underline cursor-pointer"
               >
-                {isLogin ? copy.switchToRegister : copy.switchToLogin}
+                {isLogin ? t("switchToRegister") : t("switchToLogin")}
               </Link>
             </p>
           </div>
         </section>
 
         <p className="mt-3 text-center text-xs text-[#9B8B73] dark:text-[#B8AFA6]">
-          {copy.footerLine}
+          {t("footerLine")}
         </p>
       </div>
     </main>
