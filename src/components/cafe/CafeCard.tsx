@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -106,7 +106,7 @@ export default function CafeCard({
     }
   }
 
-  const href = `/${locale}/cafe/${cafe.slug}`;
+  const href = `/cafe/${cafe.slug}`;
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
   const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
   const district = cafe.district || "";
@@ -195,7 +195,7 @@ export default function CafeCard({
           locale={locale}
           initialSaved={initialSaved}
           onSavedChange={onSavedChange}
-          className="absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border border-white/30 bg-white/88 text-[#875200] shadow-sm backdrop-blur-md transition-transform hover:scale-110 hover:bg-white dark:border-white/10 dark:bg-[#1C1210]/85 dark:text-[#FFB865]"
+          className="absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border border-white/30 shadow-sm backdrop-blur-md transition-transform hover:scale-110 dark:border-white/10"
         />
 
         {/* Text content */}

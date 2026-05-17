@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
@@ -498,7 +498,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
         params: query,
       });
     }
-    router.push(`/${locale}/search${query ? `?${query}` : ""}`);
+    router.push(`/search${query ? `?${query}` : ""}`);
   }
 
   function handleQuickFilter({ vibe, purpose }: { vibe?: string; purpose?: string }) {
@@ -512,7 +512,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
       sort: "popular",
       params: query,
     });
-    router.push(`/${locale}/search?${query}`);
+    router.push(`/search?${query}`);
   }
 
   function handleSmartSearch(searchQuery: string) {
@@ -557,7 +557,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
         params: query,
       });
     }
-    router.push(`/${locale}/search${query ? `?${query}` : ""}`);
+    router.push(`/search${query ? `?${query}` : ""}`);
   }
 
   return (
@@ -603,7 +603,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <button
-                onClick={() => router.push(`/${locale}/search?${lastSearch.params}`)}
+                onClick={() => router.push(`/search?${lastSearch.params}`)}
                 className="bg-accent rounded-full px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-(--accent-hover)"
               >
                 Xem kết quả
@@ -682,7 +682,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
                       onMouseDown={(e) => {
                         e.preventDefault();
                         setFocused(false);
-                        router.push(`/${locale}/cafe/${cafe.slug}`);
+                        router.push(`/cafe/${cafe.slug}`);
                       }}
                       className="flex w-full items-center gap-3 bg-transparent px-4 py-2.5 text-left transition-colors hover:bg-[var(--background-secondary)]"
                     >
@@ -742,12 +742,12 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
         {/* Explore CTA */}
         <div className="mt-4 flex justify-center">
-          <a
-            href={`/${locale}/search`}
+          <Link
+            href="/search"
             className="border-border bg-background/80 hover:border-accent hover:text-accent inline-flex min-w-48 items-center justify-center rounded-full border px-5 py-2 text-sm font-semibold text-(--foreground-muted) transition-all duration-150 hover:bg-(--accent-light)"
           >
             Xem tất cả quán café →
-          </a>
+          </Link>
         </div>
       </div>
     </section>

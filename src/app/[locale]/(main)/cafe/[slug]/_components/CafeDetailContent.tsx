@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft, Share2 } from "lucide-react";
 import SmartGallery from "@/components/SmartGallery";
@@ -44,7 +44,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     const token = await getCurrentAccessToken();
     if (!token) {
       saveAuthReturnUrl();
-      router.push(`/${locale}/login`);
+      router.push("/login");
       return;
     }
 
@@ -58,7 +58,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
       setSaved(prev);
       if (isUnauthorizedError(error)) {
         saveAuthReturnUrl();
-        router.push(`/${locale}/login`);
+        router.push("/login");
       }
     } finally {
       setLoadingSave(false);

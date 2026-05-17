@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { Coffee, Globe, Share2 } from "lucide-react"
 
 interface FooterProps {
@@ -17,7 +17,7 @@ export default function Footer({ locale }: FooterProps) {
           {/* Brand */}
           <div className="space-y-3">
             <Link
-              href={`/${locale}`}
+              href="/"
               className="flex items-center gap-2 group w-fit"
             >
               <span className="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white">
@@ -39,9 +39,9 @@ export default function Footer({ locale }: FooterProps) {
             </h3>
             <nav className="space-y-2">
               {[
-                { href: `/${locale}`, label: t("home") },
-                { href: `/${locale}/quiz`, label: t("quiz") },
-                { href: `/${locale}/contribute`, label: t("contribute") },
+                { href: "/", label: t("home") },
+                { href: "/quiz", label: t("quiz") },
+                { href: "/contribute", label: t("contribute") },
               ].map((link) => (
                 <Link
                   key={link.href}

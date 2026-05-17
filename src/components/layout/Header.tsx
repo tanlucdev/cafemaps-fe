@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Menu, X, Bookmark, PenLine, User, Compass } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -58,14 +57,14 @@ export default function Header({ locale }: HeaderProps) {
   }, [pathname]);
 
   const navLinks = [
-    { href: `/${locale}/search`, label: t("explore"), icon: Compass },
-    { href: `/${locale}/saved`, label: t("saved"), icon: Bookmark },
-    { href: `/${locale}/contribute`, label: t("contribute"), icon: PenLine },
+    { href: "/search", label: t("explore"), icon: Compass },
+    { href: "/saved", label: t("saved"), icon: Bookmark },
+    { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];
 
   const mobileNavLinks = [
     ...navLinks,
-    { href: `/${locale}/login`, label: t("profile"), icon: User },
+    { href: "/login", label: t("profile"), icon: User },
   ];
 
   return (
@@ -81,7 +80,7 @@ export default function Header({ locale }: HeaderProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-[62px] items-center gap-3">
             {/* Logo */}
-            <Link href={`/${locale}`} className="flex shrink-0 items-center" aria-label="Cafe Maps">
+            <Link href="/" className="flex shrink-0 items-center" aria-label="Cafe Maps">
               <Image src="/image/logo.png" alt="Cafe Maps" width={40} height={40} loading="lazy" />
             </Link>
 
@@ -126,7 +125,7 @@ export default function Header({ locale }: HeaderProps) {
                   <UserMenu locale={locale} />
                 ) : (
                   <Link
-                    href={`/${locale}/login`}
+                    href="/login"
                     className={cn(
                       "inline-flex items-center rounded-full border-2 border-[#C9870C] px-5 py-1.5 text-sm font-bold text-[#C9870C] transition-all duration-150",
                       "hover:-translate-y-px hover:bg-[#C9870C] hover:text-white hover:shadow-[0_4px_14px_rgba(201,135,12,0.3)]",
@@ -197,7 +196,7 @@ export default function Header({ locale }: HeaderProps) {
                 <UserMenu locale={locale} />
               ) : (
                 <Link
-                  href={`/${locale}/login`}
+                  href="/login"
                   onClick={() => setMenuOpen(false)}
                   className={cn(
                     "flex flex-[2] items-center justify-center rounded-lg border-2 border-[#C9870C] px-5 py-2.5 text-sm font-bold text-[#C9870C] transition-all",

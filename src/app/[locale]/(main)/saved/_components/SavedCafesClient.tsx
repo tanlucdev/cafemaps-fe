@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Bookmark,
@@ -723,7 +723,7 @@ function EmptyState({ locale, title, subtitle, cta }: { locale: string; title: s
       </div>
       <h2 className="text-xl font-bold text-[#29170c]">{title}</h2>
       <p className="mt-2 max-w-xs text-sm text-[#6b5a4a]">{subtitle}</p>
-      <Link href={`/${locale}/search`} className="mt-7 rounded-xl bg-[#875200] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
+      <Link href="/search" className="mt-7 rounded-xl bg-[#875200] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
         {cta}
       </Link>
     </motion.section>
@@ -943,10 +943,10 @@ export default function SavedCafesClient({
           <h1 className="text-2xl font-bold text-[#29170c]">{t("title")}</h1>
           <p className="mt-2 max-w-md text-sm text-[#6b5a4a]">{t("loginRequired")}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/${locale}/login`} className="rounded-xl bg-[#875200] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
+            <Link href="/login" className="rounded-xl bg-[#875200] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
               {t("loginCta")}
             </Link>
-            <Link href={`/${locale}/register`} className="rounded-xl border border-[#e6dacd] bg-white px-5 py-2.5 text-sm font-semibold text-[#29170c] transition-colors hover:border-[#c8a97a]">
+            <Link href="/register" className="rounded-xl border border-[#e6dacd] bg-white px-5 py-2.5 text-sm font-semibold text-[#29170c] transition-colors hover:border-[#c8a97a]">
               {t("registerCta")}
             </Link>
           </div>
@@ -1165,7 +1165,7 @@ export default function SavedCafesClient({
       {entries.length > 0 && (
         <div className="mt-12 flex justify-center">
           <Link
-            href={`/${locale}/search`}
+            href="/search"
             className="inline-flex items-center gap-2 rounded-2xl border border-[#e6dacd] bg-white px-6 py-3 text-sm font-semibold text-[#875200] shadow-sm transition-all hover:border-[#c8a97a] hover:bg-[#fff8f2] hover:shadow-md dark:border-[#3d2c1e] dark:bg-[#1c1209] dark:text-[#ffb865]"
           >
             <Search size={16} />

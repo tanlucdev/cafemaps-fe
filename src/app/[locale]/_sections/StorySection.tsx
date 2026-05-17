@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -64,7 +64,7 @@ export default function StorySection({ locale }: StorySectionProps) {
               transition={{ duration: 0.55, delay: i * 0.1, ease: [0.33, 1, 0.68, 1] }}
             >
               <Link
-                href={`/${locale}?vibe=${encodeURIComponent(story.tag)}`}
+                href={`/?vibe=${encodeURIComponent(story.tag)}`}
                 className="group card-shadow block overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] hover:-translate-y-1"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -96,7 +96,7 @@ export default function StorySection({ locale }: StorySectionProps) {
         {/* CTA */}
         <div className="text-center">
           <Link
-            href={`/${locale}`}
+            href="/"
             className="hover-underline inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)]"
           >
             {t("cta")} <ArrowRight size={14} />

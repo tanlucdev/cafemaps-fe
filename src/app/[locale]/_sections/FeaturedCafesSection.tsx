@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { MapPin, ArrowRight } from "lucide-react"
 import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
@@ -62,7 +62,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
           : "border border-border"
       )}
     >
-      <Link href={`/${locale}/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
+      <Link href={`/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
         {/* Image */}
         <div className={cn("relative overflow-hidden bg-(--background-secondary)", heightClass)}>
           {cafe.coverImage ? (
@@ -184,7 +184,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
           </h2>
         </div>
         <Link
-          href={`/${locale}/search`}
+          href="/search"
           className="hidden sm:flex items-center gap-1.5 text-sm text-accent hover:text-(--accent-hover) transition-colors font-medium"
         >
           {t("viewAll")}
@@ -260,7 +260,7 @@ export default function FeaturedCafesSection({ cafes, locale }: FeaturedCafesSec
       {/* Mobile explore link */}
       <div className="mt-5 text-center sm:hidden">
         <Link
-          href={`/${locale}/search`}
+          href="/search"
           className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-(--accent-hover) transition-colors font-medium"
         >
           {t("viewAllMobile")}

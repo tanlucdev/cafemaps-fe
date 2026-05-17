@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Link, usePathname } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
 import { Home, Search, Heart, User } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -15,10 +14,10 @@ export default function MobileBottomNav({ locale }: MobileBottomNavProps) {
   const t = useTranslations("bottomNav")
 
   const tabs = [
-    { href: `/${locale}`, icon: Home, label: t("home") },
-    { href: `/${locale}/search`, icon: Search, label: t("search") },
-    { href: `/${locale}/saved`, icon: Heart, label: t("saved") },
-    { href: `/${locale}/login`, icon: User, label: t("profile") },
+    { href: "/", icon: Home, label: t("home") },
+    { href: "/search", icon: Search, label: t("search") },
+    { href: "/saved", icon: Heart, label: t("saved") },
+    { href: "/login", icon: User, label: t("profile") },
   ]
 
   return (

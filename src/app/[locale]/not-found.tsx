@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
 
 export default async function NotFound() {
@@ -16,7 +16,7 @@ export default async function NotFound() {
           {t("description")}
         </p>
         <Link
-          href="/vi"
+          href="/"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           {tc("goHome")}

@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import SaveButton from "@/components/cafe/SaveButton";
@@ -115,7 +115,7 @@ function CafeListRow({
           "dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
         )}
       >
-        <Link href={`/${locale}/cafe/${cafe.slug}`} className="flex flex-1 min-w-0">
+        <Link href={`/cafe/${cafe.slug}`} className="flex flex-1 min-w-0">
           {/* Image */}
           <div
             ref={imageRef}

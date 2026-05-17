@@ -2,7 +2,7 @@ import { getCafesWithMeta, getNearbyCafes } from "@/lib/api";
 import { filterFromSearchParams } from "@/lib/search-state";
 import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 9;
 
 export default async function SearchLoader({
   locale,

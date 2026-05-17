@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { Sparkles } from "lucide-react"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -33,7 +33,7 @@ export default async function QuizPage({ params }: PageProps) {
           {t("subtitle")}
         </p>
         <Link
-          href={`/${locale}`}
+          href="/"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           <Sparkles size={15} />

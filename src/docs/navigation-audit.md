@@ -77,14 +77,24 @@ Ví dụ đã fix: `src/app/[locale]/(auth)/layout.tsx` — tạo shared layout 
 
 ## Vi phạm hiện tại (snapshot — 2026-05-17)
 
+Tất cả đã được fix. Các file đã migrate:
+
 | File | Vi phạm | Trạng thái |
 |------|---------|------------|
-| `src/app/[locale]/(main)/cafe/[slug]/_components/CafeDetailContent.tsx` | `useRouter` từ `next/navigation` | Chưa fix |
-| `src/app/[locale]/_sections/HeroSection.tsx` | `useRouter` từ `next/navigation` | Chưa fix |
-| `src/components/cafe/SaveButton.tsx` | `useRouter` từ `next/navigation` | Chưa fix |
-| `src/components/layout/Header.tsx` | `usePathname` từ `next/navigation` | Chưa fix |
-| `src/components/layout/MobileBottomNav.tsx` | `usePathname` từ `next/navigation` | Chưa fix |
-| `src/app/[locale]/(main)/contribute/ContributeForm.tsx` | `next/link` + `href="/"` hardcoded | Chưa fix |
+| `src/app/[locale]/(main)/cafe/[slug]/_components/CafeDetailContent.tsx` | `useRouter` từ `next/navigation` | ✅ Fixed |
+| `src/app/[locale]/_sections/HeroSection.tsx` | `useRouter` + `<a>` từ `next/navigation`/HTML | ✅ Fixed |
+| `src/components/cafe/SaveButton.tsx` | `useRouter` từ `next/navigation` | ✅ Fixed |
+| `src/components/layout/Header.tsx` | `Link` + `usePathname` từ `next/navigation` | ✅ Fixed |
+| `src/components/layout/MobileBottomNav.tsx` | `Link` + `usePathname` từ `next/navigation` | ✅ Fixed |
+| `src/app/[locale]/(main)/contribute/ContributeForm.tsx` | `next/link` + `href="/"` hardcoded | ✅ Fixed |
+| `src/app/[locale]/not-found.tsx` | `next/link` + `href="/vi"` hardcoded | ✅ Fixed |
+| `src/app/[locale]/_sections/StorySection.tsx` | `next/link` + locale-prefixed hrefs | ✅ Fixed |
+| `src/app/[locale]/_sections/FeaturedCafesSection.tsx` | `next/link` + locale-prefixed hrefs | ✅ Fixed |
+| `src/app/[locale]/(main)/saved/_components/SavedCafesClient.tsx` | `next/link` + locale-prefixed hrefs | ✅ Fixed |
+| `src/app/[locale]/(main)/quiz/page.tsx` | `next/link` + locale-prefixed href | ✅ Fixed |
+| `src/components/layout/Footer.tsx` | `next/link` + locale-prefixed hrefs | ✅ Fixed |
+| `src/components/cafe/CafeCard.tsx` | `next/link` | ✅ Fixed |
+| `src/components/cafe/CafeList.tsx` | `next/link` + locale-prefixed href | ✅ Fixed |
 
 ---
 

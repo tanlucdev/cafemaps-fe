@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { Bookmark } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -35,7 +35,7 @@ export default function SaveButton({
     const token = await getCurrentAccessToken();
     if (!token) {
       saveAuthReturnUrl();
-      router.push(`/${locale}/login`);
+      router.push("/login");
       return;
     }
 
@@ -50,7 +50,7 @@ export default function SaveButton({
       setSaved(prev); // rollback
       if (isUnauthorizedError(error)) {
         saveAuthReturnUrl();
-        router.push(`/${locale}/login`);
+        router.push("/login");
       }
     } finally {
       setLoading(false);
@@ -64,10 +64,8 @@ export default function SaveButton({
       disabled={loading}
       aria-label={saved ? t("unsave") : t("save")}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200",
-        saved
-          ? "bg-[var(--accent)] text-white"
-          : "bg-(--background-secondary) text-[var(--foreground-muted)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
+        "flex items-center justify-center rounded-full transition-all duration-200",
+        saved ? "bg-accent text-white" : "bg-white/88 text-[#875200] dark:bg-[#1C1210]/85 dark:text-[#FFB865]",
         className,
       )}
     >
