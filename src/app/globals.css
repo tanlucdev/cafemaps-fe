@@ -242,16 +242,12 @@ body {
 
 @media (max-width: 767px) {
   .app-main {
-    padding-bottom: calc(
-      var(--mobile-bottom-nav-height) + var(--ios-bottom-guard-height) +
-        env(safe-area-inset-bottom, 0px)
-    );
+    padding-bottom: 0;
   }
 
   .site-footer {
     margin-bottom: calc(
-      var(--mobile-bottom-nav-height) + var(--ios-bottom-guard-height) +
-        env(safe-area-inset-bottom, 0px)
+      var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px)
     );
   }
 }
