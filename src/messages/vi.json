@@ -313,6 +313,7 @@
   },
   "nearby": {
     "button": "Gần đây",
+    "buttonLong": "Tìm quán gần tôi",
     "noSupport": "Trình duyệt không hỗ trợ định vị",
     "loadError": "Không thể tải quán gần đây",
     "locationError": "Không thể lấy vị trí của bạn"

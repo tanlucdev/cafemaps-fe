@@ -16,6 +16,11 @@ export type Purpose =
   | "chill một mình"
   | "gặp bạn bè"
 
+export interface PhotoCredit {
+  ig: string
+  note?: string | null
+}
+
 export interface Cafe {
   id: string
   name: string
@@ -40,6 +45,7 @@ export interface Cafe {
   image_orientations: string[] | null
   coverImage?: string | null
   instagramUrl?: string | null
+  photoCredits?: PhotoCredit[] | null
   isFeatured?: boolean | null
   featuredOrder?: number | null
   isPublished: boolean

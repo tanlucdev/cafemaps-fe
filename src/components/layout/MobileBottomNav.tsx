@@ -5,11 +5,7 @@ import { useTranslations } from "next-intl"
 import { Home, Search, Heart, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-interface MobileBottomNavProps {
-  locale: string
-}
-
-export default function MobileBottomNav({ locale }: MobileBottomNavProps) {
+export default function MobileBottomNav() {
   const pathname = usePathname()
   const t = useTranslations("bottomNav")
 
@@ -21,33 +17,25 @@ export default function MobileBottomNav({ locale }: MobileBottomNavProps) {
   ]
 
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[var(--background)] border-t border-[var(--border)]"
-      style={{
-        paddingTop: "10px",
-        paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
-      }}
-    >
-      <div className="flex items-center justify-around px-2">
+    <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile navigation">
+      <div className="mobile-bottom-nav-inner">
         {tabs.map(({ href, icon: Icon, label }) => {
-          const isActive = pathname === href
+          const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
           return (
             <Link
               key={href}
               href={href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl min-w-0 transition-colors",
-                isActive
-                  ? "text-[var(--accent)]"
-                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"
+                "mobile-bottom-nav-item",
+                isActive && "is-active"
               )}
             >
               <Icon
-                size={20}
+                aria-hidden="true"
                 strokeWidth={isActive ? 2.2 : 1.6}
-                className={cn(isActive && "fill-[var(--accent-light)]")}
               />
-              <span className="text-[10px] font-medium truncate">{label}</span>
+              <span>{label}</span>
             </Link>
           )
         })}

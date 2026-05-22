@@ -6,7 +6,7 @@ export default async function NotFound() {
   const tc = await getTranslations("common")
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 text-center">
+    <div className="flex min-h-[100svh] items-center justify-center px-4 text-center">
       <div>
         <p className="font-display text-8xl font-bold text-[var(--border)] mb-4">404</p>
         <h1 className="font-display text-2xl font-bold text-[var(--foreground)] mb-2">

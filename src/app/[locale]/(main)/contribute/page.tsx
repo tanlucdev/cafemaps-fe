@@ -15,13 +15,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ContributePage({ params }: PageProps) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "contribute" });
-
+export default async function ContributePage() {
   return (
     <div
-      className="flex h-screen flex-col overflow-hidden px-6 pt-20 pb-4"
+      className="flex min-h-[100svh] flex-col overflow-hidden px-6 pt-20 pb-4"
       style={{ background: "#F5EFE6", fontFamily: "Be Vietnam Pro, sans-serif" }}
     >
       <div className="mx-auto flex min-h-0 w-full max-w-lg flex-1 flex-col">

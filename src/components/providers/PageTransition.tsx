@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { usePathname } from "next/navigation"
+import { usePathname } from "@/i18n/navigation"
 
 export default function PageTransition({
   children,
@@ -18,7 +18,7 @@ export default function PageTransition({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="flex-1"
+        className="app-main flex-1"
       >
         {children}
       </motion.main>

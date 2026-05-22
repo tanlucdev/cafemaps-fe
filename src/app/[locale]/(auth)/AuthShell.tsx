@@ -3,9 +3,16 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import { ChevronLeft, Coffee } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 interface AuthShellProps {
   children: React.ReactNode;
+}
+
+type AuthMode = "login" | "register";
+
+function getAuthMode(pathname: string): AuthMode {
+  return pathname === "/register" ? "register" : "login";
 }
 
 function CupMark({ isRegister }: { isRegister: boolean }) {
@@ -39,9 +46,15 @@ function CupMark({ isRegister }: { isRegister: boolean }) {
 export default function AuthShell({ children }: AuthShellProps) {
   const t = useTranslations("auth");
   const pathname = usePathname();
-  const isLogin = pathname === "/login";
+  const currentMode = getAuthMode(pathname);
+  const [authMode, setAuthMode] = useState<AuthMode>(currentMode);
+  const isLogin = authMode === "login";
   const title = isLogin ? t("loginGreetingTitle") : t("registerGreetingTitle");
   const subtitle = isLogin ? t("loginGreetingSub") : t("registerGreetingSub");
+
+  useEffect(() => {
+    setAuthMode(currentMode);
+  }, [currentMode]);
 
   return (
     <main
@@ -88,6 +101,9 @@ export default function AuthShell({ children }: AuthShellProps) {
             <div className="mb-4 flex gap-0.5 rounded-full bg-[#EDE4D6] p-1 dark:bg-[#242220]">
               <Link
                 href="/login"
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode("login")}
                 className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
                   isLogin
                     ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
@@ -98,6 +114,9 @@ export default function AuthShell({ children }: AuthShellProps) {
               </Link>
               <Link
                 href="/register"
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode("register")}
                 className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
                   !isLogin
                     ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
@@ -114,6 +133,9 @@ export default function AuthShell({ children }: AuthShellProps) {
               {isLogin ? t("noAccount") : t("hasAccount")}{" "}
               <Link
                 href={isLogin ? "/register" : "/login"}
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode(isLogin ? "register" : "login")}
                 className="font-bold text-[#C9870C] hover:underline cursor-pointer"
               >
                 {isLogin ? t("switchToRegister") : t("switchToLogin")}

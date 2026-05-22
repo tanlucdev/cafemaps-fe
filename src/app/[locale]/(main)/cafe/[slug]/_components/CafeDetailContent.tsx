@@ -78,7 +78,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   }
 
   return (
-    <article className="min-h-screen pt-16 pb-24 lg:pb-8">
+    <article className="pt-16 pb-24 lg:pb-8">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-4 pt-6 pb-4 sm:px-6 lg:max-w-[900px] lg:px-10">
         <button
           onClick={handleBack}

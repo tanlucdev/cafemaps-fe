@@ -51,7 +51,6 @@ export default function RegisterForm() {
             if (result.user) setAuthUser(result.user);
             toast.success(t("loginSuccess"));
             router.replace(getAuthReturnUrl(`/`));
-            router.refresh();
             return;
           }
           setSuccess(true);

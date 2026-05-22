@@ -2,16 +2,12 @@ import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
 import { Coffee, Globe, Share2 } from "lucide-react"
 
-interface FooterProps {
-  locale: string
-}
-
-export default function Footer({ locale }: FooterProps) {
+export default function Footer() {
   const t = useTranslations("footer")
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--background-secondary)] mb-16 md:mb-0">
+    <footer className="site-footer border-t border-[var(--border)] bg-[var(--background-secondary)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}

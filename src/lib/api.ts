@@ -117,8 +117,8 @@ type RawCafe = Omit<Cafe, "vibes" | "purposes" | "amenities" | "images" | "image
   imageOrientation?: string[] | null
   isPublished?: boolean
   location?: string
-  distance_km?: number
-  distanceKm?: number
+  distance_km?: number | string
+  distanceKm?: number | string
 }
 
 function mapApiCafe(raw: RawCafe): Cafe {
@@ -132,6 +132,12 @@ function mapApiCafe(raw: RawCafe): Cafe {
       lng = point.lng
     }
   }
+
+  const rawDistance = raw.distanceKm ?? raw.distance_km
+  const distanceKm =
+    typeof rawDistance === "string" ? Number(rawDistance) : rawDistance
+  const distanceKmValue =
+    typeof distanceKm === "number" && Number.isFinite(distanceKm) ? distanceKm : undefined
 
   return {
     ...raw,
@@ -148,6 +154,7 @@ function mapApiCafe(raw: RawCafe): Cafe {
       raw.imageOrientation ??
       null,
     isPublished: raw.isPublished ?? true,
+    distanceKm: distanceKmValue,
   }
 }
 
@@ -215,7 +222,7 @@ export async function getNearbyCafes(
     const raw = await apiFetch<RawCafe[]>(
       `/cafes/nearby?lat=${lat}&lng=${lng}&radius=${radiusKm}`
     )
-    return raw.map((item) => mapApiCafe({ ...item, distanceKm: item.distance_km ?? item.distanceKm }))
+    return raw.map(mapApiCafe)
   } catch {
     return MOCK_CAFES.slice(0, 4)
   }

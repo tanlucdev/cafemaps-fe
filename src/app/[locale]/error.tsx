@@ -16,7 +16,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error])
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 text-center">
+    <div className="flex min-h-[100svh] items-center justify-center px-4 text-center">
       <div>
         <p className="text-5xl mb-4">☕</p>
         <h1 className="font-display text-2xl font-bold text-[var(--foreground)] mb-2">

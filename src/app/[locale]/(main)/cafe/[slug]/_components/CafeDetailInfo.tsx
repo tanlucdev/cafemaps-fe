@@ -16,6 +16,38 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
+
+function InstagramIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+function extractInstagramHandle(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+  if (!trimmed.includes("/") && !trimmed.includes(".")) {
+    return trimmed.replace(/^@/, "");
+  }
+  const match = trimmed.match(/instagram\.com\/([^/?#]+)/i);
+  if (match?.[1]) return match[1].replace(/^@/, "");
+  return null;
+}
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import { formatPrice } from "@/lib/utils";
@@ -253,6 +285,13 @@ export default function CafeDetailInfo({
   const goodForItems = getGoodForItems(cafe);
   const idealForLabel = locale === "vi" ? "Lý tưởng cho" : "Good for";
   const distanceLabel = locale === "vi" ? `Cách bạn ${distance}` : `${distance} away`;
+  const parkingLabel = locale === "vi" ? "Gửi xe" : "Parking";
+  const parkingTypeLabel = locale === "vi" ? "Chỗ để xe" : "Parking";
+  const instagramLabel = locale === "vi" ? "Instagram quán" : "Instagram";
+  const photoCreditLabel = locale === "vi" ? "Ảnh từ" : "Photos by";
+  const igHandle = extractInstagramHandle(cafe.instagramUrl);
+  const photoCredits = cafe.photoCredits?.filter((c) => c?.ig) ?? [];
+  const hasSocialBlock = Boolean(igHandle) || photoCredits.length > 0;
 
   useEffect(() => {
     if (cafe.distanceKm != null) {
@@ -358,6 +397,24 @@ export default function CafeDetailInfo({
           </div>
         )}
 
+        {cafe.parking_location && (
+          <div className="rounded-2xl border border-(--border-light,#ECE4D6) bg-[#FAF6F1] px-4 py-3.5 dark:bg-[#241B15]">
+            <p className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.08em] text-(--foreground-muted) uppercase">
+              <Car size={14} />
+              {parkingLabel}
+            </p>
+            <div className="flex items-baseline gap-2 text-[13.5px]">
+              <span className="text-foreground min-w-13 shrink-0 font-bold">
+                {parkingTypeLabel}
+              </span>
+              <span className="text-border text-[11px]">·</span>
+              <span className="leading-normal text-(--foreground-muted)">
+                {cafe.parking_location}
+              </span>
+            </div>
+          </div>
+        )}
+
         {goodForItems.length > 0 && (
           <div className="pt-1">
             <p className="mb-3 text-[11px] font-bold tracking-[0.08em] text-(--foreground-muted) uppercase">
@@ -400,6 +457,55 @@ export default function CafeDetailInfo({
           </div>
         )}
 
+        {hasSocialBlock && (
+          <div className="overflow-hidden rounded-2xl border border-(--border-light,#ECE4D6)">
+            {igHandle && (
+              <div className="flex items-center justify-between gap-3 bg-[#FAF6F1] px-4 py-2.5 dark:bg-[#241B15]">
+                <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
+                  <InstagramIcon />
+                  {instagramLabel}
+                </span>
+                <a
+                  href={`https://instagram.com/${igHandle}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent text-[13.5px] font-bold tracking-[-0.01em] text-(--foreground-muted) transition-colors"
+                >
+                  @{igHandle}
+                </a>
+              </div>
+            )}
+            {photoCredits.length > 0 && (
+              <div
+                className={`flex flex-col gap-1.5 px-4 py-2.5 ${
+                  igHandle ? "border-t border-(--border-light,#ECE4D6)" : ""
+                }`}
+              >
+                <span className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
+                  <InstagramIcon />
+                  {photoCreditLabel}
+                </span>
+                {photoCredits.map((c, i) => (
+                  <a
+                    key={`${c.ig}-${i}`}
+                    href={`https://instagram.com/${c.ig}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-accent inline-flex items-center gap-1.5 text-[13px] font-semibold text-(--foreground-muted) transition-colors"
+                  >
+                    @{c.ig}
+                    {c.note && (
+                      <span className="text-[12px] font-normal text-(--foreground-muted)">
+                        · {c.note}
+                      </span>
+                    )}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="hidden pt-8 lg:block">
           <DetailActions
             saved={saved}
@@ -412,7 +518,7 @@ export default function CafeDetailInfo({
         </div>
       </motion.div>
 
-      <div className="border-border fixed right-0 bottom-0 left-0 z-30 border-t bg-(--background)/95 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+      <div className="cafe-detail-mobile-actions border-border fixed right-0 left-0 z-[60] border-t bg-(--background)/95 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
         <div className="mx-auto max-w-[680px] px-4">
           <DetailActions
             saved={saved}

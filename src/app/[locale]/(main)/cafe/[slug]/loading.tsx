@@ -1,6 +1,6 @@
 export default function CafeDetailLoading() {
   return (
-    <article className="min-h-screen pt-16 pb-36 md:pb-24 lg:pb-8">
+    <article className="pt-16 pb-24 lg:pb-8">
       <div className="max-w-2xl lg:max-w-[900px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-4 flex items-center justify-between">
         <div className="h-6 w-24 rounded-lg bg-(--background-secondary) animate-pulse" />
         <div className="h-9 w-24 rounded-lg bg-(--background-secondary) animate-pulse" />

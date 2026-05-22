@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Search } from "lucide-react";
+import { Loader2, Navigation, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MOCK_CAFES } from "@/lib/mock-data";
@@ -409,11 +409,13 @@ function ChibiWalkAnimation() {
 
 export default function HeroSection({ locale }: HeroSectionProps) {
   const t = useTranslations("hero");
+  const tNearby = useTranslations("nearby");
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
   const [lastSearch, setLastSearch] = useState<LastSearchState | null>(null);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -499,6 +501,32 @@ export default function HeroSection({ locale }: HeroSectionProps) {
       });
     }
     router.push(`/search${query ? `?${query}` : ""}`);
+  }
+
+  function handleNearMe() {
+    if (!navigator.geolocation) {
+      router.push("/search");
+      return;
+    }
+    setNearbyLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const filter = {
+          nearMe: true,
+          lat: coords.latitude,
+          lng: coords.longitude,
+          radiusKm: 2,
+        };
+        const query = buildSearchParams(filter, "popular").toString();
+        setLastSearchState({ filter, sort: "popular", params: query });
+        setNearbyLoading(false);
+        router.push(`/search?${query}`);
+      },
+      () => {
+        setNearbyLoading(false);
+        router.push("/search");
+      },
+    );
   }
 
   function handleQuickFilter({ vibe, purpose }: { vibe?: string; purpose?: string }) {
@@ -666,6 +694,21 @@ export default function HeroSection({ locale }: HeroSectionProps) {
             className="bg-accent h-11 shrink-0 cursor-pointer rounded-xl px-6 text-sm font-semibold text-white transition-all hover:bg-(--accent-hover) active:scale-95"
           >
             {t("cta")}
+          </button>
+          <button
+            type="button"
+            onClick={handleNearMe}
+            disabled={nearbyLoading}
+            aria-label={tNearby("buttonLong")}
+            title={tNearby("buttonLong")}
+            className="border-border bg-background text-foreground hover:border-accent hover:text-accent flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3.5 text-sm font-semibold transition-all hover:bg-(--accent-light) active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4"
+          >
+            {nearbyLoading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Navigation size={16} />
+            )}
+            <span className="hidden sm:inline">{tNearby("buttonLong")}</span>
           </button>
 
           {/* Autocomplete dropdown */}

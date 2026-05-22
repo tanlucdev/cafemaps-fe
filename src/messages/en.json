@@ -313,6 +313,7 @@
   },
   "nearby": {
     "button": "Nearby",
+    "buttonLong": "Find cafés near me",
     "noSupport": "Geolocation is not supported by your browser",
     "loadError": "Could not load nearby cafés",
     "locationError": "Could not get your location"

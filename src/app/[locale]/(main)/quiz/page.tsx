@@ -21,7 +21,7 @@ export default async function QuizPage({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: "quiz" })
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 flex items-center justify-center">
+    <div className="flex min-h-[100svh] items-center justify-center px-4 pt-24 pb-16">
       <div className="text-center max-w-sm">
         <div className="w-16 h-16 rounded-2xl bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-5">
           <Sparkles size={28} className="text-[var(--accent)]" />
