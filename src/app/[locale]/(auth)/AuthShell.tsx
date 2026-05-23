@@ -1,7 +1,8 @@
 "use client";
 
 import { Link, usePathname } from "@/i18n/navigation";
-import { ChevronLeft, Coffee } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -78,9 +79,14 @@ export default function AuthShell({ children }: AuthShellProps) {
             <div className="absolute -bottom-5 -left-5 h-20 w-20 rounded-full bg-[rgba(201,135,12,0.06)]" />
 
             <Link href="/" className="relative mb-2.5 inline-flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[#C9870C] text-white">
-                <Coffee size={18} />
-              </span>
+              <Image
+                src="/image/logo.png"
+                alt="Cafe Maps"
+                width={36}
+                height={36}
+                className="h-9 w-9 shrink-0 rounded-[10px] object-cover"
+                loading="lazy"
+              />
               <span className="text-[15px] font-extrabold tracking-tight text-[#C9870C]">
                 {t("brand")}
               </span>

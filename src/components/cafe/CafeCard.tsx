@@ -8,6 +8,7 @@ import { MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { cn, formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 
@@ -102,7 +103,7 @@ export default function CafeCard({
 
   function saveReturnUrl() {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("cafe-return-url", window.location.href);
+      sessionStorage.setItem(AUTH_STORAGE_KEYS.returnUrl, window.location.href);
     }
   }
 

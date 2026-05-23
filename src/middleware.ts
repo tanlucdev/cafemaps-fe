@@ -1,5 +1,6 @@
 import createMiddleware from "next-intl/middleware"
 import { NextRequest, NextResponse } from "next/server"
+import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
 import { routing } from "@/i18n/routing"
 
 const intlMiddleware = createMiddleware(routing)
@@ -30,7 +31,7 @@ function stripLocale(pathname: string, locales: readonly string[]) {
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const token = request.cookies.get("cafe-auth-token")?.value
+  const token = request.cookies.get(AUTH_COOKIE_KEYS.accessToken)?.value
   const isAuthenticated = Boolean(token)
 
   const strippedPath = stripLocale(pathname, routing.locales)
@@ -43,8 +44,10 @@ export default function middleware(request: NextRequest) {
       routing.locales.find((l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`) ??
       routing.defaultLocale
     loginUrl.pathname = `/${locale}/login`
-    loginUrl.searchParams.set("returnUrl", pathname)
-    return NextResponse.redirect(loginUrl)
+    loginUrl.searchParams.set("returnUrl", `${pathname}${request.nextUrl.search}`)
+    const response = NextResponse.redirect(loginUrl)
+    response.headers.set("Cache-Control", "no-store")
+    return response
   }
 
   if (isUnguardedAuth(strippedPath) && isAuthenticated) {
@@ -54,7 +57,9 @@ export default function middleware(request: NextRequest) {
       routing.defaultLocale
     homeUrl.pathname = `/${locale}`
     homeUrl.search = ""
-    return NextResponse.redirect(homeUrl)
+    const response = NextResponse.redirect(homeUrl)
+    response.headers.set("Cache-Control", "no-store")
+    return response
   }
 
   return intlMiddleware(request)

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { MapPin, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -24,7 +25,7 @@ function isOpenNow(openingTime?: string | null, closingTime?: string | null): bo
 
 function saveReturnUrl() {
   if (typeof window !== "undefined") {
-    sessionStorage.setItem("cafe-return-url", window.location.href);
+    sessionStorage.setItem(AUTH_STORAGE_KEYS.returnUrl, window.location.href);
   }
 }
 

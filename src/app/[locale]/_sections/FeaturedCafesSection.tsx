@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation"
 import { MapPin, ArrowRight } from "lucide-react"
 import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 import { cn } from "@/lib/utils"
 import type { Cafe } from "@/types/cafe"
 import { useRef, useState, useCallback } from "react"
@@ -45,7 +46,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
 
   function saveReturnUrl() {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("cafe-return-url", window.location.href)
+      sessionStorage.setItem(AUTH_STORAGE_KEYS.returnUrl, window.location.href)
     }
   }
 

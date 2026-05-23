@@ -256,7 +256,13 @@
     "confirmEmail": "Registration successful. Please check your email to confirm your account.",
     "loading": "Processing...",
     "loginWith": "Login with {provider}",
-    "orContinueWith": "Or continue with"
+    "orContinueWith": "Or continue with",
+    "errors": {
+      "invalidEmail": "Invalid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "confirmPasswordMin": "Confirmation password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match"
+    }
   },
   "footer": {
     "tagline": "Discover perfect moments in Ho Chi Minh City.",

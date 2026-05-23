@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useLoginMutation } from "@/api/auth/hooks";
-import { setAccessToken, setAuthUser, getAuthReturnUrl } from "@/lib/auth-client";
-import { LoginFormValues, loginSchema } from "@/lib/schemas/auth";
+import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
+import { LoginFormValues, createLoginSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -23,17 +22,23 @@ const errorClassName = "mt-1.5 flex items-center gap-1.5 text-xs text-[#C0392B]"
 
 export default function LoginForm() {
   const t = useTranslations("auth");
-  const router = useRouter();
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const schema = createLoginSchema({
+    invalidEmail: t("errors.invalidEmail"),
+    passwordMin: t("errors.passwordMin"),
+    confirmPasswordMin: t("errors.confirmPasswordMin"),
+    passwordMismatch: t("errors.passwordMismatch"),
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
   });
 
   const { mutate, isPending } = useLoginMutation();
@@ -45,12 +50,20 @@ export default function LoginForm() {
         setAccessToken(result.token);
         if (result.user) setAuthUser(result.user);
         toast.success(t("loginSuccess"));
-        const returnUrl = searchParams.get("returnUrl") || getAuthReturnUrl("/");
-        router.push(returnUrl);
+        const returnUrl = getAuthReturnUrl("/", searchParams.get("returnUrl"));
+        redirectAfterAuth(returnUrl);
       },
       onError: (error: unknown) => {
-        const msg = error instanceof Error ? error.message : "Đăng nhập thất bại, thử lại.";
-        setServerError(msg);
+        const msg = error instanceof Error ? error.message : "";
+        const normalized = msg.toLowerCase();
+        const isVietnameseAuthError =
+          normalized.includes("đăng nhập") ||
+          normalized.includes("mật khẩu") ||
+          normalized.includes("không đúng") ||
+          normalized.includes("không hợp lệ");
+        setServerError(
+          locale === "en" && isVietnameseAuthError ? t("loginError") : msg || t("loginError"),
+        );
       },
     });
   });

@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
-import { Coffee, Globe, Share2 } from "lucide-react"
+import Image from "next/image"
+import { Globe, Share2 } from "lucide-react"
 
 export default function Footer() {
   const t = useTranslations("footer")
@@ -16,9 +17,14 @@ export default function Footer() {
               href="/"
               className="flex items-center gap-2 group w-fit"
             >
-              <span className="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white">
-                <Coffee size={16} />
-              </span>
+              <Image
+                src="/image/logo.png"
+                alt="Cafe Maps"
+                width={34}
+                height={34}
+                className="h-[34px] w-[34px] shrink-0 rounded-[9px] object-cover"
+                loading="lazy"
+              />
               <span className="font-display text-lg font-semibold text-[var(--foreground)]">
                 Cafe Maps
               </span>

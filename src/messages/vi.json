@@ -256,7 +256,13 @@
     "confirmEmail": "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận tài khoản.",
     "loading": "Đang xử lý...",
     "loginWith": "Đăng nhập với {provider}",
-    "orContinueWith": "Hoặc tiếp tục với"
+    "orContinueWith": "Hoặc tiếp tục với",
+    "errors": {
+      "invalidEmail": "Email không hợp lệ",
+      "passwordMin": "Mật khẩu tối thiểu 8 ký tự",
+      "confirmPasswordMin": "Xác nhận mật khẩu tối thiểu 8 ký tự",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp"
+    }
   },
   "footer": {
     "tagline": "Khám phá những khoảnh khắc hoàn hảo tại TP.HCM.",

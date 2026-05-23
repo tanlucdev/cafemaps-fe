@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import Input from "@/components/ui/Input";
 import { useRegisterMutation } from "@/api/auth/hooks";
 import { Button } from "@/components/ui/Button";
-import { setAccessToken, setAuthUser, getAuthReturnUrl } from "@/lib/auth-client";
-import { RegisterFormValues, registerSchema } from "@/lib/schemas/auth";
+import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
+import { RegisterFormValues, createRegisterSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -22,18 +21,24 @@ const errorClassName = "mt-1.5 flex items-center gap-1.5 text-xs text-[#C0392B]"
 
 export default function RegisterForm() {
   const t = useTranslations("auth");
-  const router = useRouter();
+  const locale = useLocale();
   const [serverMessage, setServerMessage] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const schema = createRegisterSchema({
+    invalidEmail: t("errors.invalidEmail"),
+    passwordMin: t("errors.passwordMin"),
+    confirmPasswordMin: t("errors.confirmPasswordMin"),
+    passwordMismatch: t("errors.passwordMismatch"),
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
   });
 
   const { mutate, isPending } = useRegisterMutation();
@@ -50,14 +55,25 @@ export default function RegisterForm() {
             setAccessToken(result.token);
             if (result.user) setAuthUser(result.user);
             toast.success(t("loginSuccess"));
-            router.replace(getAuthReturnUrl(`/`));
+            redirectAfterAuth(getAuthReturnUrl("/"));
             return;
           }
           setSuccess(true);
           setServerMessage(t("confirmEmail"));
         },
         onError(err) {
-          setServerMessage(err.message || t("registerError"));
+          const msg = err.message || "";
+          const normalized = msg.toLowerCase();
+          const isVietnameseRegisterError =
+            normalized.includes("đăng ký") ||
+            normalized.includes("tài khoản") ||
+            normalized.includes("email") ||
+            normalized.includes("mật khẩu") ||
+            normalized.includes("tồn tại") ||
+            normalized.includes("không hợp lệ");
+          setServerMessage(
+            locale === "en" && isVietnameseRegisterError ? t("registerError") : msg || t("registerError"),
+          );
         },
       },
     );

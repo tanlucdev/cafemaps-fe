@@ -7,6 +7,7 @@ import { ChevronLeft, Share2 } from "lucide-react";
 import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
 import ShareModal from "./ShareModal";
@@ -67,9 +68,9 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
 
   function handleBack() {
     const returnUrl =
-      typeof window !== "undefined" ? sessionStorage.getItem("cafe-return-url") : null;
+      typeof window !== "undefined" ? sessionStorage.getItem(AUTH_STORAGE_KEYS.returnUrl) : null;
     if (returnUrl) {
-      sessionStorage.removeItem("cafe-return-url");
+      sessionStorage.removeItem(AUTH_STORAGE_KEYS.returnUrl);
       router.push(returnUrl);
       return;
     }

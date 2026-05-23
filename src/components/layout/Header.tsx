@@ -39,12 +39,14 @@ export default function Header({ locale }: HeaderProps) {
     { href: "/saved", label: t("saved"), icon: Bookmark },
     { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];
+  const isHome = pathname === "/";
 
   return (
     <header
       className={cn(
         "fixed top-0 right-0 left-0 z-40 block transition-all duration-300",
-        "bg-background border-border border-b backdrop-blur-[20px]",
+        "border-border border-b backdrop-blur-[20px]",
+        isHome ? "bg-[var(--background-secondary)]/95 md:bg-background" : "bg-background",
         scrolled && "shadow-[0_2px_18px_rgba(40,22,4,0.09)]",
       )}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
