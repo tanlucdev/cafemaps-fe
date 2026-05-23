@@ -76,7 +76,7 @@ input:focus-visible {
   --app-muted: rgba(44, 26, 14, 0.58);
   --app-bottom-border: rgba(83, 63, 35, 0.14);
   --mobile-bottom-nav-height: 72px;
-  --ios-bottom-guard-height: 120px;
+  --ios-bottom-guard-height: 65px;
 }
 
 .dark {
@@ -166,6 +166,7 @@ body {
   background: var(--app-surface);
   border-top: 1px solid var(--app-bottom-border);
   box-shadow: 0 -10px 30px rgba(63, 47, 31, 0.08);
+  overflow: visible;
   transform: translateZ(0);
 }
 
@@ -175,7 +176,7 @@ body {
   top: 100%;
   right: 0;
   left: 0;
-  height: calc(var(--ios-bottom-guard-height) + env(safe-area-inset-bottom, 0px));
+  height: max(var(--ios-bottom-guard-height), env(safe-area-inset-bottom, 0px));
   background: var(--app-surface);
   pointer-events: none;
 }
@@ -224,18 +225,6 @@ body {
   font-weight: 800;
 }
 
-.ios-bottom-browser-guard {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 40;
-  height: calc(var(--ios-bottom-guard-height) + env(safe-area-inset-bottom, 0px));
-  background: var(--app-surface);
-  pointer-events: none;
-  transform: translateZ(0);
-}
-
 .cafe-detail-mobile-actions {
   bottom: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
 }
@@ -246,9 +235,7 @@ body {
   }
 
   .site-footer {
-    margin-bottom: calc(
-      var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px)
-    );
+    margin-bottom: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -259,8 +246,7 @@ body {
     margin-bottom: 0;
   }
 
-  .mobile-bottom-nav,
-  .ios-bottom-browser-guard {
+  .mobile-bottom-nav {
     display: none;
   }
 

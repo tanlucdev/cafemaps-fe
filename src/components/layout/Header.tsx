@@ -43,7 +43,7 @@ export default function Header({ locale }: HeaderProps) {
   return (
     <header
       className={cn(
-        "fixed top-0 right-0 left-0 z-40 hidden transition-all duration-300 md:block",
+        "fixed top-0 right-0 left-0 z-40 block transition-all duration-300",
         "bg-background border-border border-b backdrop-blur-[20px]",
         scrolled && "shadow-[0_2px_18px_rgba(40,22,4,0.09)]",
       )}
@@ -57,7 +57,7 @@ export default function Header({ locale }: HeaderProps) {
           </Link>
 
           {/* Desktop nav links */}
-          <nav className="ml-3 flex flex-1 items-center gap-1.5">
+          <nav className="ml-3 hidden flex-1 items-center gap-1.5 md:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               const Icon = link.icon;
@@ -85,7 +85,7 @@ export default function Header({ locale }: HeaderProps) {
 
             <ThemeToggle />
 
-            <div className="ml-0.5 flex items-center">
+            <div className="ml-0.5 hidden items-center md:flex">
               {authState === null ? null : authState ? (
                 <UserMenu locale={locale} />
               ) : (

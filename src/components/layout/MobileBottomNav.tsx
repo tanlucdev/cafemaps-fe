@@ -1,13 +1,54 @@
 "use client"
 
+import { useEffect } from "react"
 import { Link, usePathname } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
 import { Home, Search, Heart, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+const IOS_BOTTOM_GUARD_VAR = "--ios-bottom-guard-height"
+const FALLBACK_IOS_BOTTOM_GUARD_HEIGHT = 80
+
 export default function MobileBottomNav() {
   const pathname = usePathname()
   const t = useTranslations("bottomNav")
+
+  useEffect(() => {
+    let frame = 0
+
+    const syncBottomGuard = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const viewport = window.visualViewport
+        const rawInset = viewport
+          ? window.innerHeight - viewport.height - viewport.offsetTop
+          : 0
+        const bottomInset = Math.ceil(Math.max(0, rawInset))
+
+        document.documentElement.style.setProperty(
+          IOS_BOTTOM_GUARD_VAR,
+          `${bottomInset || FALLBACK_IOS_BOTTOM_GUARD_HEIGHT}px`
+        )
+      })
+    }
+
+    syncBottomGuard()
+
+    const viewport = window.visualViewport
+    viewport?.addEventListener("resize", syncBottomGuard)
+    viewport?.addEventListener("scroll", syncBottomGuard)
+    window.addEventListener("resize", syncBottomGuard)
+    window.addEventListener("orientationchange", syncBottomGuard)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      viewport?.removeEventListener("resize", syncBottomGuard)
+      viewport?.removeEventListener("scroll", syncBottomGuard)
+      window.removeEventListener("resize", syncBottomGuard)
+      window.removeEventListener("orientationchange", syncBottomGuard)
+      document.documentElement.style.removeProperty(IOS_BOTTOM_GUARD_VAR)
+    }
+  }, [])
 
   const tabs = [
     { href: "/", icon: Home, label: t("home") },

@@ -16,7 +16,6 @@ export default async function MainLayout({ children, params }: MainLayoutProps) 
       <Header locale={locale} />
       <PageTransition>{children}</PageTransition>
       <Footer />
-      <div aria-hidden="true" className="ios-bottom-browser-guard" />
       <MobileBottomNav />
     </div>
   )
