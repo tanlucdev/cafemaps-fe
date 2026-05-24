@@ -7,11 +7,7 @@ import { User, LogOut } from "lucide-react";
 import { getAuthUser, logout } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-interface UserMenuProps {
-  locale: string;
-}
-
-export default function UserMenu({ locale }: UserMenuProps) {
+export default function UserMenu() {
   const t = useTranslations();
   const router = useRouter();
   const [user, setUser] = useState(() => getAuthUser());
@@ -61,9 +57,9 @@ export default function UserMenu({ locale }: UserMenuProps) {
           <button
             onClick={() => {
               setOpen(false);
-              router.push(`/${locale}/profile`);
+              router.push("/profile");
             }}
-            className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-foreground transition-colors hover:bg-(--background-secondary)"
+            className="text-foreground flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-(--background-secondary)"
           >
             <User size={14} />
             {t("bottomNav.profile")}

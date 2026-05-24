@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
+import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { formatPrice, cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
@@ -19,14 +20,14 @@ interface CafeListProps {
 }
 
 const VIBE_TAG_CLASSES: Record<string, string> = {
-  "yên tĩnh":   "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
-  "nhộn nhịp":  "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
-  vintage:       "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
-  "hiện đại":   "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
-  "thiên nhiên": "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
-  "sáng tạo":   "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
-  "lãng mạn":   "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
-  minimalist:    "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
+  quiet: "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
+  lively: "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
+  vintage: "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
+  modern: "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
+  nature: "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
+  creative: "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
+  romantic: "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
+  minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
 
 function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean {
@@ -63,6 +64,7 @@ function CafeListRow({
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [hovered, setHovered] = useState(false);
   const t = useTranslations("search");
+  const tFilters = useTranslations("filters");
 
   function handleMouseEnter() {
     setHovered(true);
@@ -82,7 +84,7 @@ function CafeListRow({
   }
 
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
-  const district = cafe.district || "";
+  const district = formatCafeArea(cafe.district, locale);
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
     .filter(Boolean)
     .join(" • ");
@@ -112,7 +114,7 @@ function CafeListRow({
           "dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
         )}
       >
-        <Link href={`/cafe/${cafe.slug}`} className="flex flex-1 min-w-0">
+        <Link href={`/cafe/${cafe.slug}`} className="flex min-w-0 flex-1">
           {/* Image */}
           <div
             ref={imageRef}
@@ -141,7 +143,8 @@ function CafeListRow({
               <div
                 className="pointer-events-none absolute inset-0 flex items-end p-2.5 transition-opacity duration-200"
                 style={{
-                  background: "linear-gradient(to top, rgba(10,5,1,0.88) 0%, rgba(10,5,1,0.20) 55%, transparent 80%)",
+                  background:
+                    "linear-gradient(to top, rgba(10,5,1,0.88) 0%, rgba(10,5,1,0.20) 55%, transparent 80%)",
                   opacity: hovered ? 1 : 0,
                 }}
               >
@@ -187,18 +190,28 @@ function CafeListRow({
 
             {/* Tags + open status */}
             <div className="flex flex-wrap items-center gap-1.5">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className={cn(
-                    "rounded-full px-2 py-0.5 text-[10px] font-medium",
-                    VIBE_TAG_CLASSES[tag] ??
-                      "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
-                  )}
-                >
-                  {tag}
-                </span>
-              ))}
+              {tags.map((tag) => {
+                const translation = getCafeTagTranslation(tag);
+                const classKey = VIBE_TRANSLATION_KEYS[tag] ?? tag;
+                const label = translation
+                  ? tFilters(
+                      `${translation.group}.${translation.key}` as Parameters<typeof tFilters>[0],
+                    )
+                  : tag;
+
+                return (
+                  <span
+                    key={tag}
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-[10px] font-medium",
+                      VIBE_TAG_CLASSES[classKey] ??
+                        "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
+                    )}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
               {(cafe.openingTime || cafe.closingTime) && (
                 <span
                   className={cn(

@@ -41,6 +41,7 @@ export interface Cafe {
   amenities: string[]
   signatureDrink?: string | null
   parking_location?: string | null
+  parkingLocation?: string | null
   images: string[]
   image_orientations: string[] | null
   coverImage?: string | null

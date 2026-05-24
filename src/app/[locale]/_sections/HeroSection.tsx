@@ -232,7 +232,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
     <section className="relative isolate min-h-[100svh] overflow-hidden border-b border-[#e8d8c0] bg-[#f5efe6]">
       <HeroBackground />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-5xl flex-col items-center justify-center px-5 pt-[calc(82px+env(safe-area-inset-top,0px))] pb-28 text-center sm:px-6 md:pb-16">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-5xl flex-col items-center justify-center px-5 pt-[calc(112px+env(safe-area-inset-top,0px))] pb-20 text-center sm:px-6 sm:pt-[calc(82px+env(safe-area-inset-top,0px))] sm:pb-28 md:pb-16">
         <HeroSearchMemory
           lastSearch={lastSearch}
           locale={locale}

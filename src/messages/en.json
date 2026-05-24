@@ -265,13 +265,29 @@
     }
   },
   "footer": {
-    "tagline": "Discover perfect moments in Ho Chi Minh City.",
+    "tagline": "Discover perfect café moments in Ho Chi Minh City.",
+    "brandNote": "Made for café lovers.",
     "copyright": "© {year} Cafe Maps. All rights reserved.",
     "exploreTitle": "Explore",
     "linksTitle": "Links",
+    "connectTitle": "Connect",
     "home": "Home",
+    "exploreCafes": "Explore cafés",
     "quiz": "Quiz",
+    "saved": "Saved cafés",
     "contribute": "Submit a café",
+    "connectText": "Share Cafe Maps with your coffee friends.",
+    "websiteAria": "Visit Cafe Maps homepage",
+    "shareAria": "Share Cafe Maps",
+    "bottomNote": "Brewed with love in Ho Chi Minh City.",
+    "stamp": "Good coffee, good day",
+    "cta": {
+      "eyebrow": "Local café discovery",
+      "title": "Find your next favorite café",
+      "description": "Discover cozy corners, quiet work spots, and hidden gems around Ho Chi Minh City.",
+      "primary": "Explore cafés",
+      "secondary": "Take the quiz"
+    },
     "links": {
       "about": "About",
       "privacy": "Privacy policy",

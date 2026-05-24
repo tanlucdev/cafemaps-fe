@@ -16,6 +16,13 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Badge from "@/components/ui/Badge";
+import { getNearbyCafes } from "@/lib/api";
+import { formatCafeDistanceParts } from "@/lib/distance";
+import { formatPrice } from "@/lib/utils";
+import { getLastSearchState } from "@/lib/search-state";
+import type { Cafe } from "@/types/cafe";
 
 function InstagramIcon({ size = 14 }: { size?: number }) {
   return (
@@ -37,24 +44,53 @@ function InstagramIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-function extractInstagramHandle(url: string | null | undefined): string | null {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (!trimmed) return null;
-  if (!trimmed.includes("/") && !trimmed.includes(".")) {
-    return trimmed.replace(/^@/, "");
+type InstagramLink = {
+  href: string;
+  label: string;
+};
+
+type PhotoCreditWithInstagram = NonNullable<Cafe["photoCredits"]>[number] & {
+  instagram: InstagramLink;
+  key: string;
+};
+
+function getInstagramHref(value: string): string {
+  if (/^https?:\/\//i.test(value)) return value;
+
+  const withoutLeadingSlashes = value.replace(/^\/+/, "");
+  if (withoutLeadingSlashes.includes(".")) {
+    return `https://${withoutLeadingSlashes}`;
   }
-  const match = trimmed.match(/instagram\.com\/([^/?#]+)/i);
-  if (match?.[1]) return match[1].replace(/^@/, "");
-  return null;
+
+  return `https://instagram.com/${withoutLeadingSlashes}`;
 }
-import { useTranslations } from "next-intl";
-import Badge from "@/components/ui/Badge";
-import { getNearbyCafes } from "@/lib/api";
-import { formatCafeDistanceParts } from "@/lib/distance";
-import { formatPrice } from "@/lib/utils";
-import { getLastSearchState } from "@/lib/search-state";
-import type { Cafe } from "@/types/cafe";
+
+function getInstagramLabel(href: string, value: string): string {
+  try {
+    const parsed = new URL(href);
+    const handle = parsed.hostname.toLowerCase().includes("instagram.com")
+      ? parsed.pathname.split("/").filter(Boolean)[0]?.replace(/^@/, "")
+      : null;
+
+    if (handle) return `@${handle}`;
+  } catch {
+    // Fall back to the raw value below if URL parsing is unavailable.
+  }
+
+  if (!value.includes("/") && !value.includes(".")) return `@${value}`;
+  return value.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+}
+
+function resolveInstagramLink(value: string | null | undefined): InstagramLink | null {
+  const trimmed = value?.trim().replace(/^@/, "");
+  if (!trimmed) return null;
+
+  const href = getInstagramHref(trimmed);
+  return {
+    href,
+    label: getInstagramLabel(href, trimmed),
+  };
+}
 
 interface CafeDetailInfoProps {
   cafe: Cafe;
@@ -235,7 +271,7 @@ function DetailActions({
         onClick={onSave}
         disabled={loadingSave}
         aria-label={saved ? "Bỏ lưu" : "Lưu quán"}
-        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-2xl border px-5 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed sm:w-32 ${
+        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl border px-5 text-sm font-semibold whitespace-nowrap transition-all duration-200 disabled:cursor-not-allowed sm:w-32 ${
           saved
             ? "border-amber-500 bg-amber-500 text-white shadow-[0_2px_8px_rgba(245,158,11,0.35)]"
             : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)"
@@ -287,11 +323,24 @@ export default function CafeDetailInfo({
   const distanceLabel = locale === "vi" ? `Cách bạn ${distanceText}` : `${distanceText} away`;
   const parkingLabel = locale === "vi" ? "Gửi xe" : "Parking";
   const parkingTypeLabel = locale === "vi" ? "Chỗ để xe" : "Parking";
+  const parkingLocation = cafe.parkingLocation ?? cafe.parking_location;
   const instagramLabel = locale === "vi" ? "Instagram quán" : "Instagram";
   const photoCreditLabel = locale === "vi" ? "Ảnh từ" : "Photos by";
-  const igHandle = extractInstagramHandle(cafe.instagramUrl);
-  const photoCredits = cafe.photoCredits?.filter((c) => c?.ig) ?? [];
-  const hasSocialBlock = Boolean(igHandle) || photoCredits.length > 0;
+  const cafeInstagram = resolveInstagramLink(cafe.instagramUrl);
+  const photoCredits =
+    cafe.photoCredits
+      ?.map((credit, index) => {
+        const instagram = resolveInstagramLink(credit.ig);
+        if (!instagram) return null;
+
+        return {
+          ...credit,
+          instagram,
+          key: `${instagram.href}-${index}`,
+        };
+      })
+      .filter((credit): credit is PhotoCreditWithInstagram => credit !== null) ?? [];
+  const hasSocialBlock = Boolean(cafeInstagram) || photoCredits.length > 0;
 
   useEffect(() => {
     if (cafe.distanceKm != null) {
@@ -322,11 +371,7 @@ export default function CafeDetailInfo({
     });
 
     async function resolveRouteDistance() {
-      const nearbyCafes = await getNearbyCafes(
-        originLat,
-        originLng,
-        searchRadiusKm,
-      );
+      const nearbyCafes = await getNearbyCafes(originLat, originLng, searchRadiusKm);
       if (cancelled) return;
 
       const routeCafe = nearbyCafes.find(
@@ -443,7 +488,7 @@ export default function CafeDetailInfo({
           </div>
         )}
 
-        {cafe.parking_location && (
+        {parkingLocation && (
           <div className="rounded-2xl border border-(--border-light,#ECE4D6) bg-[#FAF6F1] px-4 py-3.5 dark:bg-[#241B15]">
             <p className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.08em] text-(--foreground-muted) uppercase">
               <Car size={14} />
@@ -454,9 +499,7 @@ export default function CafeDetailInfo({
                 {parkingTypeLabel}
               </span>
               <span className="text-border text-[11px]">·</span>
-              <span className="leading-normal text-(--foreground-muted)">
-                {cafe.parking_location}
-              </span>
+              <span className="leading-normal text-(--foreground-muted)">{parkingLocation}</span>
             </div>
           </div>
         )}
@@ -505,41 +548,41 @@ export default function CafeDetailInfo({
 
         {hasSocialBlock && (
           <div className="overflow-hidden rounded-2xl border border-(--border-light,#ECE4D6)">
-            {igHandle && (
+            {cafeInstagram && (
               <div className="flex items-center justify-between gap-3 bg-[#FAF6F1] px-4 py-2.5 dark:bg-[#241B15]">
                 <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
                   <InstagramIcon />
                   {instagramLabel}
                 </span>
                 <a
-                  href={`https://instagram.com/${igHandle}`}
+                  href={cafeInstagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-accent text-[13.5px] font-bold tracking-[-0.01em] text-(--foreground-muted) transition-colors"
                 >
-                  @{igHandle}
+                  {cafeInstagram.label}
                 </a>
               </div>
             )}
             {photoCredits.length > 0 && (
               <div
                 className={`flex flex-col gap-1.5 px-4 py-2.5 ${
-                  igHandle ? "border-t border-(--border-light,#ECE4D6)" : ""
+                  cafeInstagram ? "border-t border-(--border-light,#ECE4D6)" : ""
                 }`}
               >
                 <span className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
                   <InstagramIcon />
                   {photoCreditLabel}
                 </span>
-                {photoCredits.map((c, i) => (
+                {photoCredits.map((c) => (
                   <a
-                    key={`${c.ig}-${i}`}
-                    href={`https://instagram.com/${c.ig}`}
+                    key={c.key}
+                    href={c.instagram.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-accent inline-flex items-center gap-1.5 text-[13px] font-semibold text-(--foreground-muted) transition-colors"
                   >
-                    @{c.ig}
+                    {c.instagram.label}
                     {c.note && (
                       <span className="text-[12px] font-normal text-(--foreground-muted)">
                         · {c.note}

@@ -6,7 +6,7 @@ import { routing } from "@/i18n/routing"
 const intlMiddleware = createMiddleware(routing)
 
 // Routes yêu cầu đăng nhập
-const GUARDED_PATHS = ["/saved", "/contribute"]
+const GUARDED_PATHS = ["/saved"]
 
 // Routes chỉ dành cho chưa đăng nhập (đã đăng nhập → redirect home)
 const UNGUARDED_AUTH_PATHS = ["/login", "/register"]
@@ -29,10 +29,32 @@ function stripLocale(pathname: string, locales: readonly string[]) {
   return pathname
 }
 
+function getDuplicateLocaleRedirectPath(pathname: string, locales: readonly string[]) {
+  const segments = pathname.split("/")
+  const firstLocale = segments[1]
+  const secondLocale = segments[2]
+
+  if (!locales.includes(firstLocale) || !locales.includes(secondLocale)) {
+    return null
+  }
+
+  const rest = segments.slice(3).join("/")
+  return rest ? `/${firstLocale}/${rest}` : `/${firstLocale}`
+}
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get(AUTH_COOKIE_KEYS.accessToken)?.value
   const isAuthenticated = Boolean(token)
+
+  const duplicateLocaleRedirectPath = getDuplicateLocaleRedirectPath(pathname, routing.locales)
+  if (duplicateLocaleRedirectPath) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = duplicateLocaleRedirectPath
+    const response = NextResponse.redirect(redirectUrl)
+    response.headers.set("Cache-Control", "no-store")
+    return response
+  }
 
   const strippedPath = stripLocale(pathname, routing.locales)
 

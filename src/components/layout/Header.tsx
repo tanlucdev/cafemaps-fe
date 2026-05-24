@@ -11,11 +11,7 @@ import { getAuthUser } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-interface HeaderProps {
-  locale: string;
-}
-
-export default function Header({ locale }: HeaderProps) {
+export default function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -91,7 +87,7 @@ export default function Header({ locale }: HeaderProps) {
 
             <div className="ml-0.5 hidden items-center md:flex">
               {authState === null ? null : authState ? (
-                <UserMenu locale={locale} />
+                <UserMenu />
               ) : (
                 <Link
                   href="/login"

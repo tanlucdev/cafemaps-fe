@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
+import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { cn, formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
@@ -22,24 +23,14 @@ interface CafeCardProps {
   onSavedChange?: (saved: boolean) => void;
 }
 
-// Normalize raw vibe values (Vietnamese or English key) → canonical key
-const VIBE_KEY_MAP: Record<string, string> = {
-  "yên tĩnh": "quiet",
-  "nhộn nhịp": "lively",
-  "hiện đại": "modern",
-  "thiên nhiên": "nature",
-  "sáng tạo": "creative",
-  "lãng mạn": "romantic",
-};
-
 const VIBE_TAG_CLASSES: Record<string, string> = {
-  quiet:      "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
-  lively:     "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
-  vintage:    "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
-  modern:     "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
-  nature:     "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
-  creative:   "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
-  romantic:   "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
+  quiet: "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
+  lively: "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
+  vintage: "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
+  modern: "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
+  nature: "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
+  creative: "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
+  romantic: "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
   minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
 
@@ -67,6 +58,7 @@ export default function CafeCard({
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
+  const tCafe = useTranslations("cafe");
   const tFilters = useTranslations("filters");
   const isSlide = animationType === "slide";
   const articleRef = useRef<HTMLElement>(null);
@@ -111,7 +103,7 @@ export default function CafeCard({
   const href = `/cafe/${cafe.slug}`;
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
   const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
-  const district = cafe.district || "";
+  const district = formatCafeArea(cafe.district, locale);
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
     .filter(Boolean)
     .join(" • ");
@@ -157,14 +149,21 @@ export default function CafeCard({
             )}
 
             {/* Gradient overlay for bottom info */}
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[rgba(15,8,2,0.55)] via-[rgba(15,8,2,0.1)] to-transparent" style={{ backgroundImage: "linear-gradient(to top, rgba(15,8,2,0.55) 0%, rgba(15,8,2,0.1) 42%, transparent 65%)" }} />
+            <div
+              className="pointer-events-none absolute inset-0 bg-linear-to-t from-[rgba(15,8,2,0.55)] via-[rgba(15,8,2,0.1)] to-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to top, rgba(15,8,2,0.55) 0%, rgba(15,8,2,0.1) 42%, transparent 65%)",
+              }}
+            />
 
             {/* Hover: description slides up from image bottom */}
             {cafe.oneLiner && (
               <div
                 className="pointer-events-none absolute inset-0 flex items-end p-3.5 transition-opacity duration-200"
                 style={{
-                  background: "linear-gradient(to top, rgba(10,5,1,0.80) 0%, rgba(10,5,1,0.12) 52%, transparent 72%)",
+                  background:
+                    "linear-gradient(to top, rgba(10,5,1,0.80) 0%, rgba(10,5,1,0.12) 52%, transparent 72%)",
                   opacity: hovered ? 1 : 0,
                 }}
               >
@@ -183,7 +182,6 @@ export default function CafeCard({
                 {price}
               </span>
             )}
-
           </div>
         </Link>
 
@@ -201,7 +199,7 @@ export default function CafeCard({
           <div className="flex flex-col gap-2 p-4">
             {/* Name + rating */}
             <div className="flex items-start justify-between gap-2">
-              <h3 className="line-clamp-1 text-[14px] font-bold leading-snug text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]">
+              <h3 className="line-clamp-1 text-[14px] leading-snug font-bold text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]">
                 {cafe.name}
               </h3>
               <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#FBF0DC] px-2.5 py-0.5 text-[11px] font-bold text-[#C9870C] dark:bg-[#2C1A08] dark:text-[#F0A830]">
@@ -222,9 +220,14 @@ export default function CafeCard({
                   {openNow && (
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1EA055] opacity-75" />
                   )}
-                  <span className={cn("relative inline-flex h-1.5 w-1.5 rounded-full", openNow ? "bg-[#1EA055]" : "bg-[#9B8B73]")} />
+                  <span
+                    className={cn(
+                      "relative inline-flex h-1.5 w-1.5 rounded-full",
+                      openNow ? "bg-[#1EA055]" : "bg-[#9B8B73]",
+                    )}
+                  />
                 </span>
-                {openNow ? "Đang mở" : "Đã đóng"}
+                {openNow ? tCafe("openNow") : tCafe("closedNow")}
               </span>
               {locationText && (
                 <>
@@ -240,16 +243,19 @@ export default function CafeCard({
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {tags.map((tag) => {
-                  const key = VIBE_KEY_MAP[tag] ?? tag;
-                  const label = key in VIBE_TAG_CLASSES
-                    ? tFilters(`vibes.${key}` as Parameters<typeof tFilters>[0])
+                  const translation = getCafeTagTranslation(tag);
+                  const classKey = VIBE_TRANSLATION_KEYS[tag] ?? tag;
+                  const label = translation
+                    ? tFilters(
+                        `${translation.group}.${translation.key}` as Parameters<typeof tFilters>[0],
+                      )
                     : tag;
                   return (
                     <span
                       key={tag}
                       className={cn(
                         "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                        VIBE_TAG_CLASSES[key] ??
+                        VIBE_TAG_CLASSES[classKey] ??
                           "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
                       )}
                     >

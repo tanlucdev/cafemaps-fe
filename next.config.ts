@@ -6,6 +6,20 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const BACKEND_URL = process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/client",
+        destination: "/vi/profile",
+        permanent: false,
+      },
+      {
+        source: "/:locale/client",
+        destination: "/:locale/profile",
+        permanent: false,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

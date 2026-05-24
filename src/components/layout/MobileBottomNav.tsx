@@ -54,7 +54,7 @@ export default function MobileBottomNav() {
     { href: "/", icon: Home, label: t("home") },
     { href: "/search", icon: Search, label: t("search") },
     { href: "/saved", icon: Heart, label: t("saved") },
-    { href: "/login", icon: User, label: t("profile") },
+    { href: "/profile", icon: User, label: t("profile") },
   ]
 
   return (

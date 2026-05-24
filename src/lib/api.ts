@@ -178,6 +178,8 @@ function mapApiCafe(raw: RawCafe): Cafe {
     vibes: raw.vibes ?? raw.vibe ?? [],
     purposes: raw.purposes ?? raw.purpose ?? [],
     amenities: raw.amenities ?? [],
+    parking_location: raw.parking_location ?? raw.parkingLocation ?? null,
+    parkingLocation: raw.parkingLocation ?? raw.parking_location ?? null,
     images: raw.images ?? [],
     image_orientations:
       raw.image_orientations ??

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { motion } from "framer-motion";
-import { ChevronLeft, Share2 } from "lucide-react";
+import { BookOpen, ChevronLeft, Share2 } from "lucide-react";
 import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -12,6 +12,7 @@ import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
+import CafeMenuModal from "./CafeMenuModal";
 
 interface CafeDetailContentProps {
   cafe: Cafe;
@@ -25,6 +26,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   const [saved, setSaved] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const cafeUrl =
     typeof window !== "undefined"
@@ -108,6 +110,16 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             orientations={cafe.image_orientations ?? []}
             cafeName={cafe.name}
           />
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="border-border hover:border-accent hover:text-accent bg-card inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-sm font-semibold text-(--foreground-muted) transition-colors"
+            >
+              <BookOpen size={15} />
+              Menu
+            </button>
+          </div>
         </motion.div>
 
         <CafeDetailInfo
@@ -129,6 +141,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         oneLiner={cafe.oneLiner}
         url={cafeUrl}
       />
+      <CafeMenuModal open={menuOpen} onClose={() => setMenuOpen(false)} cafeName={cafe.name} />
     </article>
   );
 }

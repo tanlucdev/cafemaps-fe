@@ -5,15 +5,12 @@ import PageTransition from "@/components/providers/PageTransition"
 
 interface MainLayoutProps {
   children: React.ReactNode
-  params: Promise<{ locale: string }>
 }
 
-export default async function MainLayout({ children, params }: MainLayoutProps) {
-  const { locale } = await params
-
+export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="app-shell flex min-h-[100svh] flex-col">
-      <Header locale={locale} />
+      <Header />
       <PageTransition>{children}</PageTransition>
       <Footer />
       <MobileBottomNav />

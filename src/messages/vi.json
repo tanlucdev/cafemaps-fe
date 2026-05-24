@@ -265,13 +265,29 @@
     }
   },
   "footer": {
-    "tagline": "Khám phá những khoảnh khắc hoàn hảo tại TP.HCM.",
+    "tagline": "Khám phá những khoảnh khắc cà phê thật vừa ý tại TP.HCM.",
+    "brandNote": "Dành cho người yêu cà phê.",
     "copyright": "© {year} Cafe Maps. Mọi quyền được bảo lưu.",
     "exploreTitle": "Khám phá",
     "linksTitle": "Liên kết",
+    "connectTitle": "Kết nối",
     "home": "Trang chủ",
+    "exploreCafes": "Khám phá quán",
     "quiz": "Trắc nghiệm",
+    "saved": "Quán đã lưu",
     "contribute": "Đóng góp quán",
+    "connectText": "Chia sẻ Cafe Maps với những người bạn mê cà phê.",
+    "websiteAria": "Về trang chủ Cafe Maps",
+    "shareAria": "Chia sẻ Cafe Maps",
+    "bottomNote": "Ủ bằng yêu thương tại TP.HCM.",
+    "stamp": "Good coffee, good day",
+    "cta": {
+      "eyebrow": "Khám phá cà phê địa phương",
+      "title": "Tìm quán cà phê yêu thích tiếp theo",
+      "description": "Khám phá những góc ấm cúng, chỗ làm việc yên tĩnh và các quán nhỏ thú vị quanh TP.HCM.",
+      "primary": "Khám phá quán",
+      "secondary": "Làm trắc nghiệm"
+    },
     "links": {
       "about": "Về chúng tôi",
       "privacy": "Chính sách bảo mật",
