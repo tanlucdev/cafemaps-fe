@@ -52,6 +52,9 @@ export interface Cafe {
   lat?: number | null
   lng?: number | null
   distanceKm?: number
+  durationMin?: number
+  distanceMode?: "straight" | "route"
+  straightDistanceKm?: number
   createdAt?: string
   updatedAt?: string
 }

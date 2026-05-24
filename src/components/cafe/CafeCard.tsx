@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
+import { formatCafeDistanceParts } from "@/lib/distance";
 import { cn, formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 
@@ -111,13 +112,9 @@ export default function CafeCard({
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
   const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
   const district = cafe.district || "";
-  const distance =
-    cafe.distanceKm != null
-      ? cafe.distanceKm < 1
-        ? `${Math.round(cafe.distanceKm * 1000)}m`
-        : `${cafe.distanceKm.toFixed(1)} km`
-      : "";
-  const locationText = [district, distance].filter(Boolean).join(" • ");
+  const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
+    .filter(Boolean)
+    .join(" • ");
   const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
   const rating = ratingFor(index);
 

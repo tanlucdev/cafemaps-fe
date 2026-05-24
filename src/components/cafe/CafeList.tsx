@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
+import { formatCafeDistanceParts } from "@/lib/distance";
 import { formatPrice, cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -82,13 +83,9 @@ function CafeListRow({
 
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
   const district = cafe.district || "";
-  const distance =
-    cafe.distanceKm != null
-      ? cafe.distanceKm < 1
-        ? `${Math.round(cafe.distanceKm * 1000)}m`
-        : `${cafe.distanceKm.toFixed(1)}km`
-      : "";
-  const locationText = [district, distance].filter(Boolean).join(" • ");
+  const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
+    .filter(Boolean)
+    .join(" • ");
   const openNow = useMemo(
     () => isOpenNow(cafe.openingTime, cafe.closingTime),
     [cafe.openingTime, cafe.closingTime],

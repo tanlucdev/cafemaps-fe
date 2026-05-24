@@ -50,6 +50,8 @@ function extractInstagramHandle(url: string | null | undefined): string | null {
 }
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
+import { getNearbyCafes } from "@/lib/api";
+import { formatCafeDistanceParts } from "@/lib/distance";
 import { formatPrice } from "@/lib/utils";
 import { getLastSearchState } from "@/lib/search-state";
 import type { Cafe } from "@/types/cafe";
@@ -104,6 +106,8 @@ type CafeWithRating = Cafe & {
   curatedRating?: number | null;
 };
 
+type ResolvedDistance = Pick<Cafe, "distanceKm" | "distanceMode" | "durationMin">;
+
 function formatTime(time: string | null | undefined): string {
   if (!time) return "";
 
@@ -132,12 +136,6 @@ function isOpenNow(openingTime: string | null | undefined, closingTime: string |
   const nowMins = now.getHours() * 60 + now.getMinutes();
   if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins;
   return nowMins >= openMins && nowMins < closeMins;
-}
-
-function formatDistance(distanceKm?: number | null): string {
-  if (distanceKm == null) return "";
-  if (distanceKm < 1) return `${Math.max(1, Math.round(distanceKm * 1000))}m`;
-  return `${distanceKm < 10 ? distanceKm.toFixed(1) : Math.round(distanceKm)} km`;
 }
 
 function calculateDistanceKm(
@@ -270,21 +268,23 @@ export default function CafeDetailInfo({
   onSave,
 }: CafeDetailInfoProps) {
   const t = useTranslations("cafe");
-  const [resolvedDistanceKm, setResolvedDistanceKm] = useState<number | null>(
-    cafe.distanceKm ?? null,
-  );
+  const [resolvedDistance, setResolvedDistance] = useState<ResolvedDistance>({
+    distanceKm: cafe.distanceKm,
+    distanceMode: cafe.distanceMode,
+    durationMin: cafe.durationMin,
+  });
 
   const hours = [formatTime(cafe.openingTime), formatTime(cafe.closingTime)]
     .filter(Boolean)
     .join(" – ");
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
-  const distance = formatDistance(resolvedDistanceKm);
+  const distanceText = formatCafeDistanceParts(resolvedDistance, locale).join(" • ");
   const rating = getCafeRating(cafe);
   const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
   const aboutText = cafe.description ?? cafe.oneLiner;
   const goodForItems = getGoodForItems(cafe);
   const idealForLabel = locale === "vi" ? "Lý tưởng cho" : "Good for";
-  const distanceLabel = locale === "vi" ? `Cách bạn ${distance}` : `${distance} away`;
+  const distanceLabel = locale === "vi" ? `Cách bạn ${distanceText}` : `${distanceText} away`;
   const parkingLabel = locale === "vi" ? "Gửi xe" : "Parking";
   const parkingTypeLabel = locale === "vi" ? "Chỗ để xe" : "Parking";
   const instagramLabel = locale === "vi" ? "Instagram quán" : "Instagram";
@@ -295,20 +295,66 @@ export default function CafeDetailInfo({
 
   useEffect(() => {
     if (cafe.distanceKm != null) {
-      setResolvedDistanceKm(cafe.distanceKm);
+      setResolvedDistance({
+        distanceKm: cafe.distanceKm,
+        distanceMode: cafe.distanceMode,
+        durationMin: cafe.durationMin,
+      });
       return;
     }
 
+    let cancelled = false;
     const lastSearch = getLastSearchState();
     const fromLat = lastSearch?.filter.lat;
     const fromLng = lastSearch?.filter.lng;
     if (fromLat == null || fromLng == null || cafe.lat == null || cafe.lng == null) {
-      setResolvedDistanceKm(null);
+      setResolvedDistance({});
       return;
     }
 
-    setResolvedDistanceKm(calculateDistanceKm(fromLat, fromLng, cafe.lat, cafe.lng));
-  }, [cafe.distanceKm, cafe.lat, cafe.lng]);
+    const originLat = fromLat;
+    const originLng = fromLng;
+    const searchRadiusKm = lastSearch?.filter.radiusKm ?? 2;
+
+    setResolvedDistance({
+      distanceKm: calculateDistanceKm(originLat, originLng, cafe.lat, cafe.lng),
+      distanceMode: "straight",
+    });
+
+    async function resolveRouteDistance() {
+      const nearbyCafes = await getNearbyCafes(
+        originLat,
+        originLng,
+        searchRadiusKm,
+      );
+      if (cancelled) return;
+
+      const routeCafe = nearbyCafes.find(
+        (nearbyCafe) => nearbyCafe.id === cafe.id || nearbyCafe.slug === cafe.slug,
+      );
+      if (routeCafe?.distanceKm == null) return;
+
+      setResolvedDistance({
+        distanceKm: routeCafe.distanceKm,
+        distanceMode: routeCafe.distanceMode,
+        durationMin: routeCafe.durationMin,
+      });
+    }
+
+    void resolveRouteDistance();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    cafe.distanceKm,
+    cafe.distanceMode,
+    cafe.durationMin,
+    cafe.id,
+    cafe.lat,
+    cafe.lng,
+    cafe.slug,
+  ]);
 
   return (
     <>
@@ -354,7 +400,7 @@ export default function CafeDetailInfo({
               {hours}
             </span>
           )}
-          {distance && (
+          {distanceText && (
             <span className="text-accent flex items-center gap-1.5 font-medium">
               <Navigation size={14} className="shrink-0" />
               {distanceLabel}

@@ -33,11 +33,12 @@ async function apiFetch<T>(
   const method = options?.method?.toUpperCase() ?? "GET"
   const isPublicRead =
     method === "GET" && !(options?.headers && "Authorization" in options.headers)
+  const useReadCache = isPublicRead && options?.cache !== "no-store"
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
 
   const res = await fetch(`${BASE_URL}${path}`, {
-    ...(isPublicRead
+    ...(useReadCache
       ? {
           cache: "force-cache",
           next: {
@@ -104,7 +105,19 @@ function parseEwkbPoint(hex: string): { lat: number; lng: number } | null {
   }
 }
 
-type RawCafe = Omit<Cafe, "vibes" | "purposes" | "amenities" | "images" | "image_orientations" | "isPublished"> & {
+type RawCafe = Omit<
+  Cafe,
+  | "vibes"
+  | "purposes"
+  | "amenities"
+  | "images"
+  | "image_orientations"
+  | "isPublished"
+  | "distanceKm"
+  | "durationMin"
+  | "distanceMode"
+  | "straightDistanceKm"
+> & {
   vibes?: string[]
   vibe?: string[]
   purposes?: string[]
@@ -117,8 +130,25 @@ type RawCafe = Omit<Cafe, "vibes" | "purposes" | "amenities" | "images" | "image
   imageOrientation?: string[] | null
   isPublished?: boolean
   location?: string
-  distance_km?: number | string
-  distanceKm?: number | string
+  distance_km?: number | string | null
+  distanceKm?: number | string | null
+  duration_min?: number | string | null
+  durationMin?: number | string | null
+  distance_mode?: "straight" | "route" | null
+  distanceMode?: "straight" | "route" | null
+  straight_distance_km?: number | string | null
+  straightDistanceKm?: number | string | null
+}
+
+function toFiniteNumber(value: number | string | null | undefined): number | undefined {
+  const parsed = typeof value === "string" ? Number(value) : value
+  return typeof parsed === "number" && Number.isFinite(parsed) ? parsed : undefined
+}
+
+function normalizeDistanceMode(
+  mode: "straight" | "route" | null | undefined
+): Cafe["distanceMode"] {
+  return mode === "straight" || mode === "route" ? mode : undefined
 }
 
 function mapApiCafe(raw: RawCafe): Cafe {
@@ -134,10 +164,12 @@ function mapApiCafe(raw: RawCafe): Cafe {
   }
 
   const rawDistance = raw.distanceKm ?? raw.distance_km
-  const distanceKm =
-    typeof rawDistance === "string" ? Number(rawDistance) : rawDistance
-  const distanceKmValue =
-    typeof distanceKm === "number" && Number.isFinite(distanceKm) ? distanceKm : undefined
+  const distanceKmValue = toFiniteNumber(rawDistance)
+  const durationMin = toFiniteNumber(raw.durationMin ?? raw.duration_min)
+  const straightDistanceKm = toFiniteNumber(
+    raw.straightDistanceKm ?? raw.straight_distance_km
+  )
+  const distanceMode = normalizeDistanceMode(raw.distanceMode ?? raw.distance_mode)
 
   return {
     ...raw,
@@ -155,6 +187,9 @@ function mapApiCafe(raw: RawCafe): Cafe {
       null,
     isPublished: raw.isPublished ?? true,
     distanceKm: distanceKmValue,
+    durationMin,
+    distanceMode,
+    straightDistanceKm,
   }
 }
 
@@ -219,8 +254,15 @@ export async function getNearbyCafes(
   radiusKm = 2
 ): Promise<Cafe[]> {
   try {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      radius: String(radiusKm),
+      distanceMode: "route",
+    })
     const raw = await apiFetch<RawCafe[]>(
-      `/cafes/nearby?lat=${lat}&lng=${lng}&radius=${radiusKm}`
+      `/cafes/nearby?${params.toString()}`,
+      { cache: "no-store" }
     )
     return raw.map(mapApiCafe)
   } catch {
