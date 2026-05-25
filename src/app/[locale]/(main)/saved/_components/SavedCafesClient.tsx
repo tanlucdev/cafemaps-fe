@@ -26,6 +26,7 @@ import { getCurrentAccessToken } from "@/lib/auth-client"
 import { getSavedCafeEntries, moveToCollection } from "@/lib/api"
 import CafeCard from "@/components/cafe/CafeCard"
 import { cn } from "@/lib/utils"
+import { isCafeOpenNow } from "@/lib/opening-hours"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,17 +45,6 @@ interface CollectionGroup {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function isOpenNow(cafe: Cafe) {
-  if (!cafe.openingTime || !cafe.closingTime) return true
-  const now = new Date()
-  const cur = now.getHours() * 60 + now.getMinutes()
-  const [oh, om] = cafe.openingTime.slice(0, 5).split(":").map(Number)
-  const [ch, cm] = cafe.closingTime.slice(0, 5).split(":").map(Number)
-  const open = oh * 60 + om
-  const close = ch * 60 + cm
-  return close < open ? cur >= open || cur <= close : cur >= open && cur <= close
-}
 
 // ─── Create Folder Modal ──────────────────────────────────────────────────────
 
@@ -855,7 +845,7 @@ export default function SavedCafesClient({
         ? entries.map((e) => e.cafe)
         : (collections.find((c) => c.name === activeCollection)?.cafes ?? [])
 
-    if (quickFilter === "open") list = list.filter(isOpenNow)
+    if (quickFilter === "open") list = list.filter(isCafeOpenNow)
     if (quickFilter === "parking") list = list.filter((c) => c.amenities.some((a) => a.toLowerCase().includes("đậu xe")))
     if (district) list = list.filter((c) => c.district === district || c.district_legacy === district)
     if (search.trim()) {

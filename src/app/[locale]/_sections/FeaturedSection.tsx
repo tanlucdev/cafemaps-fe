@@ -26,6 +26,7 @@ import {
   sortFromSearchParams,
   type SearchSort,
 } from "@/lib/search-state";
+import { isCafeOpenNow } from "@/lib/opening-hours";
 
 type ViewMode = "grid" | "list";
 
@@ -117,23 +118,11 @@ export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedS
     updateUrl(filter, newSort, 1);
   }
 
-  function isOpenNow(cafe: Cafe) {
-    if (!cafe.openingTime || !cafe.closingTime) return true;
-    const now = new Date();
-    const current = now.getHours() * 60 + now.getMinutes();
-    const [openHour = "0", openMinute = "0"] = cafe.openingTime.split(":");
-    const [closeHour = "0", closeMinute = "0"] = cafe.closingTime.split(":");
-    const open = Number(openHour) * 60 + Number(openMinute);
-    const close = Number(closeHour) * 60 + Number(closeMinute);
-    if (close < open) return current >= open || current <= close;
-    return current >= open && current <= close;
-  }
-
   const filtered = useMemo(() => {
     // Server already filtered — only apply client-only filters (openNow, nearMe)
     if (serverMeta) {
       let result = cafes;
-      if (filter.openNow) result = result.filter(isOpenNow);
+      if (filter.openNow) result = result.filter(isCafeOpenNow);
       if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
         const hasCoords = result.some((c) => c.lat != null && c.lng != null);
         if (hasCoords) {
@@ -176,7 +165,7 @@ export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedS
         return true;
       });
     }
-    if (openNow) result = result.filter(isOpenNow);
+    if (openNow) result = result.filter(isCafeOpenNow);
     if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
       const hasCoords = result.some((c) => c.lat != null && c.lng != null);
       if (hasCoords) {

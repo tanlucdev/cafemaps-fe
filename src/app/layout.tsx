@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { getSiteUrl, OG_IMAGE, SITE_NAME } from "@/lib/metadata";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -31,14 +32,15 @@ export const metadata: Metadata = {
   },
   description:
     "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://cafefinder.vn"),
+  metadataBase: getSiteUrl(),
   openGraph: {
-    siteName: "Cafe Maps",
+    siteName: SITE_NAME,
     locale: "vi_VN",
+    alternateLocale: ["en_US"],
     type: "website",
     images: [
       {
-        url: "/image/meta-image.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Cafe Maps — Khám phá quán cà phê TP.HCM",
@@ -47,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/image/meta-image.png"],
+    images: [OG_IMAGE],
   },
 };
 

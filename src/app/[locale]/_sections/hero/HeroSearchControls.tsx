@@ -70,7 +70,7 @@ export function HeroSearchControls({
                 onChange={(event) => onSearchChange(event.target.value)}
                 onFocus={() => onFocusChange(true)}
                 placeholder={!search ? placeholder : undefined}
-                className="h-full min-w-0 flex-1 bg-transparent px-1 text-[13px] font-medium text-[#261407] placeholder:text-[#765538] sm:text-base"
+                className="h-full min-w-0 flex-1 bg-transparent px-1 text-base font-medium text-[#261407] placeholder:text-[#765538]"
               />
               <button
                 type="submit"

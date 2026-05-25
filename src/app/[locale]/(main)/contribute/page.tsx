@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { createLocalizedMetadata } from "@/lib/metadata";
 import ContributeForm from "./ContributeForm";
 
 interface PageProps {
@@ -9,10 +10,12 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contribute" });
-  return {
+  return createLocalizedMetadata({
+    locale,
+    pathname: "/contribute",
     title: t("title"),
     description: t("subtitle"),
-  };
+  });
 }
 
 export default async function ContributePage() {

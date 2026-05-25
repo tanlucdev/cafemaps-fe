@@ -11,6 +11,7 @@ import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
+import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { cn, formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 
@@ -33,18 +34,6 @@ const VIBE_TAG_CLASSES: Record<string, string> = {
   romantic: "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
   minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
-
-function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean {
-  if (!openingTime || !closingTime) return true;
-  const now = new Date();
-  const [oh, om] = openingTime.split(":").map(Number);
-  const [ch, cm] = closingTime.split(":").map(Number);
-  const nowMins = now.getHours() * 60 + now.getMinutes();
-  const openMins = oh * 60 + om;
-  const closeMins = ch * 60 + cm;
-  if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins;
-  return nowMins >= openMins && nowMins < closeMins;
-}
 
 function ratingFor(index: number) {
   return (4.5 + (index % 5) * 0.1).toFixed(1);
@@ -102,7 +91,7 @@ export default function CafeCard({
 
   const href = `/cafe/${cafe.slug}`;
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
-  const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
+  const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const district = formatCafeArea(cafe.district, locale);
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
     .filter(Boolean)
@@ -210,28 +199,34 @@ export default function CafeCard({
 
             {/* Open status + location */}
             <div className="flex min-w-0 items-center gap-1.5 text-xs">
-              <span
-                className={cn(
-                  "inline-flex shrink-0 items-center gap-1 font-semibold",
-                  openNow ? "text-[#1EA055]" : "text-[#9B8B73]",
-                )}
-              >
-                <span className="relative flex h-1.5 w-1.5">
-                  {openNow && (
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1EA055] opacity-75" />
+              {openStatus !== null && (
+                <span
+                  className={cn(
+                    "inline-flex shrink-0 items-center gap-1 font-semibold",
+                    openStatus
+                      ? "text-[var(--status-open)]"
+                      : "text-[var(--status-closed)]",
                   )}
-                  <span
-                    className={cn(
-                      "relative inline-flex h-1.5 w-1.5 rounded-full",
-                      openNow ? "bg-[#1EA055]" : "bg-[#9B8B73]",
+                >
+                  <span className="relative flex h-1.5 w-1.5">
+                    {openStatus && (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--status-open)] opacity-75" />
                     )}
-                  />
+                    <span
+                      className={cn(
+                        "relative inline-flex h-1.5 w-1.5 rounded-full",
+                        openStatus
+                          ? "bg-[var(--status-open)]"
+                          : "bg-[var(--status-closed)]",
+                      )}
+                    />
+                  </span>
+                  {openStatus ? tCafe("openNow") : tCafe("closedNow")}
                 </span>
-                {openNow ? tCafe("openNow") : tCafe("closedNow")}
-              </span>
+              )}
               {locationText && (
                 <>
-                  <span className="text-[#C9C0B3]">·</span>
+                  {openStatus !== null && <span className="text-[#C9C0B3]">·</span>}
                   <span className="flex min-w-0 items-center gap-0.5 text-[#9B8B73]">
                     <MapPin size={11} className="shrink-0 text-[#C9870C]" />
                     <span className="truncate">{locationText}</span>

@@ -128,6 +128,10 @@ type RawCafe = Omit<
   imageOrientations?: string[] | null
   image_orientation?: string[] | null
   imageOrientation?: string[] | null
+  opening_time?: string | null
+  opening_time_local?: string | null
+  closing_time?: string | null
+  closing_time_local?: string | null
   isPublished?: boolean
   location?: string
   distance_km?: number | string | null
@@ -178,6 +182,8 @@ function mapApiCafe(raw: RawCafe): Cafe {
     vibes: raw.vibes ?? raw.vibe ?? [],
     purposes: raw.purposes ?? raw.purpose ?? [],
     amenities: raw.amenities ?? [],
+    openingTime: raw.openingTime ?? raw.opening_time ?? raw.opening_time_local ?? null,
+    closingTime: raw.closingTime ?? raw.closing_time ?? raw.closing_time_local ?? null,
     parking_location: raw.parking_location ?? raw.parkingLocation ?? null,
     parkingLocation: raw.parkingLocation ?? raw.parking_location ?? null,
     images: raw.images ?? [],

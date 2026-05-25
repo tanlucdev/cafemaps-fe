@@ -125,21 +125,21 @@ export function FilterChipsRow({
         className={cn(
           "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-all duration-150 active:scale-95",
           filter.openNow
-            ? "border-[#1EA055] bg-[#E6F5EE] text-[#166638]"
-            : "border-border bg-white text-(--foreground-muted) hover:border-[#1EA055] hover:text-[#166638] dark:bg-[#1C1210]",
+            ? "border-[var(--status-open)] bg-[var(--status-open-background)] text-[var(--status-open-foreground)]"
+            : "border-border bg-white text-(--foreground-muted) hover:border-[var(--status-open)] hover:text-[var(--status-open-foreground)] dark:bg-[#1C1210]",
         )}
       >
         <span className="relative flex h-2 w-2">
           <span
             className={cn(
               "absolute inline-flex h-full w-full rounded-full opacity-75",
-              filter.openNow ? "animate-ping bg-[#1EA055]" : "bg-[#9B8B73]",
+              filter.openNow ? "animate-ping bg-[var(--status-open)]" : "bg-[var(--status-closed)]",
             )}
           />
           <span
             className={cn(
               "relative inline-flex h-2 w-2 rounded-full",
-              filter.openNow ? "bg-[#1EA055]" : "bg-[#9B8B73]",
+              filter.openNow ? "bg-[var(--status-open)]" : "bg-[var(--status-closed)]",
             )}
           />
         </span>

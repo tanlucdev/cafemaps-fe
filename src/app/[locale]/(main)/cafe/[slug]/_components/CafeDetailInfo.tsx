@@ -20,6 +20,7 @@ import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import { getNearbyCafes } from "@/lib/api";
 import { formatCafeDistanceParts } from "@/lib/distance";
+import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice } from "@/lib/utils";
 import { getLastSearchState } from "@/lib/search-state";
 import type { Cafe } from "@/types/cafe";
@@ -153,25 +154,6 @@ function formatTime(time: string | null | undefined): string {
   const iso = time.match(/T(\d{2}):(\d{2})/);
   if (iso) return `${iso[1]}:${iso[2]}`;
   return "";
-}
-
-function parseTimeMinutes(time: string | null | undefined): number | null {
-  const formatted = formatTime(time);
-  if (!formatted) return null;
-  const [hours, minutes] = formatted.split(":").map(Number);
-  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return null;
-  return hours * 60 + minutes;
-}
-
-function isOpenNow(openingTime: string | null | undefined, closingTime: string | null | undefined) {
-  const openMins = parseTimeMinutes(openingTime);
-  const closeMins = parseTimeMinutes(closingTime);
-  if (openMins == null || closeMins == null) return true;
-
-  const now = new Date();
-  const nowMins = now.getHours() * 60 + now.getMinutes();
-  if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins;
-  return nowMins >= openMins && nowMins < closeMins;
 }
 
 function calculateDistanceKm(
@@ -316,7 +298,7 @@ export default function CafeDetailInfo({
   const price = formatPrice(cafe.priceMin, cafe.priceMax);
   const distanceText = formatCafeDistanceParts(resolvedDistance, locale).join(" • ");
   const rating = getCafeRating(cafe);
-  const openNow = isOpenNow(cafe.openingTime, cafe.closingTime);
+  const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const aboutText = cafe.description ?? cafe.oneLiner;
   const goodForItems = getGoodForItems(cafe);
   const idealForLabel = locale === "vi" ? "Lý tưởng cho" : "Good for";
@@ -414,21 +396,23 @@ export default function CafeDetailInfo({
         </h1>
 
         <div className="flex flex-wrap items-center gap-3">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
-              openNow
-                ? "bg-[#E6F5EE] text-[#166638] dark:bg-[#17351F] dark:text-[#7DC89E]"
-                : "bg-[#F6E6E1] text-[#8A3C2F] dark:bg-[#3A211E] dark:text-[#E5A092]"
-            }`}
-          >
-            <span className="relative flex h-2 w-2">
-              {openNow && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-60" />
-              )}
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
+          {openStatus !== null && (
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
+                openStatus
+                  ? "bg-[var(--status-open-background)] text-[var(--status-open-foreground)]"
+                  : "bg-[var(--status-closed-background)] text-[var(--status-closed-foreground)]"
+              }`}
+            >
+              <span className="relative flex h-2 w-2">
+                {openStatus && (
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-60" />
+                )}
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
+              </span>
+              {openStatus ? t("openNow") : t("closedNow")}
             </span>
-            {openNow ? t("openNow") : t("closedNow")}
-          </span>
+          )}
           <RatingStars rating={rating} />
         </div>
 

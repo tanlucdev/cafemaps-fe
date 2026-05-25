@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, PenLine, Compass } from "lucide-react";
+import { Bookmark, PenLine, Compass, BookOpen } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
@@ -32,6 +32,7 @@ export default function Header() {
 
   const navLinks = [
     { href: "/search", label: t("explore"), icon: Compass },
+    { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },
     { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { Sparkles } from "lucide-react"
 import { Link } from "@/i18n/navigation"
+import { createLocalizedMetadata } from "@/lib/metadata"
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -10,10 +11,12 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "quiz" })
-  return {
+  return createLocalizedMetadata({
+    locale,
+    pathname: "/quiz",
     title: t("title"),
     description: t("subtitle"),
-  }
+  })
 }
 
 export default async function QuizPage({ params }: PageProps) {

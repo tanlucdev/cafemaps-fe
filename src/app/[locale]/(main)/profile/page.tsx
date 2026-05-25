@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
 import { getSavedCafeEntries } from "@/lib/api"
+import { createLocalizedMetadata } from "@/lib/metadata"
 import type { SavedCafeEntry } from "@/types/cafe"
 import ProfilePageClient from "./_components/ProfilePageClient"
 
@@ -24,10 +25,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params
   const copy = locale === "vi" ? metadataByLocale.vi : metadataByLocale.en
 
-  return {
+  return createLocalizedMetadata({
+    locale,
+    pathname: "/profile",
     title: copy.title,
     description: copy.description,
-  }
+  })
 }
 
 export default async function ProfilePage({ params }: PageProps) {

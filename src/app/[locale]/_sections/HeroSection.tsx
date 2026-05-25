@@ -260,8 +260,14 @@ export default function HeroSection({ locale }: HeroSectionProps) {
 
         <p className="mt-4 max-w-[21rem] text-[15px] leading-[1.55] font-bold text-[#281608] drop-shadow-[0_2px_14px_rgba(255,248,238,1)] sm:mt-5 sm:max-w-2xl sm:text-lg md:text-xl">
           {isVi
-            ? "Khám phá những không gian làm việc, vintage và yên tĩnh quanh bạn."
-            : t("subtitleCompact")}
+            ? "Một chiếc bản đồ nhỏ cho những buổi cà phê thật vừa ý."
+            : "A little map for coffee plans that feel just right."}
+        </p>
+
+        <p className="mt-2 max-w-[20rem] text-sm leading-6 font-semibold text-[#6f4a28] drop-shadow-[0_2px_12px_rgba(255,248,238,0.95)] sm:max-w-xl sm:text-base">
+          {isVi
+            ? "Đi một mình, hẹn bạn hay tìm góc làm việc, cứ để Cafe Maps gợi vài nơi hợp mood."
+            : "Solo coffee, friendly catch-ups, or a quiet work corner, Cafe Maps keeps a few good ideas ready."}
         </p>
 
         <HeroSearchControls

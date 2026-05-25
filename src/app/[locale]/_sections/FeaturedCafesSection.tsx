@@ -7,6 +7,7 @@ import Badge from "@/components/ui/Badge"
 import { motion } from "framer-motion"
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 import { cn } from "@/lib/utils"
+import { getCafeOpenStatus } from "@/lib/opening-hours"
 import type { Cafe } from "@/types/cafe"
 import { useRef, useState, useCallback } from "react"
 import { useTranslations } from "next-intl"
@@ -22,15 +23,6 @@ const RANK_CONFIG = [
   { rank: 3, label: "03", heightClass: "h-52 sm:h-80 lg:h-[360px]", order: "" },
 ]
 
-function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean | null {
-  if (!openingTime || !closingTime) return null
-  const now = new Date()
-  const current = now.getHours() * 60 + now.getMinutes()
-  const [oh, om] = openingTime.split(":").map(Number)
-  const [ch, cm] = closingTime.split(":").map(Number)
-  return current >= oh * 60 + om && current < ch * 60 + cm
-}
-
 interface PodiumCardProps {
   cafe: Cafe
   locale: string
@@ -42,7 +34,7 @@ interface PodiumCardProps {
 
 function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCardProps) {
   const t = useTranslations("cafe")
-  const openStatus = isOpenNow(cafe.openingTime, cafe.closingTime)
+  const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime)
 
   function saveReturnUrl() {
     if (typeof window !== "undefined") {
@@ -96,7 +88,7 @@ function PodiumCard({ cafe, locale, rank, label, heightClass, delay }: PodiumCar
             <span className={cn(
               "absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold backdrop-blur-sm",
               openStatus
-                ? "bg-green-500/90 text-white"
+                ? "bg-[var(--status-open)] text-white"
                 : "bg-black/40 text-white/80"
             )}>
               <span className={cn("w-1.5 h-1.5 rounded-full", openStatus ? "bg-white" : "bg-white/60")} />

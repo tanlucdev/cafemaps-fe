@@ -38,6 +38,14 @@ input:focus-visible {
   --sage: #7a9e7e;
   --sage-light: #eaf2eb;
 
+  /* Cafe status */
+  --status-open: #1ea055;
+  --status-open-foreground: #166638;
+  --status-open-background: #e6f5ee;
+  --status-closed: #9b8b73;
+  --status-closed-foreground: #8a3c2f;
+  --status-closed-background: #f6e6e1;
+
   /* Surface */
   --card: #fdf6ec;
   --card-foreground: #2c1a0e;
@@ -92,6 +100,13 @@ input:focus-visible {
 
   --sage: #7a9e7e;
   --sage-light: #1e2b1f;
+
+  --status-open: #7dc89e;
+  --status-open-foreground: #7dc89e;
+  --status-open-background: #17351f;
+  --status-closed: #a8907a;
+  --status-closed-foreground: #e5a092;
+  --status-closed-background: #3a211e;
 
   --card: #2a2825;
   --card-foreground: #f0ebe3;

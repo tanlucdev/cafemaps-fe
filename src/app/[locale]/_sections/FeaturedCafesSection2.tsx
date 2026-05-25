@@ -6,21 +6,13 @@ import { MapPin, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { cn } from "@/lib/utils";
+import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
 
 interface FeaturedCafesSection2Props {
   cafes: Cafe[];
   locale: string;
-}
-
-function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean | null {
-  if (!openingTime || !closingTime) return null;
-  const now = new Date();
-  const current = now.getHours() * 60 + now.getMinutes();
-  const [oh, om] = openingTime.split(":").map(Number);
-  const [ch, cm] = closingTime.split(":").map(Number);
-  return current >= oh * 60 + om && current < ch * 60 + cm;
 }
 
 function saveReturnUrl() {
@@ -34,7 +26,7 @@ interface HeroCardProps {
 }
 
 function HeroCard({ cafe }: HeroCardProps) {
-  const openStatus = isOpenNow(cafe.openingTime, cafe.closingTime);
+  const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
 
   return (
     <motion.article
@@ -70,7 +62,7 @@ function HeroCard({ cafe }: HeroCardProps) {
             {openStatus !== null && (
               <span className={cn(
                 "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm",
-                openStatus ? "bg-green-500/90 text-white" : "bg-black/50 text-white/70"
+                openStatus ? "bg-[var(--status-open)] text-white" : "bg-black/50 text-white/70"
               )}>
                 <span className={cn("h-1.5 w-1.5 rounded-full", openStatus ? "bg-white" : "bg-white/50")} />
                 {openStatus ? "Đang mở" : "Đã đóng"}
@@ -118,7 +110,7 @@ interface SmallCardProps {
 }
 
 function SmallCard({ cafe, delay, rank }: SmallCardProps) {
-  const openStatus = isOpenNow(cafe.openingTime, cafe.closingTime);
+  const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
 
   return (
     <motion.article
@@ -156,7 +148,7 @@ function SmallCard({ cafe, delay, rank }: SmallCardProps) {
           {openStatus !== null && (
             <span className={cn(
               "absolute top-3 right-3 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold backdrop-blur-sm",
-              openStatus ? "bg-green-500/90 text-white" : "bg-black/40 text-white/70"
+              openStatus ? "bg-[var(--status-open)] text-white" : "bg-black/40 text-white/70"
             )}>
               <span className={cn("h-1.5 w-1.5 rounded-full", openStatus ? "bg-white" : "bg-white/50")} />
               {openStatus ? "Mở" : "Đóng"}

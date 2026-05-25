@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import { getTranslations } from "next-intl/server"
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
 import { getSavedCafeEntries } from "@/lib/api"
+import { createLocalizedMetadata } from "@/lib/metadata"
 import SavedCafesClient from "./_components/SavedCafesClient"
 import type { SavedCafeEntry } from "@/types/cafe"
 
@@ -13,10 +14,12 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "saved" })
-  return {
+  return createLocalizedMetadata({
+    locale,
+    pathname: "/saved",
     title: t("title"),
     description: t("heroSubtitle"),
-  }
+  })
 }
 
 export default async function SavedPage({ params }: PageProps) {

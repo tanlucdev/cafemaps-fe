@@ -9,6 +9,7 @@ import SaveButton from "@/components/cafe/SaveButton";
 import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
+import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice, cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -29,18 +30,6 @@ const VIBE_TAG_CLASSES: Record<string, string> = {
   romantic: "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
   minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
-
-function isOpenNow(openingTime?: string | null, closingTime?: string | null): boolean {
-  if (!openingTime || !closingTime) return false;
-  const now = new Date();
-  const [oh, om] = openingTime.split(":").map(Number);
-  const [ch, cm] = closingTime.split(":").map(Number);
-  const nowMins = now.getHours() * 60 + now.getMinutes();
-  const openMins = oh * 60 + om;
-  const closeMins = ch * 60 + cm;
-  if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins;
-  return nowMins >= openMins && nowMins < closeMins;
-}
 
 function ratingFor(index: number) {
   return (4.5 + (index % 5) * 0.1).toFixed(1);
@@ -88,8 +77,8 @@ function CafeListRow({
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
     .filter(Boolean)
     .join(" • ");
-  const openNow = useMemo(
-    () => isOpenNow(cafe.openingTime, cafe.closingTime),
+  const openStatus = useMemo(
+    () => getCafeOpenStatus(cafe.openingTime, cafe.closingTime),
     [cafe.openingTime, cafe.closingTime],
   );
   const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
@@ -212,17 +201,17 @@ function CafeListRow({
                   </span>
                 );
               })}
-              {(cafe.openingTime || cafe.closingTime) && (
+              {openStatus !== null && (
                 <span
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold",
-                    openNow
-                      ? "bg-[#E6F5EE] text-[#166638] dark:bg-[#1D3520] dark:text-[#7DC89E]"
-                      : "bg-[#F6E6E1] text-[#8A3C2F] dark:bg-[#3A211E] dark:text-[#E5A092]",
+                    openStatus
+                      ? "bg-[var(--status-open-background)] text-[var(--status-open-foreground)]"
+                      : "bg-[var(--status-closed-background)] text-[var(--status-closed-foreground)]",
                   )}
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                  {openNow ? t("openNow") : t("closed")}
+                  {openStatus ? t("openNow") : t("closed")}
                 </span>
               )}
             </div>
