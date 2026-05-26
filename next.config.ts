@@ -20,6 +20,28 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/image/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:all*(ico|png|jpg|jpeg|webp|svg)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
@@ -29,6 +51,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    qualities: [48, 58, 75],
     remotePatterns: [
       {
         protocol: "https",

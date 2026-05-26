@@ -3,7 +3,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
-import { useLenis } from "@/components/providers/LenisProvider";
 import { useTranslations } from "next-intl";
 import CafeGrid from "@/components/cafe/CafeGrid";
 import CafeList from "@/components/cafe/CafeList";
@@ -58,7 +57,6 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
 export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const lenis = useLenis();
   const ts = useTranslations("search");
 
   const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(searchParams));
@@ -109,8 +107,7 @@ export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedS
   function handlePageChange(newPage: number) {
     setAnimationType("fade");
     updateUrl(filter, sortMode, newPage);
-    if (lenis) lenis.scrollTo(0, { duration: 0.6 });
-    else window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleSortChange(newSort: SearchSort) {

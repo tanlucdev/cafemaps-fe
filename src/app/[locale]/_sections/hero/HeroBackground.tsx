@@ -13,6 +13,7 @@ export function HeroBackground() {
               key={`${cafe.name}-${index}`}
               className={cn(
                 "relative min-h-[112px] overflow-hidden rounded-[10px] bg-[#2c1a0e] shadow-[0_18px_42px_rgba(27,16,8,0.28)] sm:min-h-[132px]",
+                index > 7 && "hidden sm:block",
                 cafe.tileClassName,
               )}
             >
@@ -20,7 +21,9 @@ export function HeroBackground() {
                 src={cafe.src}
                 alt=""
                 fill
-                sizes="(min-width: 1280px) 16vw, (min-width: 768px) 22vw, 40vw"
+                sizes="(min-width: 1280px) 15vw, (min-width: 768px) 22vw, 38vw"
+                quality={48}
+                priority={index < 4}
                 className="object-cover brightness-[0.82] contrast-[1.03] saturate-[1.02] md:brightness-[0.74] md:contrast-[1.08] md:saturate-[1.08]"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,3,0.12)_0%,rgba(10,6,3,0.22)_45%,rgba(10,6,3,0.58)_100%)]" />
@@ -46,6 +49,7 @@ export function HeroBackground() {
           key={`desktop-${item.image.src}`}
           image={item.image}
           className={item.className}
+          priority={false}
         />
       ))}
 
@@ -55,6 +59,7 @@ export function HeroBackground() {
           image={item.image}
           className={item.className}
           variant="mobile"
+          priority={false}
         />
       ))}
     </>

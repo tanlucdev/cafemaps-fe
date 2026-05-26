@@ -84,7 +84,7 @@ const BACKGROUND_TILE_STYLES = [
   "aspect-[1.12/1] -translate-y-5",
 ] as const;
 
-export const BACKGROUND_CAFES: BackgroundCafe[] = MOCK_CAFES.slice(0, 32).map((cafe, index) => ({
+export const BACKGROUND_CAFES: BackgroundCafe[] = MOCK_CAFES.slice(0, 14).map((cafe, index) => ({
   name: cafe.name,
   src: HERO_IMAGES[index % HERO_IMAGES.length].src,
   tileClassName: BACKGROUND_TILE_STYLES[index % BACKGROUND_TILE_STYLES.length],

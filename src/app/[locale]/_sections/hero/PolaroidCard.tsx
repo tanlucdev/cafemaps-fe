@@ -6,9 +6,15 @@ type PolaroidCardProps = {
   image: HeroImage;
   className: string;
   variant?: "desktop" | "mobile";
+  priority?: boolean;
 };
 
-export function PolaroidCard({ image, className, variant = "desktop" }: PolaroidCardProps) {
+export function PolaroidCard({
+  image,
+  className,
+  variant = "desktop",
+  priority = false,
+}: PolaroidCardProps) {
   const isMobile = variant === "mobile";
 
   return (
@@ -45,6 +51,9 @@ export function PolaroidCard({ image, className, variant = "desktop" }: Polaroid
             alt=""
             fill
             sizes={isMobile ? "78px" : "188px"}
+            quality={58}
+            loading={priority ? undefined : "lazy"}
+            priority={priority}
             className="object-cover"
           />
         </div>
