@@ -1,6 +1,6 @@
 import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
+import RouteAwareFooter from "@/components/layout/RouteAwareFooter";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <div className="app-shell flex min-h-[100svh] flex-col">
       <Header />
       <main className="app-main flex-1">{children}</main>
-      <Footer />
+      <RouteAwareFooter />
       <MobileBottomNav />
     </div>
   );

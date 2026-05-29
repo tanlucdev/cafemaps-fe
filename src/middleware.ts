@@ -6,7 +6,7 @@ import { routing } from "@/i18n/routing"
 const intlMiddleware = createMiddleware(routing)
 
 // Routes yêu cầu đăng nhập
-const GUARDED_PATHS = ["/saved"]
+const GUARDED_PATHS = ["/saved", "/profile"]
 
 // Routes chỉ dành cho chưa đăng nhập (đã đăng nhập → redirect home)
 const UNGUARDED_AUTH_PATHS = ["/login", "/register"]

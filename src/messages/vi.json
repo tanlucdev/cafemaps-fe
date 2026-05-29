@@ -10,17 +10,34 @@
     "menu": "Menu",
     "profile": "Cá nhân"
   },
+  "metadata": {
+    "home": {
+      "title": "Cafe Maps — Khám phá quán cà phê TP.HCM",
+      "description": "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm."
+    }
+  },
   "hero": {
     "city": "TP. Hồ Chí Minh",
+    "headline": "Bạn đang tìm quán cà phê <accent>kiểu nào</accent>?",
     "line1": "Khám phá",
     "line2": "những quán cà phê",
     "line3": "đẹp nhất",
     "headlineCompact": "Hôm nay bạn muốn tìm quán như thế nào?",
     "subtitleCompact": "Khám phá không gian cà phê đẹp nhất TP.HCM.",
+    "subtitleMap": "Một chiếc bản đồ nhỏ cho những buổi cà phê thật vừa ý.",
+    "subtitleMood": "Đi một mình, hẹn bạn hay tìm góc làm việc, cứ để Cafe Maps gợi vài nơi hợp mood.",
     "subtitle": "Tìm không gian hoàn hảo cho mọi khoảnh khắc — từ góc làm việc yên tĩnh đến buổi hẹn hò lãng mạn.",
     "marquee": "Cà phê · Không gian · Phong cách · Trải nghiệm · Ký ức ·",
     "searchPlaceholder": "Tìm quán theo tên, địa chỉ...",
+    "searchPlaceholderCompact": "Tên quán, khu vực, phong cách",
     "cta": "Tìm kiếm",
+    "mobileSearchCta": "Tìm",
+    "nearMeCta": "Gần tôi",
+    "viewAllCafes": "Xem tất cả quán cafe",
+    "badge": "Cafe Maps · TP. Hồ Chí Minh",
+    "resumePrefix": "Tiếp tục:",
+    "resumeView": "Xem",
+    "close": "Đóng",
     "scroll": "Cuộn để khám phá",
     "greetingMorning": "Cà phê sáng hôm nay?",
     "greetingNoon": "Tìm chỗ nghỉ trưa yên tĩnh?",
@@ -29,6 +46,39 @@
     "placeholderWork": "Tìm chỗ làm việc yên tĩnh...",
     "placeholderDate": "Hẹn hò cuối tuần...",
     "placeholderMorning": "Cà phê sáng gần nhà...",
+    "polaroids": {
+      "cozy": {
+        "caption": "Góc nhỏ ấm cúng"
+      },
+      "morning": {
+        "caption": "Cà phê sáng"
+      },
+      "vintage": {
+        "caption": "Vintage vibe"
+      },
+      "work": {
+        "caption": "Không gian làm việc"
+      }
+    },
+    "quickFilters": {
+      "outdoor": "Ngoài trời",
+      "openNow": "Mở cửa ngay",
+      "quiet": "Yên tĩnh",
+      "vintage": "Vintage",
+      "workFriendly": "Work-friendly"
+    },
+    "suggestions": {
+      "cafes": "Quán cà phê",
+      "search": "Tìm kiếm"
+    },
+    "smartSuggestions": {
+      "vibeInDistrict": "Quán {vibe} ở {district}"
+    },
+    "lastSearch": {
+      "openNow": "quán đang mở",
+      "nearMe": "quán gần tôi",
+      "fallback": "tìm kiếm trước"
+    },
     "quickFilterQuiet": "Yên tĩnh",
     "quickFilterNature": "Thiên nhiên",
     "quickFilterVintage": "Vintage",
@@ -95,7 +145,10 @@
     "openMaps": "Mở Google Maps",
     "noImage": "Không có ảnh",
     "save": "Lưu quán",
+    "saveShort": "Lưu",
     "saved": "Đã lưu",
+    "directions": "Chỉ đường đến đây",
+    "notFound": "Không tìm thấy quán",
     "unsave": "Bỏ lưu",
     "share": "Chia sẻ",
     "nearby": "Gần đây",
@@ -116,6 +169,12 @@
       "goNow": "Đi thôi",
       "viewOnMap": "Xem bản đồ",
       "distanceAway": "~{km}km",
+      "distanceFromYou": "Cách bạn {distance}",
+      "idealFor": "Lý tưởng cho",
+      "parking": "Gửi xe",
+      "parkingType": "Chỗ để xe",
+      "instagram": "Instagram quán",
+      "photoCredit": "Ảnh từ",
       "openAllDay": "Mở cả ngày",
       "closedToday": "Đóng cửa hôm nay",
       "amenities": {
@@ -328,6 +387,8 @@
     "goHome": "Về trang chủ",
     "copied": "Đã sao chép",
     "copy": "Sao chép",
+    "googleMapsLink": "Link Google Maps",
+    "websiteLink": "Link website quán",
     "share": "Chia sẻ quán"
   },
   "notFound": {

@@ -27,16 +27,16 @@ export default function Footer() {
   return (
     <footer className="site-footer bg-[var(--background)] px-3 pt-4 pb-3 sm:px-4 sm:pt-8 sm:pb-4 lg:px-4 xl:px-6">
       <div className="mx-auto max-w-[1480px]">
-        <div className="relative overflow-hidden rounded-[20px] border border-[#ead8bf] bg-[#f7ecd8] px-4 py-4 shadow-[0_16px_42px_rgba(91,58,29,0.08)] sm:rounded-[24px] sm:px-5 sm:py-5 sm:shadow-[0_18px_54px_rgba(91,58,29,0.09)] lg:px-6 lg:py-6">
-          <div className="pointer-events-none absolute -top-7 right-8 hidden h-24 w-24 rounded-full border border-[#c8842a]/15 sm:block" />
-          <div className="pointer-events-none absolute right-5 bottom-16 hidden rotate-[-8deg] rounded-full border border-[#8b5b2b]/15 px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[#8b5b2b]/25 uppercase lg:block">
+        <div className="relative overflow-hidden rounded-[20px] border border-[var(--footer-panel-border)] bg-[var(--footer-panel)] px-4 py-4 shadow-[var(--footer-panel-shadow)] sm:rounded-[24px] sm:px-5 sm:py-5 lg:px-6 lg:py-6">
+          <div className="pointer-events-none absolute -top-7 right-8 hidden h-24 w-24 rounded-full border border-[var(--footer-decor)] sm:block" />
+          <div className="pointer-events-none absolute right-5 bottom-16 hidden rotate-[-8deg] rounded-full border border-[var(--footer-decor)] px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[var(--footer-decor)] uppercase lg:block">
             {t("stamp")}
           </div>
-          <div className="pointer-events-none absolute top-24 left-5 hidden h-20 w-28 rounded-[50%] border-t border-dashed border-[#8b5b2b]/20 md:block" />
-          <span className="pointer-events-none absolute top-7 right-20 hidden h-3 w-2 rotate-[-28deg] rounded-full bg-[#8b5b2b]/15 after:absolute after:top-0 after:left-1/2 after:h-full after:w-px after:-translate-x-1/2 after:bg-[#8b5b2b]/10 sm:block" />
-          <span className="pointer-events-none absolute bottom-10 left-10 hidden h-3 w-2 rotate-[22deg] rounded-full bg-[#8b5b2b]/12 after:absolute after:top-0 after:left-1/2 after:h-full after:w-px after:-translate-x-1/2 after:bg-[#8b5b2b]/10 sm:block" />
+          <div className="pointer-events-none absolute top-24 left-5 hidden h-20 w-28 rounded-[50%] border-t border-dashed border-[var(--footer-decor)] md:block" />
+          <span className="pointer-events-none absolute top-7 right-20 hidden h-3 w-2 rotate-[-28deg] rounded-full bg-[var(--footer-decor)] after:absolute after:top-0 after:left-1/2 after:h-full after:w-px after:-translate-x-1/2 after:bg-[var(--footer-decor)] sm:block" />
+          <span className="pointer-events-none absolute bottom-10 left-10 hidden h-3 w-2 rotate-[22deg] rounded-full bg-[var(--footer-decor)] after:absolute after:top-0 after:left-1/2 after:h-full after:w-px after:-translate-x-1/2 after:bg-[var(--footer-decor)] sm:block" />
 
-          <div className="relative hidden rounded-[18px] border border-white/70 bg-[#fff8ed]/80 p-4 shadow-[0_10px_28px_rgba(82,52,25,0.07)] sm:block lg:flex lg:items-center lg:justify-between lg:gap-6">
+          <div className="relative hidden rounded-[18px] border border-[var(--footer-card-border)] bg-[var(--footer-card)] p-4 shadow-[var(--footer-card-shadow)] sm:block lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="max-w-2xl">
               <div className="mb-2 flex items-center gap-2 text-[11px] font-bold tracking-[0.12em] text-[#a86d1e] uppercase">
                 <MapPin size={14} aria-hidden="true" />
@@ -52,14 +52,14 @@ export default function Footer() {
             <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:mt-0 lg:shrink-0">
               <Link
                 href="/search"
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-bold text-white shadow-[0_10px_24px_rgba(200,132,42,0.20)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] focus-visible:outline-none"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-bold text-white shadow-[0_10px_24px_rgba(200,132,42,0.20)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
               >
                 {t("cta.primary")}
                 <ArrowRight size={16} aria-hidden="true" />
               </Link>
               <Link
                 href="/quiz"
-                className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#d8bd99] bg-white/55 px-4 text-sm font-bold text-[var(--foreground)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] focus-visible:outline-none"
+                className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--footer-secondary-border)] bg-[var(--footer-control-bg-strong)] px-4 text-sm font-bold text-[var(--foreground)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
               >
                 {t("cta.secondary")}
               </Link>
@@ -92,7 +92,7 @@ export default function Footer() {
               <FooterChip href="/contribute">{t("contribute")}</FooterChip>
             </nav>
 
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#dfc7a7] pt-3">
+            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--footer-divider)] pt-3">
               <p className="text-[11px] leading-4 text-[var(--foreground-muted)]">
                 {t("bottomNote")}
               </p>
@@ -100,7 +100,7 @@ export default function Footer() {
                 <Link
                   href="/"
                   aria-label={t("websiteAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e5cfad] bg-white/40 text-[#7b5631] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Globe size={17} aria-hidden="true" />
                 </Link>
@@ -109,7 +109,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("shareAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e5cfad] bg-white/40 text-[#7b5631] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Share2 size={17} aria-hidden="true" />
                 </a>
@@ -135,7 +135,7 @@ export default function Footer() {
               <p className="mt-3 max-w-xs text-sm leading-5 text-[var(--foreground-muted)]">
                 {t("tagline")}
               </p>
-              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[#e5cfad] bg-white/35 px-3 py-1.5 text-xs font-bold text-[#7b5631]">
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-xs font-bold text-[var(--footer-warm-text)]">
                 <Coffee size={14} aria-hidden="true" />
                 {t("brandNote")}
               </div>
@@ -166,7 +166,7 @@ export default function Footer() {
                 <Link
                   href="/"
                   aria-label={t("websiteAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#e5cfad] bg-white/40 text-[#7b5631] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Globe size={18} aria-hidden="true" />
                 </Link>
@@ -175,7 +175,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("shareAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#e5cfad] bg-white/40 text-[#7b5631] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Share2 size={18} aria-hidden="true" />
                 </a>
@@ -183,10 +183,10 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="relative mx-auto hidden max-w-none border-t border-[#dfc7a7] px-1 pt-4 sm:block">
+          <div className="relative mx-auto hidden max-w-none border-t border-[var(--footer-divider)] px-1 pt-4 sm:block">
             <div className="flex flex-col gap-2 text-xs text-[var(--foreground-muted)] sm:flex-row sm:items-center sm:justify-between">
               <p>{t("copyright", { year })}</p>
-              <p className="inline-flex items-center gap-1.5 font-semibold text-[#7b5631]">
+              <p className="inline-flex items-center gap-1.5 font-semibold text-[var(--footer-warm-text)]">
                 <Heart size={13} aria-hidden="true" className="fill-[#c8842a]/20 text-[#c8842a]" />
                 {t("bottomNote")}
               </p>
@@ -208,7 +208,7 @@ function FooterChip({
   return (
     <Link
       href={href}
-      className="inline-flex min-h-9 items-center rounded-full border border-[#e5cfad] bg-white/35 px-3 text-xs font-bold text-[#7b5631] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+      className="inline-flex min-h-9 items-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 text-xs font-bold text-[var(--footer-warm-text)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
     >
       {children}
     </Link>
@@ -240,7 +240,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="w-fit text-sm font-medium text-[var(--foreground-muted)] underline-offset-4 transition hover:translate-x-0.5 hover:text-[var(--accent-hover)] hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7ecd8] focus-visible:outline-none"
+      className="w-fit text-sm font-medium text-[var(--foreground-muted)] underline-offset-4 transition hover:translate-x-0.5 hover:text-[var(--accent-hover)] hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
     >
       {children}
     </Link>

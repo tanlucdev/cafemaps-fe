@@ -1,5 +1,4 @@
 import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry } from "@/types/cafe"
-import { MOCK_CAFES } from "./mock-data"
 
 const BASE_URL =
   typeof window === "undefined"
@@ -77,6 +76,7 @@ function buildQuery(filter?: CafeFilter): string {
   const purposes = filter.purposes ?? filter.purpose
   if (vibes?.length) params.set("vibes", vibes.join(","))
   if (purposes?.length) params.set("purposes", purposes.join(","))
+  if (filter.sort && filter.sort !== "popular") params.set("sort", filter.sort)
   if (filter.page !== undefined) params.set("page", String(filter.page))
   if (filter.limit !== undefined) params.set("limit", String(filter.limit))
   const q = params.toString()
@@ -117,6 +117,12 @@ type RawCafe = Omit<
   | "durationMin"
   | "distanceMode"
   | "straightDistanceKm"
+  | "rating"
+  | "averageRating"
+  | "curatedRating"
+  | "reviewCount"
+  | "savedCount"
+  | "viewCount"
 > & {
   vibes?: string[]
   vibe?: string[]
@@ -128,6 +134,8 @@ type RawCafe = Omit<
   imageOrientations?: string[] | null
   image_orientation?: string[] | null
   imageOrientation?: string[] | null
+  website_url?: string | null
+  website?: string | null
   opening_time?: string | null
   opening_time_local?: string | null
   closing_time?: string | null
@@ -142,6 +150,17 @@ type RawCafe = Omit<
   distanceMode?: "straight" | "route" | null
   straight_distance_km?: number | string | null
   straightDistanceKm?: number | string | null
+  rating?: number | string | null
+  average_rating?: number | string | null
+  averageRating?: number | string | null
+  curated_rating?: number | string | null
+  curatedRating?: number | string | null
+  review_count?: number | string | null
+  reviewCount?: number | string | null
+  saved_count?: number | string | null
+  savedCount?: number | string | null
+  view_count?: number | string | null
+  viewCount?: number | string | null
 }
 
 function toFiniteNumber(value: number | string | null | undefined): number | undefined {
@@ -174,6 +193,12 @@ function mapApiCafe(raw: RawCafe): Cafe {
     raw.straightDistanceKm ?? raw.straight_distance_km
   )
   const distanceMode = normalizeDistanceMode(raw.distanceMode ?? raw.distance_mode)
+  const rating = toFiniteNumber(raw.rating)
+  const averageRating = toFiniteNumber(raw.averageRating ?? raw.average_rating)
+  const curatedRating = toFiniteNumber(raw.curatedRating ?? raw.curated_rating)
+  const reviewCount = toFiniteNumber(raw.reviewCount ?? raw.review_count)
+  const savedCount = toFiniteNumber(raw.savedCount ?? raw.saved_count)
+  const viewCount = toFiniteNumber(raw.viewCount ?? raw.view_count)
 
   return {
     ...raw,
@@ -184,6 +209,7 @@ function mapApiCafe(raw: RawCafe): Cafe {
     amenities: raw.amenities ?? [],
     openingTime: raw.openingTime ?? raw.opening_time ?? raw.opening_time_local ?? null,
     closingTime: raw.closingTime ?? raw.closing_time ?? raw.closing_time_local ?? null,
+    websiteUrl: raw.websiteUrl ?? raw.website_url ?? raw.website ?? null,
     parking_location: raw.parking_location ?? raw.parkingLocation ?? null,
     parkingLocation: raw.parkingLocation ?? raw.parking_location ?? null,
     images: raw.images ?? [],
@@ -198,6 +224,12 @@ function mapApiCafe(raw: RawCafe): Cafe {
     durationMin,
     distanceMode,
     straightDistanceKm,
+    rating,
+    averageRating,
+    curatedRating,
+    reviewCount,
+    savedCount,
+    viewCount,
   }
 }
 
@@ -210,7 +242,7 @@ export async function getCafes(filter?: CafeFilter): Promise<Cafe[]> {
     return raw.map(mapApiCafe)
   } catch (err) {
     console.error("getCafes failed:", err)
-    return MOCK_CAFES
+    return []
   }
 }
 
@@ -240,8 +272,13 @@ export async function getCafesWithMeta(filter?: CafeFilter): Promise<{
   } catch (err) {
     console.error("getCafesWithMeta failed:", err)
     return {
-      cafes: MOCK_CAFES,
-      meta: { total: MOCK_CAFES.length, page: 1, limit: MOCK_CAFES.length, totalPages: 1 },
+      cafes: [],
+      meta: {
+        total: 0,
+        page: filter?.page ?? 1,
+        limit: filter?.limit ?? 12,
+        totalPages: 0,
+      },
     }
   }
 }
@@ -252,7 +289,7 @@ export async function getCafeBySlug(slug: string): Promise<Cafe | null> {
     return mapApiCafe(raw)
   } catch (err) {
     console.error("getCafeBySlug failed:", err)
-    return MOCK_CAFES.find((c) => c.slug === slug) ?? null
+    return null
   }
 }
 
@@ -273,8 +310,9 @@ export async function getNearbyCafes(
       { cache: "no-store" }
     )
     return raw.map(mapApiCafe)
-  } catch {
-    return MOCK_CAFES.slice(0, 4)
+  } catch (err) {
+    console.error("getNearbyCafes failed:", err)
+    return []
   }
 }
 

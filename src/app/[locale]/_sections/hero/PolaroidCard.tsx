@@ -4,6 +4,7 @@ import type { HeroImage } from "./types";
 
 type PolaroidCardProps = {
   image: HeroImage;
+  caption: string;
   className: string;
   variant?: "desktop" | "mobile";
   priority?: boolean;
@@ -11,6 +12,7 @@ type PolaroidCardProps = {
 
 export function PolaroidCard({
   image,
+  caption,
   className,
   variant = "desktop",
   priority = false,
@@ -22,7 +24,7 @@ export function PolaroidCard({
       className={cn(
         "pointer-events-none absolute",
         isMobile
-          ? "z-[1] block w-[64px] opacity-80 sm:w-[78px] lg:hidden"
+          ? "z-[1] block w-[58px] opacity-75 sm:w-[78px] sm:opacity-80 lg:hidden"
           : "z-[2] hidden w-[150px] opacity-75 xl:block 2xl:w-[188px] 2xl:opacity-85",
         className,
       )}
@@ -66,7 +68,7 @@ export function PolaroidCard({
             !isMobile && "absolute right-0 left-0",
           )}
         >
-          {image.caption.vi}
+          {caption}
         </p>
       </div>
     </div>

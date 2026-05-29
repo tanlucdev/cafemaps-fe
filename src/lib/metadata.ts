@@ -4,6 +4,9 @@ import type { Locale } from "@/i18n/routing"
 export const SITE_NAME = "Cafe Maps"
 export const DEFAULT_LOCALE: Locale = "vi"
 export const OG_IMAGE = "/image/meta-image.png"
+export const HOME_TITLE = "Cafe Maps — Khám phá quán cà phê TP.HCM"
+export const HOME_DESCRIPTION =
+  "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm."
 
 export function getSiteUrl() {
   const siteUrl =
@@ -13,7 +16,7 @@ export function getSiteUrl() {
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : null) ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
-    "https://cafefinder.vn"
+    "https://cafemaps.net"
 
   return new URL(siteUrl)
 }
@@ -44,6 +47,7 @@ export function createLocalizedMetadata({
   description,
   image = OG_IMAGE,
   imageAlt,
+  absoluteTitle = false,
 }: {
   locale: string
   pathname?: string
@@ -51,12 +55,13 @@ export function createLocalizedMetadata({
   description?: string
   image?: string
   imageAlt?: string
+  absoluteTitle?: boolean
 }): Metadata {
   const normalizedLocale = normalizeLocale(locale)
   const canonical = localizedPath(normalizedLocale, pathname)
 
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     metadataBase: getSiteUrl(),
     alternates: {

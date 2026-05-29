@@ -30,6 +30,7 @@ export interface Cafe {
   district_legacy?: string | null
   googlePlaceId?: string | null
   googleMapsUrl?: string | null
+  websiteUrl?: string | null
   openingTime?: string | null
   closingTime?: string | null
   priceMin?: number | null
@@ -56,6 +57,12 @@ export interface Cafe {
   durationMin?: number
   distanceMode?: "straight" | "route"
   straightDistanceKm?: number
+  rating?: number | null
+  averageRating?: number | null
+  curatedRating?: number | null
+  reviewCount?: number | null
+  savedCount?: number | null
+  viewCount?: number | null
   createdAt?: string
   updatedAt?: string
 }

@@ -19,13 +19,8 @@ import { KEYWORD_TO_FILTER, PLACEHOLDER_KEYS, QUICK_FILTERS } from "./data";
 import { getNameSuggestions, getSmartSuggestions } from "./search-utils";
 import type { QuickFilter } from "./types";
 
-interface HeroSearchIslandProps {
-  locale: string;
-}
-
-export function HeroSearchIsland({ locale }: HeroSearchIslandProps) {
+export function HeroSearchIsland() {
   const t = useTranslations("hero");
-  const tNearby = useTranslations("nearby");
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -36,18 +31,20 @@ export function HeroSearchIsland({ locale }: HeroSearchIslandProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isVi = locale === "vi";
   const nameSuggestions = useMemo(() => getNameSuggestions(search, MOCK_CAFES), [search]);
-  const smartSuggestions = useMemo(() => getSmartSuggestions(search, locale), [search, locale]);
+  const smartSuggestions = useMemo(
+    () =>
+      getSmartSuggestions(search, {
+        vibeInDistrict: (vibe, district) =>
+          t("smartSuggestions.vibeInDistrict", { vibe, district }),
+      }),
+    [search, t],
+  );
   const showDropdown =
     focused && search.length >= 2 && (nameSuggestions.length > 0 || smartSuggestions.length > 0);
-  const searchPlaceholder = isVi
-    ? isCompactSearch
-      ? "Tên quán, khu vực, phong cách"
-      : "Nhập tên quán, khu vực hoặc phong cách..."
-    : isCompactSearch
-      ? "Name, area, vibe..."
-      : t(PLACEHOLDER_KEYS[placeholderIdx]);
+  const searchPlaceholder = isCompactSearch
+    ? t("searchPlaceholderCompact")
+    : t(PLACEHOLDER_KEYS[placeholderIdx]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -231,8 +228,6 @@ export function HeroSearchIsland({ locale }: HeroSearchIslandProps) {
     <>
       <HeroSearchMemory
         lastSearch={lastSearch}
-        locale={locale}
-        isVi={isVi}
         onResume={() => {
           if (lastSearch) router.push(`/search?${lastSearch.params}`);
         }}
@@ -247,7 +242,6 @@ export function HeroSearchIsland({ locale }: HeroSearchIslandProps) {
         onSearchChange={setSearch}
         focused={focused}
         onFocusChange={setFocused}
-        isVi={isVi}
         placeholder={searchPlaceholder}
         showDropdown={showDropdown}
         nameSuggestions={nameSuggestions}
@@ -263,16 +257,21 @@ export function HeroSearchIsland({ locale }: HeroSearchIslandProps) {
         onSmartSearch={handleSmartSearch}
         nearbyLoading={nearbyLoading}
         searchCta={t("cta")}
-        nearbyCta={isVi ? "Quán gần tôi" : tNearby("buttonLong")}
+        mobileSearchCta={t("mobileSearchCta")}
+        nearbyCta={t("nearMeCta")}
       />
 
-      <QuickFilterChips filters={QUICK_FILTERS} isVi={isVi} onFilter={handleQuickFilter} />
+      <QuickFilterChips
+        filters={QUICK_FILTERS}
+        getLabel={(key) => t(`quickFilters.${key}`)}
+        onFilter={handleQuickFilter}
+      />
 
       <Link
         href="/search"
         className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#8f5419] underline decoration-[#d7a64e]/60 decoration-2 underline-offset-4 transition-colors hover:text-[#5f320d] hover:decoration-[#b96a16] sm:text-base"
       >
-        <span>{isVi ? "Xem tất cả quán cafe" : "View all cafes"}</span>
+        <span>{t("viewAllCafes")}</span>
         <ArrowRight
           size={17}
           className="transition-transform group-hover:translate-x-1"

@@ -8,11 +8,7 @@ export type KeywordFilter = {
 
 export type HeroImage = {
   src: string;
-  alt: string;
-  caption: {
-    vi: string;
-    en: string;
-  };
+  captionKey: string;
 };
 
 export type BackgroundCafe = {
@@ -28,10 +24,7 @@ export type PolaroidItem = {
 
 export type QuickFilter = {
   emoji: string;
-  label: {
-    vi: string;
-    en: string;
-  };
+  labelKey: string;
   vibe?: string;
   purpose?: string;
   openNow?: boolean;

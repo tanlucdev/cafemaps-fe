@@ -10,17 +10,34 @@
     "menu": "Menu",
     "profile": "Profile"
   },
+  "metadata": {
+    "home": {
+      "title": "Cafe Maps — Discover cafés in Ho Chi Minh City",
+      "description": "Search and discover the best cafés in Ho Chi Minh City by vibe, purpose, and location."
+    }
+  },
   "hero": {
     "city": "Ho Chi Minh City",
+    "headline": "What kind of <accent>cafe</accent> are you looking for?",
     "line1": "Discover",
     "line2": "the most beautiful",
     "line3": "cafés",
     "headlineCompact": "What kind of café are you looking for today?",
     "subtitleCompact": "Find the best coffee spaces in Ho Chi Minh City.",
+    "subtitleMap": "A little map for coffee plans that feel just right.",
+    "subtitleMood": "Solo coffee, friendly catch-ups, or a quiet work corner, Cafe Maps keeps a few good ideas ready.",
     "subtitle": "Find the perfect space for every moment — from quiet work corners to romantic dates.",
     "marquee": "Coffee · Space · Vibe · Experience · Memories ·",
     "searchPlaceholder": "Search by name, address...",
+    "searchPlaceholderCompact": "Name, area, vibe...",
     "cta": "Search",
+    "mobileSearchCta": "Go",
+    "nearMeCta": "Near me",
+    "viewAllCafes": "View all cafes",
+    "badge": "Cafe Maps · Ho Chi Minh City",
+    "resumePrefix": "Resume:",
+    "resumeView": "View",
+    "close": "Close",
     "scroll": "Scroll to explore",
     "greetingMorning": "Morning coffee today?",
     "greetingNoon": "Looking for a quiet lunch spot?",
@@ -29,6 +46,39 @@
     "placeholderWork": "Find a quiet workspace...",
     "placeholderDate": "Weekend date spot...",
     "placeholderMorning": "Morning coffee nearby...",
+    "polaroids": {
+      "cozy": {
+        "caption": "Cozy corners"
+      },
+      "morning": {
+        "caption": "Morning coffee"
+      },
+      "vintage": {
+        "caption": "Vintage vibe"
+      },
+      "work": {
+        "caption": "Work spaces"
+      }
+    },
+    "quickFilters": {
+      "outdoor": "Outdoor",
+      "openNow": "Open now",
+      "quiet": "Quiet",
+      "vintage": "Vintage",
+      "workFriendly": "Work-friendly"
+    },
+    "suggestions": {
+      "cafes": "Cafes",
+      "search": "Search"
+    },
+    "smartSuggestions": {
+      "vibeInDistrict": "{vibe} cafes in {district}"
+    },
+    "lastSearch": {
+      "openNow": "open cafes",
+      "nearMe": "cafes near me",
+      "fallback": "last search"
+    },
     "quickFilterQuiet": "Quiet",
     "quickFilterNature": "Nature",
     "quickFilterVintage": "Vintage",
@@ -66,10 +116,10 @@
     "cancel": "Cancel",
     "activeLabel": "Filtering by",
     "priceRanges": {
-      "under_50k": "< 50k",
-      "50k_100k": "50–100k",
-      "100k_150k": "100–150k",
-      "above_150k": "> 150k"
+      "under_50k": "< $2",
+      "50k_100k": "$2–$4",
+      "100k_150k": "$4–$6",
+      "above_150k": "> $6"
     },
     "vibes": {
       "quiet": "Quiet",
@@ -95,7 +145,10 @@
     "openMaps": "Open Google Maps",
     "noImage": "No image",
     "save": "Save",
+    "saveShort": "Save",
     "saved": "Saved",
+    "directions": "Get directions",
+    "notFound": "Cafe not found",
     "unsave": "Unsave",
     "share": "Share",
     "nearby": "Nearby",
@@ -116,6 +169,12 @@
       "goNow": "Let's go",
       "viewOnMap": "View on map",
       "distanceAway": "~{km}km",
+      "distanceFromYou": "{distance} away",
+      "idealFor": "Good for",
+      "parking": "Parking",
+      "parkingType": "Parking",
+      "instagram": "Instagram",
+      "photoCredit": "Photos by",
       "openAllDay": "Open all day",
       "closedToday": "Closed today",
       "amenities": {
@@ -328,6 +387,8 @@
     "goHome": "Go home",
     "copied": "Copied",
     "copy": "Copy",
+    "googleMapsLink": "Google Maps link",
+    "websiteLink": "Cafe website link",
     "share": "Share café"
   },
   "notFound": {

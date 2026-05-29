@@ -9,7 +9,6 @@ type HeroSearchControlsProps = {
   onSearchChange: (value: string) => void;
   focused: boolean;
   onFocusChange: (focused: boolean) => void;
-  isVi: boolean;
   placeholder: string;
   showDropdown: boolean;
   nameSuggestions: CafeSuggestion[];
@@ -22,6 +21,7 @@ type HeroSearchControlsProps = {
   onSmartSearch: (query: string) => void;
   nearbyLoading: boolean;
   searchCta: string;
+  mobileSearchCta: string;
   nearbyCta: string;
 };
 
@@ -30,7 +30,6 @@ export function HeroSearchControls({
   onSearchChange,
   focused,
   onFocusChange,
-  isVi,
   placeholder,
   showDropdown,
   nameSuggestions,
@@ -43,6 +42,7 @@ export function HeroSearchControls({
   onSmartSearch,
   nearbyLoading,
   searchCta,
+  mobileSearchCta,
   nearbyCta,
 }: HeroSearchControlsProps) {
   return (
@@ -74,10 +74,10 @@ export function HeroSearchControls({
               />
               <button
                 type="submit"
-                className="inline-flex h-full min-w-[94px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#c8842a] px-5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(200,132,42,0.24)] transition-all hover:bg-[#a86d1e] sm:min-w-[126px] lg:hidden"
+                className="inline-flex h-full min-w-[94px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#c8842a] px-5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(200,132,42,0.24)] transition-all hover:bg-[#a86d1e] sm:min-w-[126px] lg:hidden"
               >
                 <Search size={16} />
-                <span className="sm:hidden">{isVi ? "Tìm" : "Go"}</span>
+                <span className="sm:hidden">{mobileSearchCta}</span>
                 <span className="hidden sm:inline">{searchCta}</span>
               </button>
             </div>
@@ -87,31 +87,32 @@ export function HeroSearchControls({
             <HeroSuggestionsDropdown
               nameSuggestions={nameSuggestions}
               smartSuggestions={smartSuggestions}
-              isVi={isVi}
               onCafeSelect={onCafeSelect}
               onSmartSearch={onSmartSearch}
             />
           )}
         </div>
 
-        <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center lg:w-auto lg:shrink-0">
+        <div className="flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center lg:w-auto lg:shrink-0">
           <button
             type="button"
             onClick={onNearMe}
             disabled={nearbyLoading}
-            className="order-2 inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#c8842a] px-8 text-base font-semibold text-white shadow-[0_18px_42px_rgba(200,132,42,0.24)] transition-all hover:-translate-y-0.5 hover:bg-[#a86d1e] disabled:cursor-not-allowed disabled:opacity-60 sm:order-1 sm:h-16 sm:px-10 sm:text-lg lg:h-[64px] lg:px-8 lg:text-base xl:px-10"
+            className="order-2 inline-flex h-12 min-w-[148px] cursor-pointer items-center justify-center gap-2 rounded-full border border-[#d9b878] bg-[#fffaf2]/96 px-5 text-sm font-bold text-[#7a4a17] shadow-[0_10px_28px_rgba(91,56,19,0.13)] ring-1 ring-[#f4dec0] transition-all hover:-translate-y-0.5 hover:border-[#c8842a] hover:bg-white hover:text-[#5f320d] disabled:cursor-not-allowed disabled:opacity-60 sm:order-1 sm:h-14 sm:min-w-0 sm:px-5 sm:text-base lg:h-[64px] lg:px-6"
           >
-            {nearbyLoading ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <Navigation size={21} />
-            )}
-            {nearbyCta}
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-[#f6dfb8] text-[#9a5f18]">
+              {nearbyLoading ? (
+                <Loader2 size={17} className="animate-spin" />
+              ) : (
+                <Navigation size={17} />
+              )}
+            </span>
+            <span>{nearbyCta}</span>
           </button>
           <button
             type="button"
             onClick={onSubmit}
-            className="order-1 hidden h-12 items-center justify-center gap-2 rounded-full border border-[#e0caa9] bg-white px-6 text-sm font-semibold text-[#5f442c] shadow-[0_8px_22px_rgba(44,26,14,0.1)] transition-all hover:-translate-y-0.5 hover:border-[#c8842a] hover:text-[#c8842a] sm:order-2 sm:h-16 sm:px-8 sm:text-base lg:inline-flex lg:h-[64px] lg:px-8"
+            className="order-1 hidden h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#e0caa9] bg-white px-6 text-sm font-semibold text-[#5f442c] shadow-[0_8px_22px_rgba(44,26,14,0.1)] transition-all hover:-translate-y-0.5 hover:border-[#c8842a] hover:text-[#c8842a] sm:order-2 sm:h-16 sm:px-8 sm:text-base lg:inline-flex lg:h-[64px] lg:px-8"
           >
             <Search size={17} />
             {searchCta}

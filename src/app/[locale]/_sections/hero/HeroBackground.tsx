@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 import { BACKGROUND_CAFES, MOBILE_POLAROIDS, POLAROIDS } from "./data";
 import { PolaroidCard } from "./PolaroidCard";
 
-export function HeroBackground() {
+export async function HeroBackground() {
+  const t = await getTranslations("hero.polaroids");
+
   return (
     <>
       <div className="absolute inset-0 z-0 overflow-hidden bg-[#1b1008]">
@@ -26,12 +29,7 @@ export function HeroBackground() {
                 priority={index < 4}
                 className="object-cover brightness-[0.82] contrast-[1.03] saturate-[1.02] md:brightness-[0.74] md:contrast-[1.08] md:saturate-[1.08]"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,3,0.12)_0%,rgba(10,6,3,0.22)_45%,rgba(10,6,3,0.58)_100%)]" />
-              <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-3">
-                <p className="line-clamp-2 text-left text-[11px] leading-tight font-semibold text-white/88 drop-shadow-[0_1px_5px_rgba(0,0,0,0.55)] sm:text-xs">
-                  {cafe.name}
-                </p>
-              </div>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,3,0.12)_0%,rgba(10,6,3,0.22)_45%,rgba(10,6,3,0.4)_100%)]" />
             </div>
           ))}
         </div>
@@ -48,6 +46,7 @@ export function HeroBackground() {
         <PolaroidCard
           key={`desktop-${item.image.src}`}
           image={item.image}
+          caption={t(`${item.image.captionKey}.caption`)}
           className={item.className}
           priority={false}
         />
@@ -57,6 +56,7 @@ export function HeroBackground() {
         <PolaroidCard
           key={`mobile-${item.image.src}`}
           image={item.image}
+          caption={t(`${item.image.captionKey}.caption`)}
           className={item.className}
           variant="mobile"
           priority={false}

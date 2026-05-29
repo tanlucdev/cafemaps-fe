@@ -55,23 +55,19 @@ export const VIBE_MAP: Record<string, string> = {
 export const HERO_IMAGES: HeroImage[] = [
   {
     src: "/image/home-polaroid-1.jpg",
-    alt: "Góc quán cà phê ấm cúng",
-    caption: { vi: "Góc nhỏ ấm cúng", en: "Cozy corners" },
+    captionKey: "cozy",
   },
   {
     src: "/image/home-polaroid-2.jpg",
-    alt: "Cà phê buổi sáng",
-    caption: { vi: "Cà phê sáng", en: "Morning coffee" },
+    captionKey: "morning",
   },
   {
     src: "/image/home-polaroid-3.jpg",
-    alt: "Không gian cà phê vintage",
-    caption: { vi: "Vintage vibe", en: "Vintage vibe" },
+    captionKey: "vintage",
   },
   {
     src: "/image/home-polaroid-4.jpg",
-    alt: "Không gian làm việc trong quán cà phê",
-    caption: { vi: "Không gian làm việc", en: "Work spaces" },
+    captionKey: "work",
   },
 ];
 
@@ -98,36 +94,36 @@ export const POLAROIDS: PolaroidItem[] = [
 ];
 
 export const MOBILE_POLAROIDS: PolaroidItem[] = [
-  { image: HERO_IMAGES[0], className: "top-[4.5rem] left-4 rotate-[-8deg]" },
-  { image: HERO_IMAGES[2], className: "top-[5.75rem] right-4 rotate-[7deg]" },
+  { image: HERO_IMAGES[0], className: "top-[19.25rem] left-3 rotate-[-8deg]" },
+  { image: HERO_IMAGES[2], className: "top-[20rem] right-3 rotate-[7deg]" },
   { image: HERO_IMAGES[3], className: "right-5 bottom-[7.75rem] rotate-[-5deg] opacity-70" },
 ];
 
 export const QUICK_FILTERS: QuickFilter[] = [
   {
     emoji: "🌿",
-    label: { vi: "Ngoài trời", en: "Outdoor" },
+    labelKey: "outdoor",
     vibe: "thiên nhiên",
   },
   {
     emoji: "🕒",
-    label: { vi: "Mở cửa ngay", en: "Open now" },
+    labelKey: "openNow",
     openNow: true,
     featured: true,
   },
   {
     emoji: "☁️",
-    label: { vi: "Yên tĩnh", en: "Quiet" },
+    labelKey: "quiet",
     vibe: "yên tĩnh",
   },
   {
     emoji: "✨",
-    label: { vi: "Vintage", en: "Vintage" },
+    labelKey: "vintage",
     vibe: "vintage",
   },
   {
     emoji: "💻",
-    label: { vi: "Work-friendly", en: "Work-friendly" },
+    labelKey: "workFriendly",
     purpose: "làm việc",
   },
 ];

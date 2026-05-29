@@ -54,6 +54,28 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+function numericScore(value: number | null | undefined): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function cafeRating(cafe: Cafe): number {
+  return numericScore(cafe.rating ?? cafe.averageRating ?? cafe.curatedRating);
+}
+
+function cafePopularity(cafe: Cafe): number {
+  const featuredScore = cafe.isFeatured ? 1_000_000 : 0;
+  const featuredOrderScore = cafe.featuredOrder != null ? 100_000 - cafe.featuredOrder : 0;
+  const savedScore = numericScore(cafe.savedCount) * 10;
+  const reviewScore = numericScore(cafe.reviewCount) * 5;
+  const viewScore = numericScore(cafe.viewCount);
+  return featuredScore + featuredOrderScore + savedScore + reviewScore + viewScore + cafeRating(cafe);
+}
+
+function cafeCreatedTime(cafe: Cafe): number {
+  const value = cafe.createdAt ? new Date(cafe.createdAt).getTime() : 0;
+  return Number.isFinite(value) ? value : 0;
+}
+
 export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -177,13 +199,14 @@ export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedS
   }, [cafes, filter, serverMeta]);
 
   const sorted = useMemo(() => {
-    if (sortMode === "rating" || sortMode === "popular") return filtered;
+    if (sortMode === "rating") {
+      return [...filtered].sort((a, b) => cafeRating(b) - cafeRating(a));
+    }
+    if (sortMode === "popular") {
+      return [...filtered].sort((a, b) => cafePopularity(b) - cafePopularity(a));
+    }
     if (sortMode === "newest") {
-      return [...filtered].sort((a, b) => {
-        const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return db - da;
-      });
+      return [...filtered].sort((a, b) => cafeCreatedTime(b) - cafeCreatedTime(a));
     }
     return filtered;
   }, [filtered, sortMode]);

@@ -21,6 +21,36 @@ const ROSE_TAG =
   "bg-[#FCE8ED] text-[#5A1A2A] dark:bg-[#301A20] dark:text-[#C28292] hover:brightness-95";
 const LAVENDER_TAG =
   "bg-[#F0E6F9] text-[#3A1A5A] dark:bg-[#251A30] dark:text-[#9A7DC2] hover:brightness-95";
+const PEACH_TAG =
+  "bg-[#FFF1E6] text-[#8A3E12] dark:bg-[#351C0D] dark:text-[#F0AA72] hover:brightness-95";
+const MINT_TAG =
+  "bg-[#E6F6F1] text-[#1D6B58] dark:bg-[#123028] dark:text-[#7FCDB8] hover:brightness-95";
+const GOLD_TAG =
+  "bg-[#FFF4CF] text-[#7A5200] dark:bg-[#33270A] dark:text-[#E6C25E] hover:brightness-95";
+const SKY_TAG =
+  "bg-[#E7F3FF] text-[#285A88] dark:bg-[#10283F] dark:text-[#88BDE8] hover:brightness-95";
+
+const TAG_PALETTE = [
+  WARM_TAG,
+  SAGE_TAG,
+  BLUE_TAG,
+  ROSE_TAG,
+  LAVENDER_TAG,
+  PEACH_TAG,
+  MINT_TAG,
+  GOLD_TAG,
+  SKY_TAG,
+];
+
+function normalizeLabel(label: string) {
+  return label.trim().toLowerCase();
+}
+
+function getFallbackTagClass(label: string) {
+  const normalized = normalizeLabel(label);
+  const seed = Array.from(normalized).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return TAG_PALETTE[seed % TAG_PALETTE.length];
+}
 
 const vibeColors: Record<string, string> = {
   "yên tĩnh": BLUE_TAG,
@@ -36,6 +66,24 @@ const vibeColors: Record<string, string> = {
   acoustic: WARM_TAG,
 };
 
+const tagColors: Record<string, string> = {
+  ...vibeColors,
+  "hẹn hò": ROSE_TAG,
+  "làm việc": BLUE_TAG,
+  work: BLUE_TAG,
+  "học tập": SKY_TAG,
+  study: SKY_TAG,
+  "đọc sách": LAVENDER_TAG,
+  "chill một mình": MINT_TAG,
+  "một mình": MINT_TAG,
+  "gặp bạn bè": PEACH_TAG,
+  "họp nhóm": PEACH_TAG,
+  "ngồi lâu": GOLD_TAG,
+  "sân vườn": SAGE_TAG,
+  "thú cưng": GOLD_TAG,
+  pet: GOLD_TAG,
+};
+
 export default function Badge({
   label,
   variant = "default",
@@ -44,7 +92,9 @@ export default function Badge({
   active = false,
   children,
 }: BadgeProps) {
-  const vibeClass = variant === "vibe" ? vibeColors[label] : undefined;
+  const normalizedLabel = normalizeLabel(label);
+  const tagClass = tagColors[normalizedLabel] ?? getFallbackTagClass(label);
+  const vibeClass = variant === "vibe" ? tagClass : undefined;
 
   return (
     <span
@@ -57,13 +107,8 @@ export default function Badge({
         "transition-all duration-150",
         onClick && "cursor-pointer",
         variant === "default" &&
-          (active
-            ? "bg-primary text-primary-foreground shadow-sm"
-            : "bg-secondary text-secondary-foreground hover:bg-primary/20"),
-        variant === "vibe" &&
-          (active
-            ? "bg-primary text-primary-foreground shadow-sm"
-            : vibeClass || "bg-secondary text-secondary-foreground hover:bg-primary/20"),
+          (active ? "bg-primary text-primary-foreground shadow-sm" : tagClass),
+        variant === "vibe" && (active ? "bg-primary text-primary-foreground shadow-sm" : vibeClass),
         className,
       )}
     >

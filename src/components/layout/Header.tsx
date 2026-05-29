@@ -41,14 +41,13 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 right-0 left-0 z-50 block transition-all duration-300",
+        "site-header fixed right-0 left-0 z-50 block transition-all duration-300",
         "border-b backdrop-blur-xl",
         isHome && !scrolled
-          ? "border-[#e0caa9]/75 bg-[#fff8ee]/90 shadow-[0_8px_30px_rgba(44,26,14,0.16)] dark:border-white/10 dark:bg-[#1c1209]/90 dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
-          : "border-border bg-background/95",
+          ? "border-[#e0caa9]/75 bg-[#fff8ee] shadow-[0_8px_30px_rgba(44,26,14,0.16)] dark:border-white/10 dark:bg-[#1c1209] dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)] md:bg-[#fff8ee]/90 md:dark:bg-[#1c1209]/90"
+          : "border-border bg-background md:bg-background/95",
         scrolled && "shadow-[0_2px_18px_rgba(40,22,4,0.09)]",
       )}
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-[62px] items-center gap-3">

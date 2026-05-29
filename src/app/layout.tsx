@@ -3,7 +3,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { getSiteUrl, OG_IMAGE, SITE_NAME } from "@/lib/metadata";
+import { getSiteUrl, HOME_DESCRIPTION, HOME_TITLE, OG_IMAGE, SITE_NAME } from "@/lib/metadata";
+import SpeedInsightsProvider from "@/components/providers/SpeedInsightsProvider";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -28,11 +29,32 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Cafe Maps — Khám phá quán cà phê TP.HCM",
+    default: HOME_TITLE,
     template: "%s | Cafe Maps",
   },
-  description:
-    "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm.",
+  description: HOME_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/image/logo.png", type: "image/png", sizes: "1024x1024" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/image/logo.png", type: "image/png", sizes: "1024x1024" }],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": 160,
+    "max-video-preview": -1,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": 160,
+      "max-video-preview": -1,
+    },
+  },
   metadataBase: getSiteUrl(),
   openGraph: {
     siteName: SITE_NAME,
@@ -44,7 +66,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Cafe Maps — Khám phá quán cà phê TP.HCM",
+        alt: HOME_TITLE,
       },
     ],
   },
@@ -60,6 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-full flex-col antialiased">
         {children}
         <Analytics />
+        <SpeedInsightsProvider />
       </body>
     </html>
   );

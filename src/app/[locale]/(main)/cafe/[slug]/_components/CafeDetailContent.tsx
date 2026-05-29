@@ -38,8 +38,8 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       cafe.name + " " + (cafe.address ?? ""),
     )}`;
-  const saveLabel = locale === "vi" ? (saved ? "Đã lưu" : "Lưu") : saved ? t("saved") : t("save");
-  const directionsLabel = locale === "vi" ? "Chỉ đường đến đây" : t("openMaps");
+  const saveLabel = saved ? t("saved") : t("saveShort");
+  const directionsLabel = t("directions");
 
   async function handleSave() {
     if (loadingSave) return;
@@ -81,7 +81,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   }
 
   return (
-    <article className="pt-16 pb-1 lg:pb-8">
+    <article className="cafe-detail-page pt-16 lg:pb-8">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-4 pt-6 pb-4 sm:px-6 lg:max-w-[900px] lg:px-10">
         <button
           onClick={handleBack}
@@ -138,8 +138,9 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         open={shareOpen}
         onClose={() => setShareOpen(false)}
         cafeName={cafe.name}
-        oneLiner={cafe.oneLiner}
-        url={cafeUrl}
+        description={cafe.description ?? cafe.oneLiner}
+        mapsUrl={mapsUrl}
+        websiteUrl={cafe.websiteUrl ?? cafeUrl}
       />
       <CafeMenuModal open={menuOpen} onClose={() => setMenuOpen(false)} cafeName={cafe.name} />
     </article>

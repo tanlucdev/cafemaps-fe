@@ -4,11 +4,12 @@ import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   AirVent,
+  AlarmClock,
+  Banknote,
   Bookmark,
   Car,
-  Clock,
   Coffee,
-  MapPin,
+  MapPinned,
   Navigation,
   PawPrint,
   Star,
@@ -103,6 +104,10 @@ interface CafeDetailInfoProps {
   directionsLabel: string;
   onSave: () => void | Promise<void>;
 }
+
+type DetailActionsProps = Omit<CafeDetailInfoProps, "cafe" | "locale"> & {
+  saveAriaLabel: string;
+};
 
 const AMENITY_ICONS: Record<string, ReactNode> = {
   wifi: <Wifi size={14} />,
@@ -244,15 +249,16 @@ function DetailActions({
   loadingSave,
   saveLabel,
   directionsLabel,
+  saveAriaLabel,
   mapsUrl,
   onSave,
-}: Omit<CafeDetailInfoProps, "cafe" | "locale">) {
+}: DetailActionsProps) {
   return (
     <div className="flex w-full gap-3">
       <button
         onClick={onSave}
         disabled={loadingSave}
-        aria-label={saved ? "Bỏ lưu" : "Lưu quán"}
+        aria-label={saveAriaLabel}
         className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl border px-5 text-sm font-semibold whitespace-nowrap transition-all duration-200 disabled:cursor-not-allowed sm:w-32 ${
           saved
             ? "border-amber-500 bg-amber-500 text-white shadow-[0_2px_8px_rgba(245,158,11,0.35)]"
@@ -295,19 +301,20 @@ export default function CafeDetailInfo({
   const hours = [formatTime(cafe.openingTime), formatTime(cafe.closingTime)]
     .filter(Boolean)
     .join(" – ");
-  const price = formatPrice(cafe.priceMin, cafe.priceMax);
+  const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const distanceText = formatCafeDistanceParts(resolvedDistance, locale).join(" • ");
   const rating = getCafeRating(cafe);
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const aboutText = cafe.description ?? cafe.oneLiner;
   const goodForItems = getGoodForItems(cafe);
-  const idealForLabel = locale === "vi" ? "Lý tưởng cho" : "Good for";
-  const distanceLabel = locale === "vi" ? `Cách bạn ${distanceText}` : `${distanceText} away`;
-  const parkingLabel = locale === "vi" ? "Gửi xe" : "Parking";
-  const parkingTypeLabel = locale === "vi" ? "Chỗ để xe" : "Parking";
+  const idealForLabel = t("detail.idealFor");
+  const distanceLabel = t("detail.distanceFromYou", { distance: distanceText });
+  const parkingLabel = t("detail.parking");
+  const parkingTypeLabel = t("detail.parkingType");
   const parkingLocation = cafe.parkingLocation ?? cafe.parking_location;
-  const instagramLabel = locale === "vi" ? "Instagram quán" : "Instagram";
-  const photoCreditLabel = locale === "vi" ? "Ảnh từ" : "Photos by";
+  const instagramLabel = t("detail.instagram");
+  const photoCreditLabel = t("detail.photoCredit");
+  const saveAriaLabel = saved ? t("unsave") : t("save");
   const cafeInstagram = resolveInstagramLink(cafe.instagramUrl);
   const photoCredits =
     cafe.photoCredits
@@ -391,7 +398,7 @@ export default function CafeDetailInfo({
         transition={{ duration: 0.5, delay: 0.1 }}
         className="mx-auto max-w-[680px] space-y-5 pt-2"
       >
-        <h1 className="text-foreground text-[32px] leading-[1.18] font-[var(--font-lora)] font-semibold italic sm:text-[38px]">
+        <h1 className="text-foreground text-[32px] leading-[1.18] font-[var(--font-lora)] font-semibold sm:text-[38px]">
           {cafe.name}
         </h1>
 
@@ -419,13 +426,17 @@ export default function CafeDetailInfo({
         <div className="flex flex-col gap-x-5 gap-y-2 text-[13.5px] text-(--foreground-muted) sm:flex-row sm:flex-wrap">
           {cafe.address && (
             <span className="flex items-start gap-1.5">
-              <MapPin size={14} className="mt-0.5 shrink-0 text-(--foreground-muted)" />
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#FCE8ED] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]">
+                <MapPinned size={12} />
+              </span>
               {cafe.address}
             </span>
           )}
           {hours && (
             <span className="flex items-center gap-1.5">
-              <Clock size={14} className="shrink-0 text-(--foreground-muted)" />
+              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#E6F6F1] text-[#1D6B58] dark:bg-[#123028] dark:text-[#7FCDB8]">
+                <AlarmClock size={12} />
+              </span>
               {hours}
             </span>
           )}
@@ -524,9 +535,12 @@ export default function CafeDetailInfo({
         )}
 
         {price && (
-          <div className="flex items-center gap-2 text-sm text-(--foreground-muted)">
+          <div className="flex items-center gap-2 text-sm font-bold text-(--foreground-muted)">
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FFF4CF] text-[#A06C08] dark:bg-[#33270A] dark:text-[#E6C25E]">
+              <Banknote size={16} />
+            </span>
             <span>{t("priceRange")}</span>
-            <span className="text-accent text-[15px] font-bold">{price}</span>
+            <span className="text-accent text-[15px] font-extrabold">{price}</span>
           </div>
         )}
 
@@ -585,6 +599,7 @@ export default function CafeDetailInfo({
             loadingSave={loadingSave}
             saveLabel={saveLabel}
             directionsLabel={directionsLabel}
+            saveAriaLabel={saveAriaLabel}
             mapsUrl={mapsUrl}
             onSave={onSave}
           />
@@ -598,6 +613,7 @@ export default function CafeDetailInfo({
             loadingSave={loadingSave}
             saveLabel={saveLabel}
             directionsLabel={directionsLabel}
+            saveAriaLabel={saveAriaLabel}
             mapsUrl={mapsUrl}
             onSave={onSave}
           />

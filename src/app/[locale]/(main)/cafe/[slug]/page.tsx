@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { cache } from "react"
+import { getTranslations } from "next-intl/server"
 import { getCafeBySlug } from "@/lib/api"
-import { createLocalizedMetadata } from "@/lib/metadata"
+import { createLocalizedMetadata, getSiteUrl } from "@/lib/metadata"
 import CafeDetailContent from "./_components/CafeDetailContent"
 
 interface PageProps {
@@ -14,8 +15,9 @@ const getCafe = cache((slug: string) => getCafeBySlug(slug))
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params
   const cafe = await getCafe(slug)
+  const t = await getTranslations({ locale, namespace: "cafe" })
 
-  if (!cafe) return { title: "Không tìm thấy quán" }
+  if (!cafe) return { title: t("notFound") }
 
   return {
     ...createLocalizedMetadata({
@@ -62,7 +64,7 @@ export default async function CafeDetailPage({ params }: PageProps) {
       openingHours: `${cafe.openingTime.slice(0, 5)}-${cafe.closingTime.slice(0, 5)}`,
     }),
     image: cafe.images,
-    url: `https://cafefinder.vn/${locale}/cafe/${cafe.slug}`,
+    url: new URL(`/${locale}/cafe/${cafe.slug}`, getSiteUrl()).toString(),
   }
 
   return (

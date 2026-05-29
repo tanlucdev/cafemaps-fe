@@ -1,17 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import { X } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
-  open: boolean
-  onClose: () => void
-  title?: string
-  children: React.ReactNode
-  className?: string
-  size?: "sm" | "md" | "lg" | "full"
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+  size?: "sm" | "md" | "lg" | "full";
 }
 
 const sizeMap = {
@@ -19,7 +20,7 @@ const sizeMap = {
   md: "max-w-lg",
   lg: "max-w-2xl",
   full: "max-w-full mx-4",
-}
+};
 
 export default function Modal({
   open,
@@ -27,31 +28,32 @@ export default function Modal({
   title,
   children,
   className,
+  contentClassName,
   size = "md",
 }: ModalProps) {
-  const dialogRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
-    }
+      if (e.key === "Escape") onClose();
+    };
 
-    document.addEventListener("keydown", onKey)
-    document.body.style.overflow = "hidden"
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", onKey)
-      document.body.style.overflow = ""
-    }
-  }, [open, onClose])
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
 
   return (
     <AnimatePresence>
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-label={title}
@@ -74,31 +76,29 @@ export default function Modal({
             exit={{ opacity: 0, y: 10, scale: 0.97 }}
             transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
             className={cn(
-              "relative z-10 w-full bg-[var(--card)] rounded-2xl",
-              "border border-[var(--border)] shadow-2xl overflow-hidden",
-              "max-h-[90vh] flex flex-col",
+              "relative z-10 w-full rounded-2xl bg-card",
+              "overflow-hidden border border-border shadow-2xl",
+              "flex max-h-[90vh] flex-col",
               sizeMap[size],
-              className
+              className,
             )}
           >
             {title && (
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-                <h2 className="text-base font-semibold text-[var(--foreground)]">
-                  {title}
-                </h2>
+              <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4">
+                <h2 className="text-base font-semibold text-[var(--foreground)]">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-[var(--foreground-muted)] hover:bg-[var(--background-secondary)] transition-colors"
+                  className="rounded-lg p-1.5 text-[var(--foreground-muted)] transition-colors hover:bg-[var(--background-secondary)]"
                   aria-label="Close"
                 >
                   <X size={18} />
                 </button>
               </div>
             )}
-            <div className="overflow-y-auto flex-1">{children}</div>
+            <div className={cn("flex-1 overflow-y-auto", contentClassName)}>{children}</div>
           </motion.div>
         </div>
       )}
     </AnimatePresence>
-  )
+  );
 }

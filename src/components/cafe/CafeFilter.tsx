@@ -53,10 +53,10 @@ const PURPOSE_ICONS: Record<string, React.ElementType> = {
 };
 
 const PRICE_OPTIONS = [
-  { label: "< 50k", value: "under_50k" },
-  { label: "50–100k", value: "price_50k_100k" },
-  { label: "100–150k", value: "price_100k_150k" },
-  { label: "> 150k", value: "above_150k" },
+  { translationKey: "under_50k", value: "under_50k" },
+  { translationKey: "50k_100k", value: "price_50k_100k" },
+  { translationKey: "100k_150k", value: "price_100k_150k" },
+  { translationKey: "above_150k", value: "above_150k" },
 ];
 
 interface CafeFilterProps {
@@ -150,7 +150,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
             const active = staged.priceRange === opt.value;
             return (
               <button
-                key={opt.label}
+                key={opt.value}
                 onClick={() =>
                   setStaged((s) => ({ ...s, priceRange: active ? undefined : opt.value }))
                 }
@@ -161,7 +161,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                     : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
                 )}
               >
-                {opt.label}
+                {t(`priceRanges.${opt.translationKey}`)}
               </button>
             );
           })}

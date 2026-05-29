@@ -90,7 +90,7 @@ export default function CafeCard({
   }
 
   const href = `/cafe/${cafe.slug}`;
-  const price = formatPrice(cafe.priceMin, cafe.priceMax);
+  const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const district = formatCafeArea(cafe.district, locale);
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]

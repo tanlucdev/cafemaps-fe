@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { createLocalizedMetadata, normalizeLocale } from "@/lib/metadata";
+import { createLocalizedMetadata } from "@/lib/metadata";
 import HeroSection2 from "../../_sections/HeroSection2";
 import FeaturedCafesSectionLoader2 from "../../_sections/FeaturedCafesSectionLoader2";
 import FeaturedCafesSkeleton from "../../_sections/FeaturedCafesSkeleton";
@@ -12,17 +12,14 @@ interface HomePageProps {
 
 export async function generateMetadata({ params }: HomePageProps): Promise<Metadata> {
   const { locale } = await params;
-  const normalizedLocale = normalizeLocale(locale);
-  const t = await getTranslations({ locale, namespace: "hero" });
+  const t = await getTranslations({ locale, namespace: "metadata.home" });
 
   return createLocalizedMetadata({
     locale,
     pathname: "/home2",
-    title:
-      normalizedLocale === "vi"
-        ? "Cafe Maps — Khám phá quán cà phê TP.HCM"
-        : "Cafe Maps — Discover cafés in Ho Chi Minh City",
-    description: t("subtitleCompact"),
+    title: t("title"),
+    absoluteTitle: true,
+    description: t("description"),
   });
 }
 

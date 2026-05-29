@@ -72,7 +72,7 @@ function CafeListRow({
     setPopupVisible(false);
   }
 
-  const price = formatPrice(cafe.priceMin, cafe.priceMax);
+  const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const district = formatCafeArea(cafe.district, locale);
   const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
     .filter(Boolean)

@@ -18,7 +18,20 @@ export function getNameSuggestions(input: string, cafes: Cafe[]) {
     .slice(0, 4);
 }
 
-export function getSmartSuggestions(input: string, lang: string): SmartSuggestion[] {
+type SmartSuggestionCopy = {
+  vibeInDistrict: (vibe: string, district: string) => string;
+};
+
+type LastSearchCopy = {
+  openNow: string;
+  nearMe: string;
+  fallback: string;
+};
+
+export function getSmartSuggestions(
+  input: string,
+  copy: SmartSuggestionCopy,
+): SmartSuggestion[] {
   if (input.length < 2) return [];
   const lower = input.toLowerCase();
   const normalizedLower = normalize(input);
@@ -41,28 +54,24 @@ export function getSmartSuggestions(input: string, lang: string): SmartSuggestio
       .trim();
   }
 
-  const isVi = lang === "vi";
-
   if (detectedVibe && !detectedDistrict) {
     const popular = ["Quận 1", "Quận 3", "Bình Thạnh", "Phú Nhuận", "Quận 7"];
     popular.forEach((district) => {
       suggestions.push({
-        label: isVi ? `Quán ${detectedVibe} ở ${district}` : `${detectedVibe} cafes in ${district}`,
+        label: copy.vibeInDistrict(detectedVibe, district),
         query: `${detectedVibe} ${district}`,
       });
     });
   } else if (detectedVibe && detectedDistrict) {
     suggestions.push({
-      label: isVi
-        ? `Quán ${detectedVibe} ở ${detectedDistrict}`
-        : `${detectedVibe} cafes in ${detectedDistrict}`,
+      label: copy.vibeInDistrict(detectedVibe, detectedDistrict),
       query: `${detectedVibe} ${detectedDistrict}`,
     });
   } else if (detectedDistrict && !detectedVibe) {
     const vibes = ["yên tĩnh", "làm việc", "thiên nhiên"];
     vibes.forEach((vibe) => {
       suggestions.push({
-        label: isVi ? `Quán ${vibe} ở ${detectedDistrict}` : `${vibe} cafes in ${detectedDistrict}`,
+        label: copy.vibeInDistrict(vibe, detectedDistrict),
         query: `${vibe} ${detectedDistrict}`,
       });
     });
@@ -71,11 +80,11 @@ export function getSmartSuggestions(input: string, lang: string): SmartSuggestio
   return suggestions.slice(0, 3);
 }
 
-export function getLastSearchLabel(lastSearch: LastSearchState, locale: string) {
+export function getLastSearchLabel(lastSearch: LastSearchState, copy: LastSearchCopy) {
   if (lastSearch.query) return lastSearch.query;
   if (lastSearch.filter.vibes?.length) return lastSearch.filter.vibes.join(", ");
   if (lastSearch.filter.purposes?.length) return lastSearch.filter.purposes.join(", ");
-  if (lastSearch.filter.openNow) return locale === "vi" ? "quán đang mở" : "open cafes";
-  if (lastSearch.filter.nearMe) return locale === "vi" ? "quán gần tôi" : "cafes near me";
-  return locale === "vi" ? "tìm kiếm trước" : "last search";
+  if (lastSearch.filter.openNow) return copy.openNow;
+  if (lastSearch.filter.nearMe) return copy.nearMe;
+  return copy.fallback;
 }
