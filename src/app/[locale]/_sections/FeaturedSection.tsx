@@ -139,10 +139,9 @@ export default function FeaturedSection({ cafes, locale, districts, serverMeta }
   }
 
   const filtered = useMemo(() => {
-    // Server already filtered — only apply client-only filters (openNow, nearMe)
+    // Server already filtered — only apply location checks that require browser coordinates.
     if (serverMeta) {
       let result = cafes;
-      if (filter.openNow) result = result.filter(isCafeOpenNow);
       if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
         const hasCoords = result.some((c) => c.lat != null && c.lng != null);
         if (hasCoords) {

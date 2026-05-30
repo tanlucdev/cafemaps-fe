@@ -1,5 +1,7 @@
 import type { Cafe } from "@/types/cafe"
 
+const OPENING_HOURS_TIME_ZONE = "Asia/Ho_Chi_Minh"
+
 export function parseOpeningTimeMinutes(time: string | null | undefined): number | null {
   if (!time) return null
 
@@ -26,7 +28,15 @@ export function getCafeOpenStatus(
 
   if (openMins === closeMins) return true
 
-  const nowMins = now.getHours() * 60 + now.getMinutes()
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: OPENING_HOURS_TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(now)
+  const hour = Number(parts.find((part) => part.type === "hour")?.value ?? 0) % 24
+  const minute = Number(parts.find((part) => part.type === "minute")?.value ?? 0)
+  const nowMins = hour * 60 + minute
   if (closeMins < openMins) return nowMins >= openMins || nowMins < closeMins
   return nowMins >= openMins && nowMins < closeMins
 }

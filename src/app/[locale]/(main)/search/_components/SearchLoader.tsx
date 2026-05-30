@@ -1,4 +1,5 @@
 import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
+import { isCafeOpenNow } from "@/lib/opening-hours";
 import { filterFromSearchParams } from "@/lib/search-state";
 import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection";
 
@@ -21,7 +22,8 @@ export default async function SearchLoader({
   const districts = await getCafeDistricts(locale);
 
   if (filter.nearMe && filter.lat != null && filter.lng != null) {
-    const cafes = await getNearbyCafes(filter.lat, filter.lng, filter.radiusKm ?? 2, locale);
+    const nearbyCafes = await getNearbyCafes(filter.lat, filter.lng, filter.radiusKm ?? 2, locale);
+    const cafes = filter.openNow ? nearbyCafes.filter(isCafeOpenNow) : nearbyCafes;
     return (
       <FeaturedSection
         cafes={cafes}

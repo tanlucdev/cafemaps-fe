@@ -1,5 +1,6 @@
 import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry } from "@/types/cafe"
 import { MOCK_CAFES } from "@/lib/mock-data"
+import { isCafeOpenNow } from "@/lib/opening-hours"
 
 const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
 const BASE_URL =
@@ -110,6 +111,7 @@ function buildQuery(filter?: CafeFilter, locale?: string | null): string {
   if (filter?.search) params.set("search", filter.search)
   if (filter?.district) params.set("district", filter.district)
   if (filter?.priceRange) params.set("priceRange", filter.priceRange)
+  if (filter?.openNow) params.set("openNow", "true")
   const vibes = localizeFilterValues(filter?.vibes ?? filter?.vibe, EN_VIBE_VALUES, apiLocale)
   const purposes = localizeFilterValues(filter?.purposes ?? filter?.purpose, EN_PURPOSE_VALUES, apiLocale)
   if (vibes?.length) params.set("vibes", vibes.join(","))
@@ -150,6 +152,7 @@ function fallbackCafes(filter?: CafeFilter): Cafe[] {
       return true
     })
   }
+  if (filter?.openNow) result = result.filter(isCafeOpenNow)
 
   if (sort === "newest") return [...result].reverse()
   return result
