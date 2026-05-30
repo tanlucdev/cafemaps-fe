@@ -57,6 +57,7 @@ function CreateFolderModal({
   onConfirm: (name: string) => void
   onClose: () => void
 }) {
+  const t = useTranslations("saved")
   const [value, setValue] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
   const trimmed = value.trim()
@@ -77,7 +78,7 @@ function CreateFolderModal({
     <ModalOverlay onClose={onClose}>
       <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl dark:bg-[#1c1209]">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">Tạo thư mục mới</h2>
+          <h2 className="text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">{t("createFolderTitle")}</h2>
           <button type="button" onClick={onClose} className="cursor-pointer rounded-full p-1 text-[#9b8675] hover:bg-[#f5ede7] dark:hover:bg-[#2c1a0e]">
             <X size={18} />
           </button>
@@ -86,14 +87,14 @@ function CreateFolderModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-[#29170c] dark:text-[#e8d5c4]">
-              Tên thư mục
+              {t("folderName")}
             </label>
             <input
               ref={inputRef}
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="vd: Muốn thử, Hẹn hò, Hay ghé..."
+              placeholder={t("folderNamePlaceholder")}
               maxLength={40}
               className={cn(
                 "w-full rounded-xl border px-4 py-2.5 text-sm text-[#29170c] placeholder-[#b5a090] focus:outline-none focus:ring-2 dark:bg-[#29170c] dark:text-[#f5e8d8]",
@@ -103,7 +104,7 @@ function CreateFolderModal({
               )}
             />
             {isDuplicate && (
-              <p className="mt-1 text-xs text-red-500">Tên thư mục này đã tồn tại.</p>
+              <p className="mt-1 text-xs text-red-500">{t("folderDuplicate")}</p>
             )}
             <p className="mt-1 text-right text-xs text-[#9b8675]">{trimmed.length}/40</p>
           </div>
@@ -114,14 +115,14 @@ function CreateFolderModal({
               onClick={onClose}
               className="flex-1 cursor-pointer rounded-xl border border-[#e6dacd] py-2.5 text-sm font-medium text-[#29170c] transition-colors hover:bg-[#f5ede7] dark:border-[#3d2c1e] dark:text-[#e8d5c4] dark:hover:bg-[#2c1a0e]"
             >
-              Huỷ
+              {t("cancel")}
             </button>
             <button
               type="submit"
               disabled={!isValid}
               className="flex-1 cursor-pointer rounded-xl bg-[#875200] py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity disabled:opacity-40 hover:opacity-90"
             >
-              Tạo thư mục
+              {t("createFolder")}
             </button>
           </div>
         </form>
@@ -143,6 +144,7 @@ function RenameFolderModal({
   onConfirm: (name: string) => void
   onClose: () => void
 }) {
+  const t = useTranslations("saved")
   const [value, setValue] = useState(current)
   const inputRef = useRef<HTMLInputElement>(null)
   const trimmed = value.trim()
@@ -160,7 +162,7 @@ function RenameFolderModal({
     <ModalOverlay onClose={onClose}>
       <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl dark:bg-[#1c1209]">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">Đổi tên thư mục</h2>
+          <h2 className="text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">{t("renameFolderTitle")}</h2>
           <button type="button" onClick={onClose} className="cursor-pointer rounded-full p-1 text-[#9b8675] hover:bg-[#f5ede7]">
             <X size={18} />
           </button>
@@ -185,13 +187,13 @@ function RenameFolderModal({
                 : "border-[#e6dacd] focus:border-[#c8842a] focus:ring-[#c8842a]/20 dark:border-[#3d2c1e]"
             )}
           />
-          {isDuplicate && <p className="text-xs text-red-500">Tên này đã tồn tại.</p>}
+          {isDuplicate && <p className="text-xs text-red-500">{t("folderDuplicateShort")}</p>}
           <div className="flex gap-2">
             <button type="button" onClick={onClose} className="flex-1 cursor-pointer rounded-xl border border-[#e6dacd] py-2.5 text-sm font-medium text-[#29170c] hover:bg-[#f5ede7] dark:border-[#3d2c1e] dark:text-[#e8d5c4]">
-              Huỷ
+              {t("cancel")}
             </button>
             <button type="submit" disabled={!isValid} className="flex-1 cursor-pointer rounded-xl bg-[#875200] py-2.5 text-sm font-semibold text-white disabled:opacity-40 hover:opacity-90">
-              Lưu
+              {t("save")}
             </button>
           </div>
         </form>
@@ -217,6 +219,7 @@ function MoveToCollectionModal({
   onCreate: (name: string) => void
   onClose: () => void
 }) {
+  const t = useTranslations("saved")
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState("")
   const newNameRef = useRef<HTMLInputElement>(null)
@@ -244,7 +247,7 @@ function MoveToCollectionModal({
               </div>
             )}
             <div>
-              <p className="text-xs text-[#9b8675]">Thêm vào thư mục</p>
+              <p className="text-xs text-[#9b8675]">{t("addToFolder")}</p>
               <p className="text-sm font-semibold text-[#29170c] dark:text-[#f5e8d8]">{cafe.name}</p>
             </div>
           </div>
@@ -276,7 +279,7 @@ function MoveToCollectionModal({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-[#29170c] dark:text-[#e8d5c4]">{col.name}</p>
-                  <p className="text-xs text-[#9b8675]">{col.cafes.length} quán</p>
+                  <p className="text-xs text-[#9b8675]">{t("cafeCount", { count: col.cafes.length })}</p>
                 </div>
                 {isActive && <Check size={16} className="shrink-0 text-[#875200]" />}
               </button>
@@ -284,7 +287,7 @@ function MoveToCollectionModal({
           })}
 
           {collections.length === 0 && (
-            <p className="px-6 py-4 text-sm text-[#9b8675]">Chưa có thư mục nào.</p>
+            <p className="px-6 py-4 text-sm text-[#9b8675]">{t("noFolders")}</p>
           )}
         </div>
 
@@ -297,7 +300,7 @@ function MoveToCollectionModal({
               className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[#875200] hover:underline"
             >
               <FolderPlus size={16} />
-              Tạo thư mục mới
+              {t("createFolderTitle")}
             </button>
           ) : (
             <div className="flex items-center gap-2">
@@ -306,7 +309,7 @@ function MoveToCollectionModal({
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                placeholder="Tên thư mục..."
+                placeholder={t("folderNameEllipsis")}
                 maxLength={40}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && trimmed && !isDuplicate) {
@@ -329,7 +332,7 @@ function MoveToCollectionModal({
                 }}
                 className="cursor-pointer rounded-xl bg-[#875200] px-3 py-2 text-xs font-semibold text-white disabled:opacity-40"
               >
-                Tạo
+                {t("create")}
               </button>
               <button type="button" onClick={() => setCreating(false)} className="cursor-pointer text-[#9b8675] hover:text-[#29170c]">
                 <X size={16} />
@@ -355,22 +358,27 @@ function DeleteFolderModal({
   onConfirm: () => void
   onClose: () => void
 }) {
+  const t = useTranslations("saved")
   return (
     <ModalOverlay onClose={onClose}>
       <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl dark:bg-[#1c1209]">
         <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50">
           <Trash2 size={22} className="text-red-500" />
         </div>
-        <h2 className="mb-1 text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">Xoá thư mục?</h2>
+        <h2 className="mb-1 text-lg font-bold text-[#29170c] dark:text-[#f5e8d8]">{t("deleteFolderTitle")}</h2>
         <p className="text-sm text-[#6b5a4a]">
-          Thư mục <span className="font-semibold">&ldquo;{name}&rdquo;</span> có {count} quán sẽ bị xoá. Các quán vẫn giữ trong &ldquo;Tất cả&rdquo;.
+          {t.rich("deleteFolderDesc", {
+            name,
+            count,
+            strong: (chunks) => <span className="font-semibold">&ldquo;{chunks}&rdquo;</span>,
+          })}
         </p>
         <div className="mt-6 flex gap-2">
           <button type="button" onClick={onClose} className="flex-1 cursor-pointer rounded-xl border border-[#e6dacd] py-2.5 text-sm font-medium text-[#29170c] hover:bg-[#f5ede7] dark:border-[#3d2c1e] dark:text-[#e8d5c4]">
-            Huỷ
+            {t("cancel")}
           </button>
           <button type="button" onClick={onConfirm} className="flex-1 cursor-pointer rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white hover:bg-red-600">
-            Xoá thư mục
+            {t("deleteFolder")}
           </button>
         </div>
       </div>
@@ -427,6 +435,7 @@ function FolderMenu({
   onDelete: () => void
   onClose: () => void
 }) {
+  const t = useTranslations("saved")
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -448,7 +457,7 @@ function FolderMenu({
         className="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-sm text-[#29170c] transition-colors hover:bg-[#fff8f2] dark:text-[#e8d5c4] dark:hover:bg-[#2c1a0e]"
       >
         <Pencil size={14} className="text-[#875200]" />
-        Đổi tên
+        {t("rename")}
       </button>
       <button
         type="button"
@@ -456,7 +465,7 @@ function FolderMenu({
         className="flex w-full cursor-pointer items-center gap-2 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-950/30"
       >
         <Trash2 size={14} />
-        Xoá thư mục
+        {t("deleteFolder")}
       </button>
     </div>
   )
@@ -479,6 +488,7 @@ function FolderCard({
   onRename?: () => void
   onDelete?: () => void
 }) {
+  const t = useTranslations("saved")
   const preview = group.cafes.slice(0, 4)
   const extra = Math.max(group.cafes.length - 3, 0)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -538,7 +548,7 @@ function FolderCard({
         <span className={cn("block truncate text-sm font-semibold transition-colors", active ? "text-[#875200]" : "text-[#29170c] group-hover:text-[#875200] dark:text-[#e8d5c4]")}>
           {group.name}
         </span>
-        <span className="block text-xs text-[#9b8675]">{group.cafes.length} quán</span>
+        <span className="block text-xs text-[#9b8675]">{t("cafeCount", { count: group.cafes.length })}</span>
       </motion.button>
 
       {/* Folder context menu trigger */}
@@ -603,6 +613,7 @@ function DistrictDropdown({
   value: string
   onChange: (v: string) => void
 }) {
+  const t = useTranslations("saved")
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -629,7 +640,7 @@ function DistrictDropdown({
         )}
       >
         <MapPin size={13} />
-        {active ? value : "Khu vực"}
+        {active ? value : t("area")}
         {active ? (
           <span
             role="button"
@@ -680,6 +691,7 @@ function DistrictDropdown({
 // ─── Search bar ────────────────────────────────────────────────────────────────
 
 function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useTranslations("saved")
   return (
     <div className="relative max-w-xs">
       <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9b8675]" />
@@ -687,7 +699,7 @@ function SearchBar({ value, onChange }: { value: string; onChange: (v: string) =
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Tìm trong bộ sưu tập..."
+        placeholder={t("searchPlaceholder")}
         className="w-full rounded-full border border-[#e6dacd] bg-white/70 py-1.5 pl-8 pr-8 text-sm text-[#29170c] placeholder-[#b5a090] focus:border-[#c8842a] focus:outline-none focus:ring-2 focus:ring-[#c8842a]/20 dark:border-[#3d2c1e] dark:bg-[#1c1209]/60 dark:text-[#e8d5c4]"
       />
       {value && (
@@ -701,7 +713,7 @@ function SearchBar({ value, onChange }: { value: string; onChange: (v: string) =
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
 
-function EmptyState({ locale, title, subtitle, cta }: { locale: string; title: string; subtitle: string; cta: string }) {
+function EmptyState({ title, subtitle, cta }: { title: string; subtitle: string; cta: string }) {
   return (
     <motion.section
       initial={{ opacity: 0, y: 12 }}
@@ -723,11 +735,12 @@ function EmptyState({ locale, title, subtitle, cta }: { locale: string; title: s
 // ─── Add-to-folder button on card overlay ─────────────────────────────────────
 
 function AddToFolderButton({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
+  const t = useTranslations("saved")
   return (
     <button
       type="button"
       onClick={onClick}
-      title="Thêm vào thư mục"
+      title={t("addToFolder")}
       className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/30 bg-white/88 text-[#875200] shadow-sm backdrop-blur-md transition-all hover:scale-110 hover:bg-white dark:border-white/10 dark:bg-[#1c1209]/85 dark:text-[#ffb865]"
     >
       <FolderPlus size={14} />
@@ -814,11 +827,11 @@ export default function SavedCafesClient({
     ;(async () => {
       const token = await getCurrentAccessToken()
       if (!token) { if (alive) setEntries([]); return }
-      const next = await getSavedCafeEntries(token)
+      const next = await getSavedCafeEntries(token, locale)
       if (alive) setEntries(next)
     })()
     return () => { alive = false }
-  }, [isLoggedIn, previewMode])
+  }, [isLoggedIn, locale, previewMode])
 
   // ── Derived collections ──────────────────────────────────────────────────────
   const collections = useMemo<CollectionGroup[]>(() => {
@@ -853,7 +866,7 @@ export default function SavedCafesClient({
       list = list.filter((c) => c.name.toLowerCase().includes(q) || c.district?.toLowerCase().includes(q) || c.address?.toLowerCase().includes(q))
     }
     return list
-  }, [activeCollection, quickFilter, district, search, entries])
+  }, [activeCollection, quickFilter, district, search, entries, collections])
 
   const activeFilterCount = [quickFilter !== "all", district !== "", search !== ""].filter(Boolean).length
 
@@ -954,19 +967,19 @@ export default function SavedCafesClient({
       <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-[2rem] font-bold leading-tight tracking-[-0.02em] text-[#29170c] sm:text-[2.75rem] dark:text-[#f5e8d8]">
-            Bộ sưu tập của bạn
+            {t("collectionTitle")}
           </h1>
           <p className="mt-1.5 text-base text-[#6b5a4a]">
-            Những không gian bạn đã chọn lưu lại — dễ tìm, dễ ghé.
+            {t("collectionSubtitle")}
           </p>
         </div>
         {entries.length > 0 && (
           <div className="flex items-center gap-4 text-sm text-[#6b5a4a]">
-            <span><span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{entries.length}</span> quán đã lưu</span>
+            <span>{t.rich("savedCafeTotal", { count: entries.length, strong: (chunks) => <span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{chunks}</span> })}</span>
             {collections.length > 0 && (
               <>
                 <span className="h-3.5 w-px bg-[#d7c3b1]" />
-                <span><span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{collections.length}</span> thư mục</span>
+                <span>{t.rich("folderTotal", { count: collections.length, strong: (chunks) => <span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{chunks}</span> })}</span>
               </>
             )}
           </div>
@@ -977,21 +990,21 @@ export default function SavedCafesClient({
       {entries.length > 0 && (
         <section className="mb-10">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-[#29170c] dark:text-[#f5e8d8]">Thư mục</h2>
+            <h2 className="text-base font-semibold text-[#29170c] dark:text-[#f5e8d8]">{t("folders")}</h2>
             <button
               type="button"
               onClick={() => setShowCreateFolder(true)}
               className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-[#875200] transition-opacity hover:opacity-75"
             >
               <FolderPlus size={15} />
-              Tạo thư mục
+              {t("createFolder")}
             </button>
           </div>
 
           <div className="-mx-1 flex gap-4 overflow-x-auto px-1 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {/* "All" pseudo-folder */}
             <FolderCard
-              group={{ name: "Tất cả", cafes: entries.map((e) => e.cafe) }}
+              group={{ name: t("all"), cafes: entries.map((e) => e.cafe) }}
               active={activeCollection === "all"}
               onClick={() => setActiveCollection("all")}
             />
@@ -1019,8 +1032,8 @@ export default function SavedCafesClient({
               <div className="mb-3 flex aspect-[4/3] items-center justify-center rounded-2xl border-2 border-dashed border-[#d7c3b1] bg-[#fdf8f4] transition-all group-hover:border-[#c8842a]/60 group-hover:bg-[#fff8f2] dark:border-[#3d2c1e] dark:bg-[#1c1209]">
                 <FolderPlus size={28} className="text-[#c8a97a] transition-colors group-hover:text-[#875200]" />
               </div>
-              <span className="block text-sm font-medium text-[#9b8675] group-hover:text-[#875200]">Thư mục mới</span>
-              <span className="block text-xs text-[#c8b9a8]">Tạo ngay</span>
+              <span className="block text-sm font-medium text-[#9b8675] group-hover:text-[#875200]">{t("newFolder")}</span>
+              <span className="block text-xs text-[#c8b9a8]">{t("createNow")}</span>
             </motion.button>
           </div>
         </section>
@@ -1041,7 +1054,7 @@ export default function SavedCafesClient({
             )}
           >
             <SlidersHorizontal size={14} />
-            Bộ lọc
+            {t("filters")}
             {activeFilterCount > 0 && (
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/30 text-[10px] font-bold">
                 {activeFilterCount}
@@ -1052,21 +1065,21 @@ export default function SavedCafesClient({
           {/* Desktop chips */}
           <div className="hidden items-center gap-2 sm:flex sm:flex-wrap">
             <FilterChip active={quickFilter === "all"} onClick={() => setQuickFilter("all")}>
-              Tất cả
+              {t("all")}
             </FilterChip>
             <FilterChip
               active={quickFilter === "open"}
               onClick={() => setQuickFilter(quickFilter === "open" ? "all" : "open")}
               icon={<span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />}
             >
-              Đang mở cửa
+              {t("openNow")}
             </FilterChip>
             <FilterChip
               active={quickFilter === "parking"}
               onClick={() => setQuickFilter(quickFilter === "parking" ? "all" : "parking")}
               icon={<Car size={13} />}
             >
-              Có chỗ đậu xe
+              {t("hasParking")}
             </FilterChip>
             <DistrictDropdown value={district} onChange={setDistrict} />
           </div>
@@ -1086,20 +1099,20 @@ export default function SavedCafesClient({
             className="mb-4 overflow-hidden sm:hidden"
           >
             <div className="flex flex-wrap gap-2 pb-3">
-              <FilterChip active={quickFilter === "all"} onClick={() => setQuickFilter("all")}>Tất cả</FilterChip>
+              <FilterChip active={quickFilter === "all"} onClick={() => setQuickFilter("all")}>{t("all")}</FilterChip>
               <FilterChip
                 active={quickFilter === "open"}
                 onClick={() => setQuickFilter(quickFilter === "open" ? "all" : "open")}
                 icon={<span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />}
               >
-                Đang mở cửa
+                {t("openNow")}
               </FilterChip>
               <FilterChip
                 active={quickFilter === "parking"}
                 onClick={() => setQuickFilter(quickFilter === "parking" ? "all" : "parking")}
                 icon={<Car size={13} />}
               >
-                Có chỗ đậu xe
+                {t("hasParking")}
               </FilterChip>
               <DistrictDropdown value={district} onChange={setDistrict} />
             </div>
@@ -1110,14 +1123,14 @@ export default function SavedCafesClient({
       {/* Active filter summary */}
       {activeFilterCount > 0 && (
         <div className="mb-4 flex items-center gap-2 text-sm text-[#6b5a4a]">
-          <span>{visibleCafes.length} kết quả</span>
+          <span>{t("resultCount", { count: visibleCafes.length })}</span>
           <button
             type="button"
             onClick={() => { setQuickFilter("all"); setDistrict(""); setSearch("") }}
             className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-[#e6dacd] bg-white/70 px-2.5 py-0.5 text-xs text-[#875200] transition-colors hover:bg-[#fff1ea]"
           >
             <X size={11} />
-            Xoá bộ lọc
+            {t("clearFilters")}
           </button>
         </div>
       )}
@@ -1125,9 +1138,8 @@ export default function SavedCafesClient({
       {/* ── Grid ─────────────────────────────────────────────────────────────── */}
       {visibleCafes.length === 0 ? (
         <EmptyState
-          locale={locale}
-          title={entries.length === 0 ? t("empty") : "Không tìm thấy quán nào"}
-          subtitle={entries.length === 0 ? t("emptySubtitle") : "Thử thay đổi bộ lọc hoặc từ khoá tìm kiếm."}
+          title={entries.length === 0 ? t("empty") : t("noResults")}
+          subtitle={entries.length === 0 ? t("emptySubtitle") : t("noResultsSubtitle")}
           cta={t("explore")}
         />
       ) : (
@@ -1159,7 +1171,7 @@ export default function SavedCafesClient({
             className="inline-flex items-center gap-2 rounded-2xl border border-[#e6dacd] bg-white px-6 py-3 text-sm font-semibold text-[#875200] shadow-sm transition-all hover:border-[#c8a97a] hover:bg-[#fff8f2] hover:shadow-md dark:border-[#3d2c1e] dark:bg-[#1c1209] dark:text-[#ffb865]"
           >
             <Search size={16} />
-            Khám phá thêm quán mới
+            {t("exploreMore")}
           </Link>
         </div>
       )}

@@ -33,6 +33,7 @@ interface FilterDropdownPanelProps {
   staged: StagedFilter;
   dropdownOpen: boolean;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
+  districts?: string[];
   onToggleVibeStaged: (v: Vibe) => void;
   onTogglePurposeStaged: (p: Purpose) => void;
   onSetPriceStaged: (val: string) => void;
@@ -45,6 +46,7 @@ export function FilterDropdownPanel({
   staged,
   dropdownOpen,
   dropdownRef,
+  districts,
   onToggleVibeStaged,
   onTogglePurposeStaged,
   onSetPriceStaged,
@@ -54,6 +56,7 @@ export function FilterDropdownPanel({
 }: FilterDropdownPanelProps) {
   const tf = useTranslations("filters");
   const tg = useTranslations("guidedFilter");
+  const districtOptions = districts?.length ? districts : [...AREAS];
 
   const stagedActiveCount =
     staged.vibes.length +
@@ -159,7 +162,7 @@ export function FilterDropdownPanel({
                 </SelectTrigger>
                 <SelectContent align="start" sideOffset={4}>
                   <SelectItem value="">{tg("allDistricts")}</SelectItem>
-                  {AREAS.map((area) => (
+                  {districtOptions.map((area) => (
                     <SelectItem key={area} value={area}>
                       {area}
                     </SelectItem>

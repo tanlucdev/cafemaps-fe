@@ -112,30 +112,100 @@ type DetailActionsProps = Omit<CafeDetailInfoProps, "cafe" | "locale"> & {
 const AMENITY_ICONS: Record<string, ReactNode> = {
   wifi: <Wifi size={14} />,
   "điều hoà": <AirVent size={14} />,
+  "điều hòa": <AirVent size={14} />,
+  "air conditioning": <AirVent size={14} />,
+  ac: <AirVent size={14} />,
   "đậu xe": <Car size={14} />,
+  parking: <Car size={14} />,
   "ngoài trời": <TreePine size={14} />,
+  outdoor: <TreePine size={14} />,
   "ổ cắm": <Zap size={14} />,
+  outlet: <Zap size={14} />,
+  "power outlet": <Zap size={14} />,
   "thú cưng": <PawPrint size={14} />,
+  pet: <PawPrint size={14} />,
 };
 
 const GOOD_FOR_RULES = [
-  { terms: ["chill một mình", "một mình", "chill"], emoji: "☕", label: "Chill một mình" },
-  { terms: ["học tập", "đọc sách", "yên tĩnh"], emoji: "📚", label: "Đọc sách" },
-  { terms: ["làm việc", "remote", "wifi"], emoji: "💻", label: "Làm việc remote" },
-  { terms: ["ổ cắm", "cắm máy"], emoji: "🔌", label: "Cắm máy ngồi lâu" },
-  { terms: ["jazz", "acoustic", "nhạc"], emoji: "🎵", label: "Nghe nhạc" },
-  { terms: ["thú cưng", "pet"], emoji: "🐶", label: "Dẫn thú cưng" },
-  { terms: ["hẹn hò", "lãng mạn"], emoji: "🕯️", label: "Hẹn hò nhẹ nhàng" },
-  { terms: ["gặp bạn bè", "họp nhóm", "nhộn nhịp"], emoji: "💬", label: "Gặp bạn bè" },
-  { terms: ["thiên nhiên", "ngoài trời", "sân vườn"], emoji: "🌿", label: "Ngồi ngoài trời" },
-  { terms: ["sáng tạo"], emoji: "✍️", label: "Viết linh tinh" },
+  {
+    terms: ["chill một mình", "một mình", "chill", "solo"],
+    emoji: "☕",
+    labels: { vi: "Chill một mình", en: "Solo chill" },
+  },
+  {
+    terms: ["học tập", "đọc sách", "yên tĩnh", "study", "read", "quiet"],
+    emoji: "📚",
+    labels: { vi: "Đọc sách", en: "Reading" },
+  },
+  {
+    terms: ["làm việc", "remote", "wifi", "work"],
+    emoji: "💻",
+    labels: { vi: "Làm việc remote", en: "Remote work" },
+  },
+  {
+    terms: ["ổ cắm", "cắm máy", "outlet", "power"],
+    emoji: "🔌",
+    labels: { vi: "Cắm máy ngồi lâu", en: "Long laptop sessions" },
+  },
+  {
+    terms: ["jazz", "acoustic", "nhạc", "music"],
+    emoji: "🎵",
+    labels: { vi: "Nghe nhạc", en: "Music" },
+  },
+  { terms: ["thú cưng", "pet"], emoji: "🐶", labels: { vi: "Dẫn thú cưng", en: "Pet friendly" } },
+  {
+    terms: ["hẹn hò", "lãng mạn", "date", "romantic"],
+    emoji: "🕯️",
+    labels: { vi: "Hẹn hò nhẹ nhàng", en: "Easy dates" },
+  },
+  {
+    terms: ["gặp bạn bè", "họp nhóm", "nhộn nhịp", "friends", "group", "lively"],
+    emoji: "💬",
+    labels: { vi: "Gặp bạn bè", en: "Friends hangout" },
+  },
+  {
+    terms: ["thiên nhiên", "ngoài trời", "sân vườn", "nature", "outdoor", "garden"],
+    emoji: "🌿",
+    labels: { vi: "Ngồi ngoài trời", en: "Outdoor seating" },
+  },
+  {
+    terms: ["sáng tạo", "creative"],
+    emoji: "✍️",
+    labels: { vi: "Viết linh tinh", en: "Creative writing" },
+  },
 ];
 
 const FALLBACK_GOOD_FOR = [
-  { emoji: "☕", label: "Chill một mình" },
-  { emoji: "📚", label: "Đọc sách" },
-  { emoji: "💻", label: "Làm việc remote" },
+  { emoji: "☕", labels: { vi: "Chill một mình", en: "Solo chill" } },
+  { emoji: "📚", labels: { vi: "Đọc sách", en: "Reading" } },
+  { emoji: "💻", labels: { vi: "Làm việc remote", en: "Remote work" } },
 ];
+
+const AMENITY_LABELS: Record<string, { vi: string; en: string }> = {
+  wifi: { vi: "wifi", en: "wifi" },
+  "điều hoà": { vi: "điều hoà", en: "air conditioning" },
+  "điều hòa": { vi: "điều hòa", en: "air conditioning" },
+  ac: { vi: "điều hoà", en: "air conditioning" },
+  "air conditioning": { vi: "điều hoà", en: "air conditioning" },
+  "chỗ đậu xe": { vi: "chỗ đậu xe", en: "parking" },
+  "đậu xe": { vi: "đậu xe", en: "parking" },
+  parking: { vi: "đậu xe", en: "parking" },
+  "ngoài trời": { vi: "ngoài trời", en: "outdoor seating" },
+  outdoor: { vi: "ngoài trời", en: "outdoor seating" },
+  "ổ cắm": { vi: "ổ cắm", en: "power outlets" },
+  outlet: { vi: "ổ cắm", en: "power outlets" },
+  "power outlets": { vi: "ổ cắm", en: "power outlets" },
+  "pet-friendly": { vi: "thân thiện thú cưng", en: "pet friendly" },
+};
+
+const PARKING_LOCATION_LABELS: Record<string, { vi: string; en: string }> = {
+  "gửi xe vỉa hè phía trước": {
+    vi: "Gửi xe vỉa hè phía trước",
+    en: "Street-side parking in front",
+  },
+  "gửi xe trước quán": { vi: "Gửi xe trước quán", en: "Parking in front" },
+  "có chỗ đậu xe": { vi: "Có chỗ đậu xe", en: "Parking available" },
+};
 
 type GoodForItem = {
   emoji: string;
@@ -149,6 +219,27 @@ type CafeWithRating = Cafe & {
 };
 
 type ResolvedDistance = Pick<Cafe, "distanceKm" | "distanceMode" | "durationMin">;
+
+type CafeTextAliases = Cafe & {
+  onlineEn?: string | null;
+  online_en?: string | null;
+  one_line_en?: string | null;
+};
+
+type LocalizedText = {
+  vi?: string | null;
+  en?: string | null;
+};
+
+function isEnglishLocale(locale: string): boolean {
+  return locale.startsWith("en");
+}
+
+function pickLocalizedText({ vi, en }: LocalizedText, locale: string): string | null {
+  const primary = isEnglishLocale(locale) ? en : vi;
+  const fallback = isEnglishLocale(locale) ? vi : en;
+  return primary?.trim() || fallback?.trim() || null;
+}
 
 function formatTime(time: string | null | undefined): string {
   if (!time) return "";
@@ -188,28 +279,80 @@ function getCafeRating(cafe: Cafe): number {
   return 4.5 + (seed % 5) * 0.1;
 }
 
-function getGoodForItems(cafe: Cafe): GoodForItem[] {
+function getGoodForItems(cafe: Cafe, locale: string): GoodForItem[] {
+  const isEnglish = isEnglishLocale(locale);
   const source = [
     ...cafe.purposes,
     ...cafe.vibes,
     ...cafe.amenities,
     cafe.oneLiner ?? "",
+    cafe.oneLinerEn ?? "",
     cafe.description ?? "",
+    cafe.descriptionEn ?? "",
   ]
     .join(" ")
     .toLowerCase();
 
   const items: GoodForItem[] = [];
   for (const rule of GOOD_FOR_RULES) {
-    if (
-      rule.terms.some((term) => source.includes(term)) &&
-      !items.some((i) => i.label === rule.label)
-    ) {
-      items.push({ emoji: rule.emoji, label: rule.label });
+    const label = isEnglish ? rule.labels.en : rule.labels.vi;
+    if (rule.terms.some((term) => source.includes(term)) && !items.some((i) => i.label === label)) {
+      items.push({ emoji: rule.emoji, label });
     }
   }
 
-  return (items.length > 0 ? items : FALLBACK_GOOD_FOR).slice(0, 5);
+  return (
+    items.length > 0
+      ? items
+      : FALLBACK_GOOD_FOR.map((item) => ({
+          emoji: item.emoji,
+          label: isEnglish ? item.labels.en : item.labels.vi,
+        }))
+  ).slice(0, 5);
+}
+
+function normalizeLabelKey(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function getAmenityLabel(amenity: string, locale: string): string {
+  const labels = AMENITY_LABELS[normalizeLabelKey(amenity)];
+  if (!labels) return amenity;
+  return isEnglishLocale(locale) ? labels.en : labels.vi;
+}
+
+function getKnownParkingLocationLabel(value: string, locale: string): string {
+  const labels = PARKING_LOCATION_LABELS[normalizeLabelKey(value)];
+  if (!labels) return value;
+  return isEnglishLocale(locale) ? labels.en : labels.vi;
+}
+
+function getParkingLocation(cafe: Cafe, locale: string): string | null {
+  const value = pickLocalizedText(
+    {
+      vi: cafe.parkingLocation ?? cafe.parking_location,
+      en: cafe.parkingLocationEn,
+    },
+    locale,
+  );
+
+  return value ? getKnownParkingLocationLabel(value, locale) : null;
+}
+
+function getCafeAboutText(cafe: Cafe, locale: string): string | null {
+  const textCafe = cafe as CafeTextAliases;
+  return pickLocalizedText(
+    {
+      vi: cafe.description ?? cafe.oneLiner,
+      en:
+        cafe.descriptionEn ??
+        cafe.oneLinerEn ??
+        textCafe.onlineEn ??
+        textCafe.online_en ??
+        textCafe.one_line_en,
+    },
+    locale,
+  );
 }
 
 function getAmenityIcon(amenity: string) {
@@ -305,13 +448,13 @@ export default function CafeDetailInfo({
   const distanceText = formatCafeDistanceParts(resolvedDistance, locale).join(" • ");
   const rating = getCafeRating(cafe);
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
-  const aboutText = cafe.description ?? cafe.oneLiner;
-  const goodForItems = getGoodForItems(cafe);
+  const aboutText = getCafeAboutText(cafe, locale);
+  const goodForItems = getGoodForItems(cafe, locale);
   const idealForLabel = t("detail.idealFor");
   const distanceLabel = t("detail.distanceFromYou", { distance: distanceText });
   const parkingLabel = t("detail.parking");
   const parkingTypeLabel = t("detail.parkingType");
-  const parkingLocation = cafe.parkingLocation ?? cafe.parking_location;
+  const parkingLocation = getParkingLocation(cafe, locale);
   const instagramLabel = t("detail.instagram");
   const photoCreditLabel = t("detail.photoCredit");
   const saveAriaLabel = saved ? t("unsave") : t("save");
@@ -360,7 +503,7 @@ export default function CafeDetailInfo({
     });
 
     async function resolveRouteDistance() {
-      const nearbyCafes = await getNearbyCafes(originLat, originLng, searchRadiusKm);
+      const nearbyCafes = await getNearbyCafes(originLat, originLng, searchRadiusKm, locale);
       if (cancelled) return;
 
       const routeCafe = nearbyCafes.find(
@@ -388,6 +531,7 @@ export default function CafeDetailInfo({
     cafe.lat,
     cafe.lng,
     cafe.slug,
+    locale,
   ]);
 
   return (
@@ -477,7 +621,7 @@ export default function CafeDetailInfo({
                 className="flex items-center gap-1.5 rounded-full border-[1.5px] border-[var(--border-light,#ECE4D6)] bg-[#FAF6F1] px-3 py-1.5 text-sm text-(--foreground-muted) dark:bg-[#241B15]"
               >
                 <span className="text-accent">{getAmenityIcon(a)}</span>
-                {a}
+                {getAmenityLabel(a, locale)}
               </span>
             ))}
           </div>

@@ -5,7 +5,7 @@ import { Navigation } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { getNearbyCafes } from "@/lib/api"
 import type { Cafe } from "@/types/cafe"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 interface NearbyButtonProps {
   onResults: (cafes: Cafe[]) => void
@@ -13,6 +13,7 @@ interface NearbyButtonProps {
 
 export default function NearbyButton({ onResults }: NearbyButtonProps) {
   const t = useTranslations("nearby")
+  const locale = useLocale()
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -31,7 +32,8 @@ export default function NearbyButton({ onResults }: NearbyButtonProps) {
           const cafes = await getNearbyCafes(
             coords.latitude,
             coords.longitude,
-            2
+            2,
+            locale
           )
           onResults(cafes)
         } catch {

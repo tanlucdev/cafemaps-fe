@@ -27,7 +27,7 @@ export default async function SavedPage({ params }: PageProps) {
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null
   const initialIsLoggedIn = Boolean(token)
-  const initialEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token) : []
+  const initialEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token, locale) : []
 
   return (
     <SavedCafesClient

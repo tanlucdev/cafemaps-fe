@@ -1,4 +1,4 @@
-import { getCafesWithMeta, getNearbyCafes } from "@/lib/api";
+import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
 import { filterFromSearchParams } from "@/lib/search-state";
 import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection";
 
@@ -18,18 +18,20 @@ export default async function SearchLoader({
   }
   const filter = filterFromSearchParams(sp);
   const filterWithLimit = { ...filter, limit: PAGE_SIZE };
+  const districts = await getCafeDistricts(locale);
 
   if (filter.nearMe && filter.lat != null && filter.lng != null) {
-    const cafes = await getNearbyCafes(filter.lat, filter.lng, filter.radiusKm ?? 2);
+    const cafes = await getNearbyCafes(filter.lat, filter.lng, filter.radiusKm ?? 2, locale);
     return (
       <FeaturedSection
         cafes={cafes}
         locale={locale}
+        districts={districts}
         serverMeta={{ total: cafes.length, page: 1, limit: cafes.length, totalPages: 1 }}
       />
     );
   }
 
-  const { cafes, meta } = await getCafesWithMeta(filterWithLimit);
-  return <FeaturedSection cafes={cafes} locale={locale} serverMeta={meta} />;
+  const { cafes, meta } = await getCafesWithMeta(filterWithLimit, locale);
+  return <FeaturedSection cafes={cafes} locale={locale} districts={districts} serverMeta={meta} />;
 }

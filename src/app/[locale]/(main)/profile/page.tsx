@@ -37,7 +37,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const { locale } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null
-  const initialSavedEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token) : []
+  const initialSavedEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token, locale) : []
 
   return (
     <ProfilePageClient

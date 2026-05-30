@@ -1,12 +1,35 @@
 import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry } from "@/types/cafe"
+import { MOCK_CAFES } from "@/lib/mock-data"
 
+const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
 const BASE_URL =
   typeof window === "undefined"
-    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api")
+    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_API_URL)
     : "/api-proxy"
 
 const READ_REVALIDATE_SECONDS = 300
 const API_TIMEOUT_MS = 12000
+type ApiLocale = "vi" | "en"
+
+const EN_VIBE_VALUES: Record<string, string> = {
+  "yên tĩnh": "Quiet",
+  "nhộn nhịp": "Lively",
+  vintage: "Vintage",
+  "hiện đại": "Modern",
+  "thiên nhiên": "Nature",
+  "sáng tạo": "Creative",
+  "lãng mạn": "Romantic",
+  minimalist: "Minimalist",
+}
+
+const EN_PURPOSE_VALUES: Record<string, string> = {
+  "làm việc": "Work",
+  "học tập": "Study",
+  "hẹn hò": "Date",
+  "họp nhóm": "Group",
+  "chill một mình": "Solo",
+  "gặp bạn bè": "Friends",
+}
 
 export class ApiError extends Error {
   constructor(
@@ -66,21 +89,92 @@ export function isUnauthorizedError(error: unknown) {
   return error instanceof ApiError && (error.status === 401 || error.status === 403)
 }
 
-function buildQuery(filter?: CafeFilter): string {
-  if (!filter) return ""
+export function normalizeCafeLocale(locale?: string | null): ApiLocale {
+  return locale === "en" ? "en" : "vi"
+}
+
+function localizeFilterValues(
+  values: string[] | undefined,
+  map: Record<string, string>,
+  locale: ApiLocale
+): string[] | undefined {
+  if (!values?.length) return undefined
+  if (locale !== "en") return values
+  return values.map((value) => map[value] ?? value)
+}
+
+function buildQuery(filter?: CafeFilter, locale?: string | null): string {
   const params = new URLSearchParams()
-  if (filter.search) params.set("search", filter.search)
-  if (filter.district) params.set("district", filter.district)
-  if (filter.priceRange) params.set("priceRange", filter.priceRange)
-  const vibes = filter.vibes ?? filter.vibe
-  const purposes = filter.purposes ?? filter.purpose
+  const apiLocale = normalizeCafeLocale(locale)
+  params.set("locale", apiLocale)
+  if (filter?.search) params.set("search", filter.search)
+  if (filter?.district) params.set("district", filter.district)
+  if (filter?.priceRange) params.set("priceRange", filter.priceRange)
+  const vibes = localizeFilterValues(filter?.vibes ?? filter?.vibe, EN_VIBE_VALUES, apiLocale)
+  const purposes = localizeFilterValues(filter?.purposes ?? filter?.purpose, EN_PURPOSE_VALUES, apiLocale)
   if (vibes?.length) params.set("vibes", vibes.join(","))
   if (purposes?.length) params.set("purposes", purposes.join(","))
-  if (filter.sort && filter.sort !== "popular") params.set("sort", filter.sort)
-  if (filter.page !== undefined) params.set("page", String(filter.page))
-  if (filter.limit !== undefined) params.set("limit", String(filter.limit))
+  if (filter?.sort && filter.sort !== "popular") params.set("sort", filter.sort)
+  if (filter?.page !== undefined) params.set("page", String(filter.page))
+  if (filter?.limit !== undefined) params.set("limit", String(filter.limit))
   const q = params.toString()
   return q ? `?${q}` : ""
+}
+
+function fallbackCafes(filter?: CafeFilter): Cafe[] {
+  let result = MOCK_CAFES
+  const { search, district, vibes, purposes, priceRange, sort } = filter ?? {}
+
+  if (search?.trim()) {
+    const q = search.toLowerCase()
+    result = result.filter(
+      (cafe) =>
+        cafe.name.toLowerCase().includes(q) ||
+        (cafe.address ?? "").toLowerCase().includes(q) ||
+        (cafe.district ?? "").toLowerCase().includes(q)
+    )
+  }
+  if (district) result = result.filter((cafe) => cafe.district === district)
+  if (vibes?.length) result = result.filter((cafe) => vibes.some((vibe) => cafe.vibes.includes(vibe)))
+  if (purposes?.length) {
+    result = result.filter((cafe) => purposes.some((purpose) => cafe.purposes.includes(purpose)))
+  }
+  if (priceRange) {
+    result = result.filter((cafe) => {
+      const min = cafe.priceMin ?? 0
+      const max = cafe.priceMax ?? min
+      if (priceRange === "under_50k") return min < 50000
+      if (priceRange === "price_50k_100k" || priceRange === "50k_100k") return min <= 100000 && max >= 50000
+      if (priceRange === "price_100k_150k" || priceRange === "100k_150k") return min <= 150000 && max >= 100000
+      if (priceRange === "above_150k") return max > 150000
+      return true
+    })
+  }
+
+  if (sort === "newest") return [...result].reverse()
+  return result
+}
+
+function paginateFallbackCafes(filter?: CafeFilter) {
+  const cafes = fallbackCafes(filter)
+  const page = filter?.page ?? 1
+  const limit = filter?.limit ?? (cafes.length || 12)
+  const start = (page - 1) * limit
+  const paginated = cafes.slice(start, start + limit)
+
+  return {
+    cafes: paginated,
+    meta: {
+      total: cafes.length,
+      page,
+      limit,
+      totalPages: Math.ceil(cafes.length / limit),
+    },
+  }
+}
+
+function fallbackDistricts(): string[] {
+  return [...new Set(MOCK_CAFES.map((cafe) => cafe.district).filter(Boolean) as string[])].sort()
 }
 
 // Parse PostGIS EWKB hex → { lat, lng }
@@ -126,9 +220,15 @@ type RawCafe = Omit<
 > & {
   vibes?: string[]
   vibe?: string[]
+  vibesEn?: string[]
+  vibes_en?: string[]
   purposes?: string[]
   purpose?: string[]
+  purposesEn?: string[]
+  purposes_en?: string[]
   amenities?: string[]
+  amenitiesEn?: string[]
+  amenities_en?: string[]
   images?: string[]
   image_orientations?: string[] | null
   imageOrientations?: string[] | null
@@ -161,6 +261,17 @@ type RawCafe = Omit<
   savedCount?: number | string | null
   view_count?: number | string | null
   viewCount?: number | string | null
+  name_en?: string | null
+  address_en?: string | null
+  district_en?: string | null
+  one_liner_en?: string | null
+  onlineEn?: string | null
+  online_en?: string | null
+  oneLineEn?: string | null
+  one_line_en?: string | null
+  description_en?: string | null
+  signature_drink_en?: string | null
+  parking_location_en?: string | null
 }
 
 function toFiniteNumber(value: number | string | null | undefined): number | undefined {
@@ -174,7 +285,14 @@ function normalizeDistanceMode(
   return mode === "straight" || mode === "route" ? mode : undefined
 }
 
-function mapApiCafe(raw: RawCafe): Cafe {
+function pickLocalized<T>(locale: ApiLocale, base: T, localized: T | null | undefined): T {
+  if (locale !== "en") return base
+  if (Array.isArray(localized)) return (localized.length > 0 ? localized : base) as T
+  return (localized ?? base) as T
+}
+
+function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
+  const apiLocale = normalizeCafeLocale(locale)
   let lat = raw.lat ?? null
   let lng = raw.lng ?? null
 
@@ -200,18 +318,50 @@ function mapApiCafe(raw: RawCafe): Cafe {
   const savedCount = toFiniteNumber(raw.savedCount ?? raw.saved_count)
   const viewCount = toFiniteNumber(raw.viewCount ?? raw.view_count)
 
+  const nameEn = raw.nameEn ?? raw.name_en
+  const addressEn = raw.addressEn ?? raw.address_en
+  const districtEn = raw.districtEn ?? raw.district_en
+  const oneLinerEn =
+    raw.oneLinerEn ?? raw.one_liner_en ?? raw.onlineEn ?? raw.online_en ?? raw.oneLineEn ?? raw.one_line_en
+  const descriptionEn = raw.descriptionEn ?? raw.description_en
+  const signatureDrinkEn = raw.signatureDrinkEn ?? raw.signature_drink_en
+  const vibesEn = raw.vibesEn ?? raw.vibes_en
+  const purposesEn = raw.purposesEn ?? raw.purposes_en
+  const amenitiesEn = raw.amenitiesEn ?? raw.amenities_en
+  const parkingLocationEn = raw.parkingLocationEn ?? raw.parking_location_en
+  const vibes = raw.vibes ?? raw.vibe ?? []
+  const purposes = raw.purposes ?? raw.purpose ?? []
+  const amenities = raw.amenities ?? []
+  const parkingLocation = raw.parkingLocation ?? raw.parking_location ?? null
+
   return {
     ...raw,
+    name: pickLocalized(apiLocale, raw.name, nameEn),
+    nameEn,
+    address: pickLocalized(apiLocale, raw.address, addressEn),
+    addressEn,
+    district: pickLocalized(apiLocale, raw.district, districtEn),
+    districtEn,
+    oneLiner: pickLocalized(apiLocale, raw.oneLiner, oneLinerEn),
+    oneLinerEn,
+    description: pickLocalized(apiLocale, raw.description, descriptionEn),
+    descriptionEn,
+    signatureDrink: pickLocalized(apiLocale, raw.signatureDrink, signatureDrinkEn),
+    signatureDrinkEn,
     lat,
     lng,
-    vibes: raw.vibes ?? raw.vibe ?? [],
-    purposes: raw.purposes ?? raw.purpose ?? [],
-    amenities: raw.amenities ?? [],
+    vibes: pickLocalized(apiLocale, vibes, vibesEn),
+    vibesEn,
+    purposes: pickLocalized(apiLocale, purposes, purposesEn),
+    purposesEn,
+    amenities: pickLocalized(apiLocale, amenities, amenitiesEn),
+    amenitiesEn,
     openingTime: raw.openingTime ?? raw.opening_time ?? raw.opening_time_local ?? null,
     closingTime: raw.closingTime ?? raw.closing_time ?? raw.closing_time_local ?? null,
     websiteUrl: raw.websiteUrl ?? raw.website_url ?? raw.website ?? null,
-    parking_location: raw.parking_location ?? raw.parkingLocation ?? null,
-    parkingLocation: raw.parkingLocation ?? raw.parking_location ?? null,
+    parking_location: pickLocalized(apiLocale, raw.parking_location ?? raw.parkingLocation ?? null, parkingLocationEn),
+    parkingLocation: pickLocalized(apiLocale, parkingLocation, parkingLocationEn),
+    parkingLocationEn,
     images: raw.images ?? [],
     image_orientations:
       raw.image_orientations ??
@@ -233,35 +383,35 @@ function mapApiCafe(raw: RawCafe): Cafe {
   }
 }
 
-export async function getCafes(filter?: CafeFilter): Promise<Cafe[]> {
+export async function getCafes(filter?: CafeFilter, locale?: string | null): Promise<Cafe[]> {
   try {
     const data = await apiFetch<CafesResponse | Cafe[]>(
-      `/cafes${buildQuery(filter)}`
+      `/cafes${buildQuery(filter, locale)}`
     )
     const raw = Array.isArray(data) ? data : data.data
-    return raw.map(mapApiCafe)
+    return raw.map((cafe) => mapApiCafe(cafe, locale))
   } catch (err) {
     console.error("getCafes failed:", err)
-    return []
+    return fallbackCafes(filter)
   }
 }
 
-export async function getCafesWithMeta(filter?: CafeFilter): Promise<{
+export async function getCafesWithMeta(filter?: CafeFilter, locale?: string | null): Promise<{
   cafes: Cafe[]
   meta: { total: number; page: number; limit: number; totalPages: number }
 }> {
   try {
     const data = await apiFetch<CafesResponse | Cafe[]>(
-      `/cafes${buildQuery(filter)}`
+      `/cafes${buildQuery(filter, locale)}`
     )
     if (Array.isArray(data)) {
       return {
-        cafes: data.map(mapApiCafe),
+        cafes: data.map((cafe) => mapApiCafe(cafe, locale)),
         meta: { total: data.length, page: 1, limit: data.length, totalPages: 1 },
       }
     }
     return {
-      cafes: data.data.map(mapApiCafe),
+      cafes: data.data.map((cafe) => mapApiCafe(cafe, locale)),
       meta: {
         total: data.meta?.total ?? data.total ?? data.data.length,
         page: data.meta?.page ?? data.page ?? 1,
@@ -271,33 +421,27 @@ export async function getCafesWithMeta(filter?: CafeFilter): Promise<{
     }
   } catch (err) {
     console.error("getCafesWithMeta failed:", err)
-    return {
-      cafes: [],
-      meta: {
-        total: 0,
-        page: filter?.page ?? 1,
-        limit: filter?.limit ?? 12,
-        totalPages: 0,
-      },
-    }
+    return paginateFallbackCafes(filter)
   }
 }
 
-export async function getCafeBySlug(slug: string): Promise<Cafe | null> {
+export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}`)
-    return mapApiCafe(raw)
+    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`)
+    return mapApiCafe(raw, locale)
   } catch (err) {
     console.error("getCafeBySlug failed:", err)
-    return null
+    return MOCK_CAFES.find((cafe) => cafe.slug === slug) ?? null
   }
 }
 
 export async function getNearbyCafes(
   lat: number,
   lng: number,
-  radiusKm = 2
+  radiusKm = 2,
+  _locale?: string | null
 ): Promise<Cafe[]> {
+  void _locale
   try {
     const params = new URLSearchParams({
       lat: String(lat),
@@ -309,25 +453,53 @@ export async function getNearbyCafes(
       `/cafes/nearby?${params.toString()}`,
       { cache: "no-store" }
     )
-    return raw.map(mapApiCafe)
+    return raw.map((cafe) => mapApiCafe(cafe, _locale))
   } catch (err) {
     console.error("getNearbyCafes failed:", err)
-    return []
+    return MOCK_CAFES
   }
 }
 
-export async function getSavedCafeEntries(token: string): Promise<SavedCafeEntry[]> {
+export async function getCafeDistricts(locale?: string | null): Promise<string[]> {
+  try {
+    return await apiFetch<string[]>(`/cafes/districts${buildQuery(undefined, locale)}`)
+  } catch (err) {
+    console.error("getCafeDistricts failed:", err)
+    return fallbackDistricts()
+  }
+}
+
+export async function getQuizMatchCafes(
+  filter?: CafeFilter,
+  locale?: string | null
+): Promise<Cafe[]> {
+  try {
+    const data = await apiFetch<CafesResponse | Cafe[]>(
+      `/cafes/quiz-match${buildQuery(filter, locale)}`
+    )
+    const raw = Array.isArray(data) ? data : data.data
+    return raw.map((cafe) => mapApiCafe(cafe, locale))
+  } catch (err) {
+    console.error("getQuizMatchCafes failed:", err)
+    return fallbackCafes(filter)
+  }
+}
+
+export async function getSavedCafeEntries(
+  token: string,
+  locale?: string | null
+): Promise<SavedCafeEntry[]> {
   try {
     const raw = await apiFetch<Array<{
       cafe: Cafe
       collectionName?: string
       createdAt?: string
-    }>>("/saved", {
+    }>>(`/saved${buildQuery(undefined, locale)}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     return raw.map(({ cafe, collectionName, createdAt }) => ({
-      cafe: mapApiCafe(cafe),
-      collectionName: collectionName ?? "Yeu thich",
+      cafe: mapApiCafe(cafe, locale),
+      collectionName: collectionName ?? (normalizeCafeLocale(locale) === "en" ? "Favorites" : "Yêu thích"),
       createdAt,
     }))
   } catch {
@@ -335,8 +507,8 @@ export async function getSavedCafeEntries(token: string): Promise<SavedCafeEntry
   }
 }
 
-export async function getSavedCafes(token: string): Promise<Cafe[]> {
-  const entries = await getSavedCafeEntries(token)
+export async function getSavedCafes(token: string, locale?: string | null): Promise<Cafe[]> {
+  const entries = await getSavedCafeEntries(token, locale)
   return entries.map((entry) => entry.cafe)
 }
 

@@ -10,11 +10,11 @@ interface PageProps {
   params: Promise<{ locale: string; slug: string }>
 }
 
-const getCafe = cache((slug: string) => getCafeBySlug(slug))
+const getCafe = cache((slug: string, locale: string) => getCafeBySlug(slug, locale))
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params
-  const cafe = await getCafe(slug)
+  const cafe = await getCafe(slug, locale)
   const t = await getTranslations({ locale, namespace: "cafe" })
 
   if (!cafe) return { title: t("notFound") }
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CafeDetailPage({ params }: PageProps) {
   const { locale, slug } = await params
-  const cafe = await getCafe(slug)
+  const cafe = await getCafe(slug, locale)
 
   if (!cafe) notFound()
 

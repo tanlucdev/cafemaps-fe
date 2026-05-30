@@ -11,6 +11,7 @@ import { ActiveFilterChips } from "@/components/cafe/GuidedFilterBar/ActiveFilte
 interface GuidedFilterBarProps {
   filter: Filter;
   onChange: (filter: Filter) => void;
+  districts?: string[];
   viewMode?: "grid" | "list";
   onViewModeChange?: (mode: "grid" | "list") => void;
 }
@@ -18,6 +19,7 @@ interface GuidedFilterBarProps {
 export default function GuidedFilterBar({
   filter,
   onChange,
+  districts,
   viewMode = "grid",
   onViewModeChange,
 }: GuidedFilterBarProps) {
@@ -71,6 +73,7 @@ export default function GuidedFilterBar({
             onTogglePurposeStaged={togglePurposeStaged}
             onSetPriceStaged={setPriceStaged}
             onSetDistrictStaged={setDistrictStaged}
+            districts={districts}
             onApply={applyStaged}
             onClearAll={clearAll}
           />

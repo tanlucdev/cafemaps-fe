@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useTranslations } from "next-intl"
 import { ChevronLeft, ChevronRight, Images, X, ZoomIn } from "lucide-react"
 
 interface MobileMainImageProps {
@@ -87,6 +88,7 @@ export default function SmartGallery({
   orientations = [],
   cafeName,
 }: SmartGalleryProps) {
+  const t = useTranslations("gallery")
   const [activeIndex, setActiveIndex] = useState(0)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   // Track which indices have been rendered so preloaded images stay mounted
@@ -149,7 +151,7 @@ export default function SmartGallery({
 
   if (!images || images.length === 0) return null
 
-  const visibleImages = images.slice(0, 5)
+    const visibleImages = images.slice(0, 5)
   const overflowCount = images.length - visibleImages.length
 
   function imageButton(
@@ -165,7 +167,7 @@ export default function SmartGallery({
         key={`${url}-${index}`}
         type="button"
         onClick={() => openLightbox(index)}
-        aria-label={`Xem ảnh ${index + 1} của ${cafeName}`}
+        aria-label={t("viewImageOf", { index: index + 1, cafeName })}
         className={`group relative overflow-hidden bg-(--background-secondary) ${className}`}
       >
         <Image
@@ -183,7 +185,7 @@ export default function SmartGallery({
         </span>
         {showOverflow && overflowCount > 0 && (
           <span className="absolute inset-0 flex items-center justify-center bg-black/48 text-sm font-semibold text-white backdrop-blur-[1px]">
-            +{overflowCount} ảnh
+            {t("morePhotos", { count: overflowCount })}
           </span>
         )}
       </button>
@@ -208,7 +210,7 @@ export default function SmartGallery({
               key={`${url}-${i}`}
               type="button"
               onClick={() => setActiveIndex(i)}
-              aria-label={`Xem ảnh ${i + 1}`}
+              aria-label={t("viewImage", { index: i + 1 })}
               className={`shrink-0 transition-all rounded-xl ${
                 i === activeIndex ? "opacity-100" : "opacity-50 hover:opacity-75"
               }`}
@@ -296,7 +298,7 @@ export default function SmartGallery({
         className="mt-3 hidden items-center gap-2 text-sm font-medium text-(--foreground-muted) transition-colors hover:text-accent md:inline-flex"
       >
         <Images size={16} />
-        Xem tất cả {images.length} ảnh
+        {t("viewAll", { count: images.length })}
       </button>
 
       {lightboxIndex !== null && (
@@ -305,7 +307,7 @@ export default function SmartGallery({
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
-          aria-label={`Ảnh ${lightboxIndex + 1} của ${cafeName}`}
+          aria-label={t("imageOf", { index: lightboxIndex + 1, cafeName })}
         >
           {/* Header */}
           <div className="shrink-0 flex items-center justify-between px-4 py-3 text-white">
@@ -315,7 +317,7 @@ export default function SmartGallery({
             <button
               type="button"
               onClick={closeLightbox}
-              aria-label="Đóng ảnh"
+              aria-label={t("close")}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
             >
               <X size={20} />
@@ -357,7 +359,7 @@ export default function SmartGallery({
                 <button
                   type="button"
                   onClick={() => moveLightbox(-1)}
-                  aria-label="Ảnh trước"
+                  aria-label={t("previous")}
                   className="absolute left-5 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 md:inline-flex"
                 >
                   <ChevronLeft size={24} />
@@ -365,7 +367,7 @@ export default function SmartGallery({
                 <button
                   type="button"
                   onClick={() => moveLightbox(1)}
-                  aria-label="Ảnh sau"
+                  aria-label={t("next")}
                   className="absolute right-5 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 md:inline-flex"
                 >
                   <ChevronRight size={24} />
@@ -388,7 +390,7 @@ export default function SmartGallery({
                     setActiveIndex(index)
                     setLightboxIndex(index)
                   }}
-                  aria-label={`Chuyển tới ảnh ${index + 1}`}
+                  aria-label={t("goTo", { index: index + 1 })}
                   className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg transition-all ${
                     index === lightboxIndex ? "ring-2 ring-white opacity-100" : "opacity-55 hover:opacity-85"
                   }`}

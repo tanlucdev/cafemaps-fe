@@ -41,6 +41,7 @@ interface ServerMeta {
 interface FeaturedSectionProps {
   cafes: Cafe[];
   locale: string;
+  districts?: string[];
   serverMeta?: ServerMeta;
 }
 
@@ -76,7 +77,7 @@ function cafeCreatedTime(cafe: Cafe): number {
   return Number.isFinite(value) ? value : 0;
 }
 
-export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedSectionProps) {
+export default function FeaturedSection({ cafes, locale, districts, serverMeta }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const ts = useTranslations("search");
@@ -248,6 +249,7 @@ export default function FeaturedSection({ cafes, locale, serverMeta }: FeaturedS
           <GuidedFilterBar
             filter={filter}
             onChange={handleFilterChange}
+            districts={districts}
             viewMode={viewMode}
             onViewModeChange={setViewMode}
           />

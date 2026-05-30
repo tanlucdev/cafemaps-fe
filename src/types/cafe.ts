@@ -24,9 +24,12 @@ export interface PhotoCredit {
 export interface Cafe {
   id: string
   name: string
+  nameEn?: string | null
   slug: string
   address?: string | null
+  addressEn?: string | null
   district?: string | null
+  districtEn?: string | null
   district_legacy?: string | null
   googlePlaceId?: string | null
   googleMapsUrl?: string | null
@@ -36,13 +39,21 @@ export interface Cafe {
   priceMin?: number | null
   priceMax?: number | null
   oneLiner?: string | null
+  oneLinerEn?: string | null
+  onlineEn?: string | null
   description?: string | null
+  descriptionEn?: string | null
   vibes: string[]
+  vibesEn?: string[]
   purposes: string[]
+  purposesEn?: string[]
   amenities: string[]
+  amenitiesEn?: string[]
   signatureDrink?: string | null
+  signatureDrinkEn?: string | null
   parking_location?: string | null
   parkingLocation?: string | null
+  parkingLocationEn?: string | null
   images: string[]
   image_orientations: string[] | null
   coverImage?: string | null
