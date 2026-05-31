@@ -110,16 +110,18 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             orientations={cafe.image_orientations ?? []}
             cafeName={cafe.name}
           />
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setMenuOpen(true)}
-              className="border-border hover:border-accent hover:text-accent bg-card inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-sm font-semibold text-(--foreground-muted) transition-colors"
-            >
-              <BookOpen size={15} />
-              Menu
-            </button>
-          </div>
+          {cafe.menuImage && (
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                className="border-border hover:border-accent hover:text-accent bg-card inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-sm font-semibold text-(--foreground-muted) transition-colors"
+              >
+                <BookOpen size={15} />
+                Menu
+              </button>
+            </div>
+          )}
         </motion.div>
 
         <CafeDetailInfo
@@ -142,7 +144,14 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         mapsUrl={mapsUrl}
         websiteUrl={cafe.websiteUrl ?? cafeUrl}
       />
-      <CafeMenuModal open={menuOpen} onClose={() => setMenuOpen(false)} cafeName={cafe.name} />
+      {cafe.menuImage && (
+        <CafeMenuModal
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          cafeName={cafe.name}
+          menuImage={cafe.menuImage}
+        />
+      )}
     </article>
   );
 }

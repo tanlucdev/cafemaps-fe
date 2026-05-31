@@ -7,11 +7,10 @@ type CafeMenuModalProps = {
   open: boolean;
   onClose: () => void;
   cafeName: string;
+  menuImage: string;
 };
 
-const MOCK_MENU_IMAGE = "/mock/cafe-menu-sample.svg";
-
-export default function CafeMenuModal({ open, onClose, cafeName }: CafeMenuModalProps) {
+export default function CafeMenuModal({ open, onClose, cafeName, menuImage }: CafeMenuModalProps) {
   return (
     <Modal
       open={open}
@@ -24,7 +23,7 @@ export default function CafeMenuModal({ open, onClose, cafeName }: CafeMenuModal
       <div className="flex min-h-0 items-center justify-center px-3 py-3 sm:px-5 sm:py-5">
         <div className="flex min-h-0 items-center justify-center overflow-hidden rounded-2xl border border-(--border-light,#ECE4D6) bg-[#FAF6F1] dark:bg-[#241B15]">
           <Image
-            src={MOCK_MENU_IMAGE}
+            src={menuImage}
             alt={`Menu ${cafeName}`}
             width={900}
             height={1200}

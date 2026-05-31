@@ -57,6 +57,7 @@ export interface Cafe {
   images: string[]
   image_orientations: string[] | null
   coverImage?: string | null
+  menuImage?: string | null
   instagramUrl?: string | null
   photoCredits?: PhotoCredit[] | null
   isFeatured?: boolean | null

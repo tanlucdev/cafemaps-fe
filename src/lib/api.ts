@@ -237,6 +237,7 @@ type RawCafe = Omit<
   imageOrientations?: string[] | null
   image_orientation?: string[] | null
   imageOrientation?: string[] | null
+  menu_image?: string | null
   website_url?: string | null
   website?: string | null
   opening_time?: string | null
@@ -372,6 +373,7 @@ function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
       raw.image_orientation ??
       raw.imageOrientation ??
       null,
+    menuImage: raw.menuImage ?? raw.menu_image ?? null,
     isPublished: raw.isPublished ?? true,
     distanceKm: distanceKmValue,
     durationMin,
