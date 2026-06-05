@@ -47,6 +47,12 @@ const HERO_IMAGES = [
   "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=1600&q=85",
 ];
 
+const HERO_IMAGE_ALTS = [
+  "Không gian quán cà phê ấm cúng",
+  "Quầy pha chế cà phê cổ điển",
+  "Góc quán cà phê sáng tự nhiên",
+];
+
 function normalize(str: string) {
   return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
@@ -152,7 +158,7 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img}
-              alt=""
+              alt={HERO_IMAGE_ALTS[i]}
               aria-hidden
               className="h-full w-full object-cover"
             />

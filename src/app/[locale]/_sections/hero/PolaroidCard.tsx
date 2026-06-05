@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { cn } from "@/lib/utils";
 import type { HeroImage } from "./types";
 
@@ -48,15 +48,13 @@ export function PolaroidCard({
             isMobile ? "h-[54px] sm:h-[66px]" : "h-[150px] 2xl:h-[188px]",
           )}
         >
-          <Image
+          <img
             src={image.src}
-            alt=""
-            fill
-            sizes={isMobile ? "78px" : "188px"}
-            quality={58}
-            loading={priority ? undefined : "lazy"}
-            priority={priority}
-            className="object-cover"
+            alt={caption}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
         <p

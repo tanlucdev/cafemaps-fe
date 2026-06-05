@@ -49,6 +49,8 @@ export interface Cafe {
   purposesEn?: string[]
   amenities: string[]
   amenitiesEn?: string[]
+  tags: string[]
+  tagsEn?: string[]
   signatureDrink?: string | null
   signatureDrinkEn?: string | null
   parking_location?: string | null
@@ -86,6 +88,7 @@ export interface CafeFilter {
   vibe?: string[]
   purposes?: string[]
   purpose?: string[]
+  tags?: string[]
   priceRange?: string
   search?: string
   openNow?: boolean

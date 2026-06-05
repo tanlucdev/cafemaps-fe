@@ -285,6 +285,7 @@ function getGoodForItems(cafe: Cafe, locale: string): GoodForItem[] {
     ...cafe.purposes,
     ...cafe.vibes,
     ...cafe.amenities,
+    ...cafe.tags,
     cafe.oneLiner ?? "",
     cafe.oneLinerEn ?? "",
     cafe.description ?? "",
@@ -592,13 +593,16 @@ export default function CafeDetailInfo({
           )}
         </div>
 
-        {(cafe.vibes.length > 0 || cafe.purposes.length > 0) && (
+        {(cafe.vibes.length > 0 || cafe.purposes.length > 0 || cafe.tags.length > 0) && (
           <div className="flex flex-wrap gap-2 pt-0.5">
             {cafe.vibes.map((v) => (
               <Badge key={v} label={v} variant="vibe" className="px-3 py-1 text-[12.5px]" />
             ))}
             {cafe.purposes.map((p) => (
               <Badge key={p} label={p} className="px-3 py-1 text-[12.5px]" />
+            ))}
+            {cafe.tags.map((tag) => (
+              <Badge key={tag} label={tag} className="px-3 py-1 text-[12.5px]" />
             ))}
           </div>
         )}

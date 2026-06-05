@@ -164,7 +164,7 @@ function Step1({ data, setData, errors, photoUrls }: {
           <div className="grid grid-cols-4 gap-2 mt-2">
             {data.photos.map((_, i) => (
               <div key={i} className="relative aspect-square rounded-[10px] overflow-hidden bg-[#EDE4D6]">
-                <Image src={photoUrls[i]} alt="" fill className="object-cover" sizes="100px" unoptimized />
+                <Image src={photoUrls[i]} alt={`Ảnh quán đã chọn ${i + 1}`} fill className="object-cover" sizes="100px" unoptimized />
                 {i === 0 && (
                   <span className="absolute top-1 left-1 bg-[#C9870C] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
                     Bìa
@@ -197,7 +197,7 @@ function Step2({ data, photoUrls }: { data: FormData; photoUrls: string[] }) {
     <div className="space-y-4">
       {photoUrls[0] && (
         <div className="relative w-full h-32 rounded-[14px] overflow-hidden bg-[#EDE4D6]">
-          <Image src={photoUrls[0]} alt="" fill className="object-cover" sizes="600px" unoptimized />
+          <Image src={photoUrls[0]} alt="Ảnh bìa quán đã chọn" fill className="object-cover" sizes="600px" unoptimized />
           <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
         </div>
       )}
@@ -216,7 +216,7 @@ function Step2({ data, photoUrls }: { data: FormData; photoUrls: string[] }) {
         <div className="grid grid-cols-4 gap-2">
           {photoUrls.slice(1).map((url, i) => (
             <div key={i} className="relative aspect-square rounded-[10px] overflow-hidden bg-[#EDE4D6]">
-              <Image src={url} alt="" fill className="object-cover" sizes="100px" unoptimized />
+              <Image src={url} alt={`Ảnh quán đã chọn ${i + 2}`} fill className="object-cover" sizes="100px" unoptimized />
             </div>
           ))}
         </div>

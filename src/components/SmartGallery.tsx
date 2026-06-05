@@ -58,7 +58,7 @@ function MobileMainImage({ images, activeIndex, setActiveIndex, isPortrait, cafe
           <Image
             key={i}
             src={src}
-            alt={isActive ? `${cafeName} ${i + 1}` : ""}
+            alt={`${cafeName} ${i + 1}`}
             fill
             sizes="100vw"
             className={`object-cover transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0 pointer-events-none"}`}
@@ -229,7 +229,7 @@ export default function SmartGallery({
               >
                 <Image
                   src={url}
-                  alt=""
+                  alt={`${cafeName} thumbnail ${i + 1}`}
                   width={60}
                   height={44}
                   sizes="60px"
@@ -344,7 +344,7 @@ export default function SmartGallery({
                 <Image
                   key={index}
                   src={url}
-                  alt={isActive ? `${cafeName} ${index + 1}` : ""}
+                  alt={`${cafeName} ${index + 1}`}
                   fill
                   sizes="100vw"
                   className={`object-contain transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0 pointer-events-none"}`}
@@ -395,7 +395,7 @@ export default function SmartGallery({
                     index === lightboxIndex ? "ring-2 ring-white opacity-100" : "opacity-55 hover:opacity-85"
                   }`}
                 >
-                  <Image src={url} alt="" fill sizes="56px" className="object-cover" />
+                  <Image src={url} alt={`${cafeName} thumbnail ${index + 1}`} fill sizes="56px" className="object-cover" />
                 </button>
               ))}
             </div>

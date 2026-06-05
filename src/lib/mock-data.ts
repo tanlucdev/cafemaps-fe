@@ -1,6 +1,6 @@
 import type { Cafe } from "@/types/cafe"
 
-const MOCK_CAFE_ITEMS: Omit<Cafe, "image_orientations">[] = [
+const MOCK_CAFE_ITEMS: (Omit<Cafe, "image_orientations" | "tags"> & { tags?: string[] })[] = [
   {
     id: "1",
     name: "The Workshop Coffee",
@@ -905,5 +905,6 @@ const MOCK_CAFE_ITEMS: Omit<Cafe, "image_orientations">[] = [
 
 export const MOCK_CAFES: Cafe[] = MOCK_CAFE_ITEMS.map((cafe) => ({
   ...cafe,
+  tags: cafe.tags ?? [],
   image_orientations: null,
 }))

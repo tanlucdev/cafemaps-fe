@@ -100,7 +100,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
             >
               <Image
                 src={images[THUMB_VISIBLE]}
-                alt="more"
+                alt={`${altPrefix} thumbnail ${THUMB_VISIBLE + 1}`}
                 fill
                 sizes="72px"
                 className="object-cover opacity-40"
@@ -159,7 +159,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
                       active === i ? "ring-2 ring-white" : "opacity-50 hover:opacity-80",
                     ].join(" ")}
                   >
-                    <Image src={src} alt={`thumb ${i + 1}`} fill sizes="56px" className="object-cover" />
+                    <Image src={src} alt={`${altPrefix} thumbnail ${i + 1}`} fill sizes="56px" className="object-cover" />
                   </button>
                 ))}
               </div>

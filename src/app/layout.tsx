@@ -1,10 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { getSiteUrl, HOME_DESCRIPTION, HOME_TITLE, OG_IMAGE, SITE_NAME } from "@/lib/metadata";
+import {
+  DEFAULT_LOCALE,
+  getSiteUrl,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  normalizeLocale,
+  OG_IMAGE,
+  SITE_NAME,
+} from "@/lib/metadata";
+import GoogleAnalyticsProvider from "@/components/providers/GoogleAnalyticsProvider";
 import SpeedInsightsProvider from "@/components/providers/SpeedInsightsProvider";
+
+const NEXT_INTL_LOCALE_HEADER = "X-NEXT-INTL-LOCALE";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -76,11 +88,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const requestHeaders = await headers();
+  const locale = normalizeLocale(requestHeaders.get(NEXT_INTL_LOCALE_HEADER) ?? DEFAULT_LOCALE);
+
   return (
-    <html suppressHydrationWarning className={cn("h-full", plusJakarta.variable, lora.variable)}>
+    <html lang={locale} suppressHydrationWarning className={cn("h-full", plusJakarta.variable, lora.variable)}>
       <body className="flex min-h-full flex-col antialiased">
         {children}
+        <GoogleAnalyticsProvider />
         <Analytics />
         <SpeedInsightsProvider />
       </body>

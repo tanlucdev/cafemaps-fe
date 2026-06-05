@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 import { BACKGROUND_CAFES, MOBILE_POLAROIDS, POLAROIDS } from "./data";
@@ -20,14 +20,13 @@ export async function HeroBackground() {
                 cafe.tileClassName,
               )}
             >
-              <Image
+              <img
                 src={cafe.src}
-                alt=""
-                fill
-                sizes="(min-width: 1280px) 15vw, (min-width: 768px) 22vw, 38vw"
-                quality={48}
-                priority={index < 4}
-                className="object-cover brightness-[0.82] contrast-[1.03] saturate-[1.02] md:brightness-[0.74] md:contrast-[1.08] md:saturate-[1.08]"
+                alt={cafe.name}
+                loading={index < 4 ? "eager" : "lazy"}
+                fetchPriority={index < 4 ? "high" : "auto"}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover brightness-[0.82] contrast-[1.03] saturate-[1.02] md:brightness-[0.74] md:contrast-[1.08] md:saturate-[1.08]"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,6,3,0.12)_0%,rgba(10,6,3,0.22)_45%,rgba(10,6,3,0.4)_100%)]" />
             </div>

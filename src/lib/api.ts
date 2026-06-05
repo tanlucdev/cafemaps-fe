@@ -116,6 +116,7 @@ function buildQuery(filter?: CafeFilter, locale?: string | null): string {
   const purposes = localizeFilterValues(filter?.purposes ?? filter?.purpose, EN_PURPOSE_VALUES, apiLocale)
   if (vibes?.length) params.set("vibes", vibes.join(","))
   if (purposes?.length) params.set("purposes", purposes.join(","))
+  if (filter?.tags?.length) params.set("tags", filter.tags.join(","))
   if (filter?.sort && filter.sort !== "popular") params.set("sort", filter.sort)
   if (filter?.page !== undefined) params.set("page", String(filter.page))
   if (filter?.limit !== undefined) params.set("limit", String(filter.limit))
@@ -125,7 +126,7 @@ function buildQuery(filter?: CafeFilter, locale?: string | null): string {
 
 function fallbackCafes(filter?: CafeFilter): Cafe[] {
   let result = MOCK_CAFES
-  const { search, district, vibes, purposes, priceRange, sort } = filter ?? {}
+  const { search, district, vibes, purposes, tags, priceRange, sort } = filter ?? {}
 
   if (search?.trim()) {
     const q = search.toLowerCase()
@@ -141,6 +142,7 @@ function fallbackCafes(filter?: CafeFilter): Cafe[] {
   if (purposes?.length) {
     result = result.filter((cafe) => purposes.some((purpose) => cafe.purposes.includes(purpose)))
   }
+  if (tags?.length) result = result.filter((cafe) => tags.some((tag) => cafe.tags.includes(tag)))
   if (priceRange) {
     result = result.filter((cafe) => {
       const min = cafe.priceMin ?? 0
@@ -207,6 +209,7 @@ type RawCafe = Omit<
   | "vibes"
   | "purposes"
   | "amenities"
+  | "tags"
   | "images"
   | "image_orientations"
   | "isPublished"
@@ -232,6 +235,9 @@ type RawCafe = Omit<
   amenities?: string[]
   amenitiesEn?: string[]
   amenities_en?: string[]
+  tags?: string[]
+  tagsEn?: string[]
+  tags_en?: string[]
   images?: string[]
   image_orientations?: string[] | null
   imageOrientations?: string[] | null
@@ -332,10 +338,12 @@ function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
   const vibesEn = raw.vibesEn ?? raw.vibes_en
   const purposesEn = raw.purposesEn ?? raw.purposes_en
   const amenitiesEn = raw.amenitiesEn ?? raw.amenities_en
+  const tagsEn = raw.tagsEn ?? raw.tags_en
   const parkingLocationEn = raw.parkingLocationEn ?? raw.parking_location_en
   const vibes = raw.vibes ?? raw.vibe ?? []
   const purposes = raw.purposes ?? raw.purpose ?? []
   const amenities = raw.amenities ?? []
+  const tags = raw.tags ?? []
   const parkingLocation = raw.parkingLocation ?? raw.parking_location ?? null
 
   return {
@@ -360,6 +368,8 @@ function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
     purposesEn,
     amenities: pickLocalized(apiLocale, amenities, amenitiesEn),
     amenitiesEn,
+    tags: pickLocalized(apiLocale, tags, tagsEn),
+    tagsEn,
     openingTime: raw.openingTime ?? raw.opening_time ?? raw.opening_time_local ?? null,
     closingTime: raw.closingTime ?? raw.closing_time ?? raw.closing_time_local ?? null,
     websiteUrl: raw.websiteUrl ?? raw.website_url ?? raw.website ?? null,
