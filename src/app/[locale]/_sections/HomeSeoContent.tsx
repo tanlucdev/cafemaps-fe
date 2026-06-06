@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { normalizeLocale } from "@/lib/metadata";
+import { SITE_NAME, normalizeLocale } from "@/lib/metadata";
 
 type HomeSeoContentProps = {
   locale: string;
@@ -311,14 +311,14 @@ export default function HomeSeoContent({ locale }: HomeSeoContentProps) {
     <section className="bg-[#fffaf2] px-4 py-14 text-[#2c1a0e] sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(320px,0.42fr)] lg:gap-12">
-          <article className="max-w-3xl">
-            <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-[#a86113] uppercase">
+          <article className="h-entry max-w-3xl">
+            <p className="p-category mb-3 text-xs font-semibold tracking-[0.18em] text-[#a86113] uppercase">
               {copy.eyebrow}
             </p>
-            <h2 className="font-lora text-3xl leading-tight font-bold text-[#160b05] sm:text-4xl">
+            <h2 className="p-name font-lora text-3xl leading-tight font-bold text-[#160b05] sm:text-4xl">
               {copy.title}
             </h2>
-            <div className="mt-5 space-y-4 text-[15px] leading-7 text-[#5c4129] sm:text-base sm:leading-8">
+            <div className="e-content p-summary mt-5 space-y-4 text-[15px] leading-7 text-[#5c4129] sm:text-base sm:leading-8">
               {copy.intro.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
@@ -382,6 +382,17 @@ export default function HomeSeoContent({ locale }: HomeSeoContentProps) {
           </article>
 
           <aside className="space-y-8">
+            <div className="h-card rounded-lg border border-[#ead8bd] bg-white/72 p-4 text-sm leading-6 text-[#6d5036]">
+              <a className="u-logo sr-only" href="/image/logo.png">Cafe Maps logo</a>
+              <p className="p-org font-semibold text-[#2c1a0e]">{SITE_NAME}</p>
+              <Link className="u-url mt-1 inline-flex font-semibold text-[#5d3512]" href="/">
+                cafemaps.net
+              </Link>
+              <p className="p-note mt-2">
+                {copy.intro[0]}
+              </p>
+            </div>
+
             <div>
               <h3 className="text-lg font-bold text-[#160b05]">{copy.areaTitle}</h3>
               <div className="mt-4 grid gap-3">
@@ -412,9 +423,9 @@ export default function HomeSeoContent({ locale }: HomeSeoContentProps) {
           <h3 className="text-xl font-bold text-[#160b05]">{copy.faqTitle}</h3>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {copy.faqs.map((item) => (
-              <section key={item.question} className="rounded-lg border border-[#ead8bd] bg-white/72 p-5">
-                <h4 className="font-semibold text-[#2c1a0e]">{item.question}</h4>
-                <p className="mt-2 text-sm leading-6 text-[#6d5036]">{item.answer}</p>
+              <section key={item.question} className="h-entry rounded-lg border border-[#ead8bd] bg-white/72 p-5">
+                <h4 className="p-name font-semibold text-[#2c1a0e]">{item.question}</h4>
+                <p className="e-content mt-2 text-sm leading-6 text-[#6d5036]">{item.answer}</p>
               </section>
             ))}
           </div>
