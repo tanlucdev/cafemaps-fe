@@ -138,6 +138,11 @@
       "group": "Group meeting",
       "solo": "Solo chill",
       "friends": "Friends hangout"
+    },
+    "tags": {
+      "label": "Amenities",
+      "outdoor": "Outdoor seating",
+      "smoking": "Smoking allowed"
     }
   },
   "cafe": {

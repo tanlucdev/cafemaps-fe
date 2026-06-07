@@ -7,7 +7,7 @@ import { routing } from "@/i18n/routing";
 import HeroSection from "../_sections/HeroSection";
 import FeaturedCafesSectionLoader from "../_sections/FeaturedCafesSectionLoader";
 import FeaturedCafesSkeleton from "../_sections/FeaturedCafesSkeleton";
-import HomeSeoContent from "../_sections/HomeSeoContent";
+// import HomeSeoContent from "../_sections/HomeSeoContent";
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -40,7 +40,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <Suspense fallback={<FeaturedCafesSkeleton />}>
         <FeaturedCafesSectionLoader locale={locale} />
       </Suspense>
-      <HomeSeoContent locale={locale} />
+      {/* <HomeSeoContent locale={locale} /> */}
     </>
   );
 }

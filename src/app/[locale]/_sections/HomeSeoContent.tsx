@@ -162,6 +162,8 @@ const content: Record<"vi" | "en", SeoContent> = {
     closing: [
       "Một thành phố nhiều quán như TP.HCM rất thú vị, nhưng cũng dễ khiến bạn mất thời gian chọn lựa. Khi mỗi quán được nhìn qua khu vực, phong cách, mục đích và trạng thái mở cửa, bạn có thể ra quyết định nhanh hơn mà vẫn giữ được cảm giác khám phá. Cafe Maps hướng tới việc gom những tín hiệu nhỏ đó lại trong một trải nghiệm gọn gàng: tìm quán hợp buổi sáng, quán đủ yên để làm việc, quán đẹp để gặp bạn, hoặc một góc mới để cuối tuần đổi không khí.",
       "Dù bạn thích cà phê sữa đá quen thuộc, espresso gọn gàng, cold brew nhẹ, latte nóng hay một món trà trái cây dễ uống, điều quan trọng nhất vẫn là không gian đúng lúc. Một quán phù hợp có thể làm buổi làm việc trơn tru hơn, cuộc trò chuyện ấm hơn và một ngày bình thường có thêm điểm dừng dễ nhớ.",
+      "Hãy xem việc chọn quán như chọn nhịp cho một phần nhỏ trong ngày. Một nơi có thể hợp để bắt đầu buổi sáng, nơi khác hợp để kết thúc buổi tối, và một nơi khác nữa chỉ dành cho những hôm cần yên tĩnh để hoàn thành vài việc còn dang dở. Khi thông tin được đặt cạnh nhau rõ ràng, mỗi quyết định trở nên nhẹ hơn và bạn có thêm thời gian tận hưởng ly cà phê thay vì lướt qua quá nhiều lựa chọn.",
+      "Vì vậy, trang chủ không chỉ là nơi bắt đầu tìm kiếm mà còn là một cẩm nang ngắn để bạn định hình nhu cầu trước khi mở bản đồ. Bạn có thể đi từ mục đích, khu vực, thời điểm trong ngày rồi mới chọn quán cụ thể. Cách này giúp kết quả tìm kiếm tự nhiên hơn, đặc biệt khi bạn cần quyết định nhanh nhưng vẫn muốn chọn đúng không khí.",
     ],
     exploreLabel: "Khám phá danh sách quán",
     blogLabel: "Đọc thêm kinh nghiệm chọn quán",
@@ -298,6 +300,8 @@ const content: Record<"vi" | "en", SeoContent> = {
     closing: [
       "A city with so many cafes is exciting, but it can also make choosing slow. When each cafe is framed by area, style, purpose, and opening status, you can decide quickly while still keeping the pleasure of discovery. Cafe Maps brings those small signals together so you can find a morning coffee, a steady work corner, a warm place to meet a friend, or a new weekend stop without starting from scratch every time.",
       "Whether you prefer Vietnamese iced coffee, a neat espresso, cold brew, a hot latte, or a light fruit tea, the most important thing is the space around the drink. The right cafe can make work feel easier, conversation feel warmer, and an ordinary day feel like it has a place worth remembering.",
+      "Think of choosing a cafe as choosing the rhythm for a small part of your day. One place may fit a bright morning, another may suit a slow evening, and another may be perfect for the hours when you need quiet focus. When the signals are easy to compare, the decision feels lighter and you can spend more time enjoying the coffee instead of scrolling through too many options.",
+      "That is why the homepage is more than a starting point for search. It works as a short guide for shaping your need before opening the map. You can begin with purpose, area, time of day, and practical details, then move toward a specific cafe. This makes the search feel more natural, especially when you need a quick decision but still want the atmosphere to be right.",
     ],
     exploreLabel: "Explore cafe listings",
     blogLabel: "Read more cafe tips",

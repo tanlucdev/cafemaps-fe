@@ -138,6 +138,11 @@
       "group": "Họp nhóm",
       "solo": "Chill một mình",
       "friends": "Gặp bạn bè"
+    },
+    "tags": {
+      "label": "Tiện ích",
+      "outdoor": "Ngoài trời",
+      "smoking": "Chỗ hút thuốc"
     }
   },
   "cafe": {

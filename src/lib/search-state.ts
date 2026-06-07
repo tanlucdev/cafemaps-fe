@@ -1,4 +1,5 @@
 import type { CafeFilter } from "@/types/cafe"
+import { VIBES } from "@/types/cafe"
 
 export const LAST_SEARCH_STORAGE_KEY = "cafemaps_last_search"
 
@@ -23,10 +24,11 @@ export function splitParam(value: string | null): string[] | undefined {
 type SearchParamsReader = Pick<URLSearchParams, "get" | "getAll">
 
 export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFilter {
-  const vibes =
-    splitParam(searchParams.get("tags")) ??
-    splitParam(searchParams.get("vibes")) ??
-    searchParams.getAll("vibe")
+  const tagParams = splitParam(searchParams.get("tags")) ?? []
+  const legacyVibes = tagParams.filter((tag) => VIBES.includes(tag as (typeof VIBES)[number]))
+  const tags = tagParams.filter((tag) => !legacyVibes.includes(tag))
+  const vibes = splitParam(searchParams.get("vibes")) ?? searchParams.getAll("vibe")
+  const allVibes = [...vibes, ...legacyVibes]
   const purposes = splitParam(searchParams.get("purposes")) ?? searchParams.getAll("purpose")
   const rawSort = searchParams.get("sort")
   const sort: SearchSort | undefined =
@@ -36,8 +38,9 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
 
   return {
     search: searchParams.get("search") ?? undefined,
-    vibes: vibes.length ? vibes : undefined,
+    vibes: allVibes.length ? allVibes : undefined,
     purposes: purposes.length ? purposes : undefined,
+    tags: tags.length ? tags : undefined,
     district: searchParams.get("district") ?? undefined,
     priceRange: searchParams.get("priceRange") ?? undefined,
     openNow:
@@ -61,8 +64,9 @@ export function buildSearchParams(filter: CafeFilter, sort: SearchSort, page = 1
   const params = new URLSearchParams()
 
   if (filter.search) params.set("search", filter.search)
-  if (filter.vibes?.length) params.set("tags", filter.vibes.join(","))
+  if (filter.vibes?.length) params.set("vibes", filter.vibes.join(","))
   if (filter.purposes?.length) params.set("purposes", filter.purposes.join(","))
+  if (filter.tags?.length) params.set("tags", filter.tags.join(","))
   if (filter.district) params.set("district", filter.district)
   if (filter.priceRange) params.set("priceRange", filter.priceRange)
   if (filter.openNow) params.set("open", "true")
@@ -81,6 +85,7 @@ export function hasActiveSearchFilters(filter: CafeFilter): boolean {
     filter.search ||
       filter.vibes?.length ||
       filter.purposes?.length ||
+      filter.tags?.length ||
       filter.district ||
       filter.priceRange ||
       filter.openNow ||

@@ -32,6 +32,22 @@ const EN_PURPOSE_VALUES: Record<string, string> = {
   "gặp bạn bè": "Friends",
 }
 
+const EN_TAG_VALUES: Record<string, string> = {
+  "ngoài trời": "outdoor seating",
+  "chỗ hút thuốc": "smoking allowed",
+}
+
+const INFERRED_TAG_RULES = [
+  {
+    terms: ["ngoài trời", "sân vườn", "ban công", "rooftop", "terrace", "garden", "outdoor", "balcony"],
+    labels: { vi: "ngoài trời", en: "outdoor seating" },
+  },
+  {
+    terms: ["hút thuốc", "khói thuốc", "cho phép hút thuốc", "smoking", "smoking allowed"],
+    labels: { vi: "chỗ hút thuốc", en: "smoking allowed" },
+  },
+]
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -114,9 +130,10 @@ function buildQuery(filter?: CafeFilter, locale?: string | null): string {
   if (filter?.openNow) params.set("openNow", "true")
   const vibes = localizeFilterValues(filter?.vibes ?? filter?.vibe, EN_VIBE_VALUES, apiLocale)
   const purposes = localizeFilterValues(filter?.purposes ?? filter?.purpose, EN_PURPOSE_VALUES, apiLocale)
+  const tags = localizeFilterValues(filter?.tags, EN_TAG_VALUES, apiLocale)
   if (vibes?.length) params.set("vibes", vibes.join(","))
   if (purposes?.length) params.set("purposes", purposes.join(","))
-  if (filter?.tags?.length) params.set("tags", filter.tags.join(","))
+  if (tags?.length) params.set("tags", tags.join(","))
   if (filter?.sort && filter.sort !== "popular") params.set("sort", filter.sort)
   if (filter?.page !== undefined) params.set("page", String(filter.page))
   if (filter?.limit !== undefined) params.set("limit", String(filter.limit))
@@ -142,7 +159,12 @@ function fallbackCafes(filter?: CafeFilter): Cafe[] {
   if (purposes?.length) {
     result = result.filter((cafe) => purposes.some((purpose) => cafe.purposes.includes(purpose)))
   }
-  if (tags?.length) result = result.filter((cafe) => tags.some((tag) => cafe.tags.includes(tag)))
+  if (tags?.length) {
+    result = result.filter((cafe) => {
+      const cafeTags = withInferredTags(cafe as RawCafe, cafe.tags, "vi").map(normalizeLabelKey)
+      return tags.some((tag) => cafeTags.includes(normalizeLabelKey(tag)))
+    })
+  }
   if (priceRange) {
     result = result.filter((cafe) => {
       const min = cafe.priceMin ?? 0
@@ -301,6 +323,41 @@ function pickLocalized<T>(locale: ApiLocale, base: T, localized: T | null | unde
   return (localized ?? base) as T
 }
 
+function normalizeLabelKey(value: string): string {
+  return value.trim().toLowerCase()
+}
+
+function withInferredTags(raw: RawCafe, tags: string[], locale: ApiLocale): string[] {
+  const source = [
+    ...tags,
+    ...(raw.amenities ?? []),
+    ...(raw.amenitiesEn ?? raw.amenities_en ?? []),
+    ...(raw.vibes ?? raw.vibe ?? []),
+    ...(raw.vibesEn ?? raw.vibes_en ?? []),
+    raw.oneLiner ?? "",
+    raw.oneLinerEn ?? raw.one_liner_en ?? raw.onlineEn ?? raw.online_en ?? raw.oneLineEn ?? raw.one_line_en ?? "",
+    raw.description ?? "",
+    raw.descriptionEn ?? raw.description_en ?? "",
+  ]
+    .join(" ")
+    .toLowerCase()
+
+  const next = [...tags]
+  const seen = new Set(next.map(normalizeLabelKey))
+
+  for (const rule of INFERRED_TAG_RULES) {
+    const label = locale === "en" ? rule.labels.en : rule.labels.vi
+    const equivalents = [...rule.terms, rule.labels.vi, rule.labels.en].map(normalizeLabelKey)
+    const hasEquivalent = equivalents.some((tag) => seen.has(tag))
+    if (rule.terms.some((term) => source.includes(term)) && !hasEquivalent) {
+      next.push(label)
+      seen.add(normalizeLabelKey(label))
+    }
+  }
+
+  return next
+}
+
 function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
   const apiLocale = normalizeCafeLocale(locale)
   let lat = raw.lat ?? null
@@ -345,6 +402,7 @@ function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
   const amenities = raw.amenities ?? []
   const tags = raw.tags ?? []
   const parkingLocation = raw.parkingLocation ?? raw.parking_location ?? null
+  const localizedTags = pickLocalized(apiLocale, tags, tagsEn)
 
   return {
     ...raw,
@@ -368,7 +426,7 @@ function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
     purposesEn,
     amenities: pickLocalized(apiLocale, amenities, amenitiesEn),
     amenitiesEn,
-    tags: pickLocalized(apiLocale, tags, tagsEn),
+    tags: withInferredTags(raw, localizedTags, apiLocale),
     tagsEn,
     openingTime: raw.openingTime ?? raw.opening_time ?? raw.opening_time_local ?? null,
     closingTime: raw.closingTime ?? raw.closing_time ?? raw.closing_time_local ?? null,

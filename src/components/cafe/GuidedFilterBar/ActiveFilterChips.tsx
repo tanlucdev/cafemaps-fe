@@ -7,6 +7,8 @@ import {
   PRICE_OPTIONS,
   VIBE_TRANSLATION_KEYS,
   PURPOSE_TRANSLATION_KEYS,
+  TAG_TRANSLATION_KEYS,
+  type FilterTag,
 } from "@/components/cafe/constants/filter-constants";
 import type { Vibe, Purpose } from "@/types/cafe";
 
@@ -18,6 +20,11 @@ interface ActiveFilterChipsProps {
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function getTagLabel(tag: string, translate: ReturnType<typeof useTranslations>) {
+  const key = TAG_TRANSLATION_KEYS[tag as FilterTag];
+  return key ? translate(`tags.${key}`) : tag;
 }
 
 export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterChipsProps) {
@@ -34,6 +41,10 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
       label: tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p as Purpose]}`),
       remove: () =>
         onChange({ ...filter, purposes: filter.purposes?.filter((x) => x !== p) }),
+    })),
+    ...(filter.tags ?? []).map((tag) => ({
+      label: getTagLabel(tag, tf),
+      remove: () => onChange({ ...filter, tags: filter.tags?.filter((x) => x !== tag) }),
     })),
     ...(filter.priceRange
       ? [

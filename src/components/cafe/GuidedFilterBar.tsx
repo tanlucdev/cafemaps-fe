@@ -31,6 +31,7 @@ export default function GuidedFilterBar({
     staged,
     toggleVibeStaged,
     togglePurposeStaged,
+    toggleTagStaged,
     setPriceStaged,
     setDistrictStaged,
     applyStaged,
@@ -71,6 +72,7 @@ export default function GuidedFilterBar({
             dropdownRef={dropdownRef}
             onToggleVibeStaged={toggleVibeStaged}
             onTogglePurposeStaged={togglePurposeStaged}
+            onToggleTagStaged={toggleTagStaged}
             onSetPriceStaged={setPriceStaged}
             onSetDistrictStaged={setDistrictStaged}
             districts={districts}

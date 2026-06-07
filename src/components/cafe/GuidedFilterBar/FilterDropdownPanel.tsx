@@ -11,8 +11,12 @@ import {
   PRICE_OPTIONS,
   VIBE_ICONS,
   PURPOSE_ICONS,
+  FILTER_TAGS,
+  TAG_ICONS,
   VIBE_TRANSLATION_KEYS,
   PURPOSE_TRANSLATION_KEYS,
+  TAG_TRANSLATION_KEYS,
+  type FilterTag,
 } from "@/components/cafe/constants/filter-constants";
 import {
   Select,
@@ -25,6 +29,7 @@ import {
 interface StagedFilter {
   vibes: Vibe[];
   purposes: Purpose[];
+  tags: FilterTag[];
   price: string | undefined;
   district: string | undefined;
 }
@@ -36,6 +41,7 @@ interface FilterDropdownPanelProps {
   districts?: string[];
   onToggleVibeStaged: (v: Vibe) => void;
   onTogglePurposeStaged: (p: Purpose) => void;
+  onToggleTagStaged: (tag: FilterTag) => void;
   onSetPriceStaged: (val: string) => void;
   onSetDistrictStaged: (val: string) => void;
   onApply: () => void;
@@ -49,6 +55,7 @@ export function FilterDropdownPanel({
   districts,
   onToggleVibeStaged,
   onTogglePurposeStaged,
+  onToggleTagStaged,
   onSetPriceStaged,
   onSetDistrictStaged,
   onApply,
@@ -61,6 +68,7 @@ export function FilterDropdownPanel({
   const stagedActiveCount =
     staged.vibes.length +
     staged.purposes.length +
+    staged.tags.length +
     (staged.price != null ? 1 : 0) +
     (staged.district ? 1 : 0);
 
@@ -75,7 +83,7 @@ export function FilterDropdownPanel({
       )}
     >
       <div className="rounded-2xl border border-[#E0D3C0] bg-white shadow-[0_16px_48px_rgba(40,22,4,0.16)] dark:border-[#3A2A20] dark:bg-[#1C1210]">
-        <div className="grid gap-6 p-6 sm:grid-cols-3">
+        <div className="grid gap-6 p-6 sm:grid-cols-4">
           {/* Phong cách */}
           <div>
             <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
@@ -119,6 +127,30 @@ export function FilterDropdownPanel({
                 >
                   {PURPOSE_ICONS[p]}
                   {tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p]}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tiện ích */}
+          <div>
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+              {tf("tags.label")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {FILTER_TAGS.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => onToggleTagStaged(tag)}
+                  className={cn(
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                    staged.tags.includes(tag)
+                      ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
+                      : "hover:border-accent hover:text-accent border-[#E0D3C0] text-[#5C4A2F]",
+                  )}
+                >
+                  {TAG_ICONS[tag]}
+                  {tf(`tags.${TAG_TRANSLATION_KEYS[tag]}`)}
                 </button>
               ))}
             </div>

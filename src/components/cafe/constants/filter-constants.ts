@@ -11,6 +11,8 @@ import {
   BookOpen,
   Users,
   User,
+  TreePine,
+  Cigarette,
 } from "lucide-react";
 import { createElement } from "react";
 import type { Vibe, Purpose } from "@/types/cafe";
@@ -28,6 +30,9 @@ export const PRICE_OPTIONS: { value: string; translationKey: string }[] = [
 ];
 
 export const DISTANCE_OPTIONS: { km: number }[] = [{ km: 2 }, { km: 5 }, { km: 10 }];
+
+export const FILTER_TAGS = ["ngoài trời", "chỗ hút thuốc"] as const;
+export type FilterTag = (typeof FILTER_TAGS)[number];
 
 // Map from Vibe type value to translation key in filters.vibes
 export const VIBE_TRANSLATION_KEYS: Record<Vibe, string> = {
@@ -59,6 +64,11 @@ export const PRICE_RANGE_TRANSLATION_KEYS: Record<string, string> = {
   above_150k: "above_150k",
 };
 
+export const TAG_TRANSLATION_KEYS: Record<FilterTag, string> = {
+  "ngoài trời": "outdoor",
+  "chỗ hút thuốc": "smoking",
+};
+
 export const VIBE_ICONS: Record<Vibe, ReactNode> = {
   "yên tĩnh": createElement(Minus, { size: 11 }),
   "nhộn nhịp": createElement(Zap, { size: 11 }),
@@ -77,4 +87,9 @@ export const PURPOSE_ICONS: Record<Purpose, ReactNode> = {
   "họp nhóm": createElement(Users, { size: 11 }),
   "chill một mình": createElement(User, { size: 11 }),
   "gặp bạn bè": createElement(Users, { size: 11 }),
+};
+
+export const TAG_ICONS: Record<FilterTag, ReactNode> = {
+  "ngoài trời": createElement(TreePine, { size: 11 }),
+  "chỗ hút thuốc": createElement(Cigarette, { size: 11 }),
 };

@@ -181,6 +181,17 @@ const FALLBACK_GOOD_FOR = [
   { emoji: "💻", labels: { vi: "Làm việc remote", en: "Remote work" } },
 ];
 
+const DISPLAY_TAG_RULES = [
+  {
+    terms: ["ngoài trời", "sân vườn", "ban công", "rooftop", "terrace", "garden", "outdoor", "balcony"],
+    labels: { vi: "ngoài trời", en: "outdoor seating" },
+  },
+  {
+    terms: ["hút thuốc", "khói thuốc", "cho phép hút thuốc", "smoking", "smoking allowed"],
+    labels: { vi: "chỗ hút thuốc", en: "smoking allowed" },
+  },
+];
+
 const AMENITY_LABELS: Record<string, { vi: string; en: string }> = {
   wifi: { vi: "wifi", en: "wifi" },
   "điều hoà": { vi: "điều hoà", en: "air conditioning" },
@@ -310,6 +321,49 @@ function getGoodForItems(cafe: Cafe, locale: string): GoodForItem[] {
           label: isEnglish ? item.labels.en : item.labels.vi,
         }))
   ).slice(0, 5);
+}
+
+function getDisplayTags(cafe: Cafe, locale: string): string[] {
+  const isEnglish = isEnglishLocale(locale);
+  const amenityKeys = new Set(
+    cafe.amenities.flatMap((amenity) => {
+      const labels = AMENITY_LABELS[normalizeLabelKey(amenity)];
+      return labels
+        ? [amenity, labels.vi, labels.en].map(normalizeLabelKey)
+        : [normalizeLabelKey(amenity)];
+    }),
+  );
+  const source = [
+    ...cafe.tags,
+    ...cafe.amenities,
+    ...cafe.vibes,
+    cafe.oneLiner ?? "",
+    cafe.oneLinerEn ?? "",
+    cafe.description ?? "",
+    cafe.descriptionEn ?? "",
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const tags = cafe.tags.filter((tag) => !amenityKeys.has(normalizeLabelKey(tag)));
+  const seen = new Set(tags.map((tag) => normalizeLabelKey(tag)));
+
+  for (const rule of DISPLAY_TAG_RULES) {
+    const label = isEnglish ? rule.labels.en : rule.labels.vi;
+    if (amenityKeys.has(normalizeLabelKey(label))) continue;
+    const equivalentTags = [...rule.terms, rule.labels.vi, rule.labels.en].map(normalizeLabelKey);
+    const hasEquivalentTag = equivalentTags.some((tag) => seen.has(tag));
+    if (
+      rule.terms.some((term) => source.includes(term)) &&
+      !hasEquivalentTag &&
+      !seen.has(normalizeLabelKey(label))
+    ) {
+      tags.push(label);
+      seen.add(normalizeLabelKey(label));
+    }
+  }
+
+  return tags;
 }
 
 function normalizeLabelKey(value: string): string {
@@ -451,6 +505,7 @@ export default function CafeDetailInfo({
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const aboutText = getCafeAboutText(cafe, locale);
   const goodForItems = getGoodForItems(cafe, locale);
+  const displayTags = getDisplayTags(cafe, locale);
   const idealForLabel = t("detail.idealFor");
   const distanceLabel = t("detail.distanceFromYou", { distance: distanceText });
   const parkingLabel = t("detail.parking");
@@ -593,7 +648,7 @@ export default function CafeDetailInfo({
           )}
         </div>
 
-        {(cafe.vibes.length > 0 || cafe.purposes.length > 0 || cafe.tags.length > 0) && (
+        {(cafe.vibes.length > 0 || cafe.purposes.length > 0 || displayTags.length > 0) && (
           <div className="flex flex-wrap gap-2 pt-0.5">
             {cafe.vibes.map((v) => (
               <Badge key={v} label={v} variant="vibe" className="px-3 py-1 text-[12.5px]" />
@@ -601,7 +656,7 @@ export default function CafeDetailInfo({
             {cafe.purposes.map((p) => (
               <Badge key={p} label={p} className="px-3 py-1 text-[12.5px]" />
             ))}
-            {cafe.tags.map((tag) => (
+            {displayTags.map((tag) => (
               <Badge key={tag} label={tag} className="px-3 py-1 text-[12.5px]" />
             ))}
           </div>

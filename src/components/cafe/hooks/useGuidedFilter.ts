@@ -2,10 +2,12 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { CafeFilter as Filter, Vibe, Purpose } from "@/types/cafe";
+import type { FilterTag } from "@/components/cafe/constants/filter-constants";
 
 interface StagedFilter {
   vibes: Vibe[];
   purposes: Purpose[];
+  tags: FilterTag[];
   price: string | undefined;
   district: string | undefined;
 }
@@ -22,6 +24,7 @@ interface UseGuidedFilterReturn {
   staged: StagedFilter;
   toggleVibeStaged: (v: Vibe) => void;
   togglePurposeStaged: (p: Purpose) => void;
+  toggleTagStaged: (tag: FilterTag) => void;
   setPriceStaged: (val: string) => void;
   setDistrictStaged: (val: string) => void;
   applyStaged: () => void;
@@ -51,6 +54,7 @@ export function useGuidedFilter(
   const [staged, setStaged] = useState<StagedFilter>({
     vibes: [],
     purposes: [],
+    tags: [],
     price: undefined,
     district: undefined,
   });
@@ -66,6 +70,7 @@ export function useGuidedFilter(
     setStaged({
       vibes: (filter.vibes ?? []) as Vibe[],
       purposes: (filter.purposes ?? []) as Purpose[],
+      tags: (filter.tags ?? []) as FilterTag[],
       price: filter.priceRange,
       district: filter.district,
     });
@@ -117,6 +122,15 @@ export function useGuidedFilter(
     }));
   }, []);
 
+  const toggleTagStaged = useCallback((tag: FilterTag) => {
+    setStaged((prev) => ({
+      ...prev,
+      tags: prev.tags.includes(tag)
+        ? prev.tags.filter((x) => x !== tag)
+        : [...prev.tags, tag],
+    }));
+  }, []);
+
   const setPriceStaged = useCallback((val: string) => {
     setStaged((prev) => ({
       ...prev,
@@ -136,6 +150,7 @@ export function useGuidedFilter(
       ...filter,
       vibes: staged.vibes.length > 0 ? staged.vibes : undefined,
       purposes: staged.purposes.length > 0 ? staged.purposes : undefined,
+      tags: staged.tags.length > 0 ? staged.tags : undefined,
       priceRange: staged.price,
       district: staged.district,
     });
@@ -174,6 +189,7 @@ export function useGuidedFilter(
   const activeCount =
     (filter.vibes?.length ?? 0) +
     (filter.purposes?.length ?? 0) +
+    (filter.tags?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
     (filter.district ? 1 : 0) +
     (filter.openNow ? 1 : 0);
@@ -187,6 +203,7 @@ export function useGuidedFilter(
     staged,
     toggleVibeStaged,
     togglePurposeStaged,
+    toggleTagStaged,
     setPriceStaged,
     setDistrictStaged,
     applyStaged,

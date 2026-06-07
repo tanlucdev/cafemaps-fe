@@ -80,8 +80,13 @@ const tagColors: Record<string, string> = {
   "họp nhóm": PEACH_TAG,
   "ngồi lâu": GOLD_TAG,
   "sân vườn": SAGE_TAG,
+  "ngoài trời": SAGE_TAG,
+  "outdoor seating": SAGE_TAG,
+  outdoor: SAGE_TAG,
   "thú cưng": GOLD_TAG,
   pet: GOLD_TAG,
+  "chỗ hút thuốc": WARM_TAG,
+  "smoking allowed": WARM_TAG,
 };
 
 export default function Badge({

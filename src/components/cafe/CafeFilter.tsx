@@ -13,6 +13,12 @@ import {
 } from "@/components/ui/select";
 import { VIBES, PURPOSES, AREAS, type CafeFilter as Filter } from "@/types/cafe";
 import {
+  FILTER_TAGS,
+  TAG_ICONS,
+  TAG_TRANSLATION_KEYS,
+  type FilterTag,
+} from "@/components/cafe/constants/filter-constants";
+import {
   Leaf,
   Coffee,
   Lightbulb,
@@ -68,7 +74,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
   const t = useTranslations("filters");
   const [staged, setStaged] = useState<Filter>(filter);
 
-  function toggleArray<T extends string>(key: "vibes" | "purposes", value: T) {
+  function toggleArray<T extends string>(key: "vibes" | "purposes" | "tags", value: T) {
     const current = (staged[key] ?? []) as T[];
     const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
     setStaged((s) => ({ ...s, [key]: next }));
@@ -137,6 +143,28 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
               </Badge>
             );
           })}
+        </div>
+      </section>
+
+      {/* Tags */}
+      <section>
+        <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
+          {t("tags.label")}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {FILTER_TAGS.map((tag) => (
+            <Badge
+              key={tag}
+              label={tag}
+              variant="default"
+              active={staged.tags?.includes(tag)}
+              onClick={() => toggleArray("tags", tag)}
+              className="flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm"
+            >
+              {TAG_ICONS[tag]}
+              {t(`tags.${TAG_TRANSLATION_KEYS[tag as FilterTag]}`)}
+            </Badge>
+          ))}
         </div>
       </section>
 
