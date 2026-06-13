@@ -183,7 +183,16 @@ const FALLBACK_GOOD_FOR = [
 
 const DISPLAY_TAG_RULES = [
   {
-    terms: ["ngoài trời", "sân vườn", "ban công", "rooftop", "terrace", "garden", "outdoor", "balcony"],
+    terms: [
+      "ngoài trời",
+      "sân vườn",
+      "ban công",
+      "rooftop",
+      "terrace",
+      "garden",
+      "outdoor",
+      "balcony",
+    ],
     labels: { vi: "ngoài trời", en: "outdoor seating" },
   },
   {
@@ -410,6 +419,16 @@ function getCafeAboutText(cafe: Cafe, locale: string): string | null {
   );
 }
 
+function getTextParagraphs(text: string): string[] {
+  return text
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.replace(/\n/g, " ").trim())
+    .filter(Boolean);
+}
+
 function getAmenityIcon(amenity: string) {
   const key = Object.keys(AMENITY_ICONS).find((k) => amenity.toLowerCase().includes(k));
   return key ? AMENITY_ICONS[key] : <Wifi size={14} />;
@@ -504,6 +523,7 @@ export default function CafeDetailInfo({
   const rating = getCafeRating(cafe);
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const aboutText = getCafeAboutText(cafe, locale);
+  const aboutParagraphs = aboutText ? getTextParagraphs(aboutText) : [];
   const goodForItems = getGoodForItems(cafe, locale);
   const displayTags = getDisplayTags(cafe, locale);
   const idealForLabel = t("detail.idealFor");
@@ -664,11 +684,17 @@ export default function CafeDetailInfo({
 
         <DetailDivider />
 
-        {aboutText && (
+        {aboutParagraphs.length > 0 && (
           <div className="border-l-[3px] border-[var(--border-light,#ECE4D6)] pl-5">
-            <p className="text-[15px] leading-[1.85] font-[var(--font-lora)] text-(--foreground-muted) italic">
-              &ldquo;{aboutText}&rdquo;
-            </p>
+            <div className="space-y-4 text-[15px] leading-[1.85] font-[var(--font-lora)] text-(--foreground-muted) italic">
+              {aboutParagraphs.map((paragraph, index) => (
+                <p key={`${paragraph.slice(0, 24)}-${index}`}>
+                  {index === 0 && <>&ldquo;</>}
+                  {paragraph}
+                  {index === aboutParagraphs.length - 1 && <>&rdquo;</>}
+                </p>
+              ))}
+            </div>
           </div>
         )}
 
