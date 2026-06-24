@@ -18,6 +18,11 @@
   },
   "hero": {
     "city": "Ho Chi Minh City",
+    "cinematicEyebrow": "Good coffee, good day",
+    "cinematicHeadline": "Find your next favorite cafe",
+    "cinematicSubtitle": "Discover cozy corners, quiet work spots, and small local cafes around Ho Chi Minh City.",
+    "cinematicPrimaryCta": "Explore cafes",
+    "cinematicSecondaryCta": "Take the quiz",
     "headline": "What kind of <accent>cafe</accent> are you looking for?",
     "line1": "Discover",
     "line2": "the most beautiful",
@@ -61,6 +66,7 @@
       }
     },
     "quickFilters": {
+      "nearMe": "Near me",
       "outdoor": "Outdoor",
       "openNow": "Open now",
       "quiet": "Quiet",

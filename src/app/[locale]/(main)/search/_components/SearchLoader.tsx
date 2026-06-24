@@ -51,6 +51,6 @@ export default async function SearchLoader({
     );
   }
 
-  const { cafes, meta } = await getCafesWithMeta(filterWithLimit, locale);
+  const { cafes, meta } = await getCafesWithMeta(filterWithLimit, locale, { cache: "no-store" });
   return <FeaturedSection cafes={cafes} locale={locale} districts={districts} serverMeta={meta} />;
 }

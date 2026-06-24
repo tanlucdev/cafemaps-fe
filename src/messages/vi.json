@@ -18,6 +18,11 @@
   },
   "hero": {
     "city": "TP. Hồ Chí Minh",
+    "cinematicEyebrow": "Good coffee, good day",
+    "cinematicHeadline": "Tìm quán cà phê yêu thích tiếp theo",
+    "cinematicSubtitle": "Khám phá những góc ấm cúng, chỗ làm việc yên tĩnh và các quán nhỏ thú vị quanh TP.HCM.",
+    "cinematicPrimaryCta": "Khám phá quán",
+    "cinematicSecondaryCta": "Làm trắc nghiệm",
     "headline": "Bạn đang tìm quán cà phê <accent>kiểu nào</accent>?",
     "line1": "Khám phá",
     "line2": "những quán cà phê",
@@ -61,6 +66,7 @@
       }
     },
     "quickFilters": {
+      "nearMe": "Gần tôi",
       "outdoor": "Ngoài trời",
       "openNow": "Mở cửa ngay",
       "quiet": "Yên tĩnh",

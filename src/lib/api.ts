@@ -469,13 +469,14 @@ export async function getCafes(filter?: CafeFilter, locale?: string | null): Pro
   }
 }
 
-export async function getCafesWithMeta(filter?: CafeFilter, locale?: string | null): Promise<{
+export async function getCafesWithMeta(filter?: CafeFilter, locale?: string | null, options?: NextRequestInit): Promise<{
   cafes: Cafe[]
   meta: { total: number; page: number; limit: number; totalPages: number }
 }> {
   try {
     const data = await apiFetch<CafesResponse | Cafe[]>(
-      `/cafes${buildQuery(filter, locale)}`
+      `/cafes${buildQuery(filter, locale)}`,
+      options
     )
     if (Array.isArray(data)) {
       return {
@@ -500,7 +501,9 @@ export async function getCafesWithMeta(filter?: CafeFilter, locale?: string | nu
 
 export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`)
+    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`, {
+      cache: "no-store",
+    })
     return mapApiCafe(raw, locale)
   } catch (err) {
     console.error("getCafeBySlug failed:", err)

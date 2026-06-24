@@ -162,7 +162,12 @@ export function HeroSearchIsland() {
     );
   }
 
-  function handleQuickFilter({ vibe, purpose, openNow }: QuickFilter) {
+  function handleQuickFilter({ vibe, purpose, nearMe, openNow }: QuickFilter) {
+    if (nearMe) {
+      handleNearMe();
+      return;
+    }
+
     const filter = {
       vibes: vibe ? [vibe] : undefined,
       purposes: purpose ? [purpose] : undefined,
@@ -269,7 +274,7 @@ export function HeroSearchIsland() {
 
       <Link
         href="/search"
-        className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#8f5419] underline decoration-[#d7a64e]/60 decoration-2 underline-offset-4 transition-colors hover:text-[#5f320d] hover:decoration-[#b96a16] sm:text-base"
+        className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#ffe3b7]/82 underline decoration-[#ffe3b7]/34 decoration-2 underline-offset-4 transition-colors hover:text-[#fff7e8] hover:decoration-[#ffe3b7]/68 sm:text-base"
       >
         <span>{t("viewAllCafes")}</span>
         <ArrowRight

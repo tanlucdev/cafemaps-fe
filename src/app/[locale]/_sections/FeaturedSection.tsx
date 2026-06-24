@@ -26,6 +26,7 @@ import {
   type SearchSort,
 } from "@/lib/search-state";
 import { isCafeOpenNow } from "@/lib/opening-hours";
+import { getCafeRatingValue } from "@/lib/cafe-rating";
 
 type ViewMode = "grid" | "list";
 
@@ -60,7 +61,7 @@ function numericScore(value: number | null | undefined): number {
 }
 
 function cafeRating(cafe: Cafe): number {
-  return numericScore(cafe.rating ?? cafe.averageRating ?? cafe.curatedRating);
+  return getCafeRatingValue(cafe) ?? 0;
 }
 
 function cafePopularity(cafe: Cafe): number {

@@ -20,6 +20,7 @@ import {
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import { getNearbyCafes } from "@/lib/api";
+import { getCafeRatingValue } from "@/lib/cafe-rating";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice } from "@/lib/utils";
@@ -232,12 +233,6 @@ type GoodForItem = {
   label: string;
 };
 
-type CafeWithRating = Cafe & {
-  rating?: number | null;
-  averageRating?: number | null;
-  curatedRating?: number | null;
-};
-
 type ResolvedDistance = Pick<Cafe, "distanceKm" | "distanceMode" | "durationMin">;
 
 type CafeTextAliases = Cafe & {
@@ -289,11 +284,8 @@ function calculateDistanceKm(
 }
 
 function getCafeRating(cafe: Cafe): number {
-  const ratingCafe = cafe as CafeWithRating;
-  const rating = ratingCafe.rating ?? ratingCafe.averageRating ?? ratingCafe.curatedRating;
-  if (typeof rating === "number" && Number.isFinite(rating) && rating > 0) {
-    return Math.min(5, Math.max(1, rating));
-  }
+  const rating = getCafeRatingValue(cafe);
+  if (rating != null) return rating;
 
   const seed = Array.from(cafe.slug).reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return 4.5 + (seed % 5) * 0.1;

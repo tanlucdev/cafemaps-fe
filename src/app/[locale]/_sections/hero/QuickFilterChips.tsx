@@ -1,5 +1,10 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { QuickFilter } from "./types";
+
+const MAIN_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 type QuickFilterChipsProps = {
   filters: QuickFilter[];
@@ -8,26 +13,41 @@ type QuickFilterChipsProps = {
 };
 
 export function QuickFilterChips({ filters, getLabel, onFilter }: QuickFilterChipsProps) {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <div className="mt-6 flex w-full max-w-[22rem] flex-wrap justify-center gap-2 overflow-visible px-1 sm:max-w-3xl">
+    <motion.div
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-12%" }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.085, delayChildren: 0.72 } } }}
+      className="mt-6 flex w-full max-w-full flex-wrap justify-start gap-2 overflow-visible px-0 sm:max-w-3xl"
+    >
       {filters.map((filter) => (
-        <button
+        <motion.button
           key={filter.labelKey}
           type="button"
           onClick={() => onFilter(filter)}
+          variants={{
+            hidden: { opacity: 0, y: reduceMotion ? 0 : 12, scale: reduceMotion ? 1 : 0.96 },
+            show: { opacity: 1, y: 0, scale: 1 },
+          }}
+          transition={{ duration: 0.58, ease: MAIN_EASE }}
+          whileHover={reduceMotion ? undefined : { y: -2, scale: 1.03 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.98 }}
           className={cn(
-            "inline-flex max-w-full shrink-0 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(44,26,14,0.1)]",
+            "inline-flex max-w-full shrink-0 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold shadow-[0_12px_30px_rgba(0,0,0,0.16)] outline-none backdrop-blur-md transition-colors focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05]",
             filter.featured
-              ? "border-[#bfe6cf] bg-[#eef9f0] text-[#26814a]"
-              : "border-[#e0caa9] bg-[#fff8ee]/86 text-[#5f442c] backdrop-blur hover:border-[#c8842a] hover:bg-white hover:text-[#2c1a0e]",
+              ? "border-[#ffe3b7]/34 bg-[#fff1d6]/20 text-[#fff5e6] hover:border-[#ffe3b7]/56 hover:bg-[#fff1d6]/28 hover:shadow-[0_14px_34px_rgba(245,190,104,0.18)]"
+              : "border-[#ffe3b7]/18 bg-[#1d1008]/40 text-[#fff0d4]/88 hover:border-[#ffe3b7]/42 hover:bg-[#fff1d6]/14 hover:text-[#fff7e8]",
           )}
         >
           <span className="text-base leading-none sm:text-[17px]" aria-hidden>
             {filter.emoji}
           </span>
           {getLabel(filter.labelKey)}
-        </button>
+        </motion.button>
       ))}
-    </div>
+    </motion.div>
   );
 }

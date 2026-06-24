@@ -101,14 +101,9 @@ export const MOBILE_POLAROIDS: PolaroidItem[] = [
 
 export const QUICK_FILTERS: QuickFilter[] = [
   {
-    emoji: "🌿",
-    labelKey: "outdoor",
-    vibe: "thiên nhiên",
-  },
-  {
-    emoji: "🕒",
-    labelKey: "openNow",
-    openNow: true,
+    emoji: "📍",
+    labelKey: "nearMe",
+    nearMe: true,
     featured: true,
   },
   {
@@ -125,5 +120,15 @@ export const QUICK_FILTERS: QuickFilter[] = [
     emoji: "💻",
     labelKey: "workFriendly",
     purpose: "làm việc",
+  },
+  {
+    emoji: "🌿",
+    labelKey: "outdoor",
+    vibe: "thiên nhiên",
+  },
+  {
+    emoji: "🕒",
+    labelKey: "openNow",
+    openNow: true,
   },
 ];

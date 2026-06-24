@@ -11,6 +11,7 @@ import SaveButton from "@/components/cafe/SaveButton";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
+import { formatCafeRating } from "@/lib/cafe-rating";
 import { formatPrice, cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -32,8 +33,8 @@ const VIBE_TAG_CLASSES: Record<string, string> = {
   minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
 };
 
-function ratingFor(index: number) {
-  return (4.5 + (index % 5) * 0.1).toFixed(1);
+function ratingFor(cafe: Cafe, index: number) {
+  return formatCafeRating(cafe, 4.5 + (index % 5) * 0.1);
 }
 
 function CafeListRow({
@@ -85,7 +86,7 @@ function CafeListRow({
     [cafe.openingTime, cafe.closingTime],
   );
   const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
-  const rating = ratingFor(index);
+  const rating = ratingFor(cafe, index);
 
   return (
     <motion.article
