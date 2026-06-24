@@ -11,6 +11,7 @@ interface CafeGridProps {
   loading?: boolean;
   animationType?: "slide" | "fade";
   desktopColumns?: "two" | "three";
+  variant?: "default" | "cinematic";
 }
 
 export default function CafeGrid({
@@ -19,6 +20,7 @@ export default function CafeGrid({
   loading = false,
   animationType = "slide",
   desktopColumns = "three",
+  variant = "default",
 }: CafeGridProps) {
   const t = useTranslations("search");
 
@@ -55,6 +57,7 @@ export default function CafeGrid({
           locale={locale}
           index={i}
           animationType={animationType}
+          variant={variant}
         />
       ))}
     </div>

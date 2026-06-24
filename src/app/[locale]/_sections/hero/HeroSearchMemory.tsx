@@ -11,16 +11,12 @@ type HeroSearchMemoryProps = {
   onClear: () => void;
 };
 
-export function HeroSearchMemory({
-  lastSearch,
-  onResume,
-  onClear,
-}: HeroSearchMemoryProps) {
+export function HeroSearchMemory({ lastSearch, onResume, onClear }: HeroSearchMemoryProps) {
   const t = useTranslations("hero");
 
   if (!lastSearch) {
     return (
-      <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/20 bg-[#1d1008]/46 px-4 py-2 text-xs font-bold text-[#fff0d4] shadow-[0_8px_22px_rgba(0,0,0,0.18)] backdrop-blur-md">
+      <div className="mt-2 mb-3 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[#3a2112]/42 px-4 py-2 text-xs font-bold text-[#fff0d4] shadow-[0_8px_20px_rgba(0,0,0,0.12),0_6px_18px_rgba(245,166,58,0.07)] backdrop-blur-md">
         <Coffee size={14} className="text-[#ffd18c]" />
         <span>{t("badge")}</span>
       </div>
@@ -28,7 +24,7 @@ export function HeroSearchMemory({
   }
 
   return (
-    <div className="mb-5 flex max-w-full items-center gap-2 rounded-full border border-[#ffe3b7]/20 bg-[#1d1008]/52 px-3 py-2 text-left text-sm text-[#fff0d4]/74 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md">
+    <div className="mb-3 flex max-w-full items-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[#3a2112]/48 px-3 py-2 text-left text-sm text-[#fff0d4]/78 shadow-[0_8px_22px_rgba(0,0,0,0.12),0_6px_18px_rgba(245,166,58,0.07)] backdrop-blur-md">
       <Search size={14} className="shrink-0 text-[#ffd18c]" />
       <span className="hidden sm:inline">{t("resumePrefix")}</span>
       <span className="max-w-[160px] truncate font-semibold text-[#fff7e8] sm:max-w-[280px]">

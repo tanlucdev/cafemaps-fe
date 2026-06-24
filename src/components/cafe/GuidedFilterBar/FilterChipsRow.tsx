@@ -41,10 +41,10 @@ function ChipFilter({
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-all duration-150 active:scale-95",
+        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
         active
-          ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-          : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
+          ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.14)]"
+          : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
       )}
     >
       {children}
@@ -73,16 +73,16 @@ export function FilterChipsRow({
   const extraVibes = VIBES.length - TOP_VIBES.length;
 
   return (
-    <div className="scrollbar-hide flex items-center gap-1.75 overflow-x-auto pt-2.75 pb-3">
+    <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto pt-3 pb-3.5">
       {/* Bộ lọc dropdown toggle */}
       <button
         ref={toggleBtnRef}
         onClick={onToggleDropdown}
         className={cn(
-          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-bold whitespace-nowrap transition-all duration-150 active:scale-95",
+          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
           dropdownMounted || activeCount > 0
-            ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-            : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
+            ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.14)]"
+            : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
         )}
       >
         {/* 3-line funnel icon matching design */}
@@ -102,7 +102,7 @@ export function FilterChipsRow({
         </svg>
         {tf("vibe")}
         {activeCount > 0 ? (
-          <span className="bg-accent flex h-4 min-w-4 items-center justify-center rounded-full px-0.5 text-[10px] font-extrabold text-white">
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#fff0d2] px-0.5 text-[10px] font-extrabold text-[#201006]">
             {activeCount}
           </span>
         ) : (
@@ -117,16 +117,16 @@ export function FilterChipsRow({
       </button>
 
       {/* Divider */}
-      <div className="border-border mx-0.5 h-4 w-px flex-none border-l" />
+      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
 
       {/* Open Now */}
       <button
         onClick={toggleOpenNow}
         className={cn(
-          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-all duration-150 active:scale-95",
+          "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
           filter.openNow
-            ? "border-[var(--status-open)] bg-[var(--status-open-background)] text-[var(--status-open-foreground)]"
-            : "border-border bg-white text-(--foreground-muted) hover:border-[var(--status-open)] hover:text-[var(--status-open-foreground)] dark:bg-[#1C1210]",
+            ? "border-[#8fd6a8] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] shadow-[0_10px_24px_rgba(30,160,85,0.12)]"
+            : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[#8fd6a8] hover:bg-[var(--status-open-background)] hover:text-[var(--status-open-foreground)] dark:bg-[var(--card)]",
         )}
       >
         <span className="relative flex h-2 w-2">
@@ -158,7 +158,7 @@ export function FilterChipsRow({
         ))}
 
       {/* Divider */}
-      <div className="border-border mx-0.5 h-4 w-px flex-none border-l" />
+      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
 
       {/* Quick vibes — instant */}
       {TOP_VIBES.map((v) => (
@@ -177,10 +177,10 @@ export function FilterChipsRow({
           ref={extraVibeBtnRef}
           onClick={dropdownMounted && dropdownOpen ? onToggleDropdown : onOpenDropdown}
           className={cn(
-            "border-border hover:border-accent hover:text-accent flex-none cursor-pointer rounded-full border-[1.5px] border-dashed px-3.5 py-1 text-[13px] font-semibold whitespace-nowrap transition-colors",
+            "flex-none cursor-pointer rounded-full border border-dashed px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
             dropdownMounted && dropdownOpen
-              ? "border-accent text-accent bg-[rgba(201,135,12,0.08)]"
-              : "text-(--foreground-muted)",
+              ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+              : "border-[var(--border)] bg-white/52 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
           )}
         >
           {dropdownMounted && dropdownOpen
@@ -193,7 +193,7 @@ export function FilterChipsRow({
       {activeCount > 0 && (
         <button
           onClick={clearAll}
-          className="hover:text-accent flex flex-none cursor-pointer items-center gap-1 text-xs whitespace-nowrap text-(--foreground-muted) transition-colors"
+          className="flex flex-none cursor-pointer items-center gap-1 text-xs font-bold whitespace-nowrap text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
         >
           <X size={12} />
           {tf("clear")}

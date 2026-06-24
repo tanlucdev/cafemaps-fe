@@ -57,11 +57,16 @@ export default function MobileBottomNav() {
     { href: "/profile", icon: User, label: t("profile") },
   ]
 
+  const isActiveRoute = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
+
   return (
     <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile navigation">
       <div className="mobile-bottom-nav-inner">
         {tabs.map(({ href, icon: Icon, label }) => {
-          const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href)
+          const isActive = isActiveRoute(href)
           return (
             <Link
               key={href}

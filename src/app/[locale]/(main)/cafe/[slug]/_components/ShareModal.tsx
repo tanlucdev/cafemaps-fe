@@ -135,33 +135,6 @@ export default function ShareModal({
   return (
     <Modal open={open} onClose={onClose} title={t("share")} size="sm">
       <div className="space-y-5 px-6 py-5">
-        <p className="text-sm leading-relaxed text-(--foreground-muted)">
-          {cafeName}
-          {description ? ` — ${description}` : ""}
-        </p>
-
-        <div className="grid grid-cols-4 gap-3">
-          {platforms.map((platform) => (
-            <a
-              key={platform.name}
-              href={platform.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "flex flex-col items-center gap-2 rounded-xl py-3 transition-opacity",
-                platform.colorClass,
-              )}
-            >
-              {platform.icon}
-              <span className="w-full truncate px-1 text-center text-[10px] leading-none font-medium">
-                {platform.name}
-              </span>
-            </a>
-          ))}
-        </div>
-
-        <hr className="border-border" />
-
         <div className="space-y-3">
           {links.map((link) => {
             const copied = copiedLink === link.key;

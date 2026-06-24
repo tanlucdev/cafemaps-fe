@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, LoaderCircle, Lock, LogIn, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -14,11 +14,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputClassName =
-  "auth-input h-11 rounded-xl border-[1.5px] border-[#E0D3C0] bg-[#FAF6F1] px-3.5 text-[15px] text-[#1C1209] placeholder:text-[#9B8B73] dark:border-[#4a4035] dark:bg-[#302b25] dark:text-[#F0EBE3]";
+  "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[#fffaf2]/82 text-[15px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
 const errorInputClassName = "auth-input-error";
 const labelClassName =
-  "font-lora mb-1.5 block text-[15px] italic text-[#5C4A2F] dark:text-[#D7CABC]";
-const errorClassName = "mt-1.5 flex items-center gap-1.5 text-xs text-[#C0392B]";
+  "mb-1.5 block text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]";
+const errorClassName = "mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-[#C0392B] dark:text-[#FFB4AA]";
 
 export default function LoginForm() {
   const t = useTranslations("auth");
@@ -77,7 +77,8 @@ export default function LoginForm() {
           {...register("email")}
           autoComplete="email"
           disabled={isPending}
-          placeholder="hello@email.com"
+          placeholder={t("emailPlaceholder")}
+          leftIcon={<Mail size={16} aria-hidden="true" />}
           className={`${inputClassName} ${errors.email ? errorInputClassName : ""}`}
         />
         {errors.email && (
@@ -90,10 +91,10 @@ export default function LoginForm() {
 
       <div>
         <div className="mb-1.5 flex items-baseline justify-between">
-          <label className="font-lora text-[15px] text-[#5C4A2F] italic dark:text-[#D7CABC]">
+          <label className="text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]">
             {t("passwordQuestion")}
           </label>
-          <span className="text-xs font-semibold text-[#C9870C]">{t("forgotShort")}</span>
+          <span className="text-xs font-black text-[var(--accent-hover)] dark:text-[#f0b869]">{t("forgotShort")}</span>
         </div>
         <Input
           type={showPassword ? "text" : "password"}
@@ -101,12 +102,13 @@ export default function LoginForm() {
           autoComplete="current-password"
           disabled={isPending}
           placeholder={t("passwordPlaceholder")}
+          leftIcon={<Lock size={16} aria-hidden="true" />}
           className={`${inputClassName} ${errors.password ? errorInputClassName : ""}`}
           rightIcon={
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="flex min-h-10 min-w-10 items-center justify-end text-[#9B8B73] transition-colors hover:text-[#5C4A2F] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
+              className="flex min-h-10 min-w-10 items-center justify-end text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent-hover)] dark:text-[#fff0d2]/62 dark:hover:text-[#fff7e8]"
               aria-label={showPassword ? t("hidePassword") : t("showPassword")}
               tabIndex={-1}
             >
@@ -124,7 +126,7 @@ export default function LoginForm() {
 
       {serverError && (
         <p
-          className="rounded-xl bg-[#FCEDEA] px-3 py-2 text-sm text-[#C0392B] dark:bg-[#3a211f] dark:text-[#FFB4AA]"
+          className="rounded-2xl border border-[#e9a7a0]/40 bg-[#FCEDEA]/92 px-3 py-2 text-sm font-semibold text-[#C0392B] dark:border-[#ffb4aa]/16 dark:bg-[#3a211f] dark:text-[#FFB4AA]"
           role="alert"
         >
           {serverError}
@@ -134,15 +136,18 @@ export default function LoginForm() {
       <Button
         type="submit"
         disabled={isPending}
-        className="mt-0 h-12 w-full rounded-xl bg-[#C9870C] text-[15px] font-extrabold text-white shadow-[0_4px_18px_rgba(201,135,12,0.3)] hover:bg-[#A96E08]"
+        className="mt-0 h-12 w-full rounded-full bg-[var(--accent)] text-[15px] font-black text-white shadow-[0_14px_30px_rgba(200,132,42,0.26)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-[var(--accent)]/30 disabled:hover:translate-y-0"
       >
         {isPending ? (
           <span className="inline-flex items-center gap-2">
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            <LoaderCircle size={16} className="animate-spin" aria-hidden="true" />
             {t("loading")}
           </span>
         ) : (
-          t("loginCta")
+          <span className="inline-flex items-center gap-2">
+            <LogIn size={16} aria-hidden="true" />
+            {t("loginCta")}
+          </span>
         )}
       </Button>
     </form>

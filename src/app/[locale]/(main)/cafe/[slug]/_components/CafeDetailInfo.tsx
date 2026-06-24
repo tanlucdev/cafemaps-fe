@@ -430,7 +430,10 @@ function RatingStars({ rating }: { rating: number }) {
   const roundedRating = Math.round(rating);
 
   return (
-    <span className="inline-flex items-center gap-1.5" aria-label={`${rating.toFixed(1)} sao`}>
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#f5c777]/35 bg-[#fff4dc]/72 px-3 py-1.5 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/18 dark:bg-[#fff1d6]/10"
+      aria-label={`${rating.toFixed(1)} sao`}
+    >
       <span className="inline-flex gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
@@ -444,13 +447,15 @@ function RatingStars({ rating }: { rating: number }) {
           />
         ))}
       </span>
-      <span className="text-foreground text-sm font-bold">{rating.toFixed(1)}</span>
+      <span className="text-sm font-black text-[#8a551b] dark:text-[#ffd58a]">
+        {rating.toFixed(1)}
+      </span>
     </span>
   );
 }
 
 function DetailDivider() {
-  return <div className="my-7 h-px bg-[var(--border-light,#ECE4D6)]" />;
+  return <div className="my-6 h-px bg-[linear-gradient(90deg,transparent,rgba(200,132,42,0.22),transparent)]" />;
 }
 
 function DetailActions({
@@ -468,10 +473,10 @@ function DetailActions({
         onClick={onSave}
         disabled={loadingSave}
         aria-label={saveAriaLabel}
-        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl border px-5 text-sm font-semibold whitespace-nowrap transition-all duration-200 disabled:cursor-not-allowed sm:w-32 ${
+        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 text-sm font-black whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-32 ${
           saved
-            ? "border-amber-500 bg-amber-500 text-white shadow-[0_2px_8px_rgba(245,158,11,0.35)]"
-            : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)"
+            ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+            : "border-[var(--border)] bg-white/68 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] dark:bg-[var(--card)]/72"
         }`}
       >
         <Bookmark size={15} className={saved ? "fill-white" : ""} />
@@ -481,7 +486,7 @@ function DetailActions({
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-accent flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 text-sm font-bold text-white transition-colors hover:bg-(--accent-hover)"
+        className="flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-white shadow-[0_12px_28px_rgba(200,132,42,0.24)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
       >
         <Navigation size={16} className="shrink-0" />
         <span className="truncate">{directionsLabel}</span>
@@ -608,9 +613,9 @@ export default function CafeDetailInfo({
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mx-auto max-w-[680px] space-y-5 pt-2"
+        className="mx-auto w-full max-w-[720px] min-w-0 space-y-5 rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/76 px-4 py-5 shadow-[0_18px_54px_rgba(44,26,14,0.08)] backdrop-blur-md sm:px-6 sm:py-6 dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/54 dark:shadow-[0_18px_54px_rgba(0,0,0,0.26)]"
       >
-        <h1 className="text-foreground text-[32px] leading-[1.18] font-[var(--font-lora)] font-semibold sm:text-[38px]">
+        <h1 className="text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]">
           {cafe.name}
         </h1>
 
@@ -619,8 +624,8 @@ export default function CafeDetailInfo({
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
                 openStatus
-                  ? "bg-[var(--status-open-background)] text-[var(--status-open-foreground)]"
-                  : "bg-[var(--status-closed-background)] text-[var(--status-closed-foreground)]"
+                  ? "border border-[#75c79b]/28 bg-[#e6f6ef]/78 text-[#1d6b45] shadow-[var(--shadow-sm)] dark:bg-[#123028]/72 dark:text-[#8ed7ad]"
+                  : "border border-[#e9a7a7]/32 bg-[#fff0ee]/78 text-[#9e3636] shadow-[var(--shadow-sm)] dark:bg-[#351514]/72 dark:text-[#f1a0a0]"
               }`}
             >
               <span className="relative flex h-2 w-2">
@@ -635,10 +640,10 @@ export default function CafeDetailInfo({
           <RatingStars rating={rating} />
         </div>
 
-        <div className="flex flex-col gap-x-5 gap-y-2 text-[13.5px] text-(--foreground-muted) sm:flex-row sm:flex-wrap">
+        <div className="flex flex-col gap-x-5 gap-y-2.5 text-[13.5px] font-medium text-[var(--foreground-muted)] sm:flex-row sm:flex-wrap">
           {cafe.address && (
             <span className="flex items-start gap-1.5">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#FCE8ED] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#fff0dc] text-[#b86f20] dark:bg-[#3a2414] dark:text-[#f0b869]">
                 <MapPinned size={12} />
               </span>
               {cafe.address}
@@ -646,14 +651,14 @@ export default function CafeDetailInfo({
           )}
           {hours && (
             <span className="flex items-center gap-1.5">
-              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#E6F6F1] text-[#1D6B58] dark:bg-[#123028] dark:text-[#7FCDB8]">
+              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e6f6ef] text-[#1d6b45] dark:bg-[#123028] dark:text-[#8ed7ad]">
                 <AlarmClock size={12} />
               </span>
               {hours}
             </span>
           )}
           {distanceText && (
-            <span className="text-accent flex items-center gap-1.5 font-medium">
+            <span className="flex items-center gap-1.5 font-bold text-[var(--accent-hover)] dark:text-[#f0b869]">
               <Navigation size={14} className="shrink-0" />
               {distanceLabel}
             </span>
@@ -663,13 +668,13 @@ export default function CafeDetailInfo({
         {(cafe.vibes.length > 0 || cafe.purposes.length > 0 || displayTags.length > 0) && (
           <div className="flex flex-wrap gap-2 pt-0.5">
             {cafe.vibes.map((v) => (
-              <Badge key={v} label={v} variant="vibe" className="px-3 py-1 text-[12.5px]" />
+              <Badge key={v} label={v} variant="vibe" className="border border-[#ffe3b7]/36 bg-white/58 px-3 py-1 text-[12.5px] shadow-[var(--shadow-sm)] backdrop-blur-md dark:bg-[#fff1d6]/8" />
             ))}
             {cafe.purposes.map((p) => (
-              <Badge key={p} label={p} className="px-3 py-1 text-[12.5px]" />
+              <Badge key={p} label={p} className="border border-[#ffe3b7]/36 bg-white/58 px-3 py-1 text-[12.5px] shadow-[var(--shadow-sm)] backdrop-blur-md dark:bg-[#fff1d6]/8" />
             ))}
             {displayTags.map((tag) => (
-              <Badge key={tag} label={tag} className="px-3 py-1 text-[12.5px]" />
+              <Badge key={tag} label={tag} className="border border-[#ffe3b7]/36 bg-white/58 px-3 py-1 text-[12.5px] shadow-[var(--shadow-sm)] backdrop-blur-md dark:bg-[#fff1d6]/8" />
             ))}
           </div>
         )}
@@ -677,8 +682,8 @@ export default function CafeDetailInfo({
         <DetailDivider />
 
         {aboutParagraphs.length > 0 && (
-          <div className="border-l-[3px] border-[var(--border-light,#ECE4D6)] pl-5">
-            <div className="space-y-4 text-[15px] leading-[1.85] font-[var(--font-lora)] text-(--foreground-muted) italic">
+          <div className="rounded-[22px] border border-[#ffe3b7]/34 bg-white/54 px-4 py-4 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/7">
+            <div className="space-y-4 border-l-[3px] border-[#e4ad58]/44 pl-4 text-[15px] leading-[1.85] font-[var(--font-lora)] text-[var(--foreground-muted)] italic">
               {aboutParagraphs.map((paragraph, index) => (
                 <p key={`${paragraph.slice(0, 24)}-${index}`}>
                   {index === 0 && <>&ldquo;</>}
@@ -695,7 +700,7 @@ export default function CafeDetailInfo({
             {cafe.amenities.map((a) => (
               <span
                 key={a}
-                className="flex items-center gap-1.5 rounded-full border-[1.5px] border-[var(--border-light,#ECE4D6)] bg-[#FAF6F1] px-3 py-1.5 text-sm text-(--foreground-muted) dark:bg-[#241B15]"
+                className="flex items-center gap-1.5 rounded-full border border-[#ffe3b7]/36 bg-white/58 px-3 py-1.5 text-sm font-medium text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/8"
               >
                 <span className="text-accent">{getAmenityIcon(a)}</span>
                 {getAmenityLabel(a, locale)}
@@ -705,31 +710,31 @@ export default function CafeDetailInfo({
         )}
 
         {parkingLocation && (
-          <div className="rounded-2xl border border-(--border-light,#ECE4D6) bg-[#FAF6F1] px-4 py-3.5 dark:bg-[#241B15]">
-            <p className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.08em] text-(--foreground-muted) uppercase">
+          <div className="rounded-[22px] border border-[#ffe3b7]/34 bg-white/54 px-4 py-3.5 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/7">
+            <p className="mb-2.5 flex items-center gap-1.5 text-[11px] font-bold tracking-[0.08em] text-[var(--foreground-muted)] uppercase">
               <Car size={14} />
               {parkingLabel}
             </p>
             <div className="flex items-baseline gap-2 text-[13.5px]">
-              <span className="text-foreground min-w-13 shrink-0 font-bold">
+              <span className="min-w-13 shrink-0 font-bold text-[var(--foreground)]">
                 {parkingTypeLabel}
               </span>
-              <span className="text-border text-[11px]">·</span>
-              <span className="leading-normal text-(--foreground-muted)">{parkingLocation}</span>
+              <span className="text-[var(--border)] text-[11px]">·</span>
+              <span className="leading-normal text-[var(--foreground-muted)]">{parkingLocation}</span>
             </div>
           </div>
         )}
 
         {goodForItems.length > 0 && (
           <div className="pt-1">
-            <p className="mb-3 text-[11px] font-bold tracking-[0.08em] text-(--foreground-muted) uppercase">
+            <p className="mb-3 text-[11px] font-bold tracking-[0.08em] text-[var(--foreground-muted)] uppercase">
               {idealForLabel}
             </p>
-            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
+            <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
               {goodForItems.map((item) => (
                 <span
                   key={item.label}
-                  className="bg-card inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-[var(--border-light,#ECE4D6)] px-3.5 py-2 text-sm font-medium text-(--foreground-muted) shadow-[0_1px_3px_rgba(40,22,4,0.06)]"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#ffe3b7]/36 bg-white/58 px-3.5 py-2 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/8"
                 >
                   <span aria-hidden>{item.emoji}</span>
                   {item.label}
@@ -742,34 +747,34 @@ export default function CafeDetailInfo({
         <DetailDivider />
 
         {cafe.signatureDrink && (
-          <div className="flex items-center gap-3.5 rounded-2xl border-[1.5px] border-[var(--border-light,#ECE4D6)] bg-[#FAF6F1] p-4 dark:bg-[#241B15]">
-            <span className="text-accent flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--accent-light)">
+          <div className="flex items-center gap-3.5 rounded-[22px] border border-[#ffe3b7]/34 bg-white/54 p-4 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/7">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)]">
               <Coffee size={18} />
             </span>
             <div>
-              <p className="mb-1 text-[11px] font-medium tracking-[0.06em] text-(--foreground-muted) uppercase">
+              <p className="mb-1 text-[11px] font-bold tracking-[0.06em] text-[var(--foreground-muted)] uppercase">
                 {t("signatureDrink")}
               </p>
-              <p className="text-foreground text-[15px] font-bold">{cafe.signatureDrink}</p>
+              <p className="text-[15px] font-black text-[var(--foreground)]">{cafe.signatureDrink}</p>
             </div>
           </div>
         )}
 
         {price && (
-          <div className="flex items-center gap-2 text-sm font-bold text-(--foreground-muted)">
-            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FFF4CF] text-[#A06C08] dark:bg-[#33270A] dark:text-[#E6C25E]">
+          <div className="flex items-center gap-2 text-sm font-bold text-[var(--foreground-muted)]">
+            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#fff0dc] text-[#a86d1e] dark:bg-[#33270A] dark:text-[#E6C25E]">
               <Banknote size={16} />
             </span>
             <span>{t("priceRange")}</span>
-            <span className="text-accent text-[15px] font-extrabold">{price}</span>
+            <span className="text-[15px] font-black text-[var(--accent-hover)] dark:text-[#f0b869]">{price}</span>
           </div>
         )}
 
         {hasSocialBlock && (
-          <div className="overflow-hidden rounded-2xl border border-(--border-light,#ECE4D6)">
+          <div className="overflow-hidden rounded-[22px] border border-[#ffe3b7]/34 bg-white/54 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/7">
             {cafeInstagram && (
-              <div className="flex items-center justify-between gap-3 bg-[#FAF6F1] px-4 py-2.5 dark:bg-[#241B15]">
-                <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
+              <div className="flex items-center justify-between gap-3 bg-[#fff4e5]/62 px-4 py-2.5 dark:bg-[#fff1d6]/6">
+                <span className="flex shrink-0 items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-[var(--foreground-muted)] uppercase">
                   <InstagramIcon />
                   {instagramLabel}
                 </span>
@@ -777,7 +782,7 @@ export default function CafeDetailInfo({
                   href={cafeInstagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-accent text-[13.5px] font-bold tracking-[-0.01em] text-(--foreground-muted) transition-colors"
+                  className="text-[13.5px] font-bold tracking-[-0.01em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent-hover)]"
                 >
                   {cafeInstagram.label}
                 </a>
@@ -786,10 +791,10 @@ export default function CafeDetailInfo({
             {photoCredits.length > 0 && (
               <div
                 className={`flex flex-col gap-1.5 px-4 py-2.5 ${
-                  cafeInstagram ? "border-t border-(--border-light,#ECE4D6)" : ""
+                  cafeInstagram ? "border-t border-[#ffe3b7]/28" : ""
                 }`}
               >
-                <span className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-(--foreground-muted) uppercase">
+                <span className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.07em] text-[var(--foreground-muted)] uppercase">
                   <InstagramIcon />
                   {photoCreditLabel}
                 </span>
@@ -799,11 +804,11 @@ export default function CafeDetailInfo({
                     href={c.instagram.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-accent inline-flex items-center gap-1.5 text-[13px] font-semibold text-(--foreground-muted) transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent-hover)]"
                   >
                     {c.instagram.label}
                     {c.note && (
-                      <span className="text-[12px] font-normal text-(--foreground-muted)">
+                      <span className="text-[12px] font-normal text-[var(--foreground-muted)]">
                         · {c.note}
                       </span>
                     )}
@@ -827,8 +832,8 @@ export default function CafeDetailInfo({
         </div>
       </motion.div>
 
-      <div className="cafe-detail-mobile-actions border-border fixed right-0 left-0 z-[60] border-t bg-(--background)/95 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
-        <div className="mx-auto max-w-[680px] px-4">
+      <div className="cafe-detail-mobile-actions fixed right-0 left-0 z-[60] border-t border-[#ffe3b7]/34 bg-[#fffaf2]/88 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl lg:hidden dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/88">
+        <div className="mx-auto w-full max-w-[720px] min-w-0 px-4">
           <DetailActions
             saved={saved}
             loadingSave={loadingSave}

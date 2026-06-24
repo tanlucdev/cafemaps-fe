@@ -3,7 +3,7 @@ import type { Locale } from "@/i18n/routing"
 
 export const SITE_NAME = "Cafe Maps"
 export const DEFAULT_LOCALE: Locale = "vi"
-export const OG_IMAGE = "/image/meta-image.png.png"
+export const OG_IMAGE = "/image/meta-image.webp"
 export const HOME_TITLE = "Cafe Maps — Khám phá quán cà phê TP.HCM"
 export const HOME_DESCRIPTION =
   "Tìm kiếm và khám phá những quán cà phê đẹp nhất tại TP.HCM theo phong cách, mục đích và địa điểm. Lọc nhanh theo quận, vibe, nhu cầu làm việc, hẹn hò hoặc chụp ảnh để chọn nơi ghé hôm nay."
@@ -12,10 +12,6 @@ export function getSiteUrl() {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : null) ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
     "https://cafemaps.net"
 
   return new URL(siteUrl)

@@ -21,7 +21,7 @@ export function QuickFilterChips({ filters, getLabel, onFilter }: QuickFilterChi
       whileInView="show"
       viewport={{ once: true, margin: "-12%" }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.085, delayChildren: 0.72 } } }}
-      className="mt-6 flex w-full max-w-full flex-wrap justify-start gap-2 overflow-visible px-0 sm:max-w-3xl"
+      className="mt-4 hidden w-full max-w-full flex-wrap justify-start gap-2 overflow-visible px-0 sm:flex sm:max-w-3xl"
     >
       {filters.map((filter) => (
         <motion.button
@@ -36,10 +36,10 @@ export function QuickFilterChips({ filters, getLabel, onFilter }: QuickFilterChi
           whileHover={reduceMotion ? undefined : { y: -2, scale: 1.03 }}
           whileTap={reduceMotion ? undefined : { scale: 0.98 }}
           className={cn(
-            "inline-flex max-w-full shrink-0 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold shadow-[0_12px_30px_rgba(0,0,0,0.16)] outline-none backdrop-blur-md transition-colors focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05]",
+            "inline-flex max-w-full shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-bold shadow-[0_10px_24px_rgba(0,0,0,0.12),0_8px_22px_rgba(245,166,58,0.07)] outline-none backdrop-blur-md transition-colors focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05]",
             filter.featured
               ? "border-[#ffe3b7]/34 bg-[#fff1d6]/20 text-[#fff5e6] hover:border-[#ffe3b7]/56 hover:bg-[#fff1d6]/28 hover:shadow-[0_14px_34px_rgba(245,190,104,0.18)]"
-              : "border-[#ffe3b7]/18 bg-[#1d1008]/40 text-[#fff0d4]/88 hover:border-[#ffe3b7]/42 hover:bg-[#fff1d6]/14 hover:text-[#fff7e8]",
+              : "border-[#ffe3b7]/24 bg-[#3a2112]/36 text-[#fff0d4]/88 hover:border-[#ffe3b7]/46 hover:bg-[#4a2a16]/44 hover:text-[#fff7e8]",
           )}
         >
           <span className="text-base leading-none sm:text-[17px]" aria-hidden>

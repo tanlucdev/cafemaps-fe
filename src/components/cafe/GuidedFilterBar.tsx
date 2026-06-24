@@ -1,7 +1,5 @@
 "use client";
 
-import { LayoutGrid, LayoutList } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { CafeFilter as Filter } from "@/types/cafe";
 import { useGuidedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import { FilterChipsRow } from "@/components/cafe/GuidedFilterBar/FilterChipsRow";
@@ -20,8 +18,6 @@ export default function GuidedFilterBar({
   filter,
   onChange,
   districts,
-  viewMode = "grid",
-  onViewModeChange,
 }: GuidedFilterBarProps) {
   const {
     dropdownOpen,

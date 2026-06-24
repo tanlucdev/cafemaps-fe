@@ -24,7 +24,6 @@ type CafeHeroCinematicProps = {
   headline: string;
   subtitle: string;
   primaryCta: string;
-  secondaryCta: string;
 };
 
 export function CafeHeroCinematic({
@@ -32,7 +31,6 @@ export function CafeHeroCinematic({
   headline,
   subtitle,
   primaryCta,
-  secondaryCta,
 }: CafeHeroCinematicProps) {
   const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
@@ -61,12 +59,12 @@ export function CafeHeroCinematic({
         pointerX.set(0);
         pointerY.set(0);
       }}
-      className="relative isolate min-h-[100svh] w-full max-w-[100vw] overflow-hidden bg-[#120a05] p-3 pt-[calc(62px+0.75rem)] text-[#fff6e8] sm:p-4 sm:pt-[calc(62px+1rem)] md:p-6 md:pt-[calc(62px+1.5rem)]"
+      className="relative isolate h-[100svh] w-full max-w-[100vw] overflow-hidden bg-[var(--background)] p-2 pt-[calc(62px+0.5rem)] text-[#fff6e8] sm:p-3 sm:pt-[calc(62px+0.75rem)] md:p-4 md:pt-[calc(62px+1rem)]"
     >
-      <div className="relative min-h-[calc(100svh-62px-1.5rem)] w-full max-w-full overflow-hidden rounded-[28px] border border-[#f4d9ad]/14 bg-[#120a05] shadow-[0_30px_90px_rgba(18,10,5,0.45)] sm:min-h-[calc(100svh-62px-2rem)] sm:rounded-[36px] md:min-h-[calc(100svh-62px-3rem)] md:rounded-[44px]">
+      <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/20 bg-[#4a2a16] shadow-[0_22px_62px_rgba(18,10,5,0.24),0_12px_42px_rgba(245,166,58,0.12)] sm:rounded-[30px] md:rounded-[36px]">
         <motion.div className="absolute inset-0 z-0" style={{ y: videoY }}>
           <motion.video
-            className="h-[108%] w-full object-cover"
+            className="h-[106%] w-full object-cover brightness-[1.14] contrast-[0.96] saturate-[1.08]"
             src={VIDEO_URL}
             poster="/image/home-polaroid-1.jpg"
             autoPlay
@@ -81,22 +79,22 @@ export function CafeHeroCinematic({
           />
         </motion.div>
 
-        <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,7,4,0.34)_0%,rgba(72,42,19,0.1)_42%,rgba(10,6,3,0.78)_100%)]" />
-        <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(10,6,3,0.86)_0%,rgba(20,10,4,0.68)_34%,rgba(22,12,6,0.24)_62%,rgba(8,5,3,0.54)_100%)]" />
+        <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(55,31,12,0.10)_0%,rgba(184,108,42,0.06)_42%,rgba(26,14,6,0.34)_100%)]" />
+        <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(24,13,5,0.54)_0%,rgba(72,41,20,0.34)_34%,rgba(94,54,28,0.10)_62%,rgba(28,15,6,0.22)_100%)]" />
         <div className="absolute inset-0 z-[3] opacity-[0.12] mix-blend-overlay [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.78%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.62%22/%3E%3C/svg%3E')]" />
         <motion.div
-          className="pointer-events-none absolute -top-24 right-[6%] z-[4] size-[24rem] rounded-full bg-[radial-gradient(circle,rgba(245,187,96,0.22)_0%,rgba(165,91,34,0.08)_42%,transparent_70%)] blur-2xl"
+          className="pointer-events-none absolute -top-24 right-[6%] z-[4] size-[24rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,121,0.29)_0%,rgba(190,112,42,0.13)_42%,transparent_70%)] blur-2xl"
           style={{ y: glowY }}
         />
         <motion.div
-          className="pointer-events-none absolute bottom-[-8rem] left-[8%] z-[4] size-[28rem] rounded-full bg-[radial-gradient(circle,rgba(255,242,213,0.18)_0%,rgba(132,74,31,0.08)_44%,transparent_72%)] blur-2xl"
+          className="pointer-events-none absolute bottom-[-8rem] left-[8%] z-[4] size-[28rem] rounded-full bg-[radial-gradient(circle,rgba(255,246,224,0.25)_0%,rgba(168,92,36,0.12)_44%,transparent_72%)] blur-2xl"
           style={{ y: glowY }}
         />
 
         <DecorativeCluster pointerX={smoothX} pointerY={smoothY} reduceMotion={Boolean(reduceMotion)} />
 
         <motion.div
-          className="relative z-10 flex min-h-[calc(100svh-62px-1.5rem)] w-full min-w-0 items-end px-5 pt-14 pb-9 sm:min-h-[calc(100svh-62px-2rem)] sm:px-8 sm:pt-16 sm:pb-12 md:min-h-[calc(100svh-62px-3rem)] md:px-12 lg:px-16 lg:pb-14"
+          className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-end px-5 pt-10 pb-[calc(var(--mobile-bottom-nav-height)+0.75rem)] sm:px-8 sm:pt-12 sm:pb-6 md:px-10 md:pt-12 md:pb-6 lg:px-14 lg:pb-7"
           style={{ opacity: contentOpacity, scale: contentScale }}
         >
           <div className="w-full min-w-0 max-w-[21rem] sm:max-w-[720px]">
@@ -105,7 +103,7 @@ export function CafeHeroCinematic({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-12%" }}
               transition={{ duration: 0.72, ease: MAIN_EASE }}
-              className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/20 bg-[#1f1209]/46 px-3.5 py-2 text-xs font-bold text-[#ffe7bd] shadow-[0_12px_34px_rgba(0,0,0,0.2)] backdrop-blur-md sm:text-[13px]"
+              className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[#3a2112]/34 px-3.5 py-2 text-xs font-bold text-[#ffe7bd] shadow-[0_10px_28px_rgba(0,0,0,0.12),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-md sm:text-[13px]"
             >
               <Sparkles size={14} aria-hidden />
               {eyebrow}
@@ -118,7 +116,7 @@ export function CafeHeroCinematic({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-12%" }}
               transition={{ delay: 0.42, duration: 0.78, ease: MAIN_EASE }}
-              className="mt-5 max-w-[36rem] text-[15px] leading-7 font-semibold text-[#fff0d4]/88 drop-shadow-[0_6px_22px_rgba(0,0,0,0.48)] sm:text-lg sm:leading-8"
+              className="mt-4 max-w-[36rem] text-[15px] leading-7 font-semibold text-[#fff0d4]/92 drop-shadow-[0_5px_18px_rgba(0,0,0,0.34)] sm:text-[17px] sm:leading-8"
             >
               {subtitle}
             </motion.p>
@@ -128,7 +126,7 @@ export function CafeHeroCinematic({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-12%" }}
               transition={{ delay: 0.62, duration: 0.76, ease: MAIN_EASE }}
-              className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
+              className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <Link
                 href="/search"
@@ -136,12 +134,6 @@ export function CafeHeroCinematic({
               >
                 {primaryCta}
                 <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden />
-              </Link>
-              <Link
-                href="/quiz"
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/22 bg-[#211208]/42 px-6 py-3 text-sm font-bold text-[#fff3de] shadow-[0_14px_34px_rgba(0,0,0,0.2)] outline-none backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#ffe3b7]/42 hover:bg-[#392113]/58 focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05] sm:w-auto sm:text-base"
-              >
-                {secondaryCta}
               </Link>
             </motion.div>
 
@@ -165,7 +157,7 @@ function WordsPullUp({ text }: { text: string }) {
         hidden: {},
         show: { transition: { staggerChildren: 0.075 } },
       }}
-      className="font-lora max-w-full text-[38px] leading-[1.02] font-bold text-[#fff7e8] drop-shadow-[0_10px_34px_rgba(0,0,0,0.66)] sm:max-w-[44rem] sm:text-[64px] md:text-[78px] lg:text-[88px]"
+      className="font-lora max-w-full text-[38px] leading-[1.02] font-bold text-[#fff7e8] drop-shadow-[0_8px_28px_rgba(0,0,0,0.48)] sm:max-w-[44rem] sm:text-[58px] md:text-[68px] lg:text-[76px] xl:text-[82px]"
     >
       {words.map((word, index) => (
         <motion.span
@@ -204,7 +196,7 @@ function DecorativeCluster({
           <motion.div
             animate={reduceMotion ? undefined : { y: [-8, 8, -8], rotate: [-1.2, 1.2, -1.2] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="w-[270px] rounded-[26px] border border-[#ffe6bd]/18 bg-[#1d1008]/58 p-4 text-[#fff2d9] shadow-[0_24px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl"
+            className="w-[270px] rounded-[26px] border border-[#ffe6bd]/26 bg-[#3a2112]/46 p-4 text-[#fff2d9] shadow-[0_20px_58px_rgba(0,0,0,0.28),0_12px_36px_rgba(245,166,58,0.1)] backdrop-blur-xl"
           >
             <div className="flex items-center gap-3">
               <span className="flex size-11 items-center justify-center rounded-2xl bg-[#fff0d2] text-[#301706]">
@@ -231,7 +223,7 @@ function DecorativeCluster({
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9, duration: 0.72, ease: MAIN_EASE }}
-          className="rounded-full border border-[#ffe3b7]/18 bg-[#201006]/48 px-4 py-2 text-sm font-black text-[#fff0d2] shadow-[0_18px_44px_rgba(0,0,0,0.3)] backdrop-blur-lg"
+          className="rounded-full border border-[#ffe3b7]/26 bg-[#4a2a16]/42 px-4 py-2 text-sm font-black text-[#fff0d2] shadow-[0_14px_34px_rgba(0,0,0,0.2),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-lg"
         >
           Vintage mood
         </motion.div>
@@ -295,12 +287,12 @@ function AnimatedRoute({ reduceMotion }: { reduceMotion: boolean }) {
             transition={{ duration: 3.2, repeat: Infinity, delay: index * 0.42, ease: "easeInOut" }}
           />
           <foreignObject x={cx - 12} y={cy - 27} width="24" height="30">
-            <MapPin className="h-6 w-6 fill-[#ffd18c] text-[#ffd18c] drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]" />
+            <MapPin className="h-6 w-6 fill-[#ffd18c] text-[#ffd18c] drop-shadow-[0_6px_16px_rgba(0,0,0,0.28)]" />
           </foreignObject>
         </g>
       ))}
       <foreignObject x="245" y="136" width="92" height="40">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ffe3b7]/20 bg-[#1b0e07]/58 px-3 py-2 text-xs font-black text-[#fff0d2] backdrop-blur-md">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ffe3b7]/28 bg-[#3a2112]/46 px-3 py-2 text-xs font-black text-[#fff0d2] shadow-[0_8px_22px_rgba(245,166,58,0.08)] backdrop-blur-md">
           <Navigation size={13} />
           Q.1
         </div>

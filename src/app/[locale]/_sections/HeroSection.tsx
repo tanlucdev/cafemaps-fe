@@ -10,7 +10,6 @@ export default async function HeroSection() {
       headline={t("cinematicHeadline")}
       subtitle={t("cinematicSubtitle")}
       primaryCta={t("cinematicPrimaryCta")}
-      secondaryCta={t("cinematicSecondaryCta")}
     />
   );
 }

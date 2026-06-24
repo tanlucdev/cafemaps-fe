@@ -81,29 +81,33 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   }
 
   return (
-    <article className="cafe-detail-page pt-16 lg:pb-8">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 pt-6 pb-4 sm:px-6 lg:max-w-[900px] lg:px-10">
+    <article className="cafe-detail-page relative isolate overflow-hidden bg-[var(--background)] pt-16 lg:pb-8">
+      <div className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(180deg,var(--background)_0%,#fff8ee_36%,var(--background-secondary)_100%)] dark:bg-[linear-gradient(180deg,var(--background)_0%,#251b13_42%,#1a1714_100%)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.04] mix-blend-multiply [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.74%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.45%22/%3E%3C/svg%3E')] dark:mix-blend-screen" />
+
+      <div className="mx-auto flex w-full max-w-2xl min-w-0 items-center justify-between px-4 pt-5 pb-3 sm:px-6 lg:max-w-[960px] lg:px-10">
         <button
           onClick={handleBack}
-          className="hover:text-foreground inline-flex cursor-pointer items-center gap-1.5 text-sm text-(--foreground-muted) transition-colors"
+          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/62 px-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72"
         >
           <ChevronLeft size={16} />
           {tc("back")}
         </button>
         <button
           onClick={() => setShareOpen(true)}
-          className="hover:text-foreground border-border hover:border-accent inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm text-(--foreground-muted) transition-colors"
+          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/62 px-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72"
         >
           <Share2 size={14} />
           {t("share")}
         </button>
       </div>
 
-      <div className="mx-auto max-w-2xl space-y-6 px-4 pb-4 sm:px-6 lg:max-w-[900px] lg:px-10">
+      <div className="mx-auto w-full max-w-2xl min-w-0 space-y-5 px-4 pb-4 sm:px-6 lg:max-w-[960px] lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="w-full min-w-0 max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/38 bg-white/48 p-1.5 shadow-[0_22px_62px_rgba(44,26,14,0.10)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/48 dark:shadow-[0_22px_62px_rgba(0,0,0,0.28)]"
         >
           <SmartGallery
             images={cafe.images ?? []}
@@ -111,11 +115,11 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             cafeName={cafe.name}
           />
           {cafe.menuImage && (
-            <div className="mt-3 flex flex-wrap items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center gap-3 px-1 pb-1">
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
-                className="border-border hover:border-accent hover:text-accent bg-card inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-sm font-semibold text-(--foreground-muted) transition-colors"
+                className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border border-[var(--border)] bg-white/70 px-3.5 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72"
               >
                 <BookOpen size={15} />
                 Menu

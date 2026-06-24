@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { MOCK_CAFES } from "@/lib/mock-data";
 import {
   buildSearchParams,
@@ -272,17 +271,6 @@ export function HeroSearchIsland() {
         onFilter={handleQuickFilter}
       />
 
-      <Link
-        href="/search"
-        className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#ffe3b7]/82 underline decoration-[#ffe3b7]/34 decoration-2 underline-offset-4 transition-colors hover:text-[#fff7e8] hover:decoration-[#ffe3b7]/68 sm:text-base"
-      >
-        <span>{t("viewAllCafes")}</span>
-        <ArrowRight
-          size={17}
-          className="transition-transform group-hover:translate-x-1"
-          aria-hidden
-        />
-      </Link>
     </>
   );
 }

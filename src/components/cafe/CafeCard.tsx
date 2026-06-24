@@ -3,7 +3,7 @@
 // import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
@@ -21,6 +21,7 @@ interface CafeCardProps {
   locale: string;
   index?: number;
   animationType?: "slide" | "fade";
+  variant?: "default" | "cinematic";
   initialSaved?: boolean;
   onSavedChange?: (saved: boolean) => void;
 }
@@ -45,12 +46,15 @@ export default function CafeCard({
   locale,
   index = 0,
   animationType = "fade",
+  variant = "default",
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
   const tCafe = useTranslations("cafe");
   const tFilters = useTranslations("filters");
   const isSlide = animationType === "slide";
+  const reduceMotion = useReducedMotion();
+  const isCinematic = variant === "cinematic";
 
   // Hover preview disabled per request. Keep the old code here for easy rollback.
   // const articleRef = useRef<HTMLElement>(null);
@@ -101,43 +105,65 @@ export default function CafeCard({
     .join(" • ");
   const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
   const rating = ratingFor(cafe, index);
+  const revealInitial = isSlide
+    ? { opacity: 0, y: reduceMotion ? 0 : 20, scale: reduceMotion ? 1 : 0.98 }
+    : { opacity: 0, y: 0, scale: 1 };
+  const revealTransition = {
+    duration: reduceMotion ? 0 : isSlide ? 0.34 : 0.28,
+    delay: reduceMotion ? 0 : Math.min(index % 8, 7) * 0.06,
+    ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+  };
 
   return (
     <motion.article
       // ref={articleRef}
       // onMouseEnter={handleMouseEnter}
       // onMouseLeave={handleMouseLeave}
-      {...(isSlide
-        ? {
-            initial: { opacity: 0, y: 10 },
-            animate: { opacity: 1, y: 0 },
-            transition: {
-              duration: 0.25,
-              delay: Math.min(index, 2) * 0.05,
-              ease: [0.33, 1, 0.68, 1],
-            },
-          }
-        : {})}
+      initial={revealInitial}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.18, margin: "0px 0px -6% 0px" }}
+      transition={revealTransition}
+      whileHover={isCinematic && !reduceMotion ? { y: -4, scale: 1.01 } : undefined}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)]",
-        // "group transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_6px_24px_rgba(40,22,4,0.12)]",
-        "dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
+        "group relative flex flex-col overflow-hidden rounded-2xl transition-colors duration-300",
+        isCinematic
+          ? "border border-[#ffe3b7]/12 bg-[#1b0f08]/66 shadow-[0_18px_52px_rgba(0,0,0,0.28)] backdrop-blur-md hover:border-[#ffe3b7]/28 hover:shadow-[0_22px_64px_rgba(245,166,58,0.16)]"
+          : "bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
       )}
     >
-      <Link href={href} className="block" onClick={saveReturnUrl}>
+      <Link
+        href={href}
+        className="block outline-none focus-visible:ring-2 focus-visible:ring-[#ffe3b7]"
+        onClick={saveReturnUrl}
+      >
         {/* Image area — image-forward, 65% of card height */}
-        <div className="relative h-52 overflow-hidden bg-[#E5D9CB] md:h-56 dark:bg-[#2C1A0E]">
+        <div
+          className={cn(
+            "relative h-52 overflow-hidden md:h-56",
+            isCinematic ? "bg-[#2C1A0E]" : "bg-[#E5D9CB] dark:bg-[#2C1A0E]",
+          )}
+        >
           {cafe.coverImage ? (
             <Image
               src={cafe.coverImage}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover"
+              className={cn(
+                "object-cover",
+                isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
+              )}
               // className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
             />
           ) : (
-            <div className="absolute inset-0 bg-linear-to-br from-[#FFEADF] via-[#F7DFC6] to-[#DDE9D8] dark:from-[#2C1A0E] dark:via-[#33231B] dark:to-[#1D2D20]" />
+            <div
+              className={cn(
+                "absolute inset-0",
+                isCinematic
+                  ? "bg-[radial-gradient(circle_at_28%_18%,rgba(255,232,186,0.28),transparent_34%),linear-gradient(135deg,#2c1a0e_0%,#402313_46%,#15100a_100%)]"
+                  : "bg-linear-to-br from-[#FFEADF] via-[#F7DFC6] to-[#DDE9D8] dark:from-[#2C1A0E] dark:via-[#33231B] dark:to-[#1D2D20]",
+              )}
+            />
           )}
 
           {/* Gradient overlay for bottom info */}
@@ -197,19 +223,40 @@ export default function CafeCard({
         locale={locale}
         initialSaved={initialSaved}
         onSavedChange={onSavedChange}
-        className="absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border border-white/30 shadow-sm backdrop-blur-md transition-transform hover:scale-110 dark:border-white/10"
+        className={cn(
+          "absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border shadow-sm backdrop-blur-md transition-transform hover:scale-110",
+          isCinematic
+            ? "border-[#ffe3b7]/24 bg-[#170c06]/48 text-[#fff0d4]"
+            : "border-white/30 dark:border-white/10",
+        )}
       />
 
       {/* Text content */}
-      <Link href={href} className="block flex-1" onClick={saveReturnUrl}>
+      <Link
+        href={href}
+        className="block flex-1 outline-none focus-visible:ring-2 focus-visible:ring-[#ffe3b7]"
+        onClick={saveReturnUrl}
+      >
         <div className="flex flex-col gap-2 p-4">
           {/* Name + rating */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="line-clamp-1 text-[14px] leading-snug font-bold text-[#1C1209] dark:text-[#FFE3D3]">
+            <h3
+              className={cn(
+                "line-clamp-1 text-[14px] leading-snug font-bold",
+                isCinematic ? "text-[#fff7e8]" : "text-[#1C1209] dark:text-[#FFE3D3]",
+              )}
+            >
               {/* className="line-clamp-1 text-[14px] leading-snug font-bold text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]" */}
               {cafe.name}
             </h3>
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#FBF0DC] px-2.5 py-0.5 text-[11px] font-bold text-[#C9870C] dark:bg-[#2C1A08] dark:text-[#F0A830]">
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold",
+                isCinematic
+                  ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#ffd58a]"
+                  : "bg-[#FBF0DC] text-[#C9870C] dark:bg-[#2C1A08] dark:text-[#F0A830]",
+              )}
+            >
               <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
               {rating}
             </span>
@@ -240,8 +287,15 @@ export default function CafeCard({
             )}
             {locationText && (
               <>
-                {openStatus !== null && <span className="text-[#C9C0B3]">·</span>}
-                <span className="flex min-w-0 items-center gap-0.5 text-[#9B8B73]">
+                {openStatus !== null && (
+                  <span className={isCinematic ? "text-[#fff0d4]/26" : "text-[#C9C0B3]"}>·</span>
+                )}
+                <span
+                  className={cn(
+                    "flex min-w-0 items-center gap-0.5",
+                    isCinematic ? "text-[#fff0d4]/62" : "text-[#9B8B73]",
+                  )}
+                >
                   <MapPin size={11} className="shrink-0 text-[#C9870C]" />
                   <span className="truncate">{locationText}</span>
                 </span>
@@ -264,8 +318,10 @@ export default function CafeCard({
                     key={tag}
                     className={cn(
                       "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                      VIBE_TAG_CLASSES[classKey] ??
-                        "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]",
+                      isCinematic
+                        ? "border border-[#ffe3b7]/12 bg-[#fff1d6]/9 text-[#fff0d4]/78"
+                        : (VIBE_TAG_CLASSES[classKey] ??
+                            "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]"),
                     )}
                   >
                     {label}
