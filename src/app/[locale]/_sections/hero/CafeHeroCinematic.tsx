@@ -2,6 +2,7 @@
 
 import type { MotionValue } from "framer-motion";
 import type { PointerEvent, ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -11,13 +12,14 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowRight, Coffee, MapPin, Navigation, Sparkles } from "lucide-react";
-import { useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { HeroSearchIsland } from "./HeroSearchIsland";
 
 const MAIN_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const SECONDARY_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const VIDEO_URL = "/background.mp4";
+const VIDEO_URL = "/background-1080.mp4";
+const VIDEO_POSTER_URL = "/image/home-hero-poster.jpg";
+const VIDEO_POSTER_WEBP_URL = "/image/home-hero-poster.webp";
 
 type CafeHeroCinematicProps = {
   eyebrow: string;
@@ -33,7 +35,10 @@ export function CafeHeroCinematic({
   primaryCta,
 }: CafeHeroCinematicProps) {
   const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
+  const [isVideoReady, setIsVideoReady] = useState(false);
+  const [hasVideoError, setHasVideoError] = useState(false);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, { stiffness: 80, damping: 24, mass: 0.4 });
@@ -43,6 +48,19 @@ export function CafeHeroCinematic({
   const glowY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, -28]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.76, 1], [1, 1, 0.82]);
   const contentScale = useTransform(scrollYProgress, [0, 1], reduceMotion ? [1, 1] : [1, 0.985]);
+  const shouldPlayVideo = reduceMotion !== true;
+
+  useEffect(() => {
+    setIsVideoReady(false);
+    setHasVideoError(false);
+
+    const video = videoRef.current;
+    if (!video || !shouldPlayVideo) return;
+
+    void video.play().catch(() => {
+      setHasVideoError(true);
+    });
+  }, [shouldPlayVideo]);
 
   function handlePointerMove(event: PointerEvent<HTMLElement>) {
     if (reduceMotion || event.pointerType !== "mouse") return;
@@ -63,25 +81,44 @@ export function CafeHeroCinematic({
     >
       <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/20 bg-[#4a2a16] shadow-[0_22px_62px_rgba(18,10,5,0.24),0_12px_42px_rgba(245,166,58,0.12)] sm:rounded-[30px] md:rounded-[36px]">
         <motion.div className="absolute inset-0 z-0" style={{ y: videoY }}>
-          <motion.video
-            className="h-[106%] w-full object-cover brightness-[1.14] contrast-[0.96] saturate-[1.08]"
-            src={VIDEO_URL}
-            poster="/image/home-polaroid-1.jpg"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
+          <div
+            className="absolute inset-0 h-[106%] w-full bg-cover bg-center brightness-[1.14] contrast-[0.96] saturate-[1.08]"
+            style={{
+              backgroundImage: `image-set(url(${VIDEO_POSTER_WEBP_URL}) type("image/webp"), url(${VIDEO_POSTER_URL}) type("image/jpeg"))`,
+            }}
             aria-hidden="true"
-            initial={false}
-            animate={reduceMotion ? { scale: 1.03 } : { scale: [1.03, 1.08, 1.03], x: [0, -10, 0] }}
-            transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
           />
+          {shouldPlayVideo ? (
+            <motion.video
+              ref={videoRef}
+              className="relative h-[106%] w-full object-cover brightness-[1.14] contrast-[0.96] saturate-[1.08] transition-opacity duration-700"
+              poster={VIDEO_POSTER_URL}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+              onCanPlay={(event) => {
+                setIsVideoReady(true);
+                void event.currentTarget.play().catch(() => setHasVideoError(true));
+              }}
+              onError={() => setHasVideoError(true)}
+              style={{ opacity: isVideoReady && !hasVideoError ? 1 : 0 }}
+              initial={false}
+              animate={
+                reduceMotion ? { scale: 1.03 } : { scale: [1.03, 1.08, 1.03], x: [0, -10, 0] }
+              }
+              transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <source src={VIDEO_URL} type="video/mp4" />
+            </motion.video>
+          ) : null}
         </motion.div>
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(55,31,12,0.10)_0%,rgba(184,108,42,0.06)_42%,rgba(26,14,6,0.34)_100%)]" />
         <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(24,13,5,0.54)_0%,rgba(72,41,20,0.34)_34%,rgba(94,54,28,0.10)_62%,rgba(28,15,6,0.22)_100%)]" />
-        <div className="absolute inset-0 z-[3] opacity-[0.12] mix-blend-overlay [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.78%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.62%22/%3E%3C/svg%3E')]" />
+        <div className="absolute inset-0 z-[3] [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.78%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.62%22/%3E%3C/svg%3E')] opacity-[0.12] mix-blend-overlay" />
         <motion.div
           className="pointer-events-none absolute -top-24 right-[6%] z-[4] size-[24rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,121,0.29)_0%,rgba(190,112,42,0.13)_42%,transparent_70%)] blur-2xl"
           style={{ y: glowY }}
@@ -91,13 +128,17 @@ export function CafeHeroCinematic({
           style={{ y: glowY }}
         />
 
-        <DecorativeCluster pointerX={smoothX} pointerY={smoothY} reduceMotion={Boolean(reduceMotion)} />
+        <DecorativeCluster
+          pointerX={smoothX}
+          pointerY={smoothY}
+          reduceMotion={Boolean(reduceMotion)}
+        />
 
         <motion.div
           className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-end px-5 pt-10 pb-[calc(var(--mobile-bottom-nav-height)+0.75rem)] sm:px-8 sm:pt-12 sm:pb-6 md:px-10 md:pt-12 md:pb-6 lg:px-14 lg:pb-7"
           style={{ opacity: contentOpacity, scale: contentScale }}
         >
-          <div className="w-full min-w-0 max-w-[21rem] sm:max-w-[720px]">
+          <div className="w-full max-w-[21rem] min-w-0 sm:max-w-[720px]">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -130,10 +171,14 @@ export function CafeHeroCinematic({
             >
               <Link
                 href="/search"
-                className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#fff0d2] px-6 py-3 text-sm font-black text-[#201006] shadow-[0_18px_42px_rgba(245,190,104,0.28)] outline-none transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05] sm:w-auto sm:text-base"
+                className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#fff0d2] px-6 py-3 text-sm font-black text-[#201006] shadow-[0_18px_42px_rgba(245,190,104,0.28)] transition-all outline-none hover:-translate-y-0.5 hover:bg-[#fff7e8] focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05] sm:w-auto sm:text-base"
               >
                 {primaryCta}
-                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden />
+                <ArrowRight
+                  size={18}
+                  className="transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
               </Link>
             </motion.div>
 
@@ -187,7 +232,12 @@ function DecorativeCluster({
 }) {
   return (
     <div className="pointer-events-none absolute inset-0 z-[6] hidden lg:block">
-      <HeroMotionLayer pointerX={pointerX} pointerY={pointerY} strength={26} className="right-[8%] bottom-[12%]">
+      <HeroMotionLayer
+        pointerX={pointerX}
+        pointerY={pointerY}
+        strength={26}
+        className="right-[8%] bottom-[12%]"
+      >
         <motion.div
           initial={{ opacity: 0, y: 18, rotate: -2 }}
           animate={{ opacity: 1, y: 0, rotate: -2 }}
@@ -208,8 +258,11 @@ function DecorativeCluster({
               </div>
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2">
-              {['Yên tĩnh', 'Ổ cắm', 'Ấm'].map((label) => (
-                <span key={label} className="rounded-full border border-[#ffe3b7]/16 bg-white/8 px-2.5 py-1 text-center text-[11px] font-bold text-[#fff2d9]/82">
+              {["Yên tĩnh", "Ổ cắm", "Ấm"].map((label) => (
+                <span
+                  key={label}
+                  className="rounded-full border border-[#ffe3b7]/16 bg-white/8 px-2.5 py-1 text-center text-[11px] font-bold text-[#fff2d9]/82"
+                >
                   {label}
                 </span>
               ))}
@@ -218,7 +271,12 @@ function DecorativeCluster({
         </motion.div>
       </HeroMotionLayer>
 
-      <HeroMotionLayer pointerX={pointerX} pointerY={pointerY} strength={-18} className="right-[24%] top-[18%]">
+      <HeroMotionLayer
+        pointerX={pointerX}
+        pointerY={pointerY}
+        strength={-18}
+        className="top-[18%] right-[24%]"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -229,7 +287,12 @@ function DecorativeCluster({
         </motion.div>
       </HeroMotionLayer>
 
-      <HeroMotionLayer pointerX={pointerX} pointerY={pointerY} strength={14} className="right-[13%] top-[30%]">
+      <HeroMotionLayer
+        pointerX={pointerX}
+        pointerY={pointerY}
+        strength={14}
+        className="top-[30%] right-[13%]"
+      >
         <AnimatedRoute reduceMotion={reduceMotion} />
       </HeroMotionLayer>
     </div>
@@ -283,7 +346,9 @@ function AnimatedRoute({ reduceMotion }: { reduceMotion: boolean }) {
             cy={cy}
             r="18"
             fill="rgba(255,202,121,0.16)"
-            animate={reduceMotion ? undefined : { scale: [0.84, 1.2, 0.84], opacity: [0.22, 0.48, 0.22] }}
+            animate={
+              reduceMotion ? undefined : { scale: [0.84, 1.2, 0.84], opacity: [0.22, 0.48, 0.22] }
+            }
             transition={{ duration: 3.2, repeat: Infinity, delay: index * 0.42, ease: "easeInOut" }}
           />
           <foreignObject x={cx - 12} y={cy - 27} width="24" height="30">
