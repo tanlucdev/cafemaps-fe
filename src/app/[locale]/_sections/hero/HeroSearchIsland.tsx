@@ -230,7 +230,7 @@ export function HeroSearchIsland() {
 
   return (
     <>
-      <HeroSearchMemory
+      {/* <HeroSearchMemory
         lastSearch={lastSearch}
         onResume={() => {
           if (lastSearch) router.push(`/search?${lastSearch.params}`);
@@ -239,7 +239,7 @@ export function HeroSearchIsland() {
           clearLastSearchState();
           setLastSearch(null);
         }}
-      />
+      /> */}
 
       <HeroSearchControls
         search={search}
@@ -270,7 +270,6 @@ export function HeroSearchIsland() {
         getLabel={(key) => t(`quickFilters.${key}`)}
         onFilter={handleQuickFilter}
       />
-
     </>
   );
 }

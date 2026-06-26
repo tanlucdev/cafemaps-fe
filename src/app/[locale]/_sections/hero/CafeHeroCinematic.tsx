@@ -17,9 +17,8 @@ import { HeroSearchIsland } from "./HeroSearchIsland";
 
 const MAIN_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const SECONDARY_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const VIDEO_URL = "/background-1080.mp4";
-const VIDEO_POSTER_URL = "/image/home-hero-poster.jpg";
-const VIDEO_POSTER_WEBP_URL = "/image/home-hero-poster.webp";
+const VIDEO_URL = "/background-hero.mp4";
+const FALLBACK_VIDEO_URL = "/background-hero.mp4";
 
 type CafeHeroCinematicProps = {
   eyebrow: string;
@@ -38,7 +37,7 @@ export function CafeHeroCinematic({
   const videoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
   const [isVideoReady, setIsVideoReady] = useState(false);
-  const [hasVideoError, setHasVideoError] = useState(false);
+  const [videoSrc, setVideoSrc] = useState(VIDEO_URL);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, { stiffness: 80, damping: 24, mass: 0.4 });
@@ -48,19 +47,23 @@ export function CafeHeroCinematic({
   const glowY = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [0, -28]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.76, 1], [1, 1, 0.82]);
   const contentScale = useTransform(scrollYProgress, [0, 1], reduceMotion ? [1, 1] : [1, 0.985]);
-  const shouldPlayVideo = reduceMotion !== true;
+  const shouldAutoplayVideo = reduceMotion !== true;
 
   useEffect(() => {
     setIsVideoReady(false);
-    setHasVideoError(false);
+    setVideoSrc(VIDEO_URL);
 
     const video = videoRef.current;
-    if (!video || !shouldPlayVideo) return;
+    if (!video) return;
 
-    void video.play().catch(() => {
-      setHasVideoError(true);
-    });
-  }, [shouldPlayVideo]);
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      setIsVideoReady(true);
+    }
+
+    if (shouldAutoplayVideo) {
+      void video.play().catch(() => undefined);
+    }
+  }, [shouldAutoplayVideo]);
 
   function handlePointerMove(event: PointerEvent<HTMLElement>) {
     if (reduceMotion || event.pointerType !== "mouse") return;
@@ -81,39 +84,37 @@ export function CafeHeroCinematic({
     >
       <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/20 bg-[#4a2a16] shadow-[0_22px_62px_rgba(18,10,5,0.24),0_12px_42px_rgba(245,166,58,0.12)] sm:rounded-[30px] md:rounded-[36px]">
         <motion.div className="absolute inset-0 z-0" style={{ y: videoY }}>
-          <div
-            className="absolute inset-0 h-[106%] w-full bg-cover bg-center brightness-[1.14] contrast-[0.96] saturate-[1.08]"
-            style={{
-              backgroundImage: `image-set(url(${VIDEO_POSTER_WEBP_URL}) type("image/webp"), url(${VIDEO_POSTER_URL}) type("image/jpeg"))`,
-            }}
+          <div className="absolute inset-0 h-[106%] w-full bg-[#4a2a16]" aria-hidden="true" />
+          <motion.video
+            key={videoSrc}
+            ref={videoRef}
+            className="relative h-[106%] w-full object-cover brightness-[1.14] contrast-[0.96] saturate-[1.08] transition-opacity duration-700"
+            autoPlay={shouldAutoplayVideo}
+            loop
+            muted
+            playsInline
+            preload="auto"
             aria-hidden="true"
-          />
-          {shouldPlayVideo ? (
-            <motion.video
-              ref={videoRef}
-              className="relative h-[106%] w-full object-cover brightness-[1.14] contrast-[0.96] saturate-[1.08] transition-opacity duration-700"
-              poster={VIDEO_POSTER_URL}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-              onCanPlay={(event) => {
-                setIsVideoReady(true);
-                void event.currentTarget.play().catch(() => setHasVideoError(true));
-              }}
-              onError={() => setHasVideoError(true)}
-              style={{ opacity: isVideoReady && !hasVideoError ? 1 : 0 }}
-              initial={false}
-              animate={
-                reduceMotion ? { scale: 1.03 } : { scale: [1.03, 1.08, 1.03], x: [0, -10, 0] }
+            onLoadedData={() => setIsVideoReady(true)}
+            onCanPlay={(event) => {
+              setIsVideoReady(true);
+              if (shouldAutoplayVideo) {
+                void event.currentTarget.play().catch(() => undefined);
               }
-              transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <source src={VIDEO_URL} type="video/mp4" />
-            </motion.video>
-          ) : null}
+            }}
+            onError={() => {
+              if (videoSrc !== FALLBACK_VIDEO_URL) {
+                setIsVideoReady(false);
+                setVideoSrc(FALLBACK_VIDEO_URL);
+              }
+            }}
+            style={{ opacity: isVideoReady ? 1 : 0 }}
+            initial={false}
+            animate={reduceMotion ? { scale: 1.03 } : { scale: [1.03, 1.08, 1.03], x: [0, -10, 0] }}
+            transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </motion.video>
         </motion.div>
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(55,31,12,0.10)_0%,rgba(184,108,42,0.06)_42%,rgba(26,14,6,0.34)_100%)]" />

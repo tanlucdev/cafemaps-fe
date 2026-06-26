@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { preload } from "react-dom";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { createLocalizedMetadata } from "@/lib/metadata";
@@ -29,6 +30,12 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const normalizedLocale = locale === "en" ? "en" : routing.defaultLocale;
   const jsonLd = createHomeJsonLd(normalizedLocale);
+
+  preload("/background-hero.mp4", {
+    as: "video",
+    type: "video/mp4",
+    fetchPriority: "high",
+  });
 
   return (
     <>

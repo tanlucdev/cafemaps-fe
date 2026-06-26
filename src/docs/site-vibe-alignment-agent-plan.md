@@ -33,7 +33,7 @@ Trước khi sửa code, agent phải đọc các file này:
 
 - Use existing tokens: `var(--background)`, `var(--foreground)`, `var(--foreground-muted)`, `var(--card)`, `var(--border)`, `var(--accent)`, `var(--accent-light)`, `var(--sage)`, coffee `#1f1209`, cream `#fff0d2/#fffaf2`.
 - Keep surfaces warm glass/light cream on non-home pages.
-- Use real existing visual assets when possible: `/image/home-polaroid-*.jpg`, `/image/logo.png`, `background.mp4` if suitable.
+- Use real existing visual assets when possible: `/image/home-polaroid-*.jpg`, `/image/logo.png`, `background-hero.mp4` if suitable.
 - Avoid SVG/gradient-only hero art for content pages.
 - Avoid decorative orb/blob backgrounds. Subtle texture is OK.
 - Use Lora only for editorial page-level headings, not dense controls.
@@ -63,15 +63,18 @@ Trước khi sửa code, agent phải đọc các file này:
 ### P1: Saved
 
 Files:
+
 - `src/app/[locale]/(main)/saved/page.tsx`
 - `src/app/[locale]/(main)/saved/_components/SavedCafesClient.tsx`
 
 Goal:
+
 - Collection page, not dashboard.
 - Warm collection surface, saved folders/cards feel like curated coffee list.
 - Empty state image-forward or brand-forward, not generic SaaS.
 
 Checks:
+
 - Logged-out state still clear.
 - Folder create/rename/delete unchanged.
 - Mobile bottom nav does not crowd first viewport.
@@ -79,30 +82,36 @@ Checks:
 ### P1: Profile
 
 Files:
+
 - `src/app/[locale]/(main)/profile/page.tsx`
 - `src/app/[locale]/(main)/profile/_components/ProfilePageClient.tsx`
 
 Goal:
+
 - Utility page with warm account surfaces.
 - Avoid oversized hero. Keep account actions obvious.
 - Quick links should feel like cafe guide actions, not admin tiles.
 
 Checks:
+
 - Logged-out/login flows unchanged.
 - User menu/auth event behavior unchanged.
 
 ### P1: Cafe Detail
 
 Files:
+
 - `src/app/[locale]/(main)/cafe/[slug]/page.tsx`
 - `src/app/[locale]/(main)/cafe/[slug]/_components/*`
 
 Goal:
+
 - Image/detail-first, editorial detail + practical decision-making.
 - Info panels align with search/contribute warm surfaces.
 - Detail route should not make `Khám phá` active by default unless product explicitly wants it.
 
 Checks:
+
 - Save/share/map actions work.
 - Gallery still usable.
 - Similar cafes, hours, amenities readable.
@@ -110,42 +119,51 @@ Checks:
 ### P2: Blog
 
 Files:
+
 - `src/app/[locale]/(main)/blog/page.tsx`
 - `src/app/[locale]/(main)/blog/[slug]/page.tsx`
 
 Goal:
+
 - Editorial magazine vibe within same palette.
 - Use real cafe imagery/assets, no generic card wall if avoidable.
 - Article page should be readable, not over-decorated.
 
 Checks:
+
 - Slug pages SSG still work.
 - Locale routes OK.
 
 ### P2: Quiz
 
 Files:
+
 - `src/app/[locale]/(main)/quiz/page.tsx`
 
 Goal:
+
 - Playful but still Cafe Maps warm discovery.
 - Actual quiz experience first, not landing copy.
 - Progress and answers use icons/surfaces, not emoji-only UI.
 
 Checks:
+
 - Result routes/actions work.
 - Mobile fits controls without bottom nav overlap.
 
 ### P3: Auth
 
 Files:
+
 - `src/app/[locale]/(auth)/*`
 
 Goal:
+
 - Auth shell should align with warm brand, but stay focused.
 - Keep login/register form behavior intact.
 
 Checks:
+
 - Validation unchanged.
 - Provider buttons unchanged.
 
@@ -190,6 +208,7 @@ You are working in `/Users/nguyentanluc/tanlucdev/cafe/fe-uiux`.
 Task: redesign `<PAGE>` to match the Cafe Maps warm cinematic / image-first direction.
 
 Before editing, read:
+
 - `AGENTS.md`
 - `src/docs/header-redesign-plan.md`
 - `src/docs/navigation-audit.md`
@@ -197,6 +216,7 @@ Before editing, read:
 - target page files
 
 Constraints:
+
 - Keep current data/auth/locale behavior.
 - Use `@/i18n/navigation` for localized navigation.
 - Move new user-facing copy to `src/messages/vi.json` and `src/messages/en.json`.
@@ -207,6 +227,7 @@ Constraints:
 - Keep mobile first viewport focused on the actual task.
 
 Verify:
+
 - `npm run lint`
 - `npm run build`
 - screenshots/visual QA at 375x812, 768x1024, 1440x900

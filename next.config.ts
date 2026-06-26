@@ -6,7 +6,6 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const BACKEND_URL = process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api";
 
 const nextConfig: NextConfig = {
-  htmlLimitedBots: /.*/,
   async redirects() {
     return [
       {

@@ -56,7 +56,7 @@ export function HeroSearchControls({
             }}
             className="w-full min-w-0"
           >
-            <div className="flex h-[54px] w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border border-[#ffe3b7]/32 bg-[#3a2112]/48 p-1.5 pl-4 shadow-[0_16px_40px_rgba(0,0,0,0.18),0_10px_30px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-colors focus-within:border-[#ffe3b7]/58 sm:h-[58px] sm:gap-2 sm:pl-6 lg:pr-5">
+            <div className="flex h-[54px] w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border border-[#ffe3b7]/32 bg-[#3a2112]/48 p-1.5 pl-4 pr-4 shadow-[0_16px_40px_rgba(0,0,0,0.18),0_10px_30px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-colors focus-within:border-[#ffe3b7]/58 sm:h-[58px] sm:gap-2 sm:pl-6 lg:pr-5">
               <Search
                 size={20}
                 className={cn(
@@ -75,7 +75,7 @@ export function HeroSearchControls({
               />
               <button
                 type="submit"
-                className="inline-flex h-full min-w-[72px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#fff0d2] px-4 text-sm font-black text-[#201006] shadow-[0_8px_18px_rgba(245,190,104,0.22)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:min-w-[126px] sm:px-5 lg:hidden"
+                className="hidden h-full min-w-[72px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#fff0d2] px-4 text-sm font-black text-[#201006] shadow-[0_8px_18px_rgba(245,190,104,0.22)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:inline-flex sm:min-w-[126px] sm:px-5 lg:hidden"
               >
                 <Search size={16} />
                 <span className="sm:hidden">{mobileSearchCta}</span>
@@ -94,12 +94,12 @@ export function HeroSearchControls({
           )}
         </div>
 
-        <div className="flex w-full min-w-0 flex-col items-center gap-3 sm:flex-row sm:justify-center lg:w-auto lg:shrink-0">
+        <div className="grid w-full min-w-0 grid-cols-2 items-center gap-3 sm:flex sm:justify-center lg:w-auto lg:shrink-0">
           <button
             type="button"
             onClick={onNearMe}
             disabled={nearbyLoading}
-            className="order-2 inline-flex h-12 min-w-[148px] cursor-pointer items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/30 bg-[#4a2a16]/42 px-5 text-sm font-bold text-[#fff0d4] shadow-[0_10px_24px_rgba(0,0,0,0.13),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-[#ffe3b7]/50 hover:bg-[#4a2a16]/58 disabled:cursor-not-allowed disabled:opacity-60 sm:order-1 sm:h-[58px] sm:min-w-0 sm:px-5 sm:text-base lg:px-6"
+            className="order-1 inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/30 bg-[#4a2a16]/42 px-4 text-sm font-bold text-[#fff0d4] shadow-[0_10px_24px_rgba(0,0,0,0.13),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-[#ffe3b7]/50 hover:bg-[#4a2a16]/58 disabled:cursor-not-allowed disabled:opacity-60 sm:h-[58px] sm:min-w-0 sm:px-5 sm:text-base lg:px-6"
           >
             <span className="inline-flex size-8 items-center justify-center rounded-full bg-[#fff0d2] text-[#301706]">
               {nearbyLoading ? (
@@ -113,10 +113,11 @@ export function HeroSearchControls({
           <button
             type="button"
             onClick={onSubmit}
-            className="order-1 hidden h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#fff0d2]/24 bg-[#fff0d2] px-6 text-sm font-black text-[#201006] shadow-[0_8px_22px_rgba(245,190,104,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:order-2 sm:h-[58px] sm:px-8 sm:text-base lg:inline-flex lg:px-8"
+            className="order-2 inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#fff0d2]/24 bg-[#fff0d2] px-4 text-sm font-black text-[#201006] shadow-[0_8px_22px_rgba(245,190,104,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:hidden sm:h-[58px] sm:px-8 sm:text-base lg:inline-flex lg:px-8"
           >
             <Search size={17} />
-            {searchCta}
+            <span className="sm:hidden">{mobileSearchCta}</span>
+            <span className="hidden sm:inline">{searchCta}</span>
           </button>
         </div>
       </div>

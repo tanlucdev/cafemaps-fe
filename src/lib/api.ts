@@ -501,9 +501,7 @@ export async function getCafesWithMeta(filter?: CafeFilter, locale?: string | nu
 
 export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`, {
-      cache: "no-store",
-    })
+    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`)
     return mapApiCafe(raw, locale)
   } catch (err) {
     console.error("getCafeBySlug failed:", err)

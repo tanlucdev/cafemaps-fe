@@ -10,11 +10,17 @@ import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
 import { useRef, useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
 
 interface FeaturedCafesSectionProps {
   cafes: Cafe[];
-  locale: string;
+  copy: {
+    weeklyFavourite: string;
+    mustVisit: string;
+    viewAll: string;
+    viewAllMobile: string;
+    openNow: string;
+    closedNow: string;
+  };
 }
 
 const RANK_CONFIG = [
@@ -34,10 +40,19 @@ interface PodiumCardProps {
   label: string;
   heightClass: string;
   delay: number;
+  openNowLabel: string;
+  closedNowLabel: string;
 }
 
-function PodiumCard({ cafe, rank, label, heightClass, delay }: PodiumCardProps) {
-  const t = useTranslations("cafe");
+function PodiumCard({
+  cafe,
+  rank,
+  label,
+  heightClass,
+  delay,
+  openNowLabel,
+  closedNowLabel,
+}: PodiumCardProps) {
   const reduceMotion = useReducedMotion();
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
 
@@ -107,7 +122,7 @@ function PodiumCard({ cafe, rank, label, heightClass, delay }: PodiumCardProps) 
               <span
                 className={cn("h-1.5 w-1.5 rounded-full", openStatus ? "bg-white" : "bg-white/60")}
               />
-              {openStatus ? t("openNow") : t("closedNow")}
+              {openStatus ? openNowLabel : closedNowLabel}
             </span>
           )}
 
@@ -160,8 +175,7 @@ function PodiumCard({ cafe, rank, label, heightClass, delay }: PodiumCardProps) 
   );
 }
 
-export default function FeaturedCafesSection({ cafes }: FeaturedCafesSectionProps) {
-  const t = useTranslations("featured");
+export default function FeaturedCafesSection({ cafes, copy }: FeaturedCafesSectionProps) {
   const featured = cafes.slice(0, 3);
   const [activeDot, setActiveDot] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -198,17 +212,17 @@ export default function FeaturedCafesSection({ cafes }: FeaturedCafesSectionProp
           <div>
             <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#e3c79b]/70 bg-white/46 px-3 py-1.5 text-xs font-black tracking-[0.13em] text-[#9b6424] uppercase shadow-[0_8px_22px_rgba(120,72,25,0.07)] backdrop-blur-md">
               <span className="h-1.5 w-1.5 rounded-full bg-[#c8842a] shadow-[0_0_14px_rgba(200,132,42,0.55)]" />
-              {t("weeklyFavourite")}
+              {copy.weeklyFavourite}
             </p>
             <h2 className="font-lora text-2xl leading-tight font-bold tracking-tight text-[#2c1a0e] sm:text-4xl dark:text-[var(--foreground)]">
-              {t("mustVisit")}
+              {copy.mustVisit}
             </h2>
           </div>
           <Link
             href="/search"
             className="hidden min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[#8a551d] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[#c8842a]/70 hover:text-[#a86d1e] focus-visible:ring-2 focus-visible:ring-[#c8842a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none sm:flex"
           >
-            {t("viewAll")}
+            {copy.viewAll}
             <ArrowRight size={15} />
           </Link>
         </div>
@@ -231,6 +245,8 @@ export default function FeaturedCafesSection({ cafes }: FeaturedCafesSectionProp
                     label={config.label}
                     heightClass={config.heightClass}
                     delay={0}
+                    openNowLabel={copy.openNow}
+                    closedNowLabel={copy.closedNow}
                   />
                 </div>
               );
@@ -268,6 +284,8 @@ export default function FeaturedCafesSection({ cafes }: FeaturedCafesSectionProp
                   label={config.label}
                   heightClass={config.heightClass}
                   delay={displayIdx * 0.08}
+                  openNowLabel={copy.openNow}
+                  closedNowLabel={copy.closedNow}
                 />
               </div>
             );
@@ -280,7 +298,7 @@ export default function FeaturedCafesSection({ cafes }: FeaturedCafesSectionProp
             href="/search"
             className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[#8a551d] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:border-[#c8842a]/70 hover:text-[#a86d1e] focus-visible:ring-2 focus-visible:ring-[#c8842a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none"
           >
-            {t("viewAllMobile")}
+            {copy.viewAllMobile}
             <ArrowRight size={15} />
           </Link>
         </div>
