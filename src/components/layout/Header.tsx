@@ -64,11 +64,18 @@ export default function Header() {
         >
           <Link
             href="/"
-            className="group flex min-w-0 shrink-0 items-center gap-1.5 rounded-full pr-0.5 pl-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-[390px]:gap-2 min-[390px]:pr-1 min-[390px]:pl-1.5"
+            className="group flex min-w-0 shrink-0 items-center gap-1.5 rounded-full pr-0.5 pl-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-[390px]:gap-2 min-[390px]:pr-1 min-[390px]:pl-1.5"
             aria-label="Cafe Maps"
           >
             <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow-[0_8px_22px_rgba(44,26,14,0.12)] min-[390px]:size-10 dark:bg-[#fff7e8]">
-              <Image src="/image/logo.png" alt="" width={34} height={34} loading="lazy" className="size-[31px] min-[390px]:size-[34px]" />
+              <Image
+                src="/image/logo-96.png"
+                alt=""
+                width={34}
+                height={34}
+                priority
+                className="size-[31px] min-[390px]:size-[34px]"
+              />
             </span>
             <span className="hidden min-w-0 flex-col leading-none sm:flex">
               <span
@@ -100,7 +107,7 @@ export default function Header() {
                   href={link.href}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "relative inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-bold whitespace-nowrap outline-none transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                    "relative inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-bold whitespace-nowrap transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
                     isCinematicTop
                       ? isActive || link.primary
                         ? "bg-[#fff0d2] text-[#201006] shadow-[0_10px_26px_rgba(0,0,0,0.2)] hover:bg-white"
@@ -114,9 +121,6 @@ export default function Header() {
                 >
                   <Icon size={14} strokeWidth={isActive || link.primary ? 2.2 : 1.7} />
                   {link.label}
-                  {isActive && !link.primary && (
-                    <span className="absolute right-3 bottom-1 h-1 w-1 rounded-full bg-[#d4923a]" />
-                  )}
                 </Link>
               );
             })}
@@ -132,10 +136,10 @@ export default function Header() {
           >
             <LocaleSwitcher
               className={cn(
-                "[&>button]:h-8 [&>button]:min-w-8 [&>button]:gap-1 [&>button]:px-1.5 [&>button>span]:hidden min-[390px]:[&>button]:min-w-10 min-[390px]:[&>button]:gap-1.5 min-[390px]:[&>button]:px-2 min-[390px]:[&>button>span]:inline",
+                "[&>button]:h-8 [&>button]:min-w-8 [&>button]:gap-1 [&>button]:px-1.5 min-[390px]:[&>button]:min-w-10 min-[390px]:[&>button]:gap-1.5 min-[390px]:[&>button]:px-2 [&>button>span]:hidden min-[390px]:[&>button>span]:inline",
                 isCinematicTop
                   ? "[&>button]:text-[#fff0d4] [&>button:hover]:bg-white/12 [&>button:hover]:text-white"
-                  : "[&>button]:text-[#6f5133] [&>button:hover]:bg-[#ead8bf] [&>button:hover]:text-[#2c1a0e] dark:[&>button]:text-[#ead6b7] dark:[&>button:hover]:bg-white/10 dark:[&>button:hover]:text-white",
+                  : "[&>button]:text-[#6f5133] dark:[&>button]:text-[#ead6b7] [&>button:hover]:bg-[#ead8bf] [&>button:hover]:text-[#2c1a0e] dark:[&>button:hover]:bg-white/10 dark:[&>button:hover]:text-white",
               )}
             />
 
@@ -148,7 +152,7 @@ export default function Header() {
                 <Link
                   href="/login"
                   className={cn(
-                    "inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-black outline-none transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:px-3 md:px-4 md:text-sm",
+                    "inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-black transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:px-3 md:px-4 md:text-sm",
                     isCinematicTop
                       ? "bg-[#fff0d2] text-[#201006] hover:bg-white"
                       : "bg-[var(--accent)] text-white shadow-[0_8px_20px_rgba(200,132,42,0.18)] hover:bg-[var(--accent-hover)]",
