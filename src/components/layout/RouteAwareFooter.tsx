@@ -23,8 +23,10 @@ function isCafeDetailPath(pathname: string) {
 
 export default function RouteAwareFooter() {
   const pathname = usePathname()
+  const normalizedPath = getPathWithoutLocale(pathname).replace(/\/+$/, "")
 
   if (isCafeDetailPath(pathname)) return null
+  if (normalizedPath === "/quiz") return null
 
   return <Footer />
 }
