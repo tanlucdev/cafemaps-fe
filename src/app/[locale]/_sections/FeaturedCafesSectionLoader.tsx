@@ -1,6 +1,6 @@
 import { getCafes } from "@/lib/api";
 import { getTranslations } from "next-intl/server";
-import FeaturedCafesSection from "./FeaturedCafesSection";
+import DeferredFeaturedCafesSection from "./DeferredFeaturedCafesSection";
 
 export default async function FeaturedCafesSectionLoader({ locale }: { locale: string }) {
   const [cafes, featuredT, cafeT] = await Promise.all([
@@ -10,7 +10,7 @@ export default async function FeaturedCafesSectionLoader({ locale }: { locale: s
   ]);
 
   return (
-    <FeaturedCafesSection
+    <DeferredFeaturedCafesSection
       cafes={cafes}
       copy={{
         weeklyFavourite: featuredT("weeklyFavourite"),
