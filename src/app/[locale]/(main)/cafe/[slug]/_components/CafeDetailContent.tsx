@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronLeft, Share2 } from "lucide-react";
+import { toast } from "sonner";
 import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -57,6 +58,9 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     try {
       const result = await toggleSaveCafe(cafe.id, token, prev);
       setSaved(result.saved);
+      if (!prev && result.saved) {
+        toast.success(t("saveSuccess"));
+      }
     } catch (error) {
       setSaved(prev);
       if (isUnauthorizedError(error)) {

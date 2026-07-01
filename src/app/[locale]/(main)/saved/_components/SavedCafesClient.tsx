@@ -32,6 +32,7 @@ import { getSavedCafeEntries, moveToCollection } from "@/lib/api"
 import CafeCard from "@/components/cafe/CafeCard"
 import { cn } from "@/lib/utils"
 import { isCafeOpenNow } from "@/lib/opening-hours"
+import { CafeCardSkeleton } from "@/components/ui/Skeleton"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -810,6 +811,7 @@ export default function SavedCafesClient({
   // ── Auth & entries ──────────────────────────────────────────────────────────
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn)
   const [entries, setEntries] = useState(initialEntries)
+  const [entriesLoading, setEntriesLoading] = useState(initialIsLoggedIn && initialEntries.length === 0)
 
   // ── Filters ─────────────────────────────────────────────────────────────────
   const [activeCollection, setActiveCollection] = useState<string>("all")
@@ -830,7 +832,11 @@ export default function SavedCafesClient({
     let alive = true
     const syncAuth = async () => {
       const token = await getCurrentAccessToken()
-      if (alive) setIsLoggedIn(Boolean(token))
+      if (alive) {
+        const loggedIn = Boolean(token)
+        setIsLoggedIn(loggedIn)
+        if (!loggedIn) setEntriesLoading(false)
+      }
     }
     void syncAuth()
     window.addEventListener("cafe-auth-change", syncAuth)
@@ -838,13 +844,26 @@ export default function SavedCafesClient({
   }, [previewMode])
 
   useEffect(() => {
-    if (previewMode || !isLoggedIn) return
+    if (previewMode || !isLoggedIn) {
+      setEntriesLoading(false)
+      return
+    }
     let alive = true
     ;(async () => {
+      setEntriesLoading(true)
       const token = await getCurrentAccessToken()
-      if (!token) { if (alive) setEntries([]); return }
+      if (!token) {
+        if (alive) {
+          setEntries([])
+          setEntriesLoading(false)
+        }
+        return
+      }
       const next = await getSavedCafeEntries(token, locale)
-      if (alive) setEntries(next)
+      if (alive) {
+        setEntries(next)
+        setEntriesLoading(false)
+      }
     })()
     return () => { alive = false }
   }, [isLoggedIn, locale, previewMode])
@@ -1234,7 +1253,13 @@ export default function SavedCafesClient({
       )}
 
       {/* ── Grid ─────────────────────────────────────────────────────────────── */}
-      {visibleCafes.length === 0 ? (
+      {entriesLoading ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <CafeCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : visibleCafes.length === 0 ? (
         <EmptyState
           title={entries.length === 0 ? t("empty") : t("noResults")}
           subtitle={entries.length === 0 ? t("emptySubtitle") : t("noResultsSubtitle")}

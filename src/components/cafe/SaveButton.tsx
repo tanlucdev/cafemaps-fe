@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Bookmark } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
@@ -19,7 +20,6 @@ interface SaveButtonProps {
 
 export default function SaveButton({
   cafeId,
-  locale,
   initialSaved = false,
   className,
   onSavedChange,
@@ -46,6 +46,9 @@ export default function SaveButton({
       const result = await toggleSaveCafe(cafeId, token, prev);
       setSaved(result.saved);
       onSavedChange?.(result.saved);
+      if (!prev && result.saved) {
+        toast.success(t("saveSuccess"));
+      }
     } catch (error) {
       setSaved(prev); // rollback
       if (isUnauthorizedError(error)) {
