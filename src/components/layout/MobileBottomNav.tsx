@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link, usePathname } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
 import { Home, Search, Heart, User } from "lucide-react"
@@ -12,6 +12,7 @@ const FALLBACK_IOS_BOTTOM_GUARD_HEIGHT = 80
 export default function MobileBottomNav() {
   const pathname = usePathname()
   const t = useTranslations("bottomNav")
+  const [pendingPathname, setPendingPathname] = useState<string | null>(null)
 
   useEffect(() => {
     let frame = 0
@@ -50,6 +51,10 @@ export default function MobileBottomNav() {
     }
   }, [])
 
+  useEffect(() => {
+    setPendingPathname(null)
+  }, [pathname])
+
   const tabs = [
     { href: "/", icon: Home, label: t("home") },
     { href: "/search", icon: Search, label: t("search") },
@@ -58,8 +63,9 @@ export default function MobileBottomNav() {
   ]
 
   const isActiveRoute = (href: string) => {
-    if (href === "/") return pathname === "/"
-    return pathname === href || pathname.startsWith(`${href}/`)
+    const activePathname = pendingPathname ?? pathname
+    if (href === "/") return activePathname === "/"
+    return activePathname === href || activePathname.startsWith(`${href}/`)
   }
 
   return (
@@ -71,6 +77,7 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
+              onClick={() => setPendingPathname(href)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
                 "mobile-bottom-nav-item",

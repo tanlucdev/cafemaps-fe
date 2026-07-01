@@ -16,6 +16,7 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [authState, setAuthState] = useState<boolean | null>(null);
+  const [pendingPathname, setPendingPathname] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -31,6 +32,10 @@ export default function Header() {
     return () => window.removeEventListener("cafe-auth-change", onAuthChange);
   }, []);
 
+  useEffect(() => {
+    setPendingPathname(null);
+  }, [pathname]);
+
   const navLinks = [
     { href: "/search", label: t("explore"), icon: Compass, primary: true },
     // { href: "/blog", label: t("blog"), icon: BookOpen },
@@ -38,6 +43,7 @@ export default function Header() {
     { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];
   const isHome = pathname === "/";
+  const activePathname = pendingPathname ?? pathname;
   const isCinematicTop = isHome && !scrolled;
   const shellVariant = isCinematicTop ? "cinematic" : "surface";
   const iconButtonClass = isCinematicTop
@@ -99,12 +105,13 @@ export default function Header() {
 
           <nav className="ml-2 hidden flex-1 items-center gap-1 md:flex" aria-label="Primary">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = activePathname === link.href;
               const Icon = link.icon;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setPendingPathname(link.href)}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "relative inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-bold whitespace-nowrap transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
