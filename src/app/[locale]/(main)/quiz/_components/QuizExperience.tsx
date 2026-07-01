@@ -5,19 +5,50 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
+  Armchair,
+  BadgeDollarSign,
   BookOpen,
+  BriefcaseBusiness,
   Camera,
   Check,
+  Clock,
+  CloudRain,
   Coffee,
+  CupSoda,
+  Dessert,
+  Disc3,
   Download,
+  Flower2,
+  Footprints,
+  Gem,
+  GlassWater,
+  HandHeart,
   Heart,
+  Hourglass,
+  Image as ImageIcon,
+  Keyboard,
+  LampDesk,
   Leaf,
   Laptop,
-  MapPin,
+  Laugh,
+  Landmark,
+  MessagesSquare,
   Moon,
+  PartyPopper,
+  PiggyBank,
   RotateCcw,
+  Sofa,
   Sparkles,
+  Sprout,
   Sun,
+  Sunrise,
+  Sunset,
+  Table2,
+  Trees,
+  Umbrella,
+  UsersRound,
+  Wallet,
+  Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useTransition, type Ref } from "react";
@@ -75,16 +106,21 @@ export default function QuizExperience({
   const answeredCount = answeredOptions.length;
   const result =
     isComplete && submitted
-    ? resolveQuizResult({
-        answers: questions.map((question) => answers[question.id]),
-        cafes,
-        messages,
-      })
-    : previewProfileId && !answeredCount
-      ? resolveQuizPreviewResult({ profileId: previewProfileId, dna: initialDna, cafes, messages })
-      : null;
+      ? resolveQuizResult({
+          answers: questions.map((question) => answers[question.id]),
+          cafes,
+          messages,
+        })
+      : previewProfileId && !answeredCount
+        ? resolveQuizPreviewResult({
+            profileId: previewProfileId,
+            dna: initialDna,
+            cafes,
+            messages,
+          })
+        : null;
   const progress = (answeredCount / questions.length) * 100;
-  const OptionIcon = OPTION_ICONS[step % OPTION_ICONS.length];
+  const QuestionIcon = QUESTION_ICONS[current.id] ?? Sparkles;
 
   useEffect(() => {
     return () => {
@@ -247,7 +283,7 @@ export default function QuizExperience({
                 <div className="mt-4 grid gap-2.5 sm:mt-5">
                   {current.options.map((option, index) => {
                     const active = selected?.id === option.id;
-                    const SceneIcon = OPTION_ICONS[index % OPTION_ICONS.length];
+                    const SceneIcon = getOptionIcon(option.id, index);
                     const tone = OPTION_TONES[index % OPTION_TONES.length];
                     return (
                       <motion.button
@@ -270,12 +306,16 @@ export default function QuizExperience({
                               : "border-[#e1c49b] bg-[#fff7e7] text-[#91632e]",
                           )}
                         >
-                          {active ? <Check className="size-4" /> : <SceneIcon className="size-4" />}
+                          {active ? (
+                            <Check className="size-4" />
+                          ) : (
+                            <SceneIcon className="size-4 stroke-[2.35]" />
+                          )}
                         </span>
                         <span className="min-w-0 flex-1 break-words whitespace-normal">
                           {option.label}
                         </span>
-                        <OptionIcon className="relative hidden size-4 shrink-0 text-[#c8842a] opacity-35 sm:block" />
+                        <QuestionIcon className="relative hidden size-4 shrink-0 text-[#c8842a] opacity-35 sm:block" />
                       </motion.button>
                     );
                   })}
@@ -347,7 +387,67 @@ type ResultLabels = Record<
   string
 >;
 
-const OPTION_ICONS = [Laptop, Leaf, Heart, Camera, BookOpen, Sun, Moon, MapPin];
+const OPTION_ICONS = [Laptop, Trees, LampDesk, Zap];
+
+const QUESTION_ICONS: Record<string, LucideIcon> = {
+  "deadline-hideout": BriefcaseBusiness,
+  "perfect-table": Coffee,
+  "door-sound": Disc3,
+  "cute-date": Heart,
+  "rain-plan": CloudRain,
+  "coffee-order": CupSoda,
+  "photo-style": Camera,
+  "seat-choice": Armchair,
+  "time-of-day": Clock,
+  "budget-mood": Wallet,
+};
+
+const OPTION_ICON_BY_ID: Record<string, LucideIcon> = {
+  "quiet-laptop": Laptop,
+  "green-window": Trees,
+  "warm-lamp": LampDesk,
+  "city-buzz": Zap,
+  "book-cup": BookOpen,
+  "clean-espresso": Coffee,
+  "camera-cake": Dessert,
+  "plant-sun": Sprout,
+  "keyboard-soft": Keyboard,
+  "leaves-glass": GlassWater,
+  "old-record": Disc3,
+  "friends-laughing": Laugh,
+  "small-talk": MessagesSquare,
+  "walk-after": Footprints,
+  "photo-booth": ImageIcon,
+  "low-key": HandHeart,
+  "rain-work": BriefcaseBusiness,
+  "rain-window": Umbrella,
+  "rain-date": Heart,
+  "rain-group": UsersRound,
+  "filter-calm": Coffee,
+  "sweet-latte": CupSoda,
+  "old-coffee": Landmark,
+  "iced-tea": GlassWater,
+  "clean-shot": Sun,
+  "leaf-shot": Flower2,
+  "film-shot": Camera,
+  "friends-shot": PartyPopper,
+  "corner-seat": Armchair,
+  "garden-seat": Leaf,
+  "sofa-seat": Sofa,
+  "big-table": Table2,
+  "early-focus": Sunrise,
+  "late-morning": Sun,
+  "golden-hour": Sunset,
+  "slow-night": Moon,
+  "student-friendly": PiggyBank,
+  "worth-splurge": Gem,
+  "stay-long": Hourglass,
+  "split-table": BadgeDollarSign,
+};
+
+function getOptionIcon(optionId: string, index: number) {
+  return OPTION_ICON_BY_ID[optionId] ?? OPTION_ICONS[index % OPTION_ICONS.length];
+}
 
 function DoodleIcon({ Icon, className }: { Icon: LucideIcon; className: string }) {
   return (
