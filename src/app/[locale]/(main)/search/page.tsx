@@ -1,12 +1,9 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { createLocalizedMetadata, normalizeLocale } from "@/lib/metadata";
-import SearchLoader from "./_components/SearchLoader";
-import SearchLoading from "./loading";
+import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection";
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<Record<string, string | string[]>>;
 }
 
 export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
@@ -24,14 +21,11 @@ export async function generateMetadata({ params }: SearchPageProps): Promise<Met
   });
 }
 
-export default async function SearchPage({ params, searchParams }: SearchPageProps) {
+export default async function SearchPage({ params }: SearchPageProps) {
   const { locale } = await params;
-  const sp = await searchParams;
   return (
     <div className="pt-16">
-      <Suspense fallback={<SearchLoading />}>
-        <SearchLoader locale={locale} searchParams={sp} />
-      </Suspense>
+      <FeaturedSection cafes={[]} locale={locale} deferData />
     </div>
   );
 }
