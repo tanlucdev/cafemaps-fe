@@ -11,6 +11,9 @@ import { getAuthUser } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+const HEADER_SCROLL_ENTER_Y = 24;
+const HEADER_SCROLL_LEAVE_Y = 8;
+
 export default function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
@@ -19,7 +22,15 @@ export default function Header() {
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      setScrolled((wasScrolled) => {
+        const nextScrolled = wasScrolled
+          ? scrollY > HEADER_SCROLL_LEAVE_Y
+          : scrollY > HEADER_SCROLL_ENTER_Y;
+        return nextScrolled === wasScrolled ? wasScrolled : nextScrolled;
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

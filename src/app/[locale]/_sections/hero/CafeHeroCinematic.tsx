@@ -40,11 +40,11 @@ export function CafeHeroCinematic({
       <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/20 bg-[#4a2a16] shadow-[0_22px_62px_rgba(18,10,5,0.24),0_12px_42px_rgba(245,166,58,0.12)] sm:rounded-[30px] md:rounded-[36px]">
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0 bg-[url('/image/home-hero-poster-mobile.webp')] bg-cover bg-center brightness-[0.82] contrast-[1.04] saturate-[1.03] md:hidden"
+          className="absolute inset-0 z-0 bg-[url('/image/home-hero-poster-mobile.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:hidden"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0 hidden bg-[url('/image/home-hero-poster.webp')] bg-cover bg-center brightness-[0.82] contrast-[1.04] saturate-[1.03] md:block"
+          className="absolute inset-0 z-0 hidden bg-[url('/image/home-hero-poster.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:block"
         />
 
         <HeroVideoBackdrop poster={HERO_POSTER} />

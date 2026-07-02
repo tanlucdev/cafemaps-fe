@@ -522,6 +522,15 @@ button:disabled {
   font-family: var(--font-lora);
 }
 
+h1[class*="font-lora"],
+h2[class*="font-lora"],
+h3[class*="font-lora"],
+h1[class*="font-display"],
+h2[class*="font-display"],
+h3[class*="font-display"] {
+  line-height: 1.14;
+}
+
 .card-shadow {
   box-shadow: var(--shadow-warm);
   transition:
