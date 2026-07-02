@@ -120,6 +120,11 @@ export interface SavedCafeEntry {
   createdAt?: string
 }
 
+export interface SavedCollection {
+  name: string
+  createdAt?: string
+}
+
 export const AREAS = [
   "Quận 1",
   "Quận 3",

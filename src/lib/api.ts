@@ -1,4 +1,4 @@
-import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry } from "@/types/cafe"
+import type { Cafe, CafeFilter, CafesResponse, SavedCafeEntry, SavedCollection } from "@/types/cafe"
 import { MOCK_CAFES } from "@/lib/mock-data"
 import { isCafeOpenNow } from "@/lib/opening-hours"
 
@@ -573,12 +573,52 @@ export async function getSavedCafeEntries(
     })
     return raw.map(({ cafe, collectionName, createdAt }) => ({
       cafe: mapApiCafe(cafe, locale),
-      collectionName: collectionName ?? (normalizeCafeLocale(locale) === "en" ? "Favorites" : "Yêu thích"),
+      collectionName: collectionName ?? null,
       createdAt,
     }))
   } catch {
     return []
   }
+}
+
+export async function getSavedCollections(token: string): Promise<SavedCollection[]> {
+  try {
+    const raw = await apiFetch<Array<string | SavedCollection>>("/saved/collections", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return raw
+      .map((item) => (typeof item === "string" ? { name: item } : item))
+      .filter((item) => item.name?.trim())
+  } catch {
+    return []
+  }
+}
+
+export async function createSavedCollection(name: string, token: string): Promise<SavedCollection> {
+  return apiFetch<SavedCollection>("/saved/collections", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function renameSavedCollection(
+  oldName: string,
+  name: string,
+  token: string
+): Promise<SavedCollection> {
+  return apiFetch<SavedCollection>(`/saved/collections/${encodeURIComponent(oldName)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ name }),
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function deleteSavedCollection(name: string, token: string): Promise<void> {
+  await apiFetch(`/saved/collections/${encodeURIComponent(name)}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }
 
 export async function getSavedCafes(token: string, locale?: string | null): Promise<Cafe[]> {
@@ -589,8 +629,9 @@ export async function getSavedCafes(token: string, locale?: string | null): Prom
 export async function toggleSaveCafe(
   cafeId: string,
   token: string,
-  currentlySaved?: boolean
-): Promise<{ saved: boolean }> {
+  currentlySaved?: boolean,
+  collectionName?: string | null
+): Promise<{ saved: boolean; collectionName?: string | null }> {
   if (currentlySaved) {
     await apiFetch(`/saved/${cafeId}`, {
       method: "DELETE",
@@ -600,15 +641,15 @@ export async function toggleSaveCafe(
   }
 
   try {
-    await apiFetch(`/saved`, {
+    const result = await apiFetch<{ saved?: boolean; collectionName?: string | null }>(`/saved`, {
       method: "POST",
-      body: JSON.stringify({ cafeId }),
+      body: JSON.stringify({ cafeId, collectionName }),
       headers: { Authorization: `Bearer ${token}` },
     })
-    return { saved: true }
+    return { saved: true, collectionName: result.collectionName ?? collectionName ?? null }
   } catch (error) {
     if (error instanceof ApiError && error.status === 409) {
-      return { saved: true }
+      return { saved: true, collectionName: collectionName ?? null }
     }
     throw error
   }
@@ -616,7 +657,7 @@ export async function toggleSaveCafe(
 
 export async function moveToCollection(
   cafeId: string,
-  collectionName: string,
+  collectionName: string | null,
   token: string
 ): Promise<void> {
   await apiFetch(`/saved/${cafeId}/collection`, {

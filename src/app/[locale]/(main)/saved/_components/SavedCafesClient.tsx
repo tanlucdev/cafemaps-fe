@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { Link } from "@/i18n/navigation"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Bookmark,
@@ -25,14 +26,16 @@ import {
   X,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import type { Cafe, SavedCafeEntry } from "@/types/cafe"
+import type { Cafe, SavedCafeEntry, SavedCollection } from "@/types/cafe"
 import { AREAS } from "@/types/cafe"
 import { getCurrentAccessToken } from "@/lib/auth-client"
-import { getSavedCafeEntries, moveToCollection } from "@/lib/api"
+import { getSavedCafeEntries, getSavedCollections } from "@/lib/api"
 import CafeCard from "@/components/cafe/CafeCard"
 import { cn } from "@/lib/utils"
 import { isCafeOpenNow } from "@/lib/opening-hours"
 import { CafeCardSkeleton } from "@/components/ui/Skeleton"
+import { useSavedFolders } from "./useSavedFolders"
+import type { CollectionGroup } from "./saved-folders.types"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,15 +43,11 @@ interface SavedCafesClientProps {
   locale: string
   initialIsLoggedIn: boolean
   initialEntries: SavedCafeEntry[]
+  initialFolders: SavedCollection[]
   previewMode?: boolean
 }
 
 type QuickFilter = "all" | "open" | "parking"
-
-interface CollectionGroup {
-  name: string
-  cafes: Cafe[]
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -221,7 +220,7 @@ function MoveToCollectionModal({
   cafe: Cafe
   collections: CollectionGroup[]
   currentCollection: string | null
-  onMove: (collectionName: string) => void
+  onMove: (collectionName: string | null) => void
   onCreate: (name: string) => void
   onClose: () => void
 }) {
@@ -264,6 +263,17 @@ function MoveToCollectionModal({
 
         {/* List */}
         <div className="max-h-72 overflow-y-auto py-2">
+          <button
+            type="button"
+            onClick={() => onMove(null)}
+            className="flex w-full cursor-pointer items-center gap-3 px-6 py-3 text-left transition-colors hover:bg-[#fff8f2] dark:hover:bg-[#2c1a0e]"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#e6dacd] bg-[#ffeadf] dark:border-[#3d2c1e] dark:bg-[#29170c]">
+              <FolderOpen size={16} className="text-[#c8a97a]" />
+            </div>
+            <p className="min-w-0 flex-1 truncate text-sm font-medium text-[#29170c] dark:text-[#e8d5c4]">{t("all")}</p>
+            {currentCollection === null && <Check size={16} className="shrink-0 text-[#875200]" />}
+          </button>
           {collections.map((col) => {
             const isActive = col.name === currentCollection
             return (
@@ -405,14 +415,14 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
     }
   }, [onClose])
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.15 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       >
         <motion.div
@@ -426,7 +436,8 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
           {children}
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
 
@@ -804,6 +815,7 @@ export default function SavedCafesClient({
   locale,
   initialIsLoggedIn,
   initialEntries,
+  initialFolders,
   previewMode = false,
 }: SavedCafesClientProps) {
   const t = useTranslations("saved")
@@ -825,6 +837,21 @@ export default function SavedCafesClient({
   const [renameTarget, setRenameTarget] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [moveTarget, setMoveTarget] = useState<Cafe | null>(null)
+  const {
+    collections,
+    collectionNames,
+    replaceFolders,
+    createFolder,
+    renameFolder,
+    deleteFolder,
+    moveCafeToFolder,
+  } = useSavedFolders({
+    initialFolders,
+    entries,
+    setEntries,
+    activeCollection,
+    setActiveCollection,
+  })
 
   // ── Auth sync ────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -859,27 +886,18 @@ export default function SavedCafesClient({
         }
         return
       }
-      const next = await getSavedCafeEntries(token, locale)
+      const [nextEntries, nextFolders] = await Promise.all([
+        getSavedCafeEntries(token, locale),
+        getSavedCollections(token),
+      ])
       if (alive) {
-        setEntries(next)
+        setEntries(nextEntries)
+        replaceFolders(nextFolders)
         setEntriesLoading(false)
       }
     })()
     return () => { alive = false }
-  }, [isLoggedIn, locale, previewMode])
-
-  // ── Derived collections ──────────────────────────────────────────────────────
-  const collections = useMemo<CollectionGroup[]>(() => {
-    const map = new Map<string, Cafe[]>()
-    for (const entry of entries) {
-      const key = entry.collectionName?.trim() || ""
-      if (!key) continue
-      const list = map.get(key) ?? []
-      list.push(entry.cafe)
-      map.set(key, list)
-    }
-    return Array.from(map.entries()).map(([name, cafes]) => ({ name, cafes }))
-  }, [entries])
+  }, [isLoggedIn, locale, previewMode, replaceFolders])
 
   useEffect(() => {
     if (activeCollection === "all") return
@@ -911,63 +929,28 @@ export default function SavedCafesClient({
     if (!saved) setEntries((cur) => cur.filter((e) => e.cafe.id !== cafeId))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleCreateFolder(_folderName: string) {
+  function handleCreateFolder(folderName: string) {
+    void createFolder(folderName)
     setShowCreateFolder(false)
   }
 
   function handleRenameFolder(oldName: string, newName: string) {
-    setEntries((cur) =>
-      cur.map((e) =>
-        (e.collectionName ?? "").trim() === oldName
-          ? { ...e, collectionName: newName }
-          : e
-      )
-    )
-    if (activeCollection === oldName) setActiveCollection(newName)
+    void renameFolder(oldName, newName)
     setRenameTarget(null)
-
-    // fire-and-forget: patch all affected saved entries on backend
-    void (async () => {
-      const token = await getCurrentAccessToken()
-      if (!token) return
-      const affected = entries.filter((e) => (e.collectionName ?? "").trim() === oldName)
-      await Promise.all(affected.map((e) => moveToCollection(e.cafe.id, newName, token).catch(() => null)))
-    })()
   }
 
   function handleDeleteFolder(name: string) {
-    // Remove collectionName from all entries in this folder (move them to "uncollected")
-    setEntries((cur) =>
-      cur.map((e) =>
-        (e.collectionName ?? "").trim() === name
-          ? { ...e, collectionName: null }
-          : e
-      )
-    )
-    if (activeCollection === name) setActiveCollection("all")
+    void deleteFolder(name)
     setDeleteTarget(null)
   }
 
-  async function handleMoveToCollection(cafe: Cafe, targetCollection: string) {
-    setEntries((cur) =>
-      cur.map((e) =>
-        e.cafe.id === cafe.id
-          ? { ...e, collectionName: targetCollection }
-          : e
-      )
-    )
+  function handleMoveToCollection(cafe: Cafe, targetCollection: string | null) {
+    void moveCafeToFolder(cafe, targetCollection)
     setMoveTarget(null)
-
-    const token = await getCurrentAccessToken()
-    if (token) {
-      await moveToCollection(cafe.id, targetCollection, token).catch(() => null)
-    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleEnsureCollectionExists(_folderName: string) {
-    // no-op: collections are derived from entries
+  function handleEnsureCollectionExists(folderName: string) {
+    void createFolder(folderName)
   }
 
   // ── Not logged in ─────────────────────────────────────────────────────────────
@@ -1031,8 +1014,6 @@ export default function SavedCafesClient({
       </section>
     )
   }
-
-  const collectionNames = collections.map((c) => c.name)
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[72px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:px-8 lg:pb-20 lg:pt-28">
@@ -1101,7 +1082,7 @@ export default function SavedCafesClient({
       <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/64 p-3 shadow-[0_20px_70px_rgba(44,26,14,0.09)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-5">
 
       {/* ── Collections row ──────────────────────────────────────────────────── */}
-      {entries.length > 0 && (
+      {(entries.length > 0 || collections.length > 0) && (
         <section className="mb-5" aria-label={t("folders")}>
           <div className="mb-3 flex items-center justify-between gap-3 px-1">
             <h2 className="inline-flex items-center gap-2 text-sm font-bold text-[var(--foreground)] sm:text-base">

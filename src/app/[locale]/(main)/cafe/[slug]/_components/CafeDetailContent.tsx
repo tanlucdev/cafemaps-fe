@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
+import SaveToFolderModal from "@/components/cafe/SaveToFolderModal";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
@@ -26,6 +27,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   const router = useRouter();
   const [saved, setSaved] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [pickerToken, setPickerToken] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -52,17 +54,41 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
       return;
     }
 
-    setLoadingSave(true);
     const prev = saved;
-    setSaved((s) => !s);
+    if (!prev) {
+      setPickerToken(token);
+      return;
+    }
+
+    setLoadingSave(true);
+    setSaved(false);
     try {
       const result = await toggleSaveCafe(cafe.id, token, prev);
       setSaved(result.saved);
-      if (!prev && result.saved) {
-        toast.success(t("saveSuccess"));
-      }
     } catch (error) {
       setSaved(prev);
+      if (isUnauthorizedError(error)) {
+        saveAuthReturnUrl();
+        router.push("/login");
+      }
+    } finally {
+      setLoadingSave(false);
+    }
+  }
+
+  async function handleSaveToFolder(collectionName: string | null) {
+    if (!pickerToken || loadingSave) return;
+    setLoadingSave(true);
+    try {
+      const result = await toggleSaveCafe(cafe.id, pickerToken, false, collectionName);
+      setSaved(result.saved);
+      setPickerToken(null);
+      toast.success(
+        result.collectionName
+          ? t("savedToFolder", { folder: result.collectionName })
+          : t("savedToAll")
+      );
+    } catch (error) {
       if (isUnauthorizedError(error)) {
         saveAuthReturnUrl();
         router.push("/login");
@@ -160,6 +186,13 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
           menuImage={cafe.menuImage}
         />
       )}
+      <SaveToFolderModal
+        open={Boolean(pickerToken)}
+        token={pickerToken}
+        saving={loadingSave}
+        onClose={() => setPickerToken(null)}
+        onSelect={handleSaveToFolder}
+      />
     </article>
   );
 }
