@@ -42,7 +42,7 @@ export default async function ContributePage({ params }: PageProps) {
               {t("eyebrow")}
             </div>
             <div className="max-w-2xl space-y-4">
-              <h1 className="max-w-full break-words font-lora text-[1.56rem] leading-[1.03] font-bold text-[var(--foreground)] min-[390px]:text-[1.72rem] sm:text-[clamp(2.6rem,5vw,3.85rem)] sm:leading-[1.02]">
+              <h1 className="max-w-full break-words text-balance font-lora text-[1.5rem] font-bold text-[var(--foreground)] min-[390px]:text-[1.58rem] sm:text-[clamp(2.6rem,5vw,3.85rem)]">
                 {t("heroTitle")}
               </h1>
               <p className="max-w-xl overflow-hidden text-[13.5px] leading-5 text-[var(--foreground-muted)] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] sm:text-[16px] sm:leading-7 sm:[display:block] sm:[-webkit-line-clamp:unset]">
