@@ -14,7 +14,6 @@ export default async function HeroSection({ locale }: HeroSectionProps) {
       eyebrow={t("cinematicEyebrow")}
       headline={t("cinematicHeadline")}
       subtitle={t("cinematicSubtitle")}
-      primaryCta={t("cinematicPrimaryCta")}
       searchPlaceholder={t("placeholderWork")}
       searchCta={t("cta")}
       mobileSearchCta={t("mobileSearchCta")}

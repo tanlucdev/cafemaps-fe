@@ -1,16 +1,14 @@
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Sparkles } from "lucide-react";
 import { DeferredHeroSearchIsland } from "./DeferredHeroSearchIsland";
 import { HeroVideoBackdrop } from "./HeroVideoBackdrop";
 
-const HERO_POSTER = "/image/home-hero-poster.webp";
+const HERO_POSTER = "/image/home-hero-video-frame-20260703.webp";
 
 type CafeHeroCinematicProps = {
   locale: string;
   eyebrow: string;
   headline: string;
   subtitle: string;
-  primaryCta: string;
   searchPlaceholder: string;
   searchCta: string;
   mobileSearchCta: string;
@@ -28,7 +26,6 @@ export function CafeHeroCinematic({
   eyebrow,
   headline,
   subtitle,
-  primaryCta,
   searchPlaceholder,
   searchCta,
   mobileSearchCta,
@@ -40,11 +37,11 @@ export function CafeHeroCinematic({
       <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[#ffe3b7]/20 bg-[#4a2a16] shadow-[0_22px_62px_rgba(18,10,5,0.24),0_12px_42px_rgba(245,166,58,0.12)] sm:rounded-[30px] md:rounded-[36px]">
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0 bg-[url('/image/home-hero-poster-mobile.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:hidden"
+          className="absolute inset-0 z-0 bg-[url('/image/home-hero-video-frame-mobile-20260703.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:hidden"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0 hidden bg-[url('/image/home-hero-poster.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:block"
+          className="absolute inset-0 z-0 hidden bg-[url('/image/home-hero-video-frame-20260703.webp')] bg-cover bg-center brightness-[1.08] contrast-[0.98] saturate-[1.06] md:block"
         />
 
         <HeroVideoBackdrop poster={HERO_POSTER} />
@@ -55,8 +52,8 @@ export function CafeHeroCinematic({
         <div className="pointer-events-none absolute -top-24 right-[6%] z-[4] size-[22rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,121,0.22)_0%,rgba(190,112,42,0.1)_42%,transparent_70%)] blur-2xl" />
         <div className="pointer-events-none absolute bottom-[-8rem] left-[8%] z-[4] size-[26rem] rounded-full bg-[radial-gradient(circle,rgba(255,246,224,0.22)_0%,rgba(168,92,36,0.1)_44%,transparent_72%)] blur-2xl" />
 
-        <div className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-end px-5 pt-10 pb-[calc(var(--mobile-bottom-nav-height)+0.75rem)] sm:px-8 sm:pt-12 sm:pb-6 md:px-10 md:pt-12 md:pb-6 lg:px-14 lg:pb-7">
-          <div className="w-full max-w-[21rem] min-w-0 sm:max-w-[720px]">
+        <div className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-center px-5 pt-10 pb-[calc(var(--mobile-bottom-nav-height)+0.75rem)] sm:px-8 sm:pt-12 sm:pb-6 md:px-10 md:pt-12 md:pb-6 lg:px-14 lg:pb-7">
+          <div className="w-full max-w-[21rem] min-w-0 sm:max-w-[720px] md:max-w-5xl">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[#3a2112]/34 px-3.5 py-2 text-xs font-bold text-[#ffe7bd] shadow-[0_10px_28px_rgba(0,0,0,0.12),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-md sm:text-[13px]">
               <Sparkles size={14} aria-hidden />
               {eyebrow}
@@ -69,20 +66,6 @@ export function CafeHeroCinematic({
             <p className="mt-4 max-w-[36rem] text-[15px] leading-7 font-semibold text-[#fff0d4]/92 drop-shadow-[0_5px_18px_rgba(0,0,0,0.34)] sm:text-[17px] sm:leading-8">
               {subtitle}
             </p>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/search"
-                className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#fff0d2] px-6 py-3 text-sm font-black text-[#201006] shadow-[0_18px_42px_rgba(245,190,104,0.28)] transition-all outline-none hover:-translate-y-0.5 hover:bg-[#fff7e8] focus-visible:ring-2 focus-visible:ring-[#ffe3b7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#160b05] sm:w-auto sm:text-base"
-              >
-                {primaryCta}
-                <ArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-1"
-                  aria-hidden
-                />
-              </Link>
-            </div>
 
             <DeferredHeroSearchIsland
               fallback={{

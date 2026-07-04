@@ -11,7 +11,7 @@ type QuickFilterChipsProps = {
 
 export function QuickFilterChips({ filters, getLabel, onFilter }: QuickFilterChipsProps) {
   return (
-    <div className="mt-4 flex w-full max-w-full flex-wrap justify-center gap-2 overflow-visible px-0 sm:max-w-3xl sm:justify-start">
+    <div className="mt-4 flex w-full max-w-full flex-wrap justify-start gap-2 overflow-visible px-0 md:max-w-5xl lg:flex-nowrap">
       {filters.map((filter) => (
         <button
           key={filter.labelKey}

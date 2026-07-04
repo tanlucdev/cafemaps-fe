@@ -368,18 +368,18 @@ export default function FeaturedSection({
 
       <main className="mx-auto max-w-7xl px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8">
         {/* Toolbar: results count + sort + view toggle */}
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:rounded-[22px] sm:px-4 sm:py-3">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:rounded-[22px] sm:px-4 sm:py-3">
           <p className="min-w-0 text-sm leading-tight font-medium text-[var(--foreground-muted)]">
             {total > 0 && (
               <>
-                Hiển thị <strong className="text-[var(--foreground)]">{total} quán</strong>
+                Hiển thị: <strong className="text-[var(--foreground)]">{total} quán</strong>
               </>
             )}
           </p>
-          <div className="ml-auto flex shrink-0 items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-3">
             <Select value={sortMode} onValueChange={(v) => v && handleSortChange(v as SearchSort)}>
               <SelectTrigger
-                className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-sm font-black text-[var(--foreground)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
+                className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-sm font-medium text-[var(--foreground)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
                 aria-label={ts("sortLabel")}
               >
                 <span className="min-w-0 truncate">{sortLabel}</span>
@@ -410,13 +410,14 @@ export default function FeaturedSection({
                 </SelectItem>
               </SelectContent>
             </Select>
-            <div className="relative isolate flex items-center rounded-full border border-[#e8cfa9] bg-white/82 p-0.5 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]">
+            <div className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]">
               <button
                 type="button"
                 onClick={() => handleViewModeChange("grid")}
-                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "grid" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
+                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "grid" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
                 aria-label="Grid view"
                 aria-pressed={viewMode === "grid"}
+                title="Grid view"
               >
                 {viewMode === "grid" && !reduceMotion && (
                   <motion.span
@@ -430,9 +431,10 @@ export default function FeaturedSection({
               <button
                 type="button"
                 onClick={() => handleViewModeChange("list")}
-                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "list" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[var(--foreground-muted)] hover:text-[var(--foreground)]"}`}
+                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "list" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
                 aria-label="List view"
                 aria-pressed={viewMode === "list"}
+                title="List view"
               >
                 {viewMode === "list" && !reduceMotion && (
                   <motion.span
