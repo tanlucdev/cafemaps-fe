@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Search, Navigation, Loader2, Coffee, Sparkles, MapPin } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Search, Navigation, Loader2, Coffee, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { HERO_IMAGE_ALTS, HERO_IMAGES, PLACEHOLDER_CYCLE, QUICK_TAGS, STATS } from "./HeroSection2.data";
 import {
   buildSearchParams,
   clearLastSearchState,
@@ -13,59 +14,8 @@ import {
   setLastSearchState,
   type LastSearchState,
 } from "@/lib/search-state";
-import { MOCK_CAFES } from "@/lib/mock-data";
 
-interface HeroSection2Props {
-  locale: string;
-}
-
-const QUICK_TAGS = [
-  { emoji: "☁️", label: "Yên tĩnh", vibe: "yên tĩnh" },
-  { emoji: "🌿", label: "Thiên nhiên", vibe: "thiên nhiên" },
-  { emoji: "✨", label: "Vintage", vibe: "vintage" },
-  { emoji: "💻", label: "Work-friendly", purpose: "làm việc" },
-  { emoji: "🌙", label: "Tối muộn", vibe: "nhộn nhịp" },
-  { emoji: "💕", label: "Hẹn hò", purpose: "hẹn hò" },
-];
-
-const STATS = [
-  { value: "500+", label: "Quán cà phê" },
-  { value: "19", label: "Quận / Huyện" },
-  { value: "10k+", label: "Lượt tìm kiếm" },
-];
-
-const PLACEHOLDER_CYCLE = [
-  "Tìm chỗ làm việc yên tĩnh...",
-  "Hẹn hò cuối tuần...",
-  "Cà phê sáng gần nhà...",
-  "Quán vintage Quận 3...",
-];
-
-const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=1600&q=85",
-  "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1600&q=85",
-  "https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=1600&q=85",
-];
-
-const HERO_IMAGE_ALTS = [
-  "Không gian quán cà phê ấm cúng",
-  "Quầy pha chế cà phê cổ điển",
-  "Góc quán cà phê sáng tự nhiên",
-];
-
-function normalize(str: string) {
-  return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-}
-
-function getNameSuggestions(input: string) {
-  if (input.length < 2) return [];
-  const q = normalize(input);
-  return MOCK_CAFES.filter(
-    (c) => normalize(c.name).includes(q) || c.name.toLowerCase().includes(input.toLowerCase()),
-  ).slice(0, 5);
-}
-
-export default function HeroSection2({ locale }: HeroSection2Props) {
+export default function HeroSection2() {
   const t = useTranslations("hero");
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -76,9 +26,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
   const [lastSearch, setLastSearch] = useState<LastSearchState | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const nameSuggestions = useMemo(() => getNameSuggestions(search), [search]);
-  const showDropdown = focused && search.length >= 2 && nameSuggestions.length > 0;
 
   useEffect(() => {
     const id = setInterval(() => setPlaceholderIdx((i) => (i + 1) % PLACEHOLDER_CYCLE.length), 3500);
@@ -145,7 +92,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
 
   return (
     <section className="relative min-h-[92vh] flex flex-col overflow-hidden pt-16">
-      {/* Background slideshow */}
       <div className="absolute inset-0 z-0">
         {HERO_IMAGES.map((img, i) => (
           <motion.div
@@ -164,12 +110,10 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
             />
           </motion.div>
         ))}
-        {/* Gradient overlays */}
         <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/40 to-black/80" />
         <div className="absolute inset-0 bg-linear-to-r from-black/30 to-transparent" />
       </div>
 
-      {/* Slideshow dots */}
       <div className="absolute bottom-6 right-6 z-10 flex gap-1.5" aria-hidden>
         {HERO_IMAGES.map((_, i) => (
           <button
@@ -182,11 +126,7 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           />
         ))}
       </div>
-
-      {/* Main content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
-
-        {/* Resume last search banner */}
         {lastSearch && (
           <motion.div
             initial={{ opacity: 0, y: -12 }}
@@ -214,7 +154,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           </motion.div>
         )}
 
-        {/* Label */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -227,7 +166,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           </span>
         </motion.div>
 
-        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -240,7 +178,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           {" "}cho khoảnh khắc của bạn
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -250,7 +187,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           Khám phá {STATS[0].value} quán cà phê đẹp nhất TP.HCM — từ góc làm việc yên tĩnh đến buổi hẹn hò lãng mạn.
         </motion.p>
 
-        {/* Search bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -279,7 +215,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
               />
             </div>
 
-            {/* Search button */}
             <button
               onClick={handleSearch}
               className="h-14 shrink-0 cursor-pointer rounded-2xl bg-[#C8842A] px-6 text-sm font-bold text-white transition-all hover:bg-[#A86A1A] active:scale-95 sm:px-8 sm:text-base"
@@ -287,7 +222,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
               {t("cta")}
             </button>
 
-            {/* Near me button */}
             <button
               type="button"
               onClick={handleNearMe}
@@ -303,44 +237,8 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
             </button>
           </div>
 
-          {/* Autocomplete dropdown */}
-          <AnimatePresence>
-            {showDropdown && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 4, scale: 0.98 }}
-                transition={{ duration: 0.15 }}
-                className="absolute top-[calc(100%+8px)] left-0 right-0 z-50 overflow-hidden rounded-2xl border border-white/10 bg-black/80 backdrop-blur-xl shadow-2xl"
-              >
-                <div className="px-3 py-2">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 px-1 pt-1 pb-2">
-                    Quán cà phê
-                  </p>
-                  {nameSuggestions.map((cafe) => (
-                    <button
-                      key={cafe.id}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setFocused(false);
-                        router.push(`/cafe/${cafe.slug}`);
-                      }}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-white/10 cursor-pointer"
-                    >
-                      <MapPin size={14} className="shrink-0 text-[#C8842A]" />
-                      <div>
-                        <p className="text-sm font-medium text-white">{cafe.name}</p>
-                        <p className="text-xs text-white/50">{cafe.district}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
 
-        {/* Quick tags */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -366,7 +264,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           </Link>
         </motion.div>
 
-        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -384,7 +281,6 @@ export default function HeroSection2({ locale }: HeroSection2Props) {
           ))}
         </motion.div>
 
-        {/* Scroll hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

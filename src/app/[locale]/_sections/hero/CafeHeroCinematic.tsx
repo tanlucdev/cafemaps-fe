@@ -1,36 +1,19 @@
 import { Sparkles } from "lucide-react";
-import { DeferredHeroSearchIsland } from "./DeferredHeroSearchIsland";
 import { HeroVideoBackdrop } from "./HeroVideoBackdrop";
+import { HeroSearchIsland } from "./HeroSearchIsland";
 
 const HERO_POSTER = "/image/home-hero-video-frame-20260703.webp";
 
 type CafeHeroCinematicProps = {
-  locale: string;
   eyebrow: string;
   headline: string;
   subtitle: string;
-  searchPlaceholder: string;
-  searchCta: string;
-  mobileSearchCta: string;
-  nearbyCta: string;
-  quickFilters: Array<{
-    emoji: string;
-    label: string;
-    href: string;
-    featured?: boolean;
-  }>;
 };
 
 export function CafeHeroCinematic({
-  locale,
   eyebrow,
   headline,
   subtitle,
-  searchPlaceholder,
-  searchCta,
-  mobileSearchCta,
-  nearbyCta,
-  quickFilters,
 }: CafeHeroCinematicProps) {
   return (
     <section className="relative isolate h-[100svh] w-full max-w-[100vw] overflow-hidden bg-[var(--background)] p-2 pt-[calc(62px+0.5rem)] text-[#fff6e8] sm:p-3 sm:pt-[calc(62px+0.75rem)] md:p-4 md:pt-[calc(62px+1rem)]">
@@ -67,16 +50,7 @@ export function CafeHeroCinematic({
               {subtitle}
             </p>
 
-            <DeferredHeroSearchIsland
-              fallback={{
-                locale,
-                placeholder: searchPlaceholder,
-                searchCta,
-                mobileSearchCta,
-                nearbyCta,
-                quickFilters,
-              }}
-            />
+            <HeroSearchIsland />
           </div>
         </div>
       </div>

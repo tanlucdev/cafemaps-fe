@@ -36,7 +36,7 @@ export default async function HomePage({ params }: HomePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: stringifyJsonLd(jsonLd) }}
       />
-      <HeroSection locale={locale} />
+      <HeroSection />
       <Suspense fallback={<FeaturedCafesSkeleton />}>
         <FeaturedCafesSectionLoader locale={locale} />
       </Suspense>

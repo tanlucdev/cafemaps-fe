@@ -14,13 +14,16 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.home" });
 
-  return createLocalizedMetadata({
-    locale,
-    pathname: "/home2",
-    title: t("title"),
-    absoluteTitle: true,
-    description: t("description"),
-  });
+  return {
+    ...createLocalizedMetadata({
+      locale,
+      pathname: "/home2",
+      title: t("title"),
+      absoluteTitle: true,
+      description: t("description"),
+    }),
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function Home2Page({ params }: HomePageProps) {
@@ -28,7 +31,7 @@ export default async function Home2Page({ params }: HomePageProps) {
 
   return (
     <>
-      <HeroSection2 locale={locale} />
+      <HeroSection2 />
       <Suspense fallback={<FeaturedCafesSkeleton />}>
         <FeaturedCafesSectionLoader2 locale={locale} />
       </Suspense>

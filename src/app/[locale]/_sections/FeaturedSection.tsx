@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter } from "@/i18n/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -23,6 +24,7 @@ import {
 import { isCafeOpenNow } from "@/lib/opening-hours";
 import { getCafeRatingValue } from "@/lib/cafe-rating";
 import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
+import { cafeListQueryKey } from "@/apis/cafes/query";
 
 type ViewMode = "grid" | "list";
 
@@ -111,16 +113,47 @@ export default function FeaturedSection({
   const [sortMode, setSortMode] = useState<SearchSort>(() => sortFromSearchParams(searchParams));
   const [animationType, setAnimationType] = useState<"slide" | "fade">("fade");
   const [searchInput, setSearchInput] = useState(filter.search ?? "");
-  const [clientCafes, setClientCafes] = useState(cafes);
-  const [clientDistricts, setClientDistricts] = useState(districts);
-  const [clientMeta, setClientMeta] = useState(serverMeta);
-  const [dataLoading, setDataLoading] = useState(deferData);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const page = Number(searchParams.get("page") ?? "1");
-  const activeCafes = deferData ? clientCafes : cafes;
-  const activeDistricts = deferData ? clientDistricts : districts;
-  const activeMeta = deferData ? clientMeta : serverMeta;
+  const queryFilter = useMemo(
+    () => ({ ...filter, page, limit: PAGE_SIZE, sort: sortMode }),
+    [filter, page, sortMode],
+  );
+  const districtsQuery = useQuery({
+    queryKey: ["cafe-districts", locale],
+    queryFn: () => getCafeDistricts(locale),
+    enabled: deferData,
+    staleTime: 60 * 60 * 1000,
+  });
+  const cafesQuery = useQuery({
+    queryKey: cafeListQueryKey(queryFilter, locale),
+    queryFn: async ({ signal }) => {
+      if (queryFilter.nearMe && queryFilter.lat != null && queryFilter.lng != null) {
+        const nearbyCafes = await getNearbyCafes(
+          queryFilter.lat,
+          queryFilter.lng,
+          queryFilter.radiusKm ?? 2,
+          locale,
+        );
+        const nextCafes = filterNearbyCafes(nearbyCafes, queryFilter);
+        return {
+          cafes: nextCafes,
+          meta: { total: nextCafes.length, page: 1, limit: nextCafes.length, totalPages: 1 },
+        };
+      }
+
+      return getCafesWithMeta(queryFilter, locale, { cache: "no-store", signal });
+    },
+    enabled: deferData,
+    staleTime: 60 * 1000,
+    placeholderData: keepPreviousData,
+  });
+  const activeCafes = deferData ? (cafesQuery.data?.cafes ?? cafes) : cafes;
+  const activeDistricts = deferData ? (districtsQuery.data ?? districts) : districts;
+  const activeMeta = deferData ? cafesQuery.data?.meta : serverMeta;
+  const dataLoading = deferData && cafesQuery.isLoading;
+  const dataError = deferData && cafesQuery.isError;
 
   const updateUrl = useCallback(
     (newFilter: Filter, newSort: SearchSort, newPage: number) => {
@@ -146,49 +179,6 @@ export default function FeaturedSection({
     setSortMode(nextSort);
     setSearchInput(nextFilter.search ?? "");
   }, [searchParams]);
-
-  useEffect(() => {
-    if (!deferData) return;
-    let alive = true;
-    const nextFilter = filterFromSearchParams(searchParams);
-
-    async function loadSearchData() {
-      setDataLoading(true);
-      const nextDistrictsPromise = getCafeDistricts(locale);
-
-      if (nextFilter.nearMe && nextFilter.lat != null && nextFilter.lng != null) {
-        const nearbyCafes = await getNearbyCafes(
-          nextFilter.lat,
-          nextFilter.lng,
-          nextFilter.radiusKm ?? 2,
-          locale,
-        );
-        const nextCafes = filterNearbyCafes(nearbyCafes, nextFilter);
-        const nextDistricts = await nextDistrictsPromise;
-        if (!alive) return;
-        setClientCafes(nextCafes);
-        setClientDistricts(nextDistricts);
-        setClientMeta({ total: nextCafes.length, page: 1, limit: nextCafes.length, totalPages: 1 });
-        setDataLoading(false);
-        return;
-      }
-
-      const [nextDistricts, nextResult] = await Promise.all([
-        nextDistrictsPromise,
-        getCafesWithMeta({ ...nextFilter, limit: PAGE_SIZE }, locale, { cache: "no-store" }),
-      ]);
-      if (!alive) return;
-      setClientCafes(nextResult.cafes);
-      setClientDistricts(nextDistricts);
-      setClientMeta(nextResult.meta);
-      setDataLoading(false);
-    }
-
-    void loadSearchData();
-    return () => {
-      alive = false;
-    };
-  }, [deferData, locale, searchParams]);
 
   function handleFilterChange(newFilter: Filter) {
     setFilter(newFilter);
@@ -449,7 +439,21 @@ export default function FeaturedSection({
           </div>
         </div>
 
-        {dataLoading ? (
+        {dataError ? (
+          <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
+            <Coffee size={40} className="text-[var(--accent)]/60" />
+            <p className="text-base font-medium text-[var(--foreground-muted)]">
+              {locale === "vi" ? "Không tải được danh sách quán." : "Could not load cafes."}
+            </p>
+            <button
+              type="button"
+              onClick={() => void cafesQuery.refetch()}
+              className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)]"
+            >
+              {locale === "vi" ? "Thử lại" : "Retry"}
+            </button>
+          </div>
+        ) : dataLoading ? (
           <CafeGrid cafes={[]} locale={locale} loading desktopColumns="three" />
         ) : total === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
