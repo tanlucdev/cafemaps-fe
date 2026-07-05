@@ -72,6 +72,7 @@ function MobileMainImage({
             className={`object-cover transition-opacity duration-200 ${isActive ? "opacity-100" : "pointer-events-none opacity-0"}`}
             style={{ objectPosition: isPortrait(i) ? "center 42%" : "center" }}
             priority={i === 0}
+            quality={90}
             aria-hidden={!isActive}
           />
         );
@@ -180,6 +181,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           style={{ objectPosition: isPortrait(index) ? "center 42%" : "center" }}
           priority={priority}
+          quality={90}
         />
         <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/12" />
         <span className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -233,6 +235,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
                   height={44}
                   sizes="60px"
                   className="h-full w-full object-cover"
+                  quality={85}
                 />
               </span>
             </button>
@@ -346,6 +349,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
                         className={`object-contain p-3 transition-opacity duration-200 sm:p-5 ${isActive ? "opacity-100" : "pointer-events-none opacity-0"}`}
                         aria-hidden={!isActive}
                         priority={isActive && index === 0}
+                        quality={90}
                       />
                     );
                   })}
@@ -396,6 +400,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
                           fill
                           sizes="56px"
                           className="object-cover"
+                          quality={85}
                         />
                       </button>
                     ))}

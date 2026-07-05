@@ -153,6 +153,7 @@ export default function CafeCard({
                 "object-cover",
                 isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
               )}
+              quality={90}
               // className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
             />
           ) : (
