@@ -77,16 +77,14 @@ export function FilterDropdownPanel({
       ref={dropdownRef}
       className={cn(
         "absolute top-full right-0 left-0 z-50 mt-1 transition-all duration-300",
-        dropdownOpen
-          ? "translate-y-0 opacity-100"
-          : "pointer-events-none -translate-y-2 opacity-0",
+        dropdownOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
-      <div className="rounded-2xl border border-[#E0D3C0] bg-white shadow-[0_16px_48px_rgba(40,22,4,0.16)] dark:border-[#3A2A20] dark:bg-[#1C1210]">
-        <div className="grid gap-6 p-6 sm:grid-cols-4">
+      <div className="rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/96 shadow-[0_20px_56px_rgba(44,26,14,0.14)] backdrop-blur-xl dark:bg-[var(--card)]">
+        <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
           {/* Phong cách */}
           <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("vibe")}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -95,10 +93,10 @@ export function FilterDropdownPanel({
                   key={v}
                   onClick={() => onToggleVibeStaged(v)}
                   className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
                     staged.vibes.includes(v)
-                      ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-                      : "hover:border-accent hover:text-accent border-[#E0D3C0] text-[#5C4A2F]",
+                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
                   )}
                 >
                   {VIBE_ICONS[v]}
@@ -110,7 +108,7 @@ export function FilterDropdownPanel({
 
           {/* Mục đích */}
           <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("purpose")}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -119,10 +117,10 @@ export function FilterDropdownPanel({
                   key={p}
                   onClick={() => onTogglePurposeStaged(p)}
                   className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
                     staged.purposes.includes(p)
-                      ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-                      : "hover:border-accent hover:text-accent border-[#E0D3C0] text-[#5C4A2F]",
+                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
                   )}
                 >
                   {PURPOSE_ICONS[p]}
@@ -134,7 +132,7 @@ export function FilterDropdownPanel({
 
           {/* Tiện ích */}
           <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("tags.label")}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -143,10 +141,10 @@ export function FilterDropdownPanel({
                   key={tag}
                   onClick={() => onToggleTagStaged(tag)}
                   className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
                     staged.tags.includes(tag)
-                      ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-                      : "hover:border-accent hover:text-accent border-[#E0D3C0] text-[#5C4A2F]",
+                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
                   )}
                 >
                   {TAG_ICONS[tag]}
@@ -159,7 +157,7 @@ export function FilterDropdownPanel({
           {/* Giá + Khu vực */}
           <div className="flex flex-col gap-5">
             <div>
-              <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+              <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
                 {tf("price")}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -168,10 +166,10 @@ export function FilterDropdownPanel({
                     key={opt.value}
                     onClick={() => onSetPriceStaged(opt.value)}
                     className={cn(
-                      "cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-150 active:scale-95",
+                      "cursor-pointer rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
                       staged.price === opt.value
-                        ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
-                        : "hover:border-accent hover:text-accent border-[#E0D3C0] text-[#5C4A2F]",
+                        ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+                        : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
                     )}
                   >
                     {tf(`priceRanges.${opt.translationKey}`)}
@@ -181,15 +179,15 @@ export function FilterDropdownPanel({
             </div>
 
             <div>
-              <p className="mb-2 text-[10px] font-extrabold tracking-[0.09em] text-[#9B8B73] uppercase">
+              <p className="mb-2 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
                 {tf("district")}
               </p>
               <Select
                 value={staged.district ?? ""}
                 onValueChange={(val) => onSetDistrictStaged(val ?? "")}
               >
-                <SelectTrigger className="focus-visible:border-accent h-9 w-full rounded-lg border border-[#E0D3C0] bg-[#FAF6F1] px-3 text-xs font-medium text-[#1C1209] dark:border-[#3A2A20] dark:bg-[#2C1A0E] dark:text-[#FFE3D3]">
-                  <MapPin size={12} className="shrink-0 text-[#9B8B73]" />
+                <SelectTrigger className="h-9 w-full rounded-full border border-[var(--border)] bg-white/68 px-3 text-xs font-bold text-[var(--foreground)] shadow-[var(--shadow-sm)] backdrop-blur-md focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/18 dark:bg-[var(--card)]">
+                  <MapPin size={12} className="shrink-0 text-[var(--foreground-muted)]" />
                   <SelectValue placeholder={tg("allDistricts")} />
                 </SelectTrigger>
                 <SelectContent align="start" sideOffset={4}>
@@ -206,16 +204,16 @@ export function FilterDropdownPanel({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-[#ECE4D6] px-6 py-4 dark:border-[#2A211B]">
+        <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">
           <button
             onClick={onClearAll}
-            className="cursor-pointer text-xs text-[#9B8B73] underline underline-offset-2 transition-colors hover:text-[#5C4A2F]"
+            className="cursor-pointer text-xs font-bold text-[var(--foreground-muted)] underline underline-offset-2 transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             {tf("clear")}
           </button>
           <button
             onClick={onApply}
-            className="bg-accent cursor-pointer rounded-xl px-6 py-2 text-xs font-bold text-white transition-colors hover:bg-(--accent-hover)"
+            className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
           >
             {stagedActiveCount > 0 ? `${tf("apply")} (${stagedActiveCount})` : tf("apply")}
           </button>

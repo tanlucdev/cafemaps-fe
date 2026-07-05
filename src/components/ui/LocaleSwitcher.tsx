@@ -48,13 +48,14 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-2 py-1 transition-colors",
-          "text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-(--background-secondary)",
+          "text-[var(--foreground-muted)] hover:bg-(--background-secondary) hover:text-[var(--foreground)]",
         )}
         aria-label="Switch language"
         aria-expanded={open}
       >
         <ReactCountryFlag
           countryCode={current.countryCode}
+          aria-label={current.label}
           style={{ width: "1.1rem", height: "1.1rem" }}
           svg
         />
@@ -72,9 +73,7 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
             "border border-(--border) bg-(--background)",
             "shadow-[0_8px_32px_rgba(40,22,4,0.14)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
             "animate-in fade-in-0 zoom-in-95 duration-150",
-            align === "center"
-              ? "left-1/2 -translate-x-1/2"
-              : "right-0",
+            align === "center" ? "left-1/2 -translate-x-1/2" : "right-0",
           )}
         >
           <div className="p-1.5">
@@ -86,11 +85,12 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
                   "flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
                   l.code === locale
                     ? "bg-[rgba(201,135,12,0.12)] font-semibold text-[#C9870C] dark:bg-[rgba(240,168,48,0.12)] dark:text-[#F0A830]"
-                    : "text-(--foreground-muted) hover:text-foreground hover:bg-(--background-secondary)",
+                    : "hover:text-foreground text-(--foreground-muted) hover:bg-(--background-secondary)",
                 )}
               >
                 <ReactCountryFlag
                   countryCode={l.countryCode}
+                  aria-label={l.label}
                   style={{ width: "1.2rem", height: "1.2rem" }}
                   svg
                 />

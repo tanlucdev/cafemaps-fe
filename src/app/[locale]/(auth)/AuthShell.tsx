@@ -1,7 +1,8 @@
 "use client";
 
 import { Link, usePathname } from "@/i18n/navigation";
-import { ChevronLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, Coffee, Compass, MapPin, ShieldCheck, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -16,42 +17,14 @@ function getAuthMode(pathname: string): AuthMode {
   return pathname === "/register" ? "register" : "login";
 }
 
-function CupMark({ isRegister }: { isRegister: boolean }) {
-
-  return (
-    <div className="relative mb-1 inline-block">
-      <span className="steam-1 absolute bottom-[72%] left-[30%] h-3.5 w-1.5 rounded-full bg-[rgba(201,135,12,0.28)]" />
-      <span className="steam-2 absolute bottom-[72%] left-1/2 h-3.5 w-1.5 rounded-full bg-[rgba(201,135,12,0.28)]" />
-      <span className="steam-3 absolute bottom-[72%] left-[68%] h-3.5 w-1.5 rounded-full bg-[rgba(201,135,12,0.28)]" />
-      <svg width="58" height="50" viewBox="0 0 60 52" fill="none" aria-hidden="true">
-        <ellipse cx="30" cy="46" rx="22" ry="5" fill="#EDE4D6" />
-        <path d="M10 20 Q11 40 30 42 Q49 40 50 20 Z" fill={isRegister ? "#C9870C" : "#A96E08"} />
-        <ellipse cx="30" cy="20" rx="20" ry="5" fill={isRegister ? "#D99820" : "#C9870C"} />
-        <ellipse cx="30" cy="20" rx="17" ry="4" fill="rgba(255,255,255,.16)" />
-        <path
-          d="M26 20 Q27 18.5 30 20.5 Q33 18.5 34 20 Q34 22.5 30 24 Q26 22.5 26 20 Z"
-          fill="rgba(255,255,255,.35)"
-          opacity={isRegister ? "1" : ".6"}
-        />
-        <path
-          d="M50 26 Q58 26 58 33 Q58 40 50 40"
-          stroke={isRegister ? "#C9870C" : "#A96E08"}
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
 export default function AuthShell({ children }: AuthShellProps) {
   const t = useTranslations("auth");
   const pathname = usePathname();
   const currentMode = getAuthMode(pathname);
   const [authMode, setAuthMode] = useState<AuthMode>(currentMode);
   const isLogin = authMode === "login";
-  const title = isLogin ? t("loginGreetingTitle") : t("registerGreetingTitle");
-  const subtitle = isLogin ? t("loginGreetingSub") : t("registerGreetingSub");
+  const title = isLogin ? t("loginHeroTitle") : t("registerHeroTitle");
+  const subtitle = isLogin ? t("loginHeroBody") : t("registerHeroBody");
 
   useEffect(() => {
     setAuthMode(currentMode);
@@ -60,99 +33,144 @@ export default function AuthShell({ children }: AuthShellProps) {
   return (
     <main
       data-auth-page="true"
-      className="flex min-h-[100dvh] flex-col bg-[#F5EFE6] bg-[radial-gradient(circle,rgba(201,135,12,0.09)_1.5px,transparent_1.5px)] bg-[length:22px_22px] px-6 py-[clamp(1.5rem,5vh,3.5rem)] text-[#1C1209] dark:bg-[#1E1C1A] dark:text-[#F0EBE3]"
+      className="relative min-h-[100dvh] overflow-hidden bg-[#1f1209] px-4 py-4 text-[#fff7e8] sm:px-6 lg:px-8"
     >
-      <div className="flex w-full flex-1 flex-col items-center justify-center">
-        <div className="mb-2 w-full max-w-[420px]">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#9B8B73] transition-colors hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
-          >
-            <ChevronLeft size={14} />
-            {t("backHome")}
-          </Link>
-        </div>
+      <Image
+        src="/image/home-polaroid-3.jpg"
+        alt=""
+        fill
+        sizes="100vw"
+        className="absolute inset-0 object-cover opacity-52"
+        priority
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(31,18,9,0.94),rgba(31,18,9,0.78)_42%,rgba(31,18,9,0.52))]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,rgba(31,18,9,0.96),rgba(31,18,9,0))]" />
 
-        <section className="w-full max-w-[420px] overflow-hidden rounded-[26px] border border-[#ECE4D6] bg-white shadow-[0_8px_40px_rgba(40,22,4,0.13)] max-[520px]:rounded-b-[26px] dark:border-[#3D3A36] dark:bg-[#2A2825]">
-          <div className="relative overflow-hidden border-b border-[#ECE4D6] bg-[#EDE4D6] px-8 pt-5 pb-4 text-center max-[520px]:px-5 max-[520px]:pt-4 max-[520px]:pb-3.5 dark:border-[#3D3A36] dark:bg-[#242220]">
-            <div className="absolute -top-8 -right-6 h-24 w-24 rounded-full bg-[rgba(201,135,12,0.08)]" />
-            <div className="absolute -bottom-5 -left-5 h-20 w-20 rounded-full bg-[rgba(201,135,12,0.06)]" />
+      <div className="relative mx-auto grid min-h-[calc(100dvh-2rem)] w-full min-w-0 max-w-6xl items-center gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+        <aside className="hidden min-h-[620px] overflow-hidden rounded-[32px] border border-[#ffe3b7]/18 bg-[#1f1209]/38 shadow-[0_24px_72px_rgba(0,0,0,0.34)] backdrop-blur-md lg:block">
+          <div className="relative h-full min-h-[620px]">
+            <Image
+              src="/image/home-polaroid-2.jpg"
+              alt={t("visualAlt")}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(31,18,9,0.08),rgba(31,18,9,0.76))]" />
+            <div className="absolute inset-x-0 bottom-0 p-8 xl:p-10">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/22 bg-[#1f1209]/44 px-3 py-1.5 text-xs font-bold text-[#ffe3b7] backdrop-blur-md">
+                <Sparkles size={14} aria-hidden="true" />
+                {t("visualKicker")}
+              </div>
+              <h2 className="font-lora max-w-[520px] text-[44px] leading-[1.03] font-bold text-[#fff7e8]">
+                {t("visualTitle")}
+              </h2>
+              <p className="mt-4 max-w-[470px] text-[15px] leading-7 text-[#fff0d2]/82">
+                {t("visualBody")}
+              </p>
+              <div className="mt-7 flex flex-wrap gap-2.5">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/18 bg-[#fff7e8]/12 px-3 py-2 text-xs font-bold text-[#fff0d2] backdrop-blur-md">
+                  <Coffee size={14} aria-hidden="true" />
+                  {t("benefits.saved")}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/18 bg-[#fff7e8]/12 px-3 py-2 text-xs font-bold text-[#fff0d2] backdrop-blur-md">
+                  <Compass size={14} aria-hidden="true" />
+                  {t("benefits.discovery")}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/18 bg-[#fff7e8]/12 px-3 py-2 text-xs font-bold text-[#fff0d2] backdrop-blur-md">
+                  <ShieldCheck size={14} aria-hidden="true" />
+                  {t("benefits.secure")}
+                </span>
+              </div>
+            </div>
+          </div>
+        </aside>
 
-            <Link href="/" className="relative mb-2.5 inline-flex items-center gap-2">
-              <Image
-                src="/image/logo.png"
-                alt="Cafe Maps"
-                width={36}
-                height={36}
-                className="h-9 w-9 shrink-0 rounded-[10px] object-cover"
-                loading="lazy"
-              />
-              <span className="text-[15px] font-extrabold tracking-tight text-[#C9870C]">
+        <section className="mx-auto w-full min-w-0 max-w-full rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/94 p-4 text-[var(--foreground)] shadow-[0_20px_58px_rgba(31,18,9,0.28)] backdrop-blur-xl sm:max-w-[440px] sm:p-5 dark:border-[#ffe3b7]/16 dark:bg-[#21170f]/92 dark:text-[#fff7e8]">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Link
+              href="/"
+              className="group inline-flex min-h-10 min-w-0 items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:focus-visible:ring-offset-[#21170f]"
+              aria-label="Cafe Maps"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_8px_22px_rgba(44,26,14,0.14)] dark:bg-[#fff7e8]">
+                <Image src="/image/logo-96.png" alt="" width={34} height={34} loading="lazy" />
+              </span>
+              <span className="min-w-0 text-sm font-black text-[var(--foreground)] dark:text-[#fff7e8]">
                 {t("brand")}
               </span>
             </Link>
-
-            <div className="relative">
-              <CupMark isRegister={!isLogin} />
-              <h1 className="font-lora mt-0.5 text-[18px] leading-snug font-semibold text-[#1C1209] italic max-[520px]:text-[17px] dark:text-[#F0EBE3]">
-                &ldquo;{title}&rdquo;
-              </h1>
-              <p className="mt-1 text-[13px] leading-relaxed text-[#9B8B73] dark:text-[#B8AFA6]">
-                {subtitle}
-              </p>
-            </div>
+            <Link
+              href="/"
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/52 px-3 text-xs font-bold text-[var(--foreground-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:border-[#ffe3b7]/16 dark:bg-white/8 dark:text-[#fff0d2]/78 dark:hover:text-[#fff7e8] dark:focus-visible:ring-offset-[#21170f]"
+            >
+              <ArrowLeft size={14} aria-hidden="true" />
+              <span className="hidden min-[380px]:inline">{t("backHome")}</span>
+            </Link>
           </div>
 
-          <div className="px-8 pt-[18px] pb-6 max-[520px]:px-5 max-[520px]:pt-4 max-[520px]:pb-5">
-            <div className="mb-4 flex gap-0.5 rounded-full bg-[#EDE4D6] p-1 dark:bg-[#242220]">
-              <Link
-                href="/login"
-                prefetch={true}
-                scroll={false}
-                onNavigate={() => setAuthMode("login")}
-                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
-                  isLogin
-                    ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
-                    : "text-[#9B8B73] hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
-                }`}
-              >
-                {t("loginTab")}
-              </Link>
-              <Link
-                href="/register"
-                prefetch={true}
-                scroll={false}
-                onNavigate={() => setAuthMode("register")}
-                className={`flex-1 rounded-full px-3.5 py-2 text-center text-[13.5px] font-bold transition-all cursor-pointer ${
-                  !isLogin
-                    ? "bg-white text-[#C9870C] shadow-[0_2px_10px_rgba(40,22,4,0.1)] dark:bg-[#2A2825]"
-                    : "text-[#9B8B73] hover:text-[#1C1209] dark:text-[#B8AFA6] dark:hover:text-[#F0EBE3]"
-                }`}
-              >
-                {t("registerTab")}
-              </Link>
+          <div className="mb-4 overflow-hidden rounded-[22px] border border-[#ead8bf]/72 bg-[#fff7e8]/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] dark:border-[#ffe3b7]/12 dark:bg-white/7">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#e7c995]/72 bg-[#fffaf2]/80 px-3 py-1 text-[11px] font-black text-[var(--accent-hover)] dark:border-[#ffe3b7]/16 dark:bg-white/8 dark:text-[#f0b869]">
+              <MapPin size={13} aria-hidden="true" />
+              {t("eyebrow")}
             </div>
-
-            {children}
-
-            <p className="mt-4 text-center text-[13px] text-[#9B8B73] dark:text-[#B8AFA6]">
-              {isLogin ? t("noAccount") : t("hasAccount")}{" "}
-              <Link
-                href={isLogin ? "/register" : "/login"}
-                prefetch={true}
-                scroll={false}
-                onNavigate={() => setAuthMode(isLogin ? "register" : "login")}
-                className="font-bold text-[#C9870C] hover:underline cursor-pointer"
-              >
-                {isLogin ? t("switchToRegister") : t("switchToLogin")}
-              </Link>
+            <h1 className="font-lora text-[23px] leading-[1.08] font-bold text-[var(--foreground)] min-[390px]:text-[25px] sm:text-[30px] dark:text-[#fff7e8]">
+              {title}
+            </h1>
+            <p className="mt-2 text-[13.5px] leading-6 text-[var(--foreground-muted)] dark:text-[#fff0d2]/76">
+              {subtitle}
             </p>
           </div>
-        </section>
 
-        <p className="mt-3 text-center text-xs text-[#9B8B73] dark:text-[#B8AFA6]">
-          {t("footerLine")}
-        </p>
+          <div className="mb-4 grid grid-cols-2 rounded-full border border-[#ead8bf]/72 bg-[#f5edd8]/78 p-1 dark:border-[#ffe3b7]/12 dark:bg-white/7">
+            <Link
+              href="/login"
+              prefetch={true}
+              scroll={false}
+              onNavigate={() => setAuthMode("login")}
+              aria-current={isLogin ? "page" : undefined}
+              className={cn(
+                "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
+                isLogin
+                  ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[#fff0d2] dark:text-[#201006]"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
+              )}
+            >
+              {t("loginTab")}
+            </Link>
+            <Link
+              href="/register"
+              prefetch={true}
+              scroll={false}
+              onNavigate={() => setAuthMode("register")}
+              aria-current={!isLogin ? "page" : undefined}
+              className={cn(
+                "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
+                !isLogin
+                  ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[#fff0d2] dark:text-[#201006]"
+                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
+              )}
+            >
+              {t("registerTab")}
+            </Link>
+          </div>
+
+          {children}
+
+          <p className="mt-4 text-center text-[13px] text-[var(--foreground-muted)] dark:text-[#fff0d2]/68">
+            {isLogin ? t("noAccount") : t("hasAccount")} {" "}
+            <Link
+              href={isLogin ? "/register" : "/login"}
+              prefetch={true}
+              scroll={false}
+              onNavigate={() => setAuthMode(isLogin ? "register" : "login")}
+              className="font-black text-[var(--accent-hover)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--accent)] dark:text-[#f0b869]"
+            >
+              {isLogin ? t("switchToRegister") : t("switchToLogin")}
+            </Link>
+          </p>
+        </section>
       </div>
     </main>
   );

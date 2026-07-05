@@ -34,13 +34,11 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
   const activeChips: { label: string; remove: () => void }[] = [
     ...(filter.vibes ?? []).map((v) => ({
       label: tf(`vibes.${VIBE_TRANSLATION_KEYS[v as Vibe]}`),
-      remove: () =>
-        onChange({ ...filter, vibes: filter.vibes?.filter((x) => x !== v) }),
+      remove: () => onChange({ ...filter, vibes: filter.vibes?.filter((x) => x !== v) }),
     })),
     ...(filter.purposes ?? []).map((p) => ({
       label: tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p as Purpose]}`),
-      remove: () =>
-        onChange({ ...filter, purposes: filter.purposes?.filter((x) => x !== p) }),
+      remove: () => onChange({ ...filter, purposes: filter.purposes?.filter((x) => x !== p) }),
     })),
     ...(filter.tags ?? []).map((tag) => ({
       label: getTagLabel(tag, tf),
@@ -77,13 +75,13 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
   if (activeChips.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pb-2.5">
-      <span className="text-xs font-medium text-(--foreground-muted)">{tf("activeLabel")}:</span>
+    <div className="flex flex-wrap items-center gap-2 pb-3">
+      <span className="text-xs font-semibold text-[var(--foreground-muted)]">{tf("activeLabel")}:</span>
       {activeChips.map((chip) => (
         <button
           key={chip.label}
           onClick={chip.remove}
-          className="border-accent text-accent inline-flex cursor-pointer items-center gap-1.5 rounded-full border bg-[rgba(201,135,12,0.13)] px-3 py-1 text-xs font-semibold transition-all active:scale-95"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent-light)] px-3 py-1 text-xs font-bold text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.12)] backdrop-blur-md transition-all hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
         >
           {capitalize(chip.label)}
           <X size={11} />
@@ -91,7 +89,7 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
       ))}
       <button
         onClick={clearAll}
-        className="hover:text-accent cursor-pointer text-xs text-(--foreground-muted) underline underline-offset-2 transition-colors"
+        className="cursor-pointer text-xs font-bold text-[var(--foreground-muted)] underline underline-offset-2 transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
       >
         {tf("clearAll")}
       </button>

@@ -2,7 +2,7 @@
 
 # Cafe Maps — Frontend (fe-uiux)
 
-Next.js 16 app với App Router, React 19, TypeScript strict mode.
+Next.js 15.5.15 app với App Router, React 19, TypeScript strict mode.
 
 ## Package Manager
 
@@ -69,7 +69,11 @@ src/
 - **Routing**: Luôn prefix locale, dùng `useRouter` và `usePathname` từ `@/i18n/navigation` (không phải `next/navigation` hay `next-intl` trực tiếp) trong client components — đây là locale-aware router được tạo bởi `createNavigation(routing)`
 - **Translations**: `useTranslations()` (client) / `getTranslations()` (server)
 - **Dark mode**: CSS variables `var(--background)`, `var(--foreground)`, `var(--accent)`, v.v.
-- **Images**: Dùng `next/image` với `sizes` prop; remote patterns: `*.supabase.co`, `images.unsplash.com`, `lh3.googleusercontent.com`
+- **Images**: Dùng `next/image` với `sizes` prop; chỉ dùng `unoptimized` cho local preview/menu khi cần.
+- **Files**: Tối đa 300 lines; component lớn tách thành `ComponentName/index.tsx`.
+- **Fetch code**: Nằm trong `src/apis/[feature]/index.ts`; không thêm feature API mới vào `src/lib`.
+- **Split code**: Tách `hooks`, `helpers`, `constants` khi file vượt 300 lines hoặc logic được tái sử dụng.
+- **Next docs**: Trước khi chạm Next APIs, kiểm tra installed version và `node_modules/next/dist/docs/`; nếu thiếu thì dùng official Next docs.
 
 ## Types quan trọng (`src/types/cafe.ts`)
 

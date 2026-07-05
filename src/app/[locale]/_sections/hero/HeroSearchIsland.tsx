@@ -1,37 +1,30 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
-import { MOCK_CAFES } from "@/lib/mock-data";
+import { useRouter } from "@/i18n/navigation";
 import {
   buildSearchParams,
-  clearLastSearchState,
-  getLastSearchState,
   setLastSearchState,
-  type LastSearchState,
 } from "@/lib/search-state";
 import { HeroSearchControls } from "./HeroSearchControls";
-import { HeroSearchMemory } from "./HeroSearchMemory";
 import { QuickFilterChips } from "./QuickFilterChips";
 import { KEYWORD_TO_FILTER, PLACEHOLDER_KEYS, QUICK_FILTERS } from "./data";
-import { getNameSuggestions, getSmartSuggestions } from "./search-utils";
-import type { QuickFilter } from "./types";
+import { getSmartSuggestions } from "./search-utils";
+import type { CafeSuggestion, QuickFilter } from "./types";
+
+const NAME_SUGGESTIONS: CafeSuggestion[] = [];
 
 export function HeroSearchIsland() {
   const t = useTranslations("hero");
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
-  const [isCompactSearch, setIsCompactSearch] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [lastSearch, setLastSearch] = useState<LastSearchState | null>(null);
   const [nearbyLoading, setNearbyLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const nameSuggestions = useMemo(() => getNameSuggestions(search, MOCK_CAFES), [search]);
   const smartSuggestions = useMemo(
     () =>
       getSmartSuggestions(search, {
@@ -41,10 +34,8 @@ export function HeroSearchIsland() {
     [search, t],
   );
   const showDropdown =
-    focused && search.length >= 2 && (nameSuggestions.length > 0 || smartSuggestions.length > 0);
-  const searchPlaceholder = isCompactSearch
-    ? t("searchPlaceholderCompact")
-    : t(PLACEHOLDER_KEYS[placeholderIdx]);
+    focused && search.length >= 2 && smartSuggestions.length > 0;
+  const searchPlaceholder = t(PLACEHOLDER_KEYS[placeholderIdx]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -57,17 +48,6 @@ export function HeroSearchIsland() {
     if (window.innerWidth >= 768) {
       inputRef.current?.focus();
     }
-    setIsCompactSearch(window.innerWidth < 640);
-    setLastSearch(getLastSearchState());
-  }, []);
-
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 639px)");
-    const updateCompactSearch = () => setIsCompactSearch(media.matches);
-
-    updateCompactSearch();
-    media.addEventListener("change", updateCompactSearch);
-    return () => media.removeEventListener("change", updateCompactSearch);
   }, []);
 
   useEffect(() => {
@@ -162,7 +142,12 @@ export function HeroSearchIsland() {
     );
   }
 
-  function handleQuickFilter({ vibe, purpose, openNow }: QuickFilter) {
+  function handleQuickFilter({ vibe, purpose, nearMe, openNow }: QuickFilter) {
+    if (nearMe) {
+      handleNearMe();
+      return;
+    }
+
     const filter = {
       vibes: vibe ? [vibe] : undefined,
       purposes: purpose ? [purpose] : undefined,
@@ -226,17 +211,6 @@ export function HeroSearchIsland() {
 
   return (
     <>
-      <HeroSearchMemory
-        lastSearch={lastSearch}
-        onResume={() => {
-          if (lastSearch) router.push(`/search?${lastSearch.params}`);
-        }}
-        onClear={() => {
-          clearLastSearchState();
-          setLastSearch(null);
-        }}
-      />
-
       <HeroSearchControls
         search={search}
         onSearchChange={setSearch}
@@ -244,7 +218,7 @@ export function HeroSearchIsland() {
         onFocusChange={setFocused}
         placeholder={searchPlaceholder}
         showDropdown={showDropdown}
-        nameSuggestions={nameSuggestions}
+        nameSuggestions={NAME_SUGGESTIONS}
         smartSuggestions={smartSuggestions}
         inputRef={inputRef}
         containerRef={containerRef}
@@ -266,18 +240,6 @@ export function HeroSearchIsland() {
         getLabel={(key) => t(`quickFilters.${key}`)}
         onFilter={handleQuickFilter}
       />
-
-      <Link
-        href="/search"
-        className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-bold text-[#8f5419] underline decoration-[#d7a64e]/60 decoration-2 underline-offset-4 transition-colors hover:text-[#5f320d] hover:decoration-[#b96a16] sm:text-base"
-      >
-        <span>{t("viewAllCafes")}</span>
-        <ArrowRight
-          size={17}
-          className="transition-transform group-hover:translate-x-1"
-          aria-hidden
-        />
-      </Link>
     </>
   );
 }

@@ -1,0 +1,39 @@
+import { Bookmark, Navigation } from "lucide-react";
+import type { DetailActionsProps } from "../../types";
+
+export default function DetailActions({
+  saved,
+  loadingSave,
+  saveLabel,
+  directionsLabel,
+  saveAriaLabel,
+  mapsUrl,
+  onSave,
+}: DetailActionsProps) {
+  return (
+    <div className="flex w-full gap-3">
+      <button
+        onClick={onSave}
+        disabled={loadingSave}
+        aria-label={saveAriaLabel}
+        className={`flex h-11 w-32 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 text-sm font-black whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-32 ${
+          saved
+            ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+            : "border-[var(--border)] bg-white/68 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] dark:bg-[var(--card)]/72"
+        }`}
+      >
+        <Bookmark size={15} className={saved ? "fill-white" : ""} />
+        {saveLabel}
+      </button>
+      <a
+        href={mapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-white shadow-[0_12px_28px_rgba(200,132,42,0.24)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+      >
+        <Navigation size={16} className="shrink-0" />
+        <span className="truncate">{directionsLabel}</span>
+      </a>
+    </div>
+  );
+}

@@ -48,12 +48,12 @@ export default function NearMeButton({ filter, onChange }: NearMeButtonProps) {
       disabled={loading}
       title={error ? "Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập." : undefined}
       className={cn(
-        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-medium whitespace-nowrap transition-all duration-150 active:scale-95",
+        "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
         filter.nearMe
-          ? "border-accent text-accent bg-[rgba(201,135,12,0.13)]"
+          ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.14)]"
           : error
             ? "border-red-300 text-red-500"
-            : "border-border hover:border-accent hover:text-accent bg-white text-(--foreground-muted) dark:bg-[#1C1210]",
+            : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
         loading && "cursor-not-allowed opacity-60",
       )}
     >

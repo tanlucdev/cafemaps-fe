@@ -1,58 +1,32 @@
+import { CafeCardSkeleton } from "@/components/ui/Skeleton"
+
 export default function SavedLoading() {
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-20 pt-24 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
-      {/* Header skeleton */}
-      <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
-          <div className="h-9 w-64 animate-pulse rounded-xl bg-[#f0e8df] sm:w-80" />
-          <div className="h-4 w-48 animate-pulse rounded-lg bg-[#f5ede7]" />
+    <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[72px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:px-8 lg:pb-20 lg:pt-28">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#8b5b2b_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
+      <div className="relative mx-auto max-w-[1280px]">
+        <div className="mb-5 rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/72 p-4 shadow-[0_18px_58px_rgba(44,26,14,0.1)] backdrop-blur sm:p-6 lg:p-7">
+          <div className="h-7 w-36 animate-pulse rounded-full bg-[var(--background-secondary)]" />
+          <div className="mt-5 h-12 w-full max-w-md animate-pulse rounded-2xl bg-[var(--background-secondary)] sm:h-16" />
+          <div className="mt-4 h-5 w-full max-w-xl animate-pulse rounded-full bg-[var(--background-secondary)]" />
         </div>
-        <div className="h-4 w-28 animate-pulse rounded-lg bg-[#f5ede7]" />
-      </div>
-
-      {/* Collections row skeleton */}
-      <div className="mb-10">
-        <div className="mb-4 h-5 w-20 animate-pulse rounded-lg bg-[#f0e8df]" />
-        <div className="flex gap-4 overflow-hidden">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="min-w-40 shrink-0">
-              <div className="mb-3 aspect-4/3 animate-pulse rounded-2xl bg-[#f0e8df]" />
-              <div className="mb-1 h-3.5 w-24 animate-pulse rounded bg-[#f5ede7]" />
-              <div className="h-3 w-14 animate-pulse rounded bg-[#f5ede7]" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Toolbar skeleton */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex gap-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-8 w-20 animate-pulse rounded-full bg-[#f0e8df]" />
-          ))}
-        </div>
-        <div className="h-8 w-44 animate-pulse rounded-full bg-[#f0e8df]" />
-      </div>
-
-      {/* Card grid skeleton */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="overflow-hidden rounded-2xl border border-[#e6dacd] bg-white shadow-sm">
-            <div className="h-52 animate-pulse bg-[#f0e8df] md:h-56" />
-            <div className="p-4 space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <div className="h-4 w-36 animate-pulse rounded-lg bg-[#f0e8df]" />
-                <div className="h-5 w-12 animate-pulse rounded-full bg-[#f5ede7]" />
-              </div>
-              <div className="h-3.5 w-28 animate-pulse rounded bg-[#f5ede7]" />
-              <div className="flex gap-1.5">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-[#f0e8df]" />
-                <div className="h-5 w-14 animate-pulse rounded-full bg-[#f0e8df]" />
-              </div>
-            </div>
+        <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/64 p-3 shadow-[0_20px_70px_rgba(44,26,14,0.09)] backdrop-blur sm:p-5">
+          <div className="mb-5 flex flex-wrap gap-2">
+            {[88, 104, 120, 96].map((width) => (
+              <div
+                key={width}
+                className="h-10 animate-pulse rounded-full bg-[var(--background-secondary)]"
+                style={{ width }}
+              />
+            ))}
           </div>
-        ))}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <CafeCardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, PenLine, Compass } from "lucide-react";
+import { Bookmark, PenLine, Compass, LogIn } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
@@ -11,14 +11,31 @@ import { getAuthUser } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export default function Header() {
+const HEADER_SCROLL_ENTER_Y = 24;
+const HEADER_SCROLL_LEAVE_Y = 8;
+
+type HeaderProps = {
+  initialIsLoggedIn?: boolean;
+};
+
+export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [authState, setAuthState] = useState<boolean | null>(null);
+  const [authState, setAuthState] = useState(initialIsLoggedIn);
+  const [pendingPathname, setPendingPathname] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      setScrolled((wasScrolled) => {
+        const nextScrolled = wasScrolled
+          ? scrollY > HEADER_SCROLL_LEAVE_Y
+          : scrollY > HEADER_SCROLL_ENTER_Y;
+        return nextScrolled === wasScrolled ? wasScrolled : nextScrolled;
+      });
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -30,74 +47,142 @@ export default function Header() {
     return () => window.removeEventListener("cafe-auth-change", onAuthChange);
   }, []);
 
+  useEffect(() => {
+    setPendingPathname(null);
+  }, [pathname]);
+
   const navLinks = [
-    { href: "/search", label: t("explore"), icon: Compass },
+    { href: "/search", label: t("explore"), icon: Compass, primary: true },
     // { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },
     { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];
   const isHome = pathname === "/";
+  const activePathname = pendingPathname ?? pathname;
+  const isCinematicTop = isHome && !scrolled;
+  const shellVariant = isCinematicTop ? "cinematic" : "surface";
+  const iconButtonClass = isCinematicTop
+    ? "text-[#fff0d4] hover:bg-white/12 hover:text-white"
+    : "text-[#6f5133] hover:bg-[#efe0c8] hover:text-[#2c1a0e] dark:text-[#ead6b7] dark:hover:bg-white/10 dark:hover:text-white";
 
   return (
     <header
       className={cn(
-        "site-header fixed right-0 left-0 z-50 block transition-all duration-300",
-        "border-b backdrop-blur-xl",
-        isHome && !scrolled
-          ? "border-[#e0caa9]/75 bg-[#fff8ee] shadow-[0_8px_30px_rgba(44,26,14,0.16)] dark:border-white/10 dark:bg-[#1c1209] dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)] md:bg-[#fff8ee]/90 md:dark:bg-[#1c1209]/90"
-          : "border-border bg-background md:bg-background/95",
-        scrolled && "shadow-[0_2px_18px_rgba(40,22,4,0.09)]",
+        "site-header fixed right-0 left-0 z-50 block bg-transparent transition-all duration-300",
+        "motion-reduce:transition-none",
       )}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[62px] items-center gap-3">
-          {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center" aria-label="Cafe Maps">
-            <Image src="/image/logo.png" alt="Cafe Maps" width={40} height={40} loading="lazy" />
+      <div className="mx-auto max-w-7xl px-2 pt-2 min-[390px]:px-3 sm:px-6 lg:px-8">
+        <div
+          data-variant={shellVariant}
+          className={cn(
+            "flex h-[52px] w-full min-w-0 items-center gap-1 rounded-full border px-1.5 backdrop-blur-xl transition-all duration-300 min-[390px]:h-[54px] min-[390px]:gap-2 min-[390px]:px-2.5 sm:h-[58px] sm:gap-3 sm:px-3",
+            "motion-reduce:transition-none",
+            isCinematicTop
+              ? "border-[#ffe3b7]/28 bg-[#1f1209]/42 text-[#fff0d4] shadow-[0_16px_46px_rgba(0,0,0,0.24),inset_0_1px_0_rgba(255,240,210,0.12)]"
+              : "border-[#d8bc94] bg-[#fff7e8]/96 text-[var(--foreground)] shadow-[0_16px_42px_rgba(75,45,20,0.18),inset_0_1px_0_rgba(255,255,255,0.78)] dark:border-[#ffe3b7]/22 dark:bg-[#1c1209]/88 dark:shadow-[0_16px_42px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,240,210,0.08)]",
+          )}
+        >
+          <Link
+            href="/"
+            className="group flex min-w-0 shrink-0 items-center gap-1.5 rounded-full pr-0.5 pl-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-[390px]:gap-2 min-[390px]:pr-1 min-[390px]:pl-1.5"
+            aria-label="Cafe Maps"
+          >
+            <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow-[0_8px_22px_rgba(44,26,14,0.12)] min-[390px]:size-10 dark:bg-[#fff7e8]">
+              <Image
+                src="/image/logo-96.png"
+                alt=""
+                width={34}
+                height={34}
+                priority
+                className="size-[31px] min-[390px]:size-[34px]"
+              />
+            </span>
+            <span className="hidden min-w-0 flex-col leading-none sm:flex">
+              <span
+                className={cn(
+                  "text-sm font-black whitespace-nowrap transition-colors",
+                  isCinematicTop ? "text-[#fff0d4]" : "text-[var(--foreground)]",
+                )}
+              >
+                Cafe Maps
+              </span>
+              <span
+                className={cn(
+                  "mt-1 hidden text-[10px] font-bold whitespace-nowrap lg:block",
+                  isCinematicTop ? "text-[#ffe3b7]/78" : "text-[#8c633a] dark:text-[#d7bea0]",
+                )}
+              >
+                HCMC guide
+              </span>
+            </span>
           </Link>
 
-          {/* Desktop nav links */}
-          <nav className="ml-3 hidden flex-1 items-center gap-1.5 md:flex">
+          <nav className="ml-2 hidden flex-1 items-center gap-1 md:flex" aria-label="Primary">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = activePathname === link.href;
               const Icon = link.icon;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setPendingPathname(link.href)}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full px-[15px] py-2 text-[13.5px] font-medium whitespace-nowrap transition-all duration-150",
-                    isActive
-                      ? "bg-[#C9870C] font-bold text-white"
-                      : "hover:text-foreground text-[#604832] hover:bg-[var(--background-secondary)] dark:text-[#e8dfd5] dark:hover:bg-white/10 dark:hover:text-white",
+                    "relative inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-bold whitespace-nowrap transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                    isCinematicTop
+                      ? isActive || link.primary
+                        ? "bg-[#fff0d2] text-[#201006] shadow-[0_10px_26px_rgba(0,0,0,0.2)] hover:bg-white"
+                        : "text-[#ffe3b7]/88 hover:bg-white/12 hover:text-white"
+                      : isActive
+                        ? "bg-[#fff0d2]/52 text-[#7f4f12] shadow-[inset_0_-1px_0_rgba(200,132,42,0.34)] dark:bg-white/8 dark:text-[#f0b869]"
+                        : link.primary
+                          ? "text-[#7f4f12] hover:bg-[#fff0d2]/48 dark:text-[#f0b869] dark:hover:bg-white/10"
+                          : "text-[#8a6848] hover:bg-[#efe0c8] hover:text-[#2c1a0e] dark:text-[#d7bea0] dark:hover:bg-white/10 dark:hover:text-white",
                   )}
                 >
-                  <Icon size={14} strokeWidth={isActive ? 2.2 : 1.7} />
+                  <Icon size={14} strokeWidth={isActive || link.primary ? 2.2 : 1.7} />
                   {link.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right actions */}
-          <div className="ml-auto flex items-center gap-2">
-            <LocaleSwitcher />
+          <div
+            className={cn(
+              "ml-auto flex h-9 max-w-[calc(100%-48px)] shrink-0 items-center gap-0.5 rounded-full border px-0.5 backdrop-blur-md min-[390px]:h-10 min-[390px]:max-w-none min-[390px]:gap-1 min-[390px]:px-1",
+              isCinematicTop
+                ? "border-[#ffe3b7]/24 bg-[#1f1209]/42 shadow-[inset_0_1px_0_rgba(255,240,210,0.1)]"
+                : "border-[#d9bea0] bg-[#f1e1c9]/78 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:border-[#ffe3b7]/18 dark:bg-white/8",
+            )}
+          >
+            <LocaleSwitcher
+              className={cn(
+                "[&>button]:h-8 [&>button]:min-w-8 [&>button]:gap-1 [&>button]:px-1.5 min-[390px]:[&>button]:min-w-10 min-[390px]:[&>button]:gap-1.5 min-[390px]:[&>button]:px-2 [&>button>span]:hidden min-[390px]:[&>button>span]:inline",
+                isCinematicTop
+                  ? "[&>button]:text-[#fff0d4] [&>button:hover]:bg-white/12 [&>button:hover]:text-white"
+                  : "[&>button]:text-[#6f5133] dark:[&>button]:text-[#ead6b7] [&>button:hover]:bg-[#ead8bf] [&>button:hover]:text-[#2c1a0e] dark:[&>button:hover]:bg-white/10 dark:[&>button:hover]:text-white",
+              )}
+            />
 
-            <ThemeToggle />
+            <ThemeToggle className={cn("rounded-full", iconButtonClass)} />
 
-            <div className="ml-0.5 hidden items-center md:flex">
-              {authState === null ? null : authState ? (
-                <UserMenu />
+            <div className="ml-0.5 flex items-center">
+              {authState ? (
+                <UserMenu initialIsLoggedIn={initialIsLoggedIn} />
               ) : (
                 <Link
                   href="/login"
                   className={cn(
-                    "inline-flex items-center rounded-full border-2 border-[#C9870C] px-5 py-1.5 text-sm font-bold text-[#C9870C] transition-all duration-150",
-                    "hover:-translate-y-px hover:bg-[#C9870C] hover:text-white hover:shadow-[0_4px_14px_rgba(201,135,12,0.3)]",
-                    "dark:border-[#F0A830] dark:text-[#F0A830] dark:hover:bg-[#F0A830] dark:hover:text-[#1C1209]",
+                    "inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-black transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#e4ad58] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:px-3 md:px-4 md:text-sm",
+                    isCinematicTop
+                      ? "bg-[#fff0d2] text-[#201006] hover:bg-white"
+                      : "bg-[var(--accent)] text-white shadow-[0_8px_20px_rgba(200,132,42,0.18)] hover:bg-[var(--accent-hover)]",
                   )}
+                  aria-label={t("login")}
                 >
-                  {t("login")}
+                  <LogIn size={14} className="md:hidden" />
+                  <span className="hidden sm:inline">{t("login")}</span>
                 </Link>
               )}
             </div>

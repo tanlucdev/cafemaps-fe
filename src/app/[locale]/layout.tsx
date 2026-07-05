@@ -28,6 +28,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang=${JSON.stringify(locale)};`,
+        }}
+      />
       <ThemeProvider
         attribute="class"
         defaultTheme="light"

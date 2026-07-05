@@ -18,6 +18,11 @@
   },
   "hero": {
     "city": "TP. Hồ Chí Minh",
+    "cinematicEyebrow": "Good coffee, good day",
+    "cinematicHeadline": "Tìm quán cà phê yêu thích tiếp theo",
+    "cinematicSubtitle": "Khám phá những góc ấm cúng, chỗ làm việc yên tĩnh và các quán nhỏ thú vị quanh TP.HCM.",
+    "cinematicPrimaryCta": "Khám phá quán",
+    "cinematicSecondaryCta": "Làm trắc nghiệm",
     "headline": "Bạn đang tìm quán cà phê <accent>kiểu nào</accent>?",
     "line1": "Khám phá",
     "line2": "những quán cà phê",
@@ -29,9 +34,8 @@
     "subtitle": "Tìm không gian hoàn hảo cho mọi khoảnh khắc — từ góc làm việc yên tĩnh đến buổi hẹn hò lãng mạn.",
     "marquee": "Cà phê · Không gian · Phong cách · Trải nghiệm · Ký ức ·",
     "searchPlaceholder": "Tìm quán theo tên, địa chỉ...",
-    "searchPlaceholderCompact": "Tên quán, khu vực, phong cách",
-    "cta": "Tìm kiếm",
-    "mobileSearchCta": "Tìm",
+    "cta": "Khám phá",
+    "mobileSearchCta": "Khám phá",
     "nearMeCta": "Gần tôi",
     "viewAllCafes": "Xem tất cả quán cafe",
     "badge": "Cafe Maps · TP. Hồ Chí Minh",
@@ -61,6 +65,7 @@
       }
     },
     "quickFilters": {
+      "nearMe": "Gần tôi",
       "outdoor": "Ngoài trời",
       "openNow": "Mở cửa ngay",
       "quiet": "Yên tĩnh",
@@ -151,6 +156,9 @@
     "noImage": "Không có ảnh",
     "save": "Lưu quán",
     "saveShort": "Lưu",
+    "saveSuccess": "Đã lưu quán vào danh sách của bạn.",
+    "savedToAll": "Đã lưu vào Tất cả.",
+    "savedToFolder": "Đã lưu vào {folder}.",
     "saved": "Đã lưu",
     "directions": "Chỉ đường đến đây",
     "notFound": "Không tìm thấy quán",
@@ -240,14 +248,251 @@
     "statDistricts": "Quận / Huyện"
   },
   "quiz": {
-    "title": "Tìm quán theo tính cách",
-    "subtitle": "Trả lời vài câu hỏi để chúng tôi gợi ý quán phù hợp nhất với bạn.",
+    "title": "Pha gu cà phê của bạn",
+    "subtitle": "Một quiz nhỏ kiểu scrapbook để gợi ý đúng quán, đúng mood, không đá bạn sang trang tìm kiếm.",
+    "eyebrow": "Cute cafe quiz",
     "start": "Bắt đầu trắc nghiệm",
-    "next": "Tiếp theo",
+    "next": "Qua câu tiếp",
     "back": "Quay lại",
     "result": "Kết quả của bạn",
-    "retake": "Làm lại",
-    "question": "Câu hỏi {current} / {total}"
+    "retake": "Pha lại gu",
+    "lockTaste": "Chốt gu này",
+    "question": "Câu hỏi {current} / {total}",
+    "why": "Vì sao hợp bạn",
+    "analysis": "Giải mã persona",
+    "recommendedCafes": "Quán hợp persona này",
+    "downloadImage": "Tải ảnh",
+    "shareResult": "Share",
+    "copyLink": "Copy link",
+    "copied": "Đã copy link",
+    "savedImage": "Đã tải ảnh kết quả",
+    "shareFallback": "Trình duyệt chưa share file được, mình đã tải ảnh và copy link.",
+    "traits": "Tính cách cafe",
+    "bestFor": "Hợp nhất khi",
+    "avoidWhen": "Nên tránh khi",
+    "previewNote": "Đây là bản xem nhanh từ link share. Làm quiz lại để pha DNA đầy đủ.",
+    "viewCafe": "Xem quán",
+    "match": "Độ hợp mood",
+    "brewed": "đã pha",
+    "experience": {
+      "questions": [
+        {
+          "id": "deadline-hideout",
+          "text": "Nếu chiều nay trốn deadline 2 tiếng, bạn chọn góc nào?",
+          "options": [
+            { "id": "quiet-laptop", "label": "Góc im im, laptop mở, ly latte còn ấm" },
+            { "id": "green-window", "label": "Nhiều cây, nắng lọc qua cửa, ngồi lâu không ngợp" },
+            { "id": "warm-lamp", "label": "Đèn vàng, ghế mềm, nói chuyện nhỏ cũng vui" },
+            { "id": "city-buzz", "label": "Nhạc có nhịp, bạn bè đông, ảnh lên nhìn có vibe" }
+          ]
+        },
+        {
+          "id": "perfect-table",
+          "text": "Bàn cafe lý tưởng của bạn đang có gì?",
+          "options": [
+            { "id": "book-cup", "label": "Một cuốn sách mở dở, tách cà phê cũ mà thơm" },
+            { "id": "clean-espresso", "label": "Mặt bàn gọn, espresso sạch vị, ổ điện rất gần" },
+            { "id": "camera-cake", "label": "Máy ảnh, bánh xinh, vài món đạo cụ chụp chơi" },
+            { "id": "plant-sun", "label": "Một chậu cây, vệt nắng, ly đá tan thật chậm" }
+          ]
+        },
+        {
+          "id": "door-sound",
+          "text": "Bạn mở cửa quán bước vào, âm thanh nào làm bạn thấy đúng mood?",
+          "options": [
+            { "id": "keyboard-soft", "label": "Tiếng gõ phím rất khẽ, ai cũng đang tập trung" },
+            { "id": "leaves-glass", "label": "Lá xào xạc, đá chạm ly, không khí mát rượi" },
+            { "id": "old-record", "label": "Đĩa nhạc cũ, máy pha rì rầm, câu chuyện chậm lại" },
+            { "id": "friends-laughing", "label": "Bạn bè cười vừa đủ to, playlist kéo mood lên" }
+          ]
+        },
+        {
+          "id": "cute-date",
+          "text": "Một buổi hẹn cafe xinh với bạn cần nhất điều gì?",
+          "options": [
+            { "id": "small-talk", "label": "Ánh đèn ấm, bàn nhỏ, nói chuyện lâu không bị vội" },
+            { "id": "walk-after", "label": "Có cây và lối đi gần đó để cafe xong còn dạo" },
+            {
+              "id": "photo-booth",
+              "label": "Góc ảnh đẹp, đồ uống lên màu, cả nhóm có chuyện để kể"
+            },
+            { "id": "low-key", "label": "Ít phô trương, cà phê ngon, ngồi một mình cũng ổn" }
+          ]
+        },
+        {
+          "id": "rain-plan",
+          "text": "Nếu mưa bất chợt, bạn muốn trú vào kiểu quán nào?",
+          "options": [
+            { "id": "rain-work", "label": "Khô ráo, yên, có bàn để mở laptop làm tiếp" },
+            { "id": "rain-window", "label": "Ngồi sát cửa kính, nhìn mưa rơi qua mảng xanh" },
+            { "id": "rain-date", "label": "Đèn vàng, món ngọt nhỏ, nói chuyện tới khi tạnh" },
+            { "id": "rain-group", "label": "Bàn rộng, bạn bè kéo tới, mưa thành cái cớ tụ tập" }
+          ]
+        },
+        {
+          "id": "coffee-order",
+          "text": "Ly đầu tiên bạn gọi thường nói gì về mood hôm đó?",
+          "options": [
+            { "id": "filter-calm", "label": "Filter hoặc espresso gọn, uống để đầu tỉnh" },
+            { "id": "sweet-latte", "label": "Latte mềm, hơi ngọt, nhìn cũng thấy vui" },
+            { "id": "old-coffee", "label": "Cà phê sữa kiểu cũ, quen miệng và rất thật" },
+            { "id": "iced-tea", "label": "Trà đá mát, ít caffeine, hợp ngồi lâu" }
+          ]
+        },
+        {
+          "id": "photo-style",
+          "text": "Nếu chụp một tấm ở quán, bạn thích tấm đó có vibe gì?",
+          "options": [
+            { "id": "clean-shot", "label": "Bàn sạch, ly đẹp, ánh sáng gọn và hiện đại" },
+            { "id": "leaf-shot", "label": "Nắng qua lá, màu xanh dịu, ảnh nhìn rất thở" },
+            { "id": "film-shot", "label": "Hơi film, hơi cũ, có cảm giác Sài Gòn chậm" },
+            { "id": "friends-shot", "label": "Có người trong khung hình, tự nhiên và vui" }
+          ]
+        },
+        {
+          "id": "seat-choice",
+          "text": "Vào quán còn trống nhiều bàn, bạn chọn chỗ nào trước?",
+          "options": [
+            { "id": "corner-seat", "label": "Góc sát tường, ít người qua lại, rất dễ tập trung" },
+            { "id": "garden-seat", "label": "Gần cây hoặc sân nhỏ, có chút gió càng tốt" },
+            { "id": "sofa-seat", "label": "Ghế mềm, ánh sáng ấm, ngồi lâu không mỏi" },
+            { "id": "big-table", "label": "Bàn lớn, tiện gọi thêm bạn hoặc bày đồ ra" }
+          ]
+        },
+        {
+          "id": "time-of-day",
+          "text": "Khung giờ cafe hợp bạn nhất là lúc nào?",
+          "options": [
+            { "id": "early-focus", "label": "Sáng sớm, quán vừa mở, làm một mạch cho xong" },
+            { "id": "late-morning", "label": "Gần trưa, nắng đẹp, đi để reset nhẹ" },
+            { "id": "golden-hour", "label": "Chiều vàng, ánh sáng đẹp, hợp hẹn hoặc chụp ảnh" },
+            { "id": "slow-night", "label": "Tối muộn vừa đủ yên, câu chuyện đi chậm lại" }
+          ]
+        },
+        {
+          "id": "budget-mood",
+          "text": "Hôm nay bạn muốn chi cho cafe theo kiểu nào?",
+          "options": [
+            { "id": "student-friendly", "label": "Vừa túi tiền, ngồi học/làm lâu vẫn ổn" },
+            { "id": "worth-splurge", "label": "Đắt hơn chút cũng được nếu buổi hẹn xứng đáng" },
+            { "id": "stay-long", "label": "Miễn không gian dễ chịu để ở lại lâu" },
+            { "id": "split-table", "label": "Đi với nhóm, chia bill vui là được" }
+          ]
+        }
+      ],
+      "profiles": {
+        "quiet-work-nook": {
+          "title": "Góc Làm Việc Êm",
+          "subtitle": "Tập trung sâu, cà phê ấm, thế giới nhỏ lại vừa đủ.",
+          "description": "Bạn hợp những quán có nhịp nhỏ, bàn ngồi chắc, ánh sáng dễ chịu và đủ yên để đầu óc vào guồng. Một nơi đặt laptop xuống là thấy ngày bớt rối.",
+          "shareTitle": "Mình là Góc Làm Việc Êm",
+          "shareDescription": "Cafe persona của mình: yên, gọn, vào việc sâu sau vài ngụm cà phê.",
+          "reasons": ["yên tĩnh", "làm việc sâu", "có ổ điện"],
+          "personalityTraits": ["kỷ luật mềm", "thích góc riêng", "nhạy với tiếng ồn"],
+          "bestFor": ["deadline cần bình tĩnh", "học/làm 2-3 tiếng", "đi cafe một mình"],
+          "avoidWhen": ["quán quá đông", "nhạc mạnh", "bàn thấp khó mở laptop"]
+        },
+        "garden-reset": {
+          "title": "Vườn Nhỏ Reset",
+          "subtitle": "Cây xanh, nắng dịu, mood được thở lại.",
+          "description": "Mood của bạn cần cây xanh, chút nắng mềm và khoảng thở. Quán hợp nhất là nơi ngồi lâu không mệt, nhìn ra lá cây thấy deadline cũng hiền hơn.",
+          "shareTitle": "Mình là Vườn Nhỏ Reset",
+          "shareDescription": "Cafe persona của mình: cần cây, cần nắng, cần một buổi ngồi lâu không gấp.",
+          "reasons": ["nhiều cây", "chill nhẹ", "ánh sáng tự nhiên"],
+          "personalityTraits": [
+            "dễ hồi năng lượng với thiên nhiên",
+            "thích nhịp chậm",
+            "cần khoảng thở"
+          ],
+          "bestFor": ["sáng cuối tuần", "đổi mood sau ngày mệt", "ngồi đọc hoặc nói chuyện nhẹ"],
+          "avoidWhen": ["trời quá nóng", "không gian kín bí", "bàn chen sát nhau"]
+        },
+        "vintage-story-corner": {
+          "title": "Góc Chuyện Cũ",
+          "subtitle": "Cà phê thơm, đồ gỗ cũ, một câu chuyện đi chậm.",
+          "description": "Bạn dễ rung rinh với mùi cà phê rang, đồ gỗ cũ, nhạc chậm và cảm giác mỗi bàn đều có một câu chuyện. Đi một mình hay đi hai người đều có chất.",
+          "shareTitle": "Mình là Góc Chuyện Cũ",
+          "shareDescription": "Cafe persona của mình: thích quán có tuổi, có mùi cà phê, có một nhịp rất chậm.",
+          "reasons": ["vintage", "ấm cúng", "đọc sách"],
+          "personalityTraits": ["hoài niệm vừa đủ", "thích chi tiết nhỏ", "nghe chuyện giỏi"],
+          "bestFor": ["đọc sách", "viết linh tinh", "hẹn một người muốn nói chuyện lâu"],
+          "avoidWhen": ["decor giả cổ quá tay", "ánh sáng quá tối", "quán bật nhạc ồn"]
+        },
+        "date-glow": {
+          "title": "Hẹn Hò Đèn Vàng",
+          "subtitle": "Ấm, mềm, xinh vừa đủ để câu chuyện tự sáng.",
+          "description": "Gu của bạn là không gian mềm, ánh đèn ấm, ghế ngồi thoải mái và đủ riêng để câu chuyện tự nhiên hơn. Quán phải xinh nhưng không làm quá.",
+          "shareTitle": "Mình là Hẹn Hò Đèn Vàng",
+          "shareDescription": "Cafe persona của mình: ưu tiên ánh đèn ấm, món ngọt nhỏ và cuộc nói chuyện thật lâu.",
+          "reasons": ["lãng mạn", "đèn ấm", "nói chuyện lâu"],
+          "personalityTraits": [
+            "để ý cảm giác của người đi cùng",
+            "thích không gian mềm",
+            "gu xinh nhưng tinh tế"
+          ],
+          "bestFor": ["first date", "kỷ niệm nhỏ", "một buổi chiều muốn nhớ"],
+          "avoidWhen": ["bàn quá sát", "ánh sáng gắt", "quán đông tới mức khó nghe nhau"]
+        },
+        "creative-hangout": {
+          "title": "Tụ Tập Có Vibe",
+          "subtitle": "Bạn bè, ảnh đẹp, năng lượng bật lên đúng lúc.",
+          "description": "Bạn cần nơi có năng lượng, góc ảnh ổn, nhạc vừa lên mood và đủ rộng để bạn bè tụ lại. Một buổi cafe với bạn nên có chút lấp lánh.",
+          "shareTitle": "Mình là Tụ Tập Có Vibe",
+          "shareDescription": "Cafe persona của mình: đi cafe là phải có mood, có bạn bè, có vài tấm ảnh kể chuyện.",
+          "reasons": ["góc ảnh", "bạn bè", "năng lượng sáng tạo"],
+          "personalityTraits": [
+            "hứng khởi theo nhóm",
+            "nhạy với visual",
+            "thích nơi có câu chuyện"
+          ],
+          "bestFor": ["gặp nhóm nhỏ", "brainstorm nhẹ", "chụp ảnh cuối tuần"],
+          "avoidWhen": ["quán quá im", "không có bàn nhóm", "ánh sáng chụp ảnh kém"]
+        },
+        "minimal-sprint": {
+          "title": "Sprint Tối Giản",
+          "subtitle": "Gọn, sáng, cà phê rõ vị, làm xong rồi đi.",
+          "description": "Bạn hợp quán sạch gọn, cà phê rõ vị, service nhanh và ít thứ gây xao nhãng. Ghé vào, xử lý việc, nạp caffeine, rời đi rất gọn.",
+          "shareTitle": "Mình là Sprint Tối Giản",
+          "shareDescription": "Cafe persona của mình: cần cà phê tốt, bàn sạch, ít nhiễu và tốc độ.",
+          "reasons": ["minimal", "specialty", "tập trung nhanh"],
+          "personalityTraits": ["ra quyết định nhanh", "thích sự rõ ràng", "khó chịu với rườm rà"],
+          "bestFor": ["làm việc ngắn", "họp nhanh", "nạp caffeine trước lịch dày"],
+          "avoidWhen": ["menu quá phức tạp", "decor rối", "service chậm"]
+        }
+      },
+      "matchReasons": {
+        "quiet-work-nook": [
+          "Có vibe yên và tiện cho phiên làm việc dài.",
+          "Không gian đủ gọn để bạn tập trung mà không bị cứng.",
+          "Hợp những buổi học/làm cần nhịp ổn định."
+        ],
+        "garden-reset": [
+          "Có mảng xanh và cảm giác thở nhẹ đúng gu.",
+          "Hợp buổi cafe cần reset hơn là chạy deadline.",
+          "Không gian dễ ngồi lâu, mood mềm."
+        ],
+        "vintage-story-corner": [
+          "Có chất ấm cũ và câu chuyện riêng.",
+          "Hợp đọc sách, ngồi một mình, hoặc nói chuyện chậm.",
+          "Cà phê và không gian đều có cảm giác thân quen."
+        ],
+        "date-glow": [
+          "Ánh sáng và nhịp quán hợp một buổi hẹn dễ thương.",
+          "Đủ xinh để nhớ, đủ ấm để nói chuyện lâu.",
+          "Mood mềm, không quá ồn, không quá nghiêm."
+        ],
+        "creative-hangout": [
+          "Có năng lượng cho bạn bè và vài tấm ảnh vui.",
+          "Không gian sáng tạo, hợp gặp nhóm nhỏ.",
+          "Quán có vibe nổi bật hơn một buổi cafe thường."
+        ],
+        "minimal-sprint": [
+          "Gọn, sáng, hợp xử lý việc nhanh.",
+          "Cà phê rõ vị và không gian ít nhiễu.",
+          "Đúng kiểu ghé vào là vào guồng ngay."
+        ]
+      }
+    }
   },
   "saved": {
     "title": "Quán đã lưu",
@@ -262,8 +507,19 @@
     "loginRequired": "Đăng nhập để xem và quản lý những quán cà phê bạn đã lưu.",
     "loginCta": "Đăng nhập",
     "registerCta": "Đăng ký",
+    "loginVisualAlt": "Góc cà phê ấm áp cho bộ sưu tập đã lưu",
+    "loginVisualKicker": "Sổ tay quán thân quen",
+    "loginVisualCaption": "Giữ lại những địa chỉ đáng ghé để lần sau mở ra là biết đi đâu.",
+    "loginNoteOneTitle": "Lưu quán đẹp",
+    "loginNoteOneBody": "Bookmark những không gian hợp mood, lịch hẹn hoặc ngày làm việc sâu.",
+    "loginNoteTwoTitle": "Xếp theo collection",
+    "loginNoteTwoBody": "Gom quán muốn thử, quán hay ghé và những góc yên tĩnh vào từng thư mục.",
     "savedCafeTotal": "<strong>{count}</strong> quán đã lưu",
+    "savedCafeTotalPlain": "{count} quán đã lưu",
     "folderTotal": "<strong>{count}</strong> thư mục",
+    "collectionVisualAlt": "Một bàn cà phê dưới ánh sáng ấm",
+    "collectionVisualKicker": "Curated coffee list",
+    "collectionVisualCaption": "Một collection nhỏ cho những buổi cần đúng quán, đúng không khí.",
     "folders": "Thư mục",
     "all": "Tất cả",
     "newFolder": "Thư mục mới",
@@ -284,6 +540,7 @@
     "save": "Lưu",
     "create": "Tạo",
     "addToFolder": "Thêm vào thư mục",
+    "saveToFolder": "Lưu vào thư mục",
     "noFolders": "Chưa có thư mục nào.",
     "cafeCount": "{count} quán",
     "area": "Khu vực",
@@ -308,15 +565,67 @@
   },
   "contribute": {
     "title": "Đóng góp quán mới",
-    "subtitle": "Bạn biết một quán cà phê tuyệt vời? Hãy chia sẻ với cộng đồng.",
+    "subtitle": "Chia sẻ một quán cà phê đáng ghé để cộng đồng dễ tìm thấy hơn.",
+    "eyebrow": "Cafe Maps community",
+    "heroTitle": "Chia sẻ một góc cà phê bạn muốn người khác tìm thấy",
+    "heroBody": "Một link Google Maps, vài dòng cảm nhận và ảnh thật nếu có là đủ để bọn mình bắt đầu kiểm tra. Những đóng góp nhỏ giúp Cafe Maps giữ được chất địa phương, gần gũi và đáng tin hơn.",
+    "visualAlt": "Không gian quán cà phê ấm áp được cộng đồng chia sẻ",
+    "visualKicker": "Community notes",
+    "visualCaption": "Gửi quán bạn từng ghé, chỗ có ánh sáng đẹp, góc làm việc yên tĩnh, hoặc một ly cà phê khiến ngày hôm đó dễ chịu hơn.",
+    "formAria": "Biểu mẫu đóng góp quán cà phê",
+    "trust": {
+      "googleMaps": "Google Maps link",
+      "realPhotos": "Ảnh thật nếu có",
+      "reviewTime": "Duyệt trong 1-3 ngày"
+    },
+    "steps": {
+      "share": "Chia sẻ quán",
+      "review": "Xem lại"
+    },
     "form": {
       "name": "Tên quán",
       "address": "Địa chỉ",
       "district": "Quận / Huyện",
       "description": "Mô tả ngắn",
       "submit": "Gửi đề xuất",
+      "submitting": "Đang gửi...",
+      "googleMapsLabel": "Link Google Maps của quán *",
+      "googleMapsHint": "Dán link Google Maps để bọn mình kiểm tra đúng địa điểm.",
+      "reasonLabel": "Vì sao bạn muốn chia sẻ quán này?",
+      "reasonHint": "Kể ngắn gọn, tự nhiên, như giới thiệu cho một người bạn.",
+      "reasonPlaceholder": "Ví dụ: Quán có góc ngồi sáng, nhạc vừa đủ, hợp làm việc buổi chiều...",
+      "photosLabel": "Ảnh thật của quán",
+      "photosHint": "Không bắt buộc, tối đa 8 ảnh.",
+      "dropTitle": "Kéo thả ảnh vào đây",
+      "dropSubtitle": "hoặc chọn ảnh từ máy của bạn",
+      "photoAlt": "Ảnh quán đã chọn {index}",
+      "cover": "Bìa",
+      "removePhoto": "Xóa ảnh"
+    },
+    "review": {
+      "title": "Submission summary",
+      "cover": "Ảnh bìa",
+      "coverAlt": "Ảnh bìa quán đã chọn",
+      "googleMaps": "Google Maps",
+      "reason": "Lý do",
+      "note": "Quán của bạn sẽ được đội ngũ kiểm duyệt trong 1-3 ngày làm việc trước khi xuất hiện trên Cafe Maps."
+    },
+    "actions": {
+      "back": "Quay lại",
+      "review": "Xem lại",
+      "submit": "Gửi đề xuất",
       "submitting": "Đang gửi..."
     },
+    "success": {
+      "title": "Cảm ơn bạn đã chia sẻ!",
+      "body": "Quán sẽ được kiểm duyệt trong 1-3 ngày làm việc rồi xuất hiện trên Cafe Maps nếu thông tin phù hợp.",
+      "explore": "Khám phá danh sách quán",
+      "again": "Chia sẻ thêm quán khác"
+    },
+    "errors": {
+      "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán."
+    },
+    "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
   },
   "auth": {
@@ -326,6 +635,21 @@
     "brand": "Cafe Maps",
     "backHome": "Về trang chủ",
     "footerLine": "Tìm những quán cà phê ưa thích của bạn ở Sài Gòn",
+    "eyebrow": "Sổ tay cà phê Sài Gòn",
+    "visualAlt": "Không gian quán cà phê ấm áp ở Sài Gòn",
+    "visualKicker": "Cafe Maps account",
+    "visualTitle": "Giữ lại những quán làm ngày của bạn dễ chịu hơn.",
+    "visualBody": "Đăng nhập để lưu quán, quay lại các góc yêu thích và tiếp tục hành trình khám phá cà phê quanh TP.HCM.",
+    "loginHeroTitle": "Chào lại, mình đi cà phê tiếp nhé.",
+    "loginHeroBody": "Vào tài khoản để xem lại các quán đã lưu và những gợi ý hợp mood hôm nay.",
+    "registerHeroTitle": "Tạo một góc riêng cho hành trình cà phê của bạn.",
+    "registerHeroBody": "Lưu quán đáng ghé, giữ danh sách yêu thích và tìm thêm những không gian hợp gu.",
+    "emailPlaceholder": "ban@email.com",
+    "benefits": {
+      "saved": "Lưu quán yêu thích",
+      "discovery": "Gợi ý hợp mood",
+      "secure": "Tài khoản riêng tư"
+    },
     "loginGreetingTitle": "Lâu rồi không ghé!",
     "loginGreetingSub": "Đăng nhập để tiếp tục khám phá nhé.",
     "registerGreetingTitle": "Chào người mới!",

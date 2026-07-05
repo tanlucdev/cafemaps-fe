@@ -3,30 +3,39 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { Link } from "@/i18n/navigation"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Bookmark,
   Car,
   Check,
   ChevronDown,
+  Coffee,
+  Compass,
   FolderOpen,
   FolderPlus,
+  Layers3,
+  LogIn,
   MapPin,
   MoreHorizontal,
   Pencil,
   Search,
   SlidersHorizontal,
   Trash2,
+  UserPlus,
   X,
 } from "lucide-react"
 import { useTranslations } from "next-intl"
-import type { Cafe, SavedCafeEntry } from "@/types/cafe"
+import type { Cafe, SavedCafeEntry, SavedCollection } from "@/types/cafe"
 import { AREAS } from "@/types/cafe"
 import { getCurrentAccessToken } from "@/lib/auth-client"
-import { getSavedCafeEntries, moveToCollection } from "@/lib/api"
+import { getSavedCafeEntries, getSavedCollections } from "@/lib/api"
 import CafeCard from "@/components/cafe/CafeCard"
 import { cn } from "@/lib/utils"
 import { isCafeOpenNow } from "@/lib/opening-hours"
+import { CafeCardSkeleton } from "@/components/ui/Skeleton"
+import { useSavedFolders } from "./useSavedFolders"
+import type { CollectionGroup } from "./saved-folders.types"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,15 +43,11 @@ interface SavedCafesClientProps {
   locale: string
   initialIsLoggedIn: boolean
   initialEntries: SavedCafeEntry[]
+  initialFolders: SavedCollection[]
   previewMode?: boolean
 }
 
 type QuickFilter = "all" | "open" | "parking"
-
-interface CollectionGroup {
-  name: string
-  cafes: Cafe[]
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -215,7 +220,7 @@ function MoveToCollectionModal({
   cafe: Cafe
   collections: CollectionGroup[]
   currentCollection: string | null
-  onMove: (collectionName: string) => void
+  onMove: (collectionName: string | null) => void
   onCreate: (name: string) => void
   onClose: () => void
 }) {
@@ -258,6 +263,17 @@ function MoveToCollectionModal({
 
         {/* List */}
         <div className="max-h-72 overflow-y-auto py-2">
+          <button
+            type="button"
+            onClick={() => onMove(null)}
+            className="flex w-full cursor-pointer items-center gap-3 px-6 py-3 text-left transition-colors hover:bg-[#fff8f2] dark:hover:bg-[#2c1a0e]"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#e6dacd] bg-[#ffeadf] dark:border-[#3d2c1e] dark:bg-[#29170c]">
+              <FolderOpen size={16} className="text-[#c8a97a]" />
+            </div>
+            <p className="min-w-0 flex-1 truncate text-sm font-medium text-[#29170c] dark:text-[#e8d5c4]">{t("all")}</p>
+            {currentCollection === null && <Check size={16} className="shrink-0 text-[#875200]" />}
+          </button>
           {collections.map((col) => {
             const isActive = col.name === currentCollection
             return (
@@ -399,14 +415,14 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
     }
   }, [onClose])
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.15 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       >
         <motion.div
@@ -420,7 +436,8 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
           {children}
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
 
@@ -494,19 +511,19 @@ function FolderCard({
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="group relative min-w-[160px] shrink-0">
+    <div className="group relative min-w-[150px] shrink-0 sm:min-w-[168px]">
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={onClick}
-        className="w-full cursor-pointer text-left"
+        className="w-full cursor-pointer rounded-[20px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:focus-visible:ring-offset-[#1f1209]"
         type="button"
       >
         <div
           className={cn(
-            "relative mb-3 aspect-[4/3] overflow-hidden rounded-2xl border transition-all duration-200",
+            "relative mb-3 aspect-[4/3] overflow-hidden rounded-[18px] border transition-all duration-200",
             active
-              ? "border-[#c8842a] shadow-[0_8px_24px_rgba(200,132,42,0.22)] ring-2 ring-[#c8842a]/30"
-              : "border-[#e6dacd] shadow-[0_4px_16px_rgba(41,23,12,0.07)] group-hover:border-[#c8842a]/50 group-hover:shadow-[0_8px_20px_rgba(41,23,12,0.12)]"
+              ? "border-[#c8842a] shadow-[0_14px_36px_rgba(200,132,42,0.24)] ring-2 ring-[#c8842a]/28"
+              : "border-[#ffe3b7]/70 shadow-[0_10px_26px_rgba(44,26,14,0.08)] group-hover:border-[#c8842a]/55 group-hover:shadow-[0_14px_32px_rgba(44,26,14,0.13)]"
           )}
         >
           {preview.length >= 3 ? (
@@ -518,7 +535,7 @@ function FolderCard({
                   )}
                 </div>
               ))}
-              <div className="flex items-center justify-center bg-[#875200]">
+              <div className="flex items-center justify-center bg-[#1f1209]/86">
                 <span className="text-base font-bold text-white">+{extra > 0 ? extra : 1}</span>
               </div>
             </div>
@@ -542,13 +559,13 @@ function FolderCard({
             </div>
           )}
           {active && (
-            <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-inset ring-[#c8842a]/40" />
+            <div className="pointer-events-none absolute inset-0 rounded-[18px] bg-linear-to-t from-[#1f1209]/28 to-transparent ring-2 ring-inset ring-[#c8842a]/40" />
           )}
         </div>
-        <span className={cn("block truncate text-sm font-semibold transition-colors", active ? "text-[#875200]" : "text-[#29170c] group-hover:text-[#875200] dark:text-[#e8d5c4]")}>
+        <span className={cn("block truncate text-sm font-bold transition-colors", active ? "text-[#875200] dark:text-[#ffb865]" : "text-[var(--foreground)] group-hover:text-[#875200]")}>
           {group.name}
         </span>
-        <span className="block text-xs text-[#9b8675]">{t("cafeCount", { count: group.cafes.length })}</span>
+        <span className="block text-xs text-[var(--foreground-muted)]">{t("cafeCount", { count: group.cafes.length })}</span>
       </motion.button>
 
       {/* Folder context menu trigger */}
@@ -557,7 +574,7 @@ function FolderCard({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setMenuOpen((v) => !v) }}
-            className="absolute right-0 top-[-116px] flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/90 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 dark:bg-[#2c1a0e]/90"
+            className="absolute right-2 top-[-112px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#ffe3b7]/60 bg-[#fffaf2]/92 opacity-0 shadow-sm backdrop-blur transition-opacity focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] group-hover:opacity-100 dark:border-white/10 dark:bg-[#2c1a0e]/90"
           >
             <MoreHorizontal size={14} className="text-[#6b5a4a]" />
           </button>
@@ -592,10 +609,10 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-150",
+        "inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:focus-visible:ring-offset-[#1f1209]",
         active
-          ? "border-[#875200] bg-[#875200] text-white shadow-sm"
-          : "border-[#e6dacd] bg-white/70 text-[#4a3728] hover:border-[#c8a97a] hover:bg-[#fff8f2] dark:border-[#3d2c1e] dark:bg-[#1c1209]/60 dark:text-[#e8d5c4] dark:hover:border-[#875200]"
+          ? "border-[#875200] bg-[#875200] text-white shadow-[0_8px_22px_rgba(135,82,0,0.18)]"
+          : "border-[#ffe3b7]/70 bg-[#fffaf2]/72 text-[var(--foreground)] shadow-[0_8px_24px_rgba(44,26,14,0.05)] backdrop-blur hover:border-[#c8a97a] hover:bg-[#fff8f2] dark:border-white/10 dark:bg-white/6 dark:text-[#f5e8d8] dark:hover:border-[#875200]"
       )}
     >
       {icon}
@@ -633,10 +650,10 @@ function DistrictDropdown({
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-150",
+          "inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:focus-visible:ring-offset-[#1f1209]",
           active
-            ? "border-[#875200] bg-[#875200] text-white shadow-sm"
-            : "border-[#e6dacd] bg-white/70 text-[#4a3728] hover:border-[#c8a97a] hover:bg-[#fff8f2] dark:border-[#3d2c1e] dark:bg-[#1c1209]/60 dark:text-[#e8d5c4]"
+            ? "border-[#875200] bg-[#875200] text-white shadow-[0_8px_22px_rgba(135,82,0,0.18)]"
+            : "border-[#ffe3b7]/70 bg-[#fffaf2]/72 text-[var(--foreground)] shadow-[0_8px_24px_rgba(44,26,14,0.05)] backdrop-blur hover:border-[#c8a97a] hover:bg-[#fff8f2] dark:border-white/10 dark:bg-white/6 dark:text-[#f5e8d8]"
         )}
       >
         <MapPin size={13} />
@@ -663,7 +680,7 @@ function DistrictDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute left-0 top-10 z-30 max-h-64 w-44 overflow-y-auto rounded-2xl border border-[#e6dacd] bg-white py-1 shadow-xl dark:border-[#3d2c1e] dark:bg-[#1c1209]"
+            className="absolute left-0 top-12 z-30 max-h-64 w-44 overflow-y-auto rounded-2xl border border-[#ffe3b7]/70 bg-[#fffaf2] py-1 shadow-[0_18px_44px_rgba(44,26,14,0.16)] dark:border-white/10 dark:bg-[#1c1209]"
           >
             {AREAS.map((area) => (
               <button
@@ -693,14 +710,14 @@ function DistrictDropdown({
 function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const t = useTranslations("saved")
   return (
-    <div className="relative max-w-xs">
-      <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9b8675]" />
+    <div className="relative w-full min-w-0 rounded-full focus-within:ring-2 focus-within:ring-[var(--accent)]/35 sm:max-w-xs">
+      <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9b8675]" />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={t("searchPlaceholder")}
-        className="w-full rounded-full border border-[#e6dacd] bg-white/70 py-1.5 pl-8 pr-8 text-sm text-[#29170c] placeholder-[#b5a090] focus:border-[#c8842a] focus:outline-none focus:ring-2 focus:ring-[#c8842a]/20 dark:border-[#3d2c1e] dark:bg-[#1c1209]/60 dark:text-[#e8d5c4]"
+        className="min-h-11 w-full rounded-full border border-[#ffe3b7]/75 bg-[#fffaf2]/82 py-2.5 pl-9 pr-9 text-sm font-semibold text-[var(--foreground)] placeholder-[#9b8675] shadow-[0_10px_26px_rgba(44,26,14,0.06)] backdrop-blur dark:border-white/10 dark:bg-white/6 dark:text-[#f5e8d8]"
       />
       {value && (
         <button type="button" onClick={() => onChange("")} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-[#9b8675] hover:text-[#29170c]">
@@ -718,16 +735,27 @@ function EmptyState({ title, subtitle, cta }: { title: string; subtitle: string;
     <motion.section
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center py-20 text-center"
+      className="relative overflow-hidden rounded-[28px] border border-[#ffe3b7]/55 bg-[#1f1209] px-5 py-14 text-center shadow-[0_22px_70px_rgba(44,26,14,0.16)] sm:px-8 sm:py-18"
     >
-      <div className="mb-6 flex h-32 w-32 items-center justify-center rounded-full bg-[#fff1ea] shadow-[0_8px_32px_rgba(41,23,12,0.08)]">
-        <Bookmark size={48} className="text-[#c8a97a]" />
+      <Image
+        src="/image/home-polaroid-2.jpg"
+        alt=""
+        fill
+        sizes="(min-width: 768px) 70vw, 100vw"
+        className="object-cover opacity-58"
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-[#1f1209]/95 via-[#1f1209]/60 to-[#1f1209]/18" />
+      <div className="relative mx-auto flex max-w-md flex-col items-center">
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#ffe3b7]/24 bg-[#fff0d2]/12 text-[#ffd18c] shadow-[0_18px_40px_rgba(0,0,0,0.18)] backdrop-blur">
+          <Bookmark size={25} />
+        </div>
+        <h2 className="font-lora text-2xl font-bold leading-tight text-[#fff7e8] sm:text-3xl">{title}</h2>
+        <p className="mt-3 max-w-xs text-sm leading-6 text-[#fff0d2]/78">{subtitle}</p>
+        <Link href="/search" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#fff0d2] px-5 py-2.5 text-sm font-bold text-[#2a170c] shadow-[0_12px_34px_rgba(0,0,0,0.22)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd18c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1f1209]">
+          <Compass size={16} />
+          {cta}
+        </Link>
       </div>
-      <h2 className="text-xl font-bold text-[#29170c]">{title}</h2>
-      <p className="mt-2 max-w-xs text-sm text-[#6b5a4a]">{subtitle}</p>
-      <Link href="/search" className="mt-7 rounded-xl bg-[#875200] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
-        {cta}
-      </Link>
     </motion.section>
   )
 }
@@ -787,6 +815,7 @@ export default function SavedCafesClient({
   locale,
   initialIsLoggedIn,
   initialEntries,
+  initialFolders,
   previewMode = false,
 }: SavedCafesClientProps) {
   const t = useTranslations("saved")
@@ -794,6 +823,7 @@ export default function SavedCafesClient({
   // ── Auth & entries ──────────────────────────────────────────────────────────
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn)
   const [entries, setEntries] = useState(initialEntries)
+  const [entriesLoading, setEntriesLoading] = useState(initialIsLoggedIn && initialEntries.length === 0)
 
   // ── Filters ─────────────────────────────────────────────────────────────────
   const [activeCollection, setActiveCollection] = useState<string>("all")
@@ -807,6 +837,21 @@ export default function SavedCafesClient({
   const [renameTarget, setRenameTarget] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [moveTarget, setMoveTarget] = useState<Cafe | null>(null)
+  const {
+    collections,
+    collectionNames,
+    replaceFolders,
+    createFolder,
+    renameFolder,
+    deleteFolder,
+    moveCafeToFolder,
+  } = useSavedFolders({
+    initialFolders,
+    entries,
+    setEntries,
+    activeCollection,
+    setActiveCollection,
+  })
 
   // ── Auth sync ────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -814,7 +859,11 @@ export default function SavedCafesClient({
     let alive = true
     const syncAuth = async () => {
       const token = await getCurrentAccessToken()
-      if (alive) setIsLoggedIn(Boolean(token))
+      if (alive) {
+        const loggedIn = Boolean(token)
+        setIsLoggedIn(loggedIn)
+        if (!loggedIn) setEntriesLoading(false)
+      }
     }
     void syncAuth()
     window.addEventListener("cafe-auth-change", syncAuth)
@@ -822,29 +871,33 @@ export default function SavedCafesClient({
   }, [previewMode])
 
   useEffect(() => {
-    if (previewMode || !isLoggedIn) return
+    if (previewMode || !isLoggedIn) {
+      setEntriesLoading(false)
+      return
+    }
     let alive = true
     ;(async () => {
+      setEntriesLoading(true)
       const token = await getCurrentAccessToken()
-      if (!token) { if (alive) setEntries([]); return }
-      const next = await getSavedCafeEntries(token, locale)
-      if (alive) setEntries(next)
+      if (!token) {
+        if (alive) {
+          setEntries([])
+          setEntriesLoading(false)
+        }
+        return
+      }
+      const [nextEntries, nextFolders] = await Promise.all([
+        getSavedCafeEntries(token, locale),
+        getSavedCollections(token),
+      ])
+      if (alive) {
+        setEntries(nextEntries)
+        replaceFolders(nextFolders)
+        setEntriesLoading(false)
+      }
     })()
     return () => { alive = false }
-  }, [isLoggedIn, locale, previewMode])
-
-  // ── Derived collections ──────────────────────────────────────────────────────
-  const collections = useMemo<CollectionGroup[]>(() => {
-    const map = new Map<string, Cafe[]>()
-    for (const entry of entries) {
-      const key = entry.collectionName?.trim() || ""
-      if (!key) continue
-      const list = map.get(key) ?? []
-      list.push(entry.cafe)
-      map.set(key, list)
-    }
-    return Array.from(map.entries()).map(([name, cafes]) => ({ name, cafes }))
-  }, [entries])
+  }, [isLoggedIn, locale, previewMode, replaceFolders])
 
   useEffect(() => {
     if (activeCollection === "all") return
@@ -876,125 +929,170 @@ export default function SavedCafesClient({
     if (!saved) setEntries((cur) => cur.filter((e) => e.cafe.id !== cafeId))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleCreateFolder(_folderName: string) {
+  function handleCreateFolder(folderName: string) {
+    void createFolder(folderName)
     setShowCreateFolder(false)
   }
 
   function handleRenameFolder(oldName: string, newName: string) {
-    setEntries((cur) =>
-      cur.map((e) =>
-        (e.collectionName ?? "").trim() === oldName
-          ? { ...e, collectionName: newName }
-          : e
-      )
-    )
-    if (activeCollection === oldName) setActiveCollection(newName)
+    void renameFolder(oldName, newName)
     setRenameTarget(null)
-
-    // fire-and-forget: patch all affected saved entries on backend
-    void (async () => {
-      const token = await getCurrentAccessToken()
-      if (!token) return
-      const affected = entries.filter((e) => (e.collectionName ?? "").trim() === oldName)
-      await Promise.all(affected.map((e) => moveToCollection(e.cafe.id, newName, token).catch(() => null)))
-    })()
   }
 
   function handleDeleteFolder(name: string) {
-    // Remove collectionName from all entries in this folder (move them to "uncollected")
-    setEntries((cur) =>
-      cur.map((e) =>
-        (e.collectionName ?? "").trim() === name
-          ? { ...e, collectionName: null }
-          : e
-      )
-    )
-    if (activeCollection === name) setActiveCollection("all")
+    void deleteFolder(name)
     setDeleteTarget(null)
   }
 
-  async function handleMoveToCollection(cafe: Cafe, targetCollection: string) {
-    setEntries((cur) =>
-      cur.map((e) =>
-        e.cafe.id === cafe.id
-          ? { ...e, collectionName: targetCollection }
-          : e
-      )
-    )
+  function handleMoveToCollection(cafe: Cafe, targetCollection: string | null) {
+    void moveCafeToFolder(cafe, targetCollection)
     setMoveTarget(null)
-
-    const token = await getCurrentAccessToken()
-    if (token) {
-      await moveToCollection(cafe.id, targetCollection, token).catch(() => null)
-    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleEnsureCollectionExists(_folderName: string) {
-    // no-op: collections are derived from entries
+  function handleEnsureCollectionExists(folderName: string) {
+    void createFolder(folderName)
   }
 
   // ── Not logged in ─────────────────────────────────────────────────────────────
   if (!previewMode && !isLoggedIn) {
     return (
-      <section className="mx-auto max-w-[1280px] px-4 pb-16 pt-24 sm:px-6 sm:pt-28 lg:pt-32">
-        <div className="rounded-3xl border border-[#e6dacd] bg-gradient-to-br from-[#fffaf6] to-[#fff1e8] p-8 shadow-[0_8px_40px_rgba(41,23,12,0.07)]">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff1ea] shadow-sm">
-            <Bookmark size={28} className="text-[#875200]" />
+      <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[76px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:pb-16 lg:pt-28">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#8b5b2b_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-[#fff0d2]/55 to-transparent dark:from-white/6" />
+
+        <div className="relative mx-auto grid w-full max-w-6xl overflow-hidden rounded-[30px] border border-[#ffe3b7]/55 bg-[#1f1209] shadow-[0_28px_90px_rgba(44,26,14,0.2)] lg:grid-cols-[0.96fr_1.04fr]">
+          <div className="relative min-h-[260px] lg:min-h-[560px]">
+            <Image
+              src="/image/home-polaroid-4.jpg"
+              alt={t("loginVisualAlt")}
+              fill
+              priority
+              sizes="(min-width: 1024px) 46vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-[#1f1209]/92 via-[#1f1209]/32 to-transparent lg:bg-linear-to-r lg:from-[#1f1209]/28 lg:via-[#1f1209]/22 lg:to-[#1f1209]/86" />
+            <div className="absolute inset-x-4 bottom-4 rounded-[22px] border border-[#ffe3b7]/18 bg-[#1f1209]/42 p-4 text-[#fff0d2] backdrop-blur-xl sm:inset-x-6 sm:bottom-6 sm:p-5 lg:max-w-sm">
+              <p className="text-[12px] font-bold text-[#ffd18c]">{t("loginVisualKicker")}</p>
+              <p className="mt-2 text-sm leading-6 text-[#fff7e8]/84">{t("loginVisualCaption")}</p>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-[#29170c]">{t("title")}</h1>
-          <p className="mt-2 max-w-md text-sm text-[#6b5a4a]">{t("loginRequired")}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/login" className="rounded-xl bg-[#875200] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90">
-              {t("loginCta")}
-            </Link>
-            <Link href="/register" className="rounded-xl border border-[#e6dacd] bg-white px-5 py-2.5 text-sm font-semibold text-[#29170c] transition-colors hover:border-[#c8a97a]">
-              {t("registerCta")}
-            </Link>
+          <div className="flex flex-col justify-center bg-[#fffaf2]/94 p-6 backdrop-blur dark:bg-[#1f1209]/92 sm:p-9 lg:p-12">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#ffe3b7]/70 bg-white/55 px-3 py-1.5 text-[12px] font-bold text-[var(--accent)] shadow-[0_10px_28px_rgba(44,26,14,0.07)] dark:border-white/10 dark:bg-white/7">
+              <Bookmark className="size-3.5" aria-hidden="true" />
+              {t("collection")}
+            </div>
+            <h1 className="mt-4 max-w-xl font-lora text-[2rem] font-bold leading-[1.05] text-[var(--foreground)] sm:text-[3rem] lg:text-[3.55rem]">
+              {t("title")}
+            </h1>
+            <p className="mt-4 max-w-md text-[15px] leading-7 text-[var(--foreground-muted)] sm:text-base">
+              {t("loginRequired")}
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/login" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#875200] px-5 py-2.5 text-sm font-bold text-white shadow-[0_12px_32px_rgba(135,82,0,0.24)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:focus-visible:ring-offset-[#1f1209]">
+                <LogIn size={16} />
+                {t("loginCta")}
+              </Link>
+              <Link href="/register" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#ffe3b7]/85 bg-white/72 px-5 py-2.5 text-sm font-bold text-[var(--foreground)] shadow-[0_10px_26px_rgba(44,26,14,0.06)] transition-colors hover:border-[#c8a97a] hover:bg-[#fff8f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:border-white/10 dark:bg-white/6 dark:focus-visible:ring-offset-[#1f1209]">
+                <UserPlus size={16} />
+                {t("registerCta")}
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[18px] border border-[#ffe3b7]/70 bg-white/56 p-4 shadow-[0_10px_28px_rgba(44,26,14,0.05)] dark:border-white/10 dark:bg-white/5">
+                <Coffee className="mb-3 size-5 text-[var(--accent)]" aria-hidden="true" />
+                <p className="text-sm font-bold text-[var(--foreground)]">{t("loginNoteOneTitle")}</p>
+                <p className="mt-1 text-xs leading-5 text-[var(--foreground-muted)]">{t("loginNoteOneBody")}</p>
+              </div>
+              <div className="rounded-[18px] border border-[#dbe8d2] bg-[#f2f8ef]/72 p-4 shadow-[0_10px_28px_rgba(44,26,14,0.05)] dark:border-[#7a9e7e]/22 dark:bg-[#7a9e7e]/10">
+                <Layers3 className="mb-3 size-5 text-[var(--sage)]" aria-hidden="true" />
+                <p className="text-sm font-bold text-[var(--foreground)]">{t("loginNoteTwoTitle")}</p>
+                <p className="mt-1 text-xs leading-5 text-[var(--foreground-muted)]">{t("loginNoteTwoBody")}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     )
   }
 
-  const collectionNames = collections.map((c) => c.name)
-
   return (
-    <section className="mx-auto max-w-[1280px] px-4 pb-20 pt-24 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
+    <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[72px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:px-8 lg:pb-20 lg:pt-28">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#8b5b2b_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-[#fff0d2]/55 to-transparent dark:from-white/6" />
+
+      <div className="relative mx-auto max-w-[1280px]">
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-[2rem] font-bold leading-tight tracking-[-0.02em] text-[#29170c] sm:text-[2.75rem] dark:text-[#f5e8d8]">
-            {t("collectionTitle")}
-          </h1>
-          <p className="mt-1.5 text-base text-[#6b5a4a]">
-            {t("collectionSubtitle")}
-          </p>
-        </div>
-        {entries.length > 0 && (
-          <div className="flex items-center gap-4 text-sm text-[#6b5a4a]">
-            <span>{t.rich("savedCafeTotal", { count: entries.length, strong: (chunks) => <span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{chunks}</span> })}</span>
-            {collections.length > 0 && (
-              <>
-                <span className="h-3.5 w-px bg-[#d7c3b1]" />
-                <span>{t.rich("folderTotal", { count: collections.length, strong: (chunks) => <span className="font-semibold text-[#29170c] dark:text-[#f5e8d8]">{chunks}</span> })}</span>
-              </>
+      <div className="mb-5 grid gap-4 lg:mb-7 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-stretch">
+        <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/72 p-4 shadow-[0_18px_58px_rgba(44,26,14,0.1)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-6 lg:p-7">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/70 bg-white/55 px-3 py-1.5 text-[12px] font-bold text-[var(--accent)] shadow-[0_10px_28px_rgba(44,26,14,0.06)] dark:border-white/10 dark:bg-white/7">
+              <Bookmark className="size-3.5" aria-hidden="true" />
+              {t("collection")}
+            </span>
+            {entries.length > 0 && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#dbe8d2] bg-[#f2f8ef]/72 px-3 py-1.5 text-[12px] font-bold text-[#4d7651] dark:border-[#7a9e7e]/24 dark:bg-[#7a9e7e]/12 dark:text-[#a7c9aa]">
+                <Coffee className="size-3.5" aria-hidden="true" />
+                {t("savedCafeTotalPlain", { count: entries.length })}
+              </span>
             )}
           </div>
-        )}
+
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0">
+              <h1 className="font-lora text-[2rem] font-bold leading-[1.04] text-[var(--foreground)] sm:text-[3.1rem] lg:text-[3.75rem]">
+                {t("collectionTitle")}
+              </h1>
+              <p className="mt-3 max-w-2xl text-[14px] leading-6 text-[var(--foreground-muted)] sm:text-base sm:leading-7">
+                {t("collectionSubtitle")}
+              </p>
+            </div>
+            {entries.length > 0 && (
+              <div className="grid grid-cols-2 gap-2 sm:min-w-[240px]">
+                <div className="rounded-[18px] border border-[#ffe3b7]/70 bg-white/56 px-4 py-3 shadow-[0_10px_28px_rgba(44,26,14,0.05)] dark:border-white/10 dark:bg-white/5">
+                  <p className="text-[11px] font-bold uppercase text-[var(--foreground-muted)]">{t("total")}</p>
+                  <p className="mt-1 text-2xl font-bold text-[var(--foreground)]">{entries.length}</p>
+                </div>
+                <div className="rounded-[18px] border border-[#ffe3b7]/70 bg-white/56 px-4 py-3 shadow-[0_10px_28px_rgba(44,26,14,0.05)] dark:border-white/10 dark:bg-white/5">
+                  <p className="text-[11px] font-bold uppercase text-[var(--foreground-muted)]">{t("folders")}</p>
+                  <p className="mt-1 text-2xl font-bold text-[var(--foreground)]">{collections.length}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="relative hidden overflow-hidden rounded-[28px] border border-[#ffe3b7]/45 bg-[#1f1209] shadow-[0_24px_70px_rgba(44,26,14,0.16)] lg:block">
+          <Image
+            src="/image/home-polaroid-1.jpg"
+            alt={t("collectionVisualAlt")}
+            fill
+            priority
+            sizes="360px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-[#1f1209]/92 via-[#1f1209]/32 to-transparent" />
+          <div className="absolute right-4 bottom-4 left-4 rounded-[20px] border border-[#ffe3b7]/20 bg-[#1f1209]/44 p-4 text-[#fff0d2] backdrop-blur-xl">
+            <p className="text-[12px] font-bold text-[#ffd18c]">{t("collectionVisualKicker")}</p>
+            <p className="mt-2 text-sm leading-6 text-[#fff7e8]/84">{t("collectionVisualCaption")}</p>
+          </div>
+        </div>
       </div>
 
+      <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/64 p-3 shadow-[0_20px_70px_rgba(44,26,14,0.09)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-5">
+
       {/* ── Collections row ──────────────────────────────────────────────────── */}
-      {entries.length > 0 && (
-        <section className="mb-10">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-[#29170c] dark:text-[#f5e8d8]">{t("folders")}</h2>
+      {(entries.length > 0 || collections.length > 0) && (
+        <section className="mb-5" aria-label={t("folders")}>
+          <div className="mb-3 flex items-center justify-between gap-3 px-1">
+            <h2 className="inline-flex items-center gap-2 text-sm font-bold text-[var(--foreground)] sm:text-base">
+              <FolderOpen className="size-4 text-[var(--accent)]" aria-hidden="true" />
+              {t("folders")}
+            </h2>
             <button
               type="button"
               onClick={() => setShowCreateFolder(true)}
-              className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-[#875200] transition-opacity hover:opacity-75"
+              className="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border border-[#ffe3b7]/75 bg-white/64 px-3.5 py-2 text-sm font-bold text-[#875200] shadow-[0_8px_22px_rgba(44,26,14,0.05)] transition-colors hover:bg-[#fff8f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:border-white/10 dark:bg-white/6 dark:text-[#ffb865] dark:focus-visible:ring-offset-[#1f1209]"
             >
               <FolderPlus size={15} />
               {t("createFolder")}
@@ -1027,30 +1125,30 @@ export default function SavedCafesClient({
               whileTap={{ scale: 0.97 }}
               onClick={() => setShowCreateFolder(true)}
               type="button"
-              className="group min-w-[160px] shrink-0 cursor-pointer text-left"
+              className="group min-w-[150px] shrink-0 cursor-pointer rounded-[20px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:focus-visible:ring-offset-[#1f1209] sm:min-w-[168px]"
             >
-              <div className="mb-3 flex aspect-[4/3] items-center justify-center rounded-2xl border-2 border-dashed border-[#d7c3b1] bg-[#fdf8f4] transition-all group-hover:border-[#c8842a]/60 group-hover:bg-[#fff8f2] dark:border-[#3d2c1e] dark:bg-[#1c1209]">
+              <div className="mb-3 flex aspect-[4/3] items-center justify-center rounded-[18px] border-2 border-dashed border-[#d7c3b1] bg-[#fffaf2]/76 transition-all group-hover:border-[#c8842a]/60 group-hover:bg-[#fff8f2] dark:border-white/12 dark:bg-white/5">
                 <FolderPlus size={28} className="text-[#c8a97a] transition-colors group-hover:text-[#875200]" />
               </div>
-              <span className="block text-sm font-medium text-[#9b8675] group-hover:text-[#875200]">{t("newFolder")}</span>
-              <span className="block text-xs text-[#c8b9a8]">{t("createNow")}</span>
+              <span className="block text-sm font-bold text-[var(--foreground-muted)] group-hover:text-[#875200]">{t("newFolder")}</span>
+              <span className="block text-xs text-[#b99d7f]">{t("createNow")}</span>
             </motion.button>
           </div>
         </section>
       )}
 
       {/* ── Toolbar ──────────────────────────────────────────────────────────── */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" aria-label={t("filters")}>
         <div className="flex flex-wrap items-center gap-2">
           {/* Mobile toggle */}
           <button
             type="button"
             onClick={() => setFiltersOpen((v) => !v)}
             className={cn(
-              "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all sm:hidden",
+              "inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-bold transition-all sm:hidden",
               filtersOpen || activeFilterCount > 0
                 ? "border-[#875200] bg-[#875200] text-white"
-                : "border-[#e6dacd] bg-white/70 text-[#4a3728]"
+                : "border-[#ffe3b7]/70 bg-[#fffaf2]/72 text-[var(--foreground)]"
             )}
           >
             <SlidersHorizontal size={14} />
@@ -1122,12 +1220,12 @@ export default function SavedCafesClient({
 
       {/* Active filter summary */}
       {activeFilterCount > 0 && (
-        <div className="mb-4 flex items-center gap-2 text-sm text-[#6b5a4a]">
+        <div className="mb-4 flex flex-wrap items-center gap-2 px-1 text-sm text-[var(--foreground-muted)]">
           <span>{t("resultCount", { count: visibleCafes.length })}</span>
           <button
             type="button"
             onClick={() => { setQuickFilter("all"); setDistrict(""); setSearch("") }}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-[#e6dacd] bg-white/70 px-2.5 py-0.5 text-xs text-[#875200] transition-colors hover:bg-[#fff1ea]"
+            className="inline-flex min-h-8 cursor-pointer items-center gap-1 rounded-full border border-[#ffe3b7]/70 bg-white/70 px-2.5 py-1 text-xs font-bold text-[#875200] transition-colors hover:bg-[#fff1ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] dark:border-white/10 dark:bg-white/6 dark:text-[#ffb865]"
           >
             <X size={11} />
             {t("clearFilters")}
@@ -1136,7 +1234,13 @@ export default function SavedCafesClient({
       )}
 
       {/* ── Grid ─────────────────────────────────────────────────────────────── */}
-      {visibleCafes.length === 0 ? (
+      {entriesLoading ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <CafeCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : visibleCafes.length === 0 ? (
         <EmptyState
           title={entries.length === 0 ? t("empty") : t("noResults")}
           subtitle={entries.length === 0 ? t("emptySubtitle") : t("noResultsSubtitle")}
@@ -1165,10 +1269,10 @@ export default function SavedCafesClient({
 
       {/* ── Bottom CTA ────────────────────────────────────────────────────────── */}
       {entries.length > 0 && (
-        <div className="mt-12 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <Link
             href="/search"
-            className="inline-flex items-center gap-2 rounded-2xl border border-[#e6dacd] bg-white px-6 py-3 text-sm font-semibold text-[#875200] shadow-sm transition-all hover:border-[#c8a97a] hover:bg-[#fff8f2] hover:shadow-md dark:border-[#3d2c1e] dark:bg-[#1c1209] dark:text-[#ffb865]"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#ffe3b7]/75 bg-[#fffaf2]/78 px-5 py-2.5 text-sm font-bold text-[#875200] shadow-[0_10px_26px_rgba(44,26,14,0.06)] transition-all hover:border-[#c8a97a] hover:bg-[#fff8f2] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff8ed] dark:border-white/10 dark:bg-white/6 dark:text-[#ffb865] dark:focus-visible:ring-offset-[#1f1209]"
           >
             <Search size={16} />
             {t("exploreMore")}
@@ -1214,6 +1318,8 @@ export default function SavedCafesClient({
           onClose={() => setMoveTarget(null)}
         />
       )}
+      </div>
+      </div>
     </section>
   )
 }

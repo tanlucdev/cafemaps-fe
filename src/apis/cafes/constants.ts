@@ -1,0 +1,2 @@
+export const CAFE_API_PAGE_SIZE_LIMIT = 50
+export const READ_REVALIDATE_SECONDS = 300

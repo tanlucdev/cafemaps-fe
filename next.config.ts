@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "node:path";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const BACKEND_URL = process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api";
 
 const nextConfig: NextConfig = {
-  htmlLimitedBots: /.*/,
   async redirects() {
     return [
       {
@@ -41,6 +41,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/:all*(mp4|webm)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {
@@ -51,9 +60,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  webpack(config, { dev, webpack }) {
+    if (!dev) {
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /@\/apis\/cafes\/dev-fallback$/,
+          path.join(process.cwd(), "src/apis/cafes/prod-fallback.ts"),
+        ),
+      );
+    }
+    return config;
+  },
   images: {
-    unoptimized: true,
-    qualities: [48, 58, 75],
+    qualities: [48, 58, 75, 85, 90],
     remotePatterns: [
       {
         protocol: "https",
@@ -66,12 +85,16 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
     ],
   },
   allowedDevOrigins: [
-    "192.168.2.89:3000, 192.168.1.186:3000, 192.168.2.25:3000, 172.16.0.135:3000",
+    "192.168.2.89:3000, 192.168.1.186:3000, 192.168.2.25:3000, 172.16.0.135:3000, 192.168.2.191:3000",
   ],
 };
 

@@ -65,6 +65,7 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
             sizes="320px"
             className="object-cover"
             priority={false}
+            quality={90}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-[#FFEADF] via-[#F7DFC6] to-[#DDE9D8]" />

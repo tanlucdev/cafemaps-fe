@@ -1,4 +1,3 @@
-import { MOCK_CAFES } from "@/lib/mock-data";
 import type { BackgroundCafe, HeroImage, KeywordFilter, PolaroidItem, QuickFilter } from "./types";
 
 export const KEYWORD_TO_FILTER: KeywordFilter[] = [
@@ -80,8 +79,8 @@ const BACKGROUND_TILE_STYLES = [
   "aspect-[1.12/1] -translate-y-5",
 ] as const;
 
-export const BACKGROUND_CAFES: BackgroundCafe[] = MOCK_CAFES.slice(0, 14).map((cafe, index) => ({
-  name: cafe.name,
+export const BACKGROUND_CAFES: BackgroundCafe[] = Array.from({ length: 14 }, (_, index) => ({
+  name: `Cafe space ${index + 1}`,
   src: HERO_IMAGES[index % HERO_IMAGES.length].src,
   tileClassName: BACKGROUND_TILE_STYLES[index % BACKGROUND_TILE_STYLES.length],
 }));
@@ -101,14 +100,9 @@ export const MOBILE_POLAROIDS: PolaroidItem[] = [
 
 export const QUICK_FILTERS: QuickFilter[] = [
   {
-    emoji: "🌿",
-    labelKey: "outdoor",
-    vibe: "thiên nhiên",
-  },
-  {
-    emoji: "🕒",
-    labelKey: "openNow",
-    openNow: true,
+    emoji: "📍",
+    labelKey: "nearMe",
+    nearMe: true,
     featured: true,
   },
   {
@@ -125,5 +119,15 @@ export const QUICK_FILTERS: QuickFilter[] = [
     emoji: "💻",
     labelKey: "workFriendly",
     purpose: "làm việc",
+  },
+  {
+    emoji: "🌿",
+    labelKey: "outdoor",
+    vibe: "thiên nhiên",
+  },
+  {
+    emoji: "🕒",
+    labelKey: "openNow",
+    openNow: true,
   },
 ];

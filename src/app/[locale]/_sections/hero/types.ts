@@ -27,6 +27,7 @@ export type QuickFilter = {
   labelKey: string;
   vibe?: string;
   purpose?: string;
+  nearMe?: boolean;
   openNow?: boolean;
   featured?: boolean;
 };

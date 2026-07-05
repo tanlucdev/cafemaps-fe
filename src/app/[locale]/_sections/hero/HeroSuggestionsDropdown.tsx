@@ -20,7 +20,7 @@ export function HeroSuggestionsDropdown({
   const t = useTranslations("hero.suggestions");
 
   return (
-    <div className="absolute top-[calc(100%+10px)] right-0 left-0 z-50 max-h-[min(60vh,330px)] overflow-y-auto rounded-[18px] border border-[#e8d8c0] bg-white text-left shadow-[0_18px_42px_rgba(44,26,14,0.16)]">
+    <div className="absolute top-[calc(100%+10px)] right-0 left-0 z-50 max-h-[min(60vh,330px)] overflow-y-auto rounded-[18px] border border-[#ffe3b7]/22 bg-[#fff8ee]/96 text-left shadow-[0_18px_42px_rgba(0,0,0,0.24)] backdrop-blur-xl">
       {nameSuggestions.length > 0 && (
         <div className="border-b border-[#e8d8c0] py-2 last:border-b-0">
           <div className="px-4 pt-1 pb-1 text-[11px] font-semibold tracking-[0.08em] text-[#8c6d4f] uppercase">
