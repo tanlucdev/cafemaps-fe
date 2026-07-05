@@ -14,11 +14,15 @@ import Image from "next/image";
 const HEADER_SCROLL_ENTER_Y = 24;
 const HEADER_SCROLL_LEAVE_Y = 8;
 
-export default function Header() {
+type HeaderProps = {
+  initialIsLoggedIn?: boolean;
+};
+
+export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [authState, setAuthState] = useState<boolean | null>(null);
+  const [authState, setAuthState] = useState(initialIsLoggedIn);
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
 
   useEffect(() => {
@@ -164,8 +168,8 @@ export default function Header() {
             <ThemeToggle className={cn("rounded-full", iconButtonClass)} />
 
             <div className="ml-0.5 flex items-center">
-              {authState === null ? null : authState ? (
-                <UserMenu />
+              {authState ? (
+                <UserMenu initialIsLoggedIn={initialIsLoggedIn} />
               ) : (
                 <Link
                   href="/login"

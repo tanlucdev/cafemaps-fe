@@ -7,12 +7,23 @@ import { User, LogOut } from "lucide-react";
 import { getAuthUser, logout } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-export default function UserMenu() {
+type UserMenuProps = {
+  initialIsLoggedIn?: boolean;
+};
+
+export default function UserMenu({ initialIsLoggedIn = false }: UserMenuProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [user, setUser] = useState(() => getAuthUser());
+  const [user, setUser] = useState(() => (initialIsLoggedIn ? null : getAuthUser()));
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const syncUser = () => setUser(getAuthUser());
+    syncUser();
+    window.addEventListener("cafe-auth-change", syncUser);
+    return () => window.removeEventListener("cafe-auth-change", syncUser);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -25,11 +36,11 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  if (!user) return null;
+  if (!user && !initialIsLoggedIn) return null;
 
-  const initials = user.displayName
-    ? user.displayName.slice(0, 2).toUpperCase()
-    : user.email.slice(0, 2).toUpperCase();
+  const initials = user
+    ? (user.displayName || user.email).slice(0, 2).toUpperCase()
+    : null;
 
   function handleLogout() {
     logout();
@@ -49,7 +60,7 @@ export default function UserMenu() {
         )}
         aria-label="Tài khoản"
       >
-        {initials}
+        {initials ?? <User size={15} aria-hidden />}
       </button>
 
       {open && (
