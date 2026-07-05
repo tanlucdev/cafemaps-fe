@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "node:path";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -59,9 +60,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  webpack(config, { dev, webpack }) {
+    if (!dev) {
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /@\/apis\/cafes\/dev-fallback$/,
+          path.join(process.cwd(), "src/apis/cafes/prod-fallback.ts"),
+        ),
+      );
+    }
+    return config;
+  },
   images: {
-    unoptimized: true,
-    qualities: [48, 58, 75],
+    qualities: [48, 58, 75, 85, 90],
     remotePatterns: [
       {
         protocol: "https",
@@ -71,6 +82,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
       {
         protocol: "https",

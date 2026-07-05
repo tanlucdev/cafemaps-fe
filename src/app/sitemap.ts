@@ -3,6 +3,7 @@ import { getCafesWithMeta } from "@/lib/api"
 import { blogPosts } from "@/lib/blog-data"
 import { getSiteUrl } from "@/lib/metadata"
 import { routing } from "@/i18n/routing"
+import { CAFE_API_PAGE_SIZE_LIMIT } from "@/apis/cafes/constants"
 
 export const revalidate = 3600
 
@@ -28,7 +29,7 @@ const BLOG_LAST_MODIFIED: Record<string, string> = {
   "hen-cuoi-tuan-o-mot-quan-co-san-vuon": "2026-04-26",
 }
 
-const CAFE_SITEMAP_PAGE_SIZE = 100
+const CAFE_SITEMAP_PAGE_SIZE = CAFE_API_PAGE_SIZE_LIMIT
 const MAX_CAFE_SITEMAP_PAGES = 500
 
 function getBaseUrl() {
@@ -70,7 +71,8 @@ function toValidDate(value: string | null | undefined) {
 async function getCafeEntries(siteUrl: string, fallbackLastModified: Date) {
   const firstPage = await getCafesWithMeta(
     { page: 1, limit: CAFE_SITEMAP_PAGE_SIZE },
-    routing.defaultLocale
+    routing.defaultLocale,
+    { fallback: false }
   )
   const totalPages = Math.max(
     1,
@@ -80,7 +82,8 @@ async function getCafeEntries(siteUrl: string, fallbackLastModified: Date) {
     Array.from({ length: totalPages - 1 }, (_, index) =>
       getCafesWithMeta(
         { page: index + 2, limit: CAFE_SITEMAP_PAGE_SIZE },
-        routing.defaultLocale
+        routing.defaultLocale,
+        { fallback: false }
       )
     )
   )
@@ -120,7 +123,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     })
   )
-  const cafeEntries = await getCafeEntries(siteUrl, now)
+  let cafeEntries: MetadataRoute.Sitemap = []
+  try {
+    cafeEntries = await getCafeEntries(siteUrl, now)
+  } catch (error) {
+    console.error("sitemap cafes failed:", error)
+  }
 
   return [...staticEntries, ...blogEntries, ...cafeEntries]
 }
