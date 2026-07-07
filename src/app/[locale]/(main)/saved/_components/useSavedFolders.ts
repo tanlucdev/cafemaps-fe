@@ -50,7 +50,7 @@ export function useSavedFolders({
 
   async function renameFolder(oldName: string, rawNewName: string) {
     const newName = normalizeFolderName(rawNewName)
-    if (!newName || oldName === newName) return
+    if (!newName || oldName === newName) return false
 
     setFolders((cur) => cur.map((folder) => (same(folder.name, oldName) ? { ...folder, name: newName } : folder)))
     setEntries((cur) =>
@@ -59,10 +59,29 @@ export function useSavedFolders({
     if (activeCollection === oldName) setActiveCollection(newName)
 
     const token = await getCurrentAccessToken()
-    if (token) await renameSavedCollection(oldName, newName, token).catch(() => null)
+    if (!token) return rollbackRename()
+
+    try {
+      await renameSavedCollection(oldName, newName, token)
+      return true
+    } catch {
+      return rollbackRename()
+    }
+
+    function rollbackRename() {
+      setFolders((cur) => cur.map((folder) => (same(folder.name, newName) ? { ...folder, name: oldName } : folder)))
+      setEntries((cur) =>
+        cur.map((entry) => (same(entry.collectionName, newName) ? { ...entry, collectionName: oldName } : entry))
+      )
+      setActiveCollection((cur) => (cur === newName ? oldName : cur))
+      return false
+    }
   }
 
   async function deleteFolder(name: string) {
+    const deletedFolder = folders.find((folder) => same(folder.name, name)) ?? { name }
+    const movedEntries = entries.filter((entry) => same(entry.collectionName, name))
+
     setFolders((cur) => cur.filter((folder) => !same(folder.name, name)))
     setEntries((cur) =>
       cur.map((entry) => (same(entry.collectionName, name) ? { ...entry, collectionName: null } : entry))
@@ -70,7 +89,25 @@ export function useSavedFolders({
     if (activeCollection === name) setActiveCollection("all")
 
     const token = await getCurrentAccessToken()
-    if (token) await deleteSavedCollection(name, token).catch(() => null)
+    if (!token) return rollbackDelete()
+
+    try {
+      await deleteSavedCollection(name, token)
+      return true
+    } catch {
+      return rollbackDelete()
+    }
+
+    function rollbackDelete() {
+      setFolders((cur) => (cur.some((folder) => same(folder.name, deletedFolder.name)) ? cur : [...cur, deletedFolder]))
+      setEntries((cur) =>
+        cur.map((entry) =>
+          movedEntries.some((moved) => moved.cafe.id === entry.cafe.id) ? { ...entry, collectionName: name } : entry
+        )
+      )
+      setActiveCollection((cur) => (cur === "all" && activeCollection === name ? name : cur))
+      return false
+    }
   }
 
   async function moveCafeToFolder(cafe: Cafe, targetCollection: string | null) {
