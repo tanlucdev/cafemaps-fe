@@ -7,23 +7,19 @@ import { Bookmark, PenLine, Compass, LogIn } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
-import { getAuthUser } from "@/lib/auth-client";
+import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const HEADER_SCROLL_ENTER_Y = 24;
 const HEADER_SCROLL_LEAVE_Y = 8;
 
-type HeaderProps = {
-  initialIsLoggedIn?: boolean;
-};
-
-export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
+export default function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [authState, setAuthState] = useState(initialIsLoggedIn);
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
+  const { isLoggedIn } = useAuthState();
 
   useEffect(() => {
     const onScroll = () => {
@@ -38,13 +34,6 @@ export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    setAuthState(!!getAuthUser());
-    const onAuthChange = () => setAuthState(!!getAuthUser());
-    window.addEventListener("cafe-auth-change", onAuthChange);
-    return () => window.removeEventListener("cafe-auth-change", onAuthChange);
   }, []);
 
   useEffect(() => {
@@ -168,8 +157,8 @@ export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
             <ThemeToggle className={cn("rounded-full", iconButtonClass)} />
 
             <div className="ml-0.5 flex items-center">
-              {authState ? (
-                <UserMenu initialIsLoggedIn={initialIsLoggedIn} />
+              {isLoggedIn ? (
+                <UserMenu />
               ) : (
                 <Link
                   href="/login"

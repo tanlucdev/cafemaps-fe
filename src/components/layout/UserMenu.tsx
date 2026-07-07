@@ -4,26 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { User, LogOut } from "lucide-react";
-import { getAuthUser, logout } from "@/lib/auth-client";
+import { logout } from "@/lib/auth-client";
+import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 
-type UserMenuProps = {
-  initialIsLoggedIn?: boolean;
-};
-
-export default function UserMenu({ initialIsLoggedIn = false }: UserMenuProps) {
+export default function UserMenu() {
   const t = useTranslations();
   const router = useRouter();
-  const [user, setUser] = useState(() => (initialIsLoggedIn ? null : getAuthUser()));
+  const { user } = useAuthState();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const syncUser = () => setUser(getAuthUser());
-    syncUser();
-    window.addEventListener("cafe-auth-change", syncUser);
-    return () => window.removeEventListener("cafe-auth-change", syncUser);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -36,7 +26,7 @@ export default function UserMenu({ initialIsLoggedIn = false }: UserMenuProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  if (!user && !initialIsLoggedIn) return null;
+  if (!user) return null;
 
   const initials = user
     ? (user.displayName || user.email).slice(0, 2).toUpperCase()
@@ -44,7 +34,6 @@ export default function UserMenu({ initialIsLoggedIn = false }: UserMenuProps) {
 
   function handleLogout() {
     logout();
-    setUser(null);
     setOpen(false);
     router.replace(`/`);
     router.refresh();
