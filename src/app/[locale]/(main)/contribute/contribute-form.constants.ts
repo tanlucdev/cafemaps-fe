@@ -3,6 +3,7 @@ import type { ContributeFormData } from "./contribute-form.types";
 export const MAX_PHOTOS = 8;
 export const MAX_REASON_LENGTH = 300;
 export const INITIAL_FORM_DATA: ContributeFormData = {
+  name: "",
   googleMapsUrl: "",
   reason: "",
   photos: [],

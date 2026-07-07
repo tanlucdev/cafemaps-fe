@@ -1,10 +1,12 @@
-import type { Cafe } from "@/types/cafe"
-import { apiFetch } from "@/apis/http"
+import {
+  createSubmission,
+  type CafeSubmission,
+  type CreateSubmissionInput,
+} from "@/apis/submissions"
 
-export async function submitCafe(data: Partial<Cafe>, token: string): Promise<Cafe> {
-  return apiFetch<Cafe>("/cafes/submit", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { Authorization: `Bearer ${token}` },
-  })
+export async function submitCafe(
+  data: CreateSubmissionInput,
+  token: string
+): Promise<CafeSubmission> {
+  return createSubmission(data, token)
 }

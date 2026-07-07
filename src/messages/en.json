@@ -635,6 +635,7 @@
     },
     "form": {
       "name": "Café name",
+      "namePlaceholder": "Example: Little Alley Coffee",
       "address": "Address",
       "district": "District",
       "description": "Short description",
@@ -674,7 +675,9 @@
       "again": "Share another café"
     },
     "errors": {
-      "googleMapsRequired": "A Google Maps link is required so people can find the café."
+      "nameRequired": "A café name is required so the team can review it.",
+      "googleMapsRequired": "A Google Maps link is required so people can find the café.",
+      "submitFailed": "Could not submit this café yet. Please try again."
     },
     "stepCount": "Step {step} / {total}",
     "heading": "Tell us about a café you love"

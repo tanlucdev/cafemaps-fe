@@ -584,6 +584,7 @@
     },
     "form": {
       "name": "Tên quán",
+      "namePlaceholder": "Ví dụ: Cà phê Nhà Bên Hẻm",
       "address": "Địa chỉ",
       "district": "Quận / Huyện",
       "description": "Mô tả ngắn",
@@ -623,7 +624,9 @@
       "again": "Chia sẻ thêm quán khác"
     },
     "errors": {
-      "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán."
+      "nameRequired": "Tên quán là bắt buộc để đội ngũ dễ kiểm tra.",
+      "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán.",
+      "submitFailed": "Chưa gửi được đề xuất. Thử lại giúp bọn mình nhé."
     },
     "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
