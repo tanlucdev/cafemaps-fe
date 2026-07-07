@@ -3,16 +3,9 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useRouter } from "@/i18n/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import CafeGrid from "@/components/cafe/CafeGrid";
-import CafeList from "@/components/cafe/CafeList";
-import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
-import Pagination from "@/components/ui/Pagination";
-import { Coffee, Search, LayoutGrid, LayoutList } from "lucide-react";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import {
   buildSearchParams,
   filterFromSearchParams,
@@ -22,20 +15,21 @@ import {
   type SearchSort,
 } from "@/lib/search-state";
 import { isCafeOpenNow } from "@/lib/opening-hours";
-import { getCafeRatingValue } from "@/lib/cafe-rating";
 import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
 import { cafeListQueryKey } from "@/apis/cafes/query";
-
-type ViewMode = "grid" | "list";
-
-const PAGE_SIZE = 9;
-
-interface ServerMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+import FeaturedSectionControls from "./FeaturedSectionControls";
+import FeaturedSectionResults from "./FeaturedSectionResults";
+import FeaturedSectionToolbar from "./FeaturedSectionToolbar";
+import {
+  cafeCreatedTime,
+  cafePopularity,
+  cafeRating,
+  filterNearbyCafes,
+  haversineKm,
+  PAGE_SIZE,
+  type ServerMeta,
+  type ViewMode,
+} from "./featured-section-helpers";
 
 interface FeaturedSectionProps {
   cafes: Cafe[];
@@ -43,57 +37,6 @@ interface FeaturedSectionProps {
   districts?: string[];
   serverMeta?: ServerMeta;
   deferData?: boolean;
-}
-
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLng = (lng2 - lng1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function numericScore(value: number | null | undefined): number {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
-
-function cafeRating(cafe: Cafe): number {
-  return getCafeRatingValue(cafe) ?? 0;
-}
-
-function cafePopularity(cafe: Cafe): number {
-  const featuredScore = cafe.isFeatured ? 1_000_000 : 0;
-  const featuredOrderScore = cafe.featuredOrder != null ? 100_000 - cafe.featuredOrder : 0;
-  const savedScore = numericScore(cafe.savedCount) * 10;
-  const reviewScore = numericScore(cafe.reviewCount) * 5;
-  const viewScore = numericScore(cafe.viewCount);
-  return (
-    featuredScore + featuredOrderScore + savedScore + reviewScore + viewScore + cafeRating(cafe)
-  );
-}
-
-function cafeCreatedTime(cafe: Cafe): number {
-  const value = cafe.createdAt ? new Date(cafe.createdAt).getTime() : 0;
-  return Number.isFinite(value) ? value : 0;
-}
-
-function filterNearbyCafes(cafes: Cafe[], filter: Filter): Cafe[] {
-  return cafes.filter((cafe) => {
-    if (filter.openNow && !isCafeOpenNow(cafe)) return false;
-    if (filter.vibes?.length && !filter.vibes.some((vibe) => cafe.vibes.includes(vibe)))
-      return false;
-    if (
-      filter.purposes?.length &&
-      !filter.purposes.some((purpose) => cafe.purposes.includes(purpose))
-    ) {
-      return false;
-    }
-    if (filter.tags?.length && !filter.tags.some((tag) => cafe.tags.includes(tag))) return false;
-    if (filter.district && cafe.district !== filter.district) return false;
-    return true;
-  });
 }
 
 export default function FeaturedSection({
@@ -104,7 +47,6 @@ export default function FeaturedSection({
   deferData = false,
 }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const ts = useTranslations("search");
   const reduceMotion = useReducedMotion();
 
@@ -159,7 +101,7 @@ export default function FeaturedSection({
     (newFilter: Filter, newSort: SearchSort, newPage: number) => {
       const params = buildSearchParams(newFilter, newSort, newPage);
       const query = params.toString();
-      router.push(query ? `?${query}` : "?", { scroll: false });
+      window.history.pushState(null, "", query ? `${window.location.pathname}?${query}` : window.location.pathname);
       if (query && hasActiveSearchFilters(newFilter)) {
         setLastSearchState({
           query: newFilter.search,
@@ -169,7 +111,7 @@ export default function FeaturedSection({
         });
       }
     },
-    [router],
+    [],
   );
 
   useEffect(() => {
@@ -304,193 +246,46 @@ export default function FeaturedSection({
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_0%,rgba(200,132,42,0.12),transparent_32%),radial-gradient(circle_at_86%_10%,rgba(122,158,126,0.12),transparent_30%),linear-gradient(180deg,var(--background)_0%,#fffaf2_44%,var(--background-secondary)_100%)]" />
       <div className="pointer-events-none absolute inset-0 -z-10 [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.72%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.36%22/%3E%3C/svg%3E')] opacity-[0.035] mix-blend-multiply" />
 
-      {/* ── Search + Filter block ── */}
-      <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-7 pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-9 sm:pb-5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div {...headerMotion} className="max-w-3xl pb-5">
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
-              <Coffee size={13} aria-hidden /> CafeMaps search
-            </p>
-            <h1 className="font-lora text-[34px] leading-tight font-bold text-[var(--foreground)] sm:text-[44px]">
-              Tìm quán phù hợp hôm nay
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 font-medium text-[var(--foreground-muted)] sm:text-base">
-              Lọc theo mood, khu vực, mức giá và trạng thái mở cửa.
-            </p>
-          </motion.div>
-
-          {/* Search bar */}
-          <motion.div {...headerMotion} className="pb-3">
-            <div className="flex max-w-2xl items-center overflow-hidden rounded-full border border-[var(--border)] bg-white/78 shadow-[var(--shadow-sm)] backdrop-blur-md transition-colors outline-none focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/16 dark:bg-[var(--card)]">
-              <div className="flex shrink-0 items-center pl-4 text-[var(--foreground-muted)]">
-                <Search size={16} />
-              </div>
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
-                placeholder={ts("placeholder")}
-                className="flex-1 appearance-none border-0 bg-transparent py-3 pr-2 pl-3 text-[13.5px] text-[var(--foreground)] shadow-none ring-0 outline-0 placeholder:text-[var(--foreground-muted)] focus:border-0 focus:shadow-none focus:ring-0 focus:outline-none"
-              />
-              <button
-                onClick={handleSearchSubmit}
-                className="m-1.5 shrink-0 cursor-pointer rounded-full bg-[var(--accent)] px-5 py-2 text-[13px] font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)] transition-transform hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
-              >
-                {ts("button")}
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Filter bar — inline, same background block */}
-          <div className="sticky top-16 z-50 -mx-2 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-18 sm:mx-0 sm:px-4">
-            <GuidedFilterBar
-              filter={filter}
-              onChange={handleFilterChange}
-              districts={activeDistricts}
-              viewMode={viewMode}
-              onViewModeChange={setViewMode}
-            />
-          </div>
-        </div>
-      </section>
+      <FeaturedSectionControls
+        activeDistricts={activeDistricts}
+        filter={filter}
+        headerMotion={headerMotion}
+        searchInput={searchInput}
+        searchInputRef={searchInputRef}
+        setSearchInput={setSearchInput}
+        setViewMode={setViewMode}
+        ts={ts}
+        viewMode={viewMode}
+        onFilterChange={handleFilterChange}
+        onSearchSubmit={handleSearchSubmit}
+      />
 
       <main className="mx-auto max-w-7xl px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8">
-        {/* Toolbar: results count + sort + view toggle */}
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:rounded-[22px] sm:px-4 sm:py-3">
-          <p className="min-w-0 text-sm leading-tight font-medium text-[var(--foreground-muted)]">
-            {total > 0 && (
-              <>
-                Hiển thị: <strong className="text-[var(--foreground)]">{total} quán</strong>
-              </>
-            )}
-          </p>
-          <div className="ml-auto flex shrink-0 items-center gap-3">
-            <Select value={sortMode} onValueChange={(v) => v && handleSortChange(v as SearchSort)}>
-              <SelectTrigger
-                className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-sm font-medium text-[var(--foreground)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
-                aria-label={ts("sortLabel")}
-              >
-                <span className="min-w-0 truncate">{sortLabel}</span>
-              </SelectTrigger>
-              <SelectContent
-                sideOffset={6}
-                align="end"
-                alignItemWithTrigger={false}
-                className="min-w-[224px] rounded-[18px] border border-[#e8cfa9] bg-[#fffaf2]/96 p-1 text-[#2f2116] shadow-[0_18px_48px_rgba(44,26,14,0.14)] ring-0 backdrop-blur-xl"
-              >
-                <SelectItem
-                  value="popular"
-                  className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-white data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-white"
-                >
-                  {ts("sortPopular")}
-                </SelectItem>
-                <SelectItem
-                  value="rating"
-                  className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-white data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-white"
-                >
-                  {ts("sortRating")}
-                </SelectItem>
-                <SelectItem
-                  value="newest"
-                  className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-white data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-white"
-                >
-                  {ts("sortNewest")}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <div className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]">
-              <button
-                type="button"
-                onClick={() => handleViewModeChange("grid")}
-                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "grid" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
-                aria-label="Grid view"
-                aria-pressed={viewMode === "grid"}
-                title="Grid view"
-              >
-                {viewMode === "grid" && !reduceMotion && (
-                  <motion.span
-                    layoutId="featured-view-toggle-thumb"
-                    className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]"
-                    transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.7 }}
-                  />
-                )}
-                <LayoutGrid size={16} className="relative z-10" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleViewModeChange("list")}
-                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${viewMode === "list" ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
-                aria-label="List view"
-                aria-pressed={viewMode === "list"}
-                title="List view"
-              >
-                {viewMode === "list" && !reduceMotion && (
-                  <motion.span
-                    layoutId="featured-view-toggle-thumb"
-                    className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]"
-                    transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.7 }}
-                  />
-                )}
-                <LayoutList size={16} className="relative z-10" />
-              </button>
-            </div>
-          </div>
-        </div>
+        <FeaturedSectionToolbar
+          reduceMotion={reduceMotion}
+          sortLabel={sortLabel}
+          sortMode={sortMode}
+          total={total}
+          ts={ts}
+          viewMode={viewMode}
+          onSortChange={handleSortChange}
+          onViewModeChange={handleViewModeChange}
+        />
 
-        {dataError ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
-            <Coffee size={40} className="text-[var(--accent)]/60" />
-            <p className="text-base font-medium text-[var(--foreground-muted)]">
-              {locale === "vi" ? "Không tải được danh sách quán." : "Could not load cafes."}
-            </p>
-            <button
-              type="button"
-              onClick={() => void cafesQuery.refetch()}
-              className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)]"
-            >
-              {locale === "vi" ? "Thử lại" : "Retry"}
-            </button>
-          </div>
-        ) : dataLoading ? (
-          <CafeGrid cafes={[]} locale={locale} loading desktopColumns="three" />
-        ) : total === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
-            <Coffee size={40} className="text-[var(--accent)]/60" />
-            <p className="text-base font-medium text-[var(--foreground-muted)]">
-              {ts("noResultsMessage")}
-            </p>
-          </div>
-        ) : (
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={`${viewMode}-${page}-${animationType}`}
-              initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.992 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.992 }}
-              transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {viewMode === "grid" ? (
-                <CafeGrid
-                  cafes={paginated}
-                  locale={locale}
-                  animationType={animationType}
-                  desktopColumns="three"
-                />
-              ) : (
-                <CafeList cafes={paginated} locale={locale} animationType={animationType} />
-              )}
-
-              <Pagination
-                page={page}
-                total={total}
-                limit={PAGE_SIZE}
-                onPageChange={handlePageChange}
-              />
-            </motion.div>
-          </AnimatePresence>
-        )}
+        <FeaturedSectionResults
+          animationType={animationType}
+          dataError={dataError}
+          dataLoading={dataLoading}
+          locale={locale}
+          page={page}
+          paginated={paginated}
+          reduceMotion={reduceMotion}
+          total={total}
+          ts={ts}
+          viewMode={viewMode}
+          onPageChange={handlePageChange}
+          onRetry={() => void cafesQuery.refetch()}
+        />
       </main>
     </div>
   );

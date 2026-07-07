@@ -1,0 +1,93 @@
+"use client"
+
+import { motion } from "framer-motion"
+import { LayoutGrid, LayoutList } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import type { SearchSort } from "@/lib/search-state"
+import type { ViewMode } from "./featured-section-helpers"
+
+interface FeaturedSectionToolbarProps {
+  reduceMotion: boolean | null
+  sortLabel: string
+  sortMode: SearchSort
+  total: number
+  ts: (key: string) => string
+  viewMode: ViewMode
+  onSortChange: (sort: SearchSort) => void
+  onViewModeChange: (mode: ViewMode) => void
+}
+
+export default function FeaturedSectionToolbar({
+  reduceMotion,
+  sortLabel,
+  sortMode,
+  total,
+  ts,
+  viewMode,
+  onSortChange,
+  onViewModeChange,
+}: FeaturedSectionToolbarProps) {
+  return (
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:rounded-[22px] sm:px-4 sm:py-3">
+      <p className="min-w-0 text-sm leading-tight font-medium text-[var(--foreground-muted)]">
+        {total > 0 && (
+          <>
+            Hiển thị: <strong className="text-[var(--foreground)]">{total} quán</strong>
+          </>
+        )}
+      </p>
+      <div className="ml-auto flex shrink-0 items-center gap-3">
+        <Select value={sortMode} onValueChange={(v) => v && onSortChange(v as SearchSort)}>
+          <SelectTrigger
+            className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-sm font-medium text-[var(--foreground)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
+            aria-label={ts("sortLabel")}
+          >
+            <span className="min-w-0 truncate">{sortLabel}</span>
+          </SelectTrigger>
+          <SelectContent
+            sideOffset={6}
+            align="end"
+            alignItemWithTrigger={false}
+            className="min-w-[224px] rounded-[18px] border border-[#e8cfa9] bg-[#fffaf2]/96 p-1 text-[#2f2116] shadow-[0_18px_48px_rgba(44,26,14,0.14)] ring-0 backdrop-blur-xl"
+          >
+            {(["popular", "rating", "newest"] as const).map((value) => (
+              <SelectItem
+                key={value}
+                value={value}
+                className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-white data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-white"
+              >
+                {ts(value === "popular" ? "sortPopular" : value === "rating" ? "sortRating" : "sortNewest")}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]">
+          {(["grid", "list"] as const).map((mode) => {
+            const active = viewMode === mode
+            const Icon = mode === "grid" ? LayoutGrid : LayoutList
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => onViewModeChange(mode)}
+                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${active ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
+                aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
+                aria-pressed={active}
+                title={`${mode === "grid" ? "Grid" : "List"} view`}
+              >
+                {active && !reduceMotion && (
+                  <motion.span
+                    layoutId="featured-view-toggle-thumb"
+                    className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]"
+                    transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.7 }}
+                  />
+                )}
+                <Icon size={16} className="relative z-10" />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
