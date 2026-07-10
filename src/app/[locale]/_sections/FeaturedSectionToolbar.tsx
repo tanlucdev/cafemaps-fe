@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { LayoutGrid, LayoutList } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import type { SearchSort } from "@/lib/search-state"
@@ -61,32 +61,59 @@ export default function FeaturedSectionToolbar({
             ))}
           </SelectContent>
         </Select>
-        <div className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]">
+        <motion.div
+          layout
+          className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]"
+        >
           {(["grid", "list"] as const).map((mode) => {
             const active = viewMode === mode
             const Icon = mode === "grid" ? LayoutGrid : LayoutList
             return (
-              <button
+              <motion.button
                 key={mode}
                 type="button"
                 onClick={() => onViewModeChange(mode)}
+                whileHover={reduceMotion ? undefined : { y: -1, scale: 1.04 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.92 }}
                 className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${active ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
                 aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
                 aria-pressed={active}
                 title={`${mode === "grid" ? "Grid" : "List"} view`}
               >
                 {active && !reduceMotion && (
-                  <motion.span
-                    layoutId="featured-view-toggle-thumb"
-                    className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]"
-                    transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.7 }}
-                  />
+                  <>
+                    <motion.span
+                      layoutId="featured-view-toggle-thumb"
+                      className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_20px_rgba(200,132,42,0.28),inset_0_1px_0_rgba(255,255,255,0.22)] ring-1 ring-white/35"
+                      transition={{ type: "spring", stiffness: 640, damping: 28, mass: 0.56 }}
+                    />
+                    <AnimatePresence>
+                      <motion.span
+                        key={mode}
+                        className="pointer-events-none absolute inset-[-5px] z-0 rounded-full border border-[var(--accent)]"
+                        initial={{ opacity: 0.55, scale: 0.76 }}
+                        animate={{ opacity: 0, scale: 1.5 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    </AnimatePresence>
+                  </>
                 )}
-                <Icon size={16} className="relative z-10" />
-              </button>
+                <motion.span
+                  className="relative z-10 grid place-items-center"
+                  animate={
+                    active && !reduceMotion
+                      ? { scale: [0.82, 1.12, 1], rotate: [0, mode === "grid" ? 12 : -12, 0] }
+                      : { scale: 1, rotate: 0 }
+                  }
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Icon size={16} />
+                </motion.span>
+              </motion.button>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </div>
   )

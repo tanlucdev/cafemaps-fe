@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import { Coffee } from "lucide-react"
 import CafeGrid from "@/components/cafe/CafeGrid"
 import CafeList from "@/components/cafe/CafeList"
@@ -37,6 +37,25 @@ export default function FeaturedSectionResults({
   onPageChange,
   onRetry,
 }: FeaturedSectionResultsProps) {
+  const direction = viewMode === "grid" ? -1 : 1
+  const panelVariants = {
+    enter: (dir: number) => ({
+      opacity: 0.28,
+      x: dir * 34,
+      y: 14,
+      scale: 0.982,
+      filter: "blur(2px)",
+    }),
+    center: { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" },
+    exit: (dir: number) => ({
+      opacity: 0.2,
+      x: dir * -26,
+      y: -10,
+      scale: 0.986,
+      filter: "blur(2px)",
+    }),
+  }
+
   if (dataError) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
@@ -69,27 +88,36 @@ export default function FeaturedSectionResults({
   }
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={`${viewMode}-${page}-${animationType}`}
-        initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.992 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.992 }}
-        transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {viewMode === "grid" ? (
-          <CafeGrid
-            cafes={paginated}
-            locale={locale}
-            animationType={animationType}
-            desktopColumns="three"
-          />
-        ) : (
-          <CafeList cafes={paginated} locale={locale} animationType={animationType} />
-        )}
+    <LayoutGroup id="featured-cafe-results">
+      <AnimatePresence custom={direction} mode="popLayout" initial={false}>
+        <motion.div
+          key={`${viewMode}-${page}-${animationType}`}
+          custom={direction}
+          variants={panelVariants}
+          initial={reduceMotion ? false : "enter"}
+          animate="center"
+          exit={reduceMotion ? { opacity: 0 } : "exit"}
+          className="will-change-transform"
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.34, ease: [0.16, 1, 0.3, 1] }
+          }
+        >
+          {viewMode === "grid" ? (
+            <CafeGrid
+              cafes={paginated}
+              locale={locale}
+              animationType={animationType}
+              desktopColumns="three"
+            />
+          ) : (
+            <CafeList cafes={paginated} locale={locale} animationType={animationType} />
+          )}
 
-        <Pagination page={page} total={total} limit={9} onPageChange={onPageChange} />
-      </motion.div>
-    </AnimatePresence>
+          <Pagination page={page} total={total} limit={9} onPageChange={onPageChange} />
+        </motion.div>
+      </AnimatePresence>
+    </LayoutGroup>
   )
 }

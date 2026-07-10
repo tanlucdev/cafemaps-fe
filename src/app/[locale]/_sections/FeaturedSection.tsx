@@ -146,7 +146,7 @@ export default function FeaturedSection({
 
   function handleViewModeChange(nextMode: ViewMode) {
     if (nextMode === viewMode) return;
-    setAnimationType("fade");
+    setAnimationType("slide");
     setViewMode(nextMode);
   }
 
@@ -253,7 +253,7 @@ export default function FeaturedSection({
         searchInput={searchInput}
         searchInputRef={searchInputRef}
         setSearchInput={setSearchInput}
-        setViewMode={setViewMode}
+        setViewMode={handleViewModeChange}
         ts={ts}
         viewMode={viewMode}
         onFilterChange={handleFilterChange}
