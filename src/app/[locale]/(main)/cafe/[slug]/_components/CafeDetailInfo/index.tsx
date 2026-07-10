@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { AlarmClock, MapPinned, Navigation } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatCafeDistanceParts } from "@/lib/distance";
@@ -41,6 +41,7 @@ export default function CafeDetailInfo({
   onSave,
 }: CafeDetailInfoProps) {
   const t = useTranslations("cafe");
+  const reduceMotion = useReducedMotion();
   const resolvedDistance = useResolvedCafeDistance(cafe, locale);
   const hours = [formatTime(cafe.openingTime), formatTime(cafe.closingTime)]
     .filter(Boolean)
@@ -75,20 +76,60 @@ export default function CafeDetailInfo({
         };
       })
       .filter((credit): credit is PhotoCreditWithInstagram => credit !== null) ?? [];
+  const panelVariants = {
+    hidden: reduceMotion ? { opacity: 1 } : { opacity: 0, y: 22, scale: 0.992 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: reduceMotion
+        ? { duration: 0 }
+        : {
+            type: "spring" as const,
+            stiffness: 170,
+            damping: 24,
+            mass: 0.86,
+          },
+    },
+  };
+  const itemVariants = {
+    hidden: reduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: reduceMotion
+        ? { duration: 0 }
+        : { duration: 0.34, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+    },
+  };
+  const revealInitial = reduceMotion ? false : "hidden";
+  const revealViewport = { once: true, amount: 0.28, margin: "0px 0px -8% 0px" };
 
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        variants={panelVariants}
+        initial="hidden"
+        animate="show"
         className="mx-auto w-full max-w-[720px] min-w-0 space-y-5 rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/76 px-4 py-5 shadow-[0_18px_54px_rgba(44,26,14,0.08)] backdrop-blur-md sm:px-6 sm:py-6 dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/54 dark:shadow-[0_18px_54px_rgba(0,0,0,0.26)]"
       >
-        <h1 className="text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]">
+        <motion.h1
+          variants={itemVariants}
+          initial={revealInitial}
+          whileInView="show"
+          viewport={revealViewport}
+          className="text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]"
+        >
           {cafe.name}
-        </h1>
+        </motion.h1>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <motion.div
+          variants={itemVariants}
+          initial={revealInitial}
+          whileInView="show"
+          viewport={revealViewport}
+          className="flex flex-wrap items-center gap-3"
+        >
           {openStatus !== null && (
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
@@ -107,9 +148,15 @@ export default function CafeDetailInfo({
             </span>
           )}
           <RatingStars rating={rating} />
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col gap-x-5 gap-y-2.5 text-[13.5px] font-medium text-[var(--foreground-muted)] sm:flex-row sm:flex-wrap">
+        <motion.div
+          variants={itemVariants}
+          initial={revealInitial}
+          whileInView="show"
+          viewport={revealViewport}
+          className="flex flex-col gap-x-5 gap-y-2.5 text-[13.5px] font-medium text-[var(--foreground-muted)] sm:flex-row sm:flex-wrap"
+        >
           {cafe.address && (
             <span className="flex items-start gap-1.5">
               <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#fff0dc] text-[#b86f20] dark:bg-[#3a2414] dark:text-[#f0b869]">
@@ -132,29 +179,55 @@ export default function CafeDetailInfo({
               {distanceLabel}
             </span>
           )}
-        </div>
+        </motion.div>
 
-        <DetailTags cafe={cafe} displayTags={displayTags} />
-        <DetailDivider />
-        <AboutSection paragraphs={aboutParagraphs} />
-        <AmenitiesSection amenities={cafe.amenities} locale={locale} />
-        <ParkingSection
-          parkingLabel={parkingLabel}
-          parkingTypeLabel={parkingTypeLabel}
-          parkingLocation={parkingLocation}
-        />
-        <GoodForSection label={idealForLabel} items={goodForItems} />
-        <DetailDivider />
-        <SignatureDrinkSection signatureDrink={cafe.signatureDrink} label={t("signatureDrink")} />
-        <PriceSection price={price} label={t("priceRange")} />
-        <SocialSection
-          cafeInstagram={cafeInstagram}
-          photoCredits={photoCredits}
-          instagramLabel={instagramLabel}
-          photoCreditLabel={photoCreditLabel}
-        />
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <DetailTags cafe={cafe} displayTags={displayTags} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <DetailDivider />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <AboutSection paragraphs={aboutParagraphs} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <AmenitiesSection amenities={cafe.amenities} locale={locale} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <ParkingSection
+            parkingLabel={parkingLabel}
+            parkingTypeLabel={parkingTypeLabel}
+            parkingLocation={parkingLocation}
+          />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <GoodForSection label={idealForLabel} items={goodForItems} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <DetailDivider />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <SignatureDrinkSection signatureDrink={cafe.signatureDrink} label={t("signatureDrink")} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <PriceSection price={price} label={t("priceRange")} />
+        </motion.div>
+        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+          <SocialSection
+            cafeInstagram={cafeInstagram}
+            photoCredits={photoCredits}
+            instagramLabel={instagramLabel}
+            photoCreditLabel={photoCreditLabel}
+          />
+        </motion.div>
 
-        <div className="hidden pt-8 lg:block">
+        <motion.div
+          variants={itemVariants}
+          initial={revealInitial}
+          whileInView="show"
+          viewport={revealViewport}
+          className="hidden pt-8 lg:block"
+        >
           <DetailActions
             saved={saved}
             loadingSave={loadingSave}
@@ -164,10 +237,15 @@ export default function CafeDetailInfo({
             mapsUrl={mapsUrl}
             onSave={onSave}
           />
-        </div>
+        </motion.div>
       </motion.div>
 
-      <div className="cafe-detail-mobile-actions fixed right-0 left-0 z-[60] border-t border-[#ffe3b7]/34 bg-[#fffaf2]/88 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl lg:hidden dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/88">
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 0.32, delay: 0.18 }}
+        className="cafe-detail-mobile-actions fixed right-0 left-0 z-[60] border-t border-[#ffe3b7]/34 bg-[#fffaf2]/88 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl lg:hidden dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/88"
+      >
         <div className="mx-auto w-full max-w-[720px] min-w-0 px-4">
           <DetailActions
             saved={saved}
@@ -179,7 +257,7 @@ export default function CafeDetailInfo({
             onSave={onSave}
           />
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
