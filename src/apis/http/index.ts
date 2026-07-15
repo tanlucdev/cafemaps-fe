@@ -54,6 +54,7 @@ export async function apiFetch<T>(
         }
       : {}),
     ...fetchOptions,
+    credentials: fetchOptions.credentials ?? "include",
     signal: fetchOptions.signal ?? controller.signal,
     headers: {
       "Content-Type": "application/json",

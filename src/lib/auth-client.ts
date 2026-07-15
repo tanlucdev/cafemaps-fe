@@ -1,16 +1,7 @@
 "use client"
 
 import { AUTH_COOKIE_KEYS, AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
-
-function setCookie(name: string, value: string, days = 7) {
-  const expires = new Date(Date.now() + days * 864e5).toUTCString()
-  const secure = location.protocol === "https:" ? "; Secure" : ""
-  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax${secure}`
-}
-
-function deleteCookie(name: string) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`
-}
+import { getMeApi, logoutApi } from "@/api/auth/api"
 
 export interface AuthUser {
   id: string
@@ -26,14 +17,12 @@ export function dispatchAuthChange() {
 
 export function setAccessToken(token: string) {
   if (typeof window === "undefined") return
-  localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, token)
-  setCookie(AUTH_COOKIE_KEYS.accessToken, token)
+  void token
 }
 
 export function clearAccessToken() {
   if (typeof window === "undefined") return
   localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken)
-  deleteCookie(AUTH_COOKIE_KEYS.accessToken)
 }
 
 export function setAuthUser(user: AuthUser) {
@@ -54,7 +43,10 @@ export function clearAuthUser() {
   localStorage.removeItem(AUTH_STORAGE_KEYS.user)
 }
 
-export function logout() {
+export async function logout() {
+  try {
+    await logoutApi()
+  } catch {}
   clearAccessToken()
   clearAuthUser()
   dispatchAuthChange()
@@ -62,15 +54,15 @@ export function logout() {
 
 export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
-  const localToken = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
-  if (localToken) return localToken
-
-  const cookieToken = document.cookie
-    .split("; ")
-    .find((entry) => entry.startsWith(`${AUTH_COOKIE_KEYS.accessToken}=`))
-    ?.split("=")[1]
-
-  return cookieToken ? decodeURIComponent(cookieToken) : null
+  if (getAuthUser()) return AUTH_COOKIE_KEYS.accessToken
+  try {
+    const user = await getMeApi()
+    if (!user) return null
+    setAuthUser(user)
+    return AUTH_COOKIE_KEYS.accessToken
+  } catch {
+    return null
+  }
 }
 
 export function saveAuthReturnUrl() {

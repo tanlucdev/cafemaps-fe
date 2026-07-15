@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import Input from "@/components/ui/Input";
 import { useRegisterMutation } from "@/api/auth/hooks";
 import { Button } from "@/components/ui/Button";
-import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
+import { getAuthReturnUrl, redirectAfterAuth, setAuthUser } from "@/lib/auth-client";
 import { RegisterFormValues, createRegisterSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,7 +52,6 @@ export default function RegisterForm() {
       {
         onSuccess(result) {
           if (result.token) {
-            setAccessToken(result.token);
             if (result.user) setAuthUser(result.user);
             toast.success(t("loginSuccess"));
             redirectAfterAuth(getAuthReturnUrl("/"));

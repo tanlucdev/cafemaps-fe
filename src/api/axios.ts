@@ -2,6 +2,7 @@ import axios from "axios"
 
 const apiClient = axios.create({
   baseURL: "/api-proxy",
+  withCredentials: true,
   timeout: 12000,
   headers: {
     "Content-Type": "application/json",

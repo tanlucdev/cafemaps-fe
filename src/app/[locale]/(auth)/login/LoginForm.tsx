@@ -8,10 +8,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useLoginMutation } from "@/api/auth/hooks";
-import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
+import { getAuthReturnUrl, redirectAfterAuth, setAuthUser } from "@/lib/auth-client";
 import { LoginFormValues, createLoginSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const inputClassName =
   "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[#fffaf2]/82 text-[16px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
@@ -47,7 +48,6 @@ export default function LoginForm() {
     setServerError(null);
     mutate(data, {
       onSuccess: (result) => {
-        setAccessToken(result.token);
         if (result.user) setAuthUser(result.user);
         toast.success(t("loginSuccess"));
         const returnUrl = getAuthReturnUrl("/", searchParams.get("returnUrl"));
@@ -70,6 +70,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-3.5">
+      <GoogleLoginButton disabled={isPending} />
       <div>
         <label className={labelClassName}>{t("emailQuestion")}</label>
         <Input

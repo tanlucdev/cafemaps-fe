@@ -7,7 +7,7 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   token: string
-  user: { id: string; email: string; displayName: string | null; role: string; createdAt: string }
+  user: AuthUserResponse
 }
 
 export interface RegisterPayload {
@@ -17,8 +17,21 @@ export interface RegisterPayload {
 
 export interface RegisterResponse {
   token?: string
-  user?: { id: string; email: string; displayName: string | null; role: string; createdAt: string }
+  user?: AuthUserResponse
   message?: string
+}
+
+export interface AuthUserResponse {
+  id: string
+  email: string
+  displayName: string | null
+  role: string
+  createdAt: string
+  avatarUrl?: string | null
+}
+
+export interface GoogleOAuthStartResponse {
+  authorizationUrl: string
 }
 
 export async function loginApi(payload: LoginPayload): Promise<LoginResponse> {
@@ -34,4 +47,23 @@ export async function registerApi(
     payload
   )
   return data
+}
+
+export async function getGoogleOAuthStartApi(
+  returnUrl: string
+): Promise<GoogleOAuthStartResponse> {
+  const { data } = await apiClient.get<GoogleOAuthStartResponse>(
+    "/auth/oauth/google/start",
+    { params: { returnUrl } }
+  )
+  return data
+}
+
+export async function getMeApi(): Promise<AuthUserResponse | null> {
+  const { data } = await apiClient.get<AuthUserResponse | null>("/auth/me")
+  return data
+}
+
+export async function logoutApi(): Promise<void> {
+  await apiClient.post("/auth/logout")
 }
