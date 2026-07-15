@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Link } from "@/i18n/navigation";
 
 export default function MapCtaSection() {
   const t = useTranslations("map");
@@ -53,12 +54,10 @@ export default function MapCtaSection() {
                 </h2>
                 <p className="mb-6 max-w-md text-sm leading-6 text-[#fff0d4]/76">{t("subtitle")}</p>
                 <Button
+                  render={<Link href="/map" />}
                   variant="default"
                   size="lg"
                   className="min-h-11 rounded-full border border-[#ffe3b7]/28 bg-[#f4b35d] px-5 font-black text-[#2c1a0e] shadow-[0_14px_34px_rgba(244,179,93,0.28)] hover:-translate-y-0.5 hover:bg-[#ffd891] focus-visible:ring-[#ffe3b7]/70"
-                  onClick={() => {
-                    window.open("https://www.google.com/maps/search/cafe+ho+chi+minh", "_blank");
-                  }}
                 >
                   <MapPin size={16} />
                   {t("cta")}

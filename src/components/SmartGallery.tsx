@@ -131,11 +131,14 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
     }
 
     const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [closeLightbox, lightboxIndex, moveLightbox]);
@@ -296,15 +299,15 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
     lightboxIndex !== null && typeof document !== "undefined"
       ? createPortal(
           <div
-            className="fixed inset-0 z-50 overflow-y-auto bg-[#2c1a0e]/54 px-3 py-[max(0.75rem,env(safe-area-inset-top))] text-white backdrop-blur-md sm:px-5 sm:py-5"
+            className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-[#2c1a0e]/54 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] text-white backdrop-blur-md sm:p-5"
             onClick={closeLightbox}
             role="dialog"
             aria-modal="true"
             aria-label={t("imageOf", { index: lightboxIndex + 1, cafeName })}
           >
-            <div className="flex min-h-full items-center justify-center">
+            <div className="flex h-full w-full items-center justify-center">
               <div
-                className="flex h-[min(860px,calc(100dvh-1.5rem))] w-full max-w-5xl flex-col overflow-hidden rounded-[28px] border border-[#ffe3b7]/28 bg-[#120b06]/92 shadow-[0_28px_90px_rgba(18,10,5,0.46),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/10 sm:h-[min(860px,calc(100dvh-2.5rem))] sm:rounded-[34px]"
+                className="flex h-full max-h-[860px] w-full max-w-5xl flex-col overflow-hidden rounded-[28px] border border-[#ffe3b7]/28 bg-[#120b06]/92 shadow-[0_28px_90px_rgba(18,10,5,0.46),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/10 sm:rounded-[34px]"
                 onClick={(event) => event.stopPropagation()}
               >
                 {/* Header */}
