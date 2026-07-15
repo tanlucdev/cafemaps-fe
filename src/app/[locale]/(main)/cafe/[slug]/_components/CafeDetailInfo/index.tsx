@@ -35,10 +35,19 @@ export default function CafeDetailInfo({
   locale,
   saved,
   loadingSave,
+  visited,
+  loadingVisited,
+  voted,
+  loadingVote,
   mapsUrl,
   saveLabel,
+  visitedLabel,
+  voteLabel,
+  votedLabel,
   directionsLabel,
   onSave,
+  onVisited,
+  onVote,
 }: CafeDetailInfoProps) {
   const t = useTranslations("cafe");
   const reduceMotion = useReducedMotion();
@@ -54,7 +63,10 @@ export default function CafeDetailInfo({
   const aboutParagraphs = aboutText ? getTextParagraphs(aboutText) : [];
   const goodForItems = getGoodForItems(cafe, locale);
   const displayTags = getDisplayTags(cafe, locale);
+  const featureLabel = t("detail.features");
   const idealForLabel = t("detail.idealFor");
+  const purposeLabel = t("detail.purpose");
+  const vibeLabel = t("detail.vibe");
   const distanceLabel = t("detail.distanceFromYou", { distance: distanceText });
   const parkingLabel = t("detail.parking");
   const parkingTypeLabel = t("detail.parkingType");
@@ -62,6 +74,7 @@ export default function CafeDetailInfo({
   const instagramLabel = t("detail.instagram");
   const photoCreditLabel = t("detail.photoCredit");
   const saveAriaLabel = saved ? t("unsave") : t("save");
+  const visitedAriaLabel = visited ? t("unmarkVisited") : t("markVisited");
   const cafeInstagram = resolveInstagramLink(cafe.instagramUrl);
   const photoCredits =
     cafe.photoCredits
@@ -182,7 +195,13 @@ export default function CafeDetailInfo({
         </motion.div>
 
         <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
-          <DetailTags cafe={cafe} displayTags={displayTags} />
+          <DetailTags
+            cafe={cafe}
+            displayTags={displayTags}
+            featureLabel={featureLabel}
+            purposeLabel={purposeLabel}
+            vibeLabel={vibeLabel}
+          />
         </motion.div>
         <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
           <DetailDivider />
@@ -231,11 +250,21 @@ export default function CafeDetailInfo({
           <DetailActions
             saved={saved}
             loadingSave={loadingSave}
+            visited={visited}
+            loadingVisited={loadingVisited}
+            voted={voted}
+            loadingVote={loadingVote}
             saveLabel={saveLabel}
+            visitedLabel={visitedLabel}
+            voteLabel={voteLabel}
+            votedLabel={votedLabel}
             directionsLabel={directionsLabel}
             saveAriaLabel={saveAriaLabel}
+            visitedAriaLabel={visitedAriaLabel}
             mapsUrl={mapsUrl}
             onSave={onSave}
+            onVisited={onVisited}
+            onVote={onVote}
           />
         </motion.div>
       </motion.div>
@@ -250,11 +279,21 @@ export default function CafeDetailInfo({
           <DetailActions
             saved={saved}
             loadingSave={loadingSave}
+            visited={visited}
+            loadingVisited={loadingVisited}
+            voted={voted}
+            loadingVote={loadingVote}
             saveLabel={saveLabel}
+            visitedLabel={visitedLabel}
+            voteLabel={voteLabel}
+            votedLabel={votedLabel}
             directionsLabel={directionsLabel}
             saveAriaLabel={saveAriaLabel}
+            visitedAriaLabel={visitedAriaLabel}
             mapsUrl={mapsUrl}
             onSave={onSave}
+            onVisited={onVisited}
+            onVote={onVote}
           />
         </div>
       </motion.div>

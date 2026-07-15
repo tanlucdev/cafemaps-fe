@@ -15,14 +15,24 @@ export interface CafeDetailInfoProps {
   locale: string;
   saved: boolean;
   loadingSave: boolean;
+  visited: boolean;
+  loadingVisited: boolean;
   mapsUrl: string;
   saveLabel: string;
+  visitedLabel: string;
+  voteLabel: string;
+  votedLabel: string;
+  voted: boolean;
+  loadingVote: boolean;
   directionsLabel: string;
   onSave: () => void | Promise<void>;
+  onVisited: () => void | Promise<void>;
+  onVote: () => void | Promise<void>;
 }
 
 export type DetailActionsProps = Omit<CafeDetailInfoProps, "cafe" | "locale"> & {
   saveAriaLabel: string;
+  visitedAriaLabel: string;
 };
 
 export type GoodForItem = {

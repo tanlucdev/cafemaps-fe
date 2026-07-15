@@ -20,9 +20,9 @@ export interface CafeSubmission {
 }
 
 export async function createSubmission(data: CreateSubmissionInput, token: string) {
+  void token
   return apiFetch<CafeSubmission>("/submissions", {
     method: "POST",
     body: JSON.stringify(data),
-    headers: { Authorization: `Bearer ${token}` },
   })
 }

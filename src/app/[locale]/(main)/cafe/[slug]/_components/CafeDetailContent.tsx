@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BookOpen, ChevronLeft, Share2 } from "lucide-react";
@@ -9,12 +9,19 @@ import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
-import { isUnauthorizedError, toggleSaveCafe } from "@/lib/api";
+import {
+  getMyCafeVotes,
+  isUnauthorizedError,
+  toggleSaveCafe,
+  unvoteCafe,
+  voteCafe,
+} from "@/lib/api";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
 import SaveToFolderModal from "@/components/cafe/SaveToFolderModal";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
+import { useCafeVisited } from "./useCafeVisited";
 
 interface CafeDetailContentProps {
   cafe: Cafe;
@@ -33,7 +40,9 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     mass: 0.7,
   });
   const [saved, setSaved] = useState(false);
+  const [voted, setVoted] = useState(cafe.hasUserVote ?? false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingVote, setLoadingVote] = useState(false);
   const [pickerToken, setPickerToken] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,11 +57,31 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
       cafe.name + " " + (cafe.address ?? ""),
     )}`;
+  const { visited, loadingVisited, handleVisited } = useCafeVisited(cafe.id, locale);
   const saveLabel = saved ? t("saved") : t("saveShort");
+  const visitedLabel = visited ? t("visited") : t("markVisited");
+  const voteLabel = t("vote");
+  const votedLabel = t("voted");
   const directionsLabel = t("directions");
   const heroTransition = reduceMotion
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 180, damping: 24, mass: 0.82 };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadVoteState() {
+      const token = await getCurrentAccessToken();
+      if (!token) return;
+      const ids = await getMyCafeVotes(token);
+      if (!cancelled && ids.includes(cafe.id)) setVoted(true);
+    }
+
+    void loadVoteState().catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [cafe.id]);
 
   async function handleSave() {
     if (loadingSave) return;
@@ -105,6 +134,35 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
       }
     } finally {
       setLoadingSave(false);
+    }
+  }
+
+  async function handleVote() {
+    if (loadingVote) return;
+
+    function redirectToLogin() {
+      toast.warning(t("loginRequiredToVote"));
+      saveAuthReturnUrl();
+      setTimeout(() => router.push("/login"), 700);
+    }
+
+    const token = await getCurrentAccessToken();
+    if (!token) {
+      redirectToLogin();
+      return;
+    }
+
+    setLoadingVote(true);
+    const nextVoted = !voted;
+    setVoted(nextVoted);
+    try {
+      await (nextVoted ? voteCafe : unvoteCafe)(cafe.id, token);
+      toast.success(t(nextVoted ? "voteSuccess" : "unvoteSuccess"));
+    } catch (error) {
+      setVoted(!nextVoted);
+      if (isUnauthorizedError(error)) redirectToLogin();
+    } finally {
+      setLoadingVote(false);
     }
   }
 
@@ -184,13 +242,22 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         <CafeDetailInfo
           cafe={cafe}
           locale={locale}
-          saved={saved}
-          loadingSave={loadingSave}
-          mapsUrl={mapsUrl}
-          saveLabel={saveLabel}
-          directionsLabel={directionsLabel}
-          onSave={handleSave}
-        />
+            saved={saved}
+            loadingSave={loadingSave}
+            visited={visited}
+            loadingVisited={loadingVisited}
+            voted={voted}
+            loadingVote={loadingVote}
+            mapsUrl={mapsUrl}
+            saveLabel={saveLabel}
+            visitedLabel={visitedLabel}
+            voteLabel={voteLabel}
+            votedLabel={votedLabel}
+            directionsLabel={directionsLabel}
+            onSave={handleSave}
+            onVisited={handleVisited}
+            onVote={handleVote}
+          />
       </div>
 
       <ShareModal
