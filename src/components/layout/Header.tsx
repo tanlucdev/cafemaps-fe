@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Bookmark, PenLine, Compass, LogIn } from "lucide-react";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
@@ -50,10 +49,6 @@ export default function Header() {
   const activePathname = pendingPathname ?? pathname;
   const isCinematicTop = isHome && !scrolled;
   const shellVariant = isCinematicTop ? "cinematic" : "surface";
-  const iconButtonClass = isCinematicTop
-    ? "text-[#fff0d4] hover:bg-white/12 hover:text-white"
-    : "text-[#6f5133] hover:bg-[#efe0c8] hover:text-[#2c1a0e] dark:text-[#ead6b7] dark:hover:bg-white/10 dark:hover:text-white";
-
   return (
     <header
       className={cn(
@@ -154,7 +149,6 @@ export default function Header() {
               )}
             />
 
-            <ThemeToggle className={cn("rounded-full", iconButtonClass)} />
 
             <div className="ml-0.5 flex items-center">
               {isLoggedIn ? (
