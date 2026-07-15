@@ -255,6 +255,7 @@ export default function FeaturedSection({
         setSearchInput={setSearchInput}
         setViewMode={handleViewModeChange}
         ts={ts}
+        locale={locale}
         viewMode={viewMode}
         onFilterChange={handleFilterChange}
         onSearchSubmit={handleSearchSubmit}

@@ -378,7 +378,8 @@ function MapCtaBanner() {
   );
 }
 
-export default function FeaturedCafesSection2({ cafes, locale }: FeaturedCafesSection2Props) {
+export default function FeaturedCafesSection2({ cafes, locale: _locale }: FeaturedCafesSection2Props) {
+  void _locale;
   const t = useTranslations("featured");
   const featured = cafes.slice(0, 3);
 

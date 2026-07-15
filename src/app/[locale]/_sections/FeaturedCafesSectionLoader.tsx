@@ -19,6 +19,9 @@ export default async function FeaturedCafesSectionLoader({ locale }: { locale: s
         viewAllMobile: featuredT("viewAllMobile"),
         openNow: cafeT("openNow"),
         closedNow: cafeT("closedNow"),
+        vote: featuredT("vote"),
+        voted: featuredT("voted"),
+        voteCount: "",
       }}
     />
   );

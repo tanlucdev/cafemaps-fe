@@ -1,24 +1,25 @@
-"use client"
+"use client";
 
-import type { RefObject } from "react"
-import { motion, type MotionProps } from "framer-motion"
-import { Coffee, Search } from "lucide-react"
-import GuidedFilterBar from "@/components/cafe/GuidedFilterBar"
-import type { CafeFilter as Filter } from "@/types/cafe"
-import type { ViewMode } from "./featured-section-helpers"
+import type { RefObject } from "react";
+import { motion, type MotionProps } from "framer-motion";
+import { Coffee, Search } from "lucide-react";
+import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
+import type { CafeFilter as Filter } from "@/types/cafe";
+import type { ViewMode } from "./featured-section-helpers";
 
 interface FeaturedSectionControlsProps {
-  activeDistricts?: string[]
-  filter: Filter
-  headerMotion: MotionProps
-  searchInput: string
-  searchInputRef: RefObject<HTMLInputElement | null>
-  setSearchInput: (value: string) => void
-  setViewMode: (value: ViewMode) => void
-  ts: (key: string) => string
-  viewMode: ViewMode
-  onFilterChange: (filter: Filter) => void
-  onSearchSubmit: () => void
+  activeDistricts?: string[];
+  filter: Filter;
+  headerMotion: MotionProps;
+  searchInput: string;
+  searchInputRef: RefObject<HTMLInputElement | null>;
+  setSearchInput: (value: string) => void;
+  setViewMode: (value: ViewMode) => void;
+  ts: (key: string) => string;
+  locale: string;
+  viewMode: ViewMode;
+  onFilterChange: (filter: Filter) => void;
+  onSearchSubmit: () => void;
 }
 
 export default function FeaturedSectionControls({
@@ -30,16 +31,19 @@ export default function FeaturedSectionControls({
   setSearchInput,
   setViewMode,
   ts,
+  locale,
   viewMode,
   onFilterChange,
   onSearchSubmit,
 }: FeaturedSectionControlsProps) {
+  const isVi = locale.startsWith("vi");
+
   return (
     <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-7 pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-9 sm:pb-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div {...headerMotion} className="max-w-3xl pb-5">
           <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
-            <Coffee size={13} aria-hidden /> CafeMaps search
+            <Coffee size={13} aria-hidden /> {isVi ? "Tìm kiếm " : "CafeMaps search"}
           </p>
           <h1 className="font-lora text-[34px] leading-tight font-bold text-[var(--foreground)] sm:text-[44px]">
             Tìm quán phù hợp hôm nay
@@ -83,5 +87,5 @@ export default function FeaturedSectionControls({
         </div>
       </div>
     </section>
-  )
+  );
 }

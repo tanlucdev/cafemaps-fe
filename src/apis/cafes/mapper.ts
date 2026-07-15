@@ -57,6 +57,9 @@ export type RawCafe = Omit<
   | "reviewCount"
   | "savedCount"
   | "viewCount"
+  | "weeklyVoteCount"
+  | "voteCount"
+  | "hasUserVote"
 > & {
   vibes?: string[]
   vibe?: string[]
@@ -105,6 +108,12 @@ export type RawCafe = Omit<
   savedCount?: number | string | null
   view_count?: number | string | null
   viewCount?: number | string | null
+  weekly_vote_count?: number | string | null
+  weeklyVoteCount?: number | string | null
+  vote_count?: number | string | null
+  voteCount?: number | string | null
+  has_user_vote?: boolean | null
+  hasUserVote?: boolean | null
   name_en?: string | null
   address_en?: string | null
   district_en?: string | null
@@ -196,6 +205,8 @@ export function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
   const reviewCount = toFiniteNumber(raw.reviewCount ?? raw.review_count)
   const savedCount = toFiniteNumber(raw.savedCount ?? raw.saved_count)
   const viewCount = toFiniteNumber(raw.viewCount ?? raw.view_count)
+  const weeklyVoteCount = toFiniteNumber(raw.weeklyVoteCount ?? raw.weekly_vote_count)
+  const voteCount = toFiniteNumber(raw.voteCount ?? raw.vote_count)
 
   const nameEn = raw.nameEn ?? raw.name_en
   const addressEn = raw.addressEn ?? raw.address_en
@@ -264,6 +275,9 @@ export function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
     curatedRating,
     reviewCount,
     savedCount,
+    weeklyVoteCount,
+    voteCount,
+    hasUserVote: raw.hasUserVote ?? raw.has_user_vote ?? false,
     viewCount,
   }
 }

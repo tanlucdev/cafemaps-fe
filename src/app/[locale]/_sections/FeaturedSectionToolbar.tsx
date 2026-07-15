@@ -85,16 +85,16 @@ export default function FeaturedSectionToolbar({
                     <motion.span
                       layoutId="featured-view-toggle-thumb"
                       className="absolute inset-0 z-0 rounded-full bg-[var(--accent)] shadow-[0_8px_20px_rgba(200,132,42,0.28),inset_0_1px_0_rgba(255,255,255,0.22)] ring-1 ring-white/35"
-                      transition={{ type: "spring", stiffness: 640, damping: 28, mass: 0.56 }}
+                      transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.72 }}
                     />
                     <AnimatePresence>
                       <motion.span
                         key={mode}
                         className="pointer-events-none absolute inset-[-5px] z-0 rounded-full border border-[var(--accent)]"
-                        initial={{ opacity: 0.55, scale: 0.76 }}
-                        animate={{ opacity: 0, scale: 1.5 }}
+                        initial={{ opacity: 0.42, scale: 0.82 }}
+                        animate={{ opacity: 0, scale: 1.34 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                       />
                     </AnimatePresence>
                   </>
@@ -103,10 +103,10 @@ export default function FeaturedSectionToolbar({
                   className="relative z-10 grid place-items-center"
                   animate={
                     active && !reduceMotion
-                      ? { scale: [0.82, 1.12, 1], rotate: [0, mode === "grid" ? 12 : -12, 0] }
+                      ? { scale: [0.9, 1.06, 1], rotate: [0, mode === "grid" ? 8 : -8, 0] }
                       : { scale: 1, rotate: 0 }
                   }
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <Icon size={16} />
                 </motion.span>
