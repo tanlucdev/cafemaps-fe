@@ -7,15 +7,10 @@ import { ArrowRight, Coffee, Globe, Heart, MapPin, Share2 } from "lucide-react";
 const exploreLinks = [
   { href: "/", labelKey: "home" },
   { href: "/search", labelKey: "exploreCafes" },
+  { href: "/map", labelKey: "map" },
   { href: "/quiz", labelKey: "quiz" },
   { href: "/saved", labelKey: "saved" },
   { href: "/contribute", labelKey: "contribute" },
-] as const;
-
-const footerLinks = [
-  { href: "#", labelKey: "about" },
-  { href: "#", labelKey: "privacy" },
-  { href: "#", labelKey: "terms" },
 ] as const;
 
 export default function Footer() {
@@ -91,6 +86,7 @@ export default function Footer() {
 
             <nav className="mt-4 flex flex-wrap gap-2">
               <FooterChip href="/search">{t("exploreCafes")}</FooterChip>
+              <FooterChip href="/map">{t("map")}</FooterChip>
               <FooterChip href="/quiz">{t("quiz")}</FooterChip>
               <FooterChip href="/contribute">{t("contribute")}</FooterChip>
             </nav>
@@ -120,7 +116,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="relative mx-auto hidden max-w-none gap-7 px-1 pt-6 pb-5 sm:grid lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] lg:gap-8 lg:pt-7 xl:gap-10">
+          <div className="relative mx-auto hidden max-w-none gap-7 px-1 pt-6 pb-5 sm:grid lg:grid-cols-[1.2fr_0.8fr_1fr] lg:gap-8 lg:pt-7 xl:gap-10">
             <div>
               <Link href="/" className="group flex w-fit items-center gap-3" aria-label="Cafe Maps">
                 <Image
@@ -148,14 +144,6 @@ export default function Footer() {
               {exploreLinks.map((link) => (
                 <FooterLink key={link.href} href={link.href}>
                   {t(link.labelKey)}
-                </FooterLink>
-              ))}
-            </FooterNav>
-
-            <FooterNav title={t("linksTitle")}>
-              {footerLinks.map((link) => (
-                <FooterLink key={link.labelKey} href={link.href}>
-                  {t(`links.${link.labelKey}`)}
                 </FooterLink>
               ))}
             </FooterNav>

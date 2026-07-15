@@ -32,8 +32,8 @@ export default function UserMenu() {
     ? (user.displayName || user.email).slice(0, 2).toUpperCase()
     : null;
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     setOpen(false);
     router.replace(`/`);
     router.refresh();
