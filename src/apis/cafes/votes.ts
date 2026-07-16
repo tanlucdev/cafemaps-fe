@@ -1,4 +1,4 @@
-import { apiFetch } from "@/apis/http"
+import { apiFetch, authHeaders } from "@/apis/http"
 
 export interface CafeVoteResponse {
   cafeId: string
@@ -8,22 +8,22 @@ export interface CafeVoteResponse {
 }
 
 export function voteCafe(cafeId: string, token: string) {
-  void token
   return apiFetch<CafeVoteResponse>(`/cafes/${cafeId}/vote`, {
     method: "POST",
+    headers: authHeaders(token),
   })
 }
 
 export function unvoteCafe(cafeId: string, token: string) {
-  void token
   return apiFetch<CafeVoteResponse>(`/cafes/${cafeId}/vote`, {
     method: "DELETE",
+    headers: authHeaders(token),
   })
 }
 
 export function getMyCafeVotes(token: string) {
-  void token
   return apiFetch<string[]>("/cafes/votes/me", {
     cache: "no-store",
+    headers: authHeaders(token),
   })
 }

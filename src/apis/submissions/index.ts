@@ -1,4 +1,4 @@
-import { apiFetch } from "@/apis/http"
+import { apiFetch, authHeaders } from "@/apis/http"
 
 export interface CreateSubmissionInput {
   name: string
@@ -20,9 +20,9 @@ export interface CafeSubmission {
 }
 
 export async function createSubmission(data: CreateSubmissionInput, token: string) {
-  void token
   return apiFetch<CafeSubmission>("/submissions", {
     method: "POST",
+    headers: authHeaders(token),
     body: JSON.stringify(data),
   })
 }
