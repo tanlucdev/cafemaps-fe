@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useLoginMutation } from "@/api/auth/hooks";
-import { getAuthReturnUrl, redirectAfterAuth, setAuthUser } from "@/lib/auth-client";
+import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
 import { LoginFormValues, createLoginSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +48,7 @@ export default function LoginForm() {
     setServerError(null);
     mutate(data, {
       onSuccess: (result) => {
+        setAccessToken(result.token);
         if (result.user) setAuthUser(result.user);
         toast.success(t("loginSuccess"));
         const returnUrl = getAuthReturnUrl("/", searchParams.get("returnUrl"));

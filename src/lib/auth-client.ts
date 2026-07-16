@@ -17,7 +17,7 @@ export function dispatchAuthChange() {
 
 export function setAccessToken(token: string) {
   if (typeof window === "undefined") return
-  void token
+  localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, token)
 }
 
 export function clearAccessToken() {
@@ -54,6 +54,8 @@ export async function logout() {
 
 export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
+  const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
+  if (token) return token
   if (getAuthUser()) return AUTH_COOKIE_KEYS.accessToken
   try {
     const user = await getMeApi()
