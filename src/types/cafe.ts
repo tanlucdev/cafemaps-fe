@@ -76,6 +76,9 @@ export interface Cafe {
   curatedRating?: number | null
   reviewCount?: number | null
   savedCount?: number | null
+  weeklyVoteCount?: number
+  voteCount?: number
+  hasUserVote?: boolean
   viewCount?: number | null
   createdAt?: string
   updatedAt?: string

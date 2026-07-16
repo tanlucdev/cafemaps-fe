@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { createSubmission } from "@/apis/submissions";
+import { ApiError, isUnauthorizedError } from "@/apis/http";
+import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { INITIAL_FORM_DATA } from "./contribute-form.constants";
 import type { ContributeFormErrors } from "./contribute-form.types";
@@ -16,40 +20,83 @@ import {
 
 export default function ContributeForm() {
   const t = useTranslations("contribute");
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [data, setData] = useState(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<ContributeFormErrors>({});
+  const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const photoUrls = usePhotoUrls(data.photos);
 
   const validate = () => {
     const nextErrors: ContributeFormErrors = {};
+    if (!data.name.trim()) nextErrors.name = t("errors.nameRequired");
     if (!data.googleMapsUrl.trim()) nextErrors.googleMapsUrl = t("errors.googleMapsRequired");
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
 
   const next = () => {
+    setServerError(null);
     if (validate()) setStep(2);
   };
 
   const back = () => {
     setStep(1);
     setErrors({});
+    setServerError(null);
   };
 
   const submit = async () => {
+    if (loading) return;
+    if (!validate()) {
+      setStep(1);
+      return;
+    }
+
+    setServerError(null);
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    setLoading(false);
-    setDone(true);
+    try {
+      const token = await getCurrentAccessToken();
+      if (!token) {
+        saveAuthReturnUrl();
+        router.push("/login");
+        return;
+      }
+
+      await createSubmission(
+        {
+          name: data.name.trim(),
+          googleMapsUrl: data.googleMapsUrl.trim(),
+          note: data.reason.trim() || undefined,
+        },
+        token,
+      );
+      setDone(true);
+    } catch (error) {
+      if (isUnauthorizedError(error)) {
+        saveAuthReturnUrl();
+        router.push("/login");
+        return;
+      }
+      setServerError(
+        error instanceof ApiError
+          ? t("errors.submitFailed")
+          : error instanceof Error
+            ? error.message
+            : t("errors.submitFailed"),
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const reset = () => {
     setData(INITIAL_FORM_DATA);
     setStep(1);
     setErrors({});
+    setServerError(null);
     setDone(false);
   };
 
@@ -69,6 +116,14 @@ export default function ContributeForm() {
             <ShareStep data={data} setData={setData} errors={errors} photoUrls={photoUrls} />
           )}
           {step === 2 && <ReviewStep data={data} photoUrls={photoUrls} />}
+          {serverError && (
+            <p
+              role="alert"
+              className="mt-4 rounded-2xl border border-[var(--danger)]/25 bg-[var(--danger)]/10 px-3.5 py-3 text-[12.5px] font-semibold text-[var(--danger)]"
+            >
+              {serverError}
+            </p>
+          )}
           <FormActions
             step={step}
             loading={loading}

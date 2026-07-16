@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
 import { getSavedCafeEntries } from "@/lib/api"
 import { createLocalizedMetadata } from "@/lib/metadata"
@@ -37,7 +38,9 @@ export default async function ProfilePage({ params }: PageProps) {
   const { locale } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null
-  const initialSavedEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token, locale) : []
+  if (!token) redirect(`/${locale}/login?returnUrl=${encodeURIComponent(`/${locale}/profile`)}`)
+
+  const initialSavedEntries: SavedCafeEntry[] = await getSavedCafeEntries(token, locale)
 
   return (
     <ProfilePageClient

@@ -27,6 +27,7 @@ export default function RouteAwareFooter() {
 
   if (isCafeDetailPath(pathname)) return null
   if (normalizedPath === "/quiz") return null
+  if (normalizedPath === "/map") return null
 
   return <Footer />
 }

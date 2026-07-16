@@ -1,7 +1,6 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
 import QueryProvider from "@/components/providers/QueryProvider";
@@ -33,17 +32,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           __html: `document.documentElement.lang=${JSON.stringify(locale)};`,
         }}
       />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="light"
-        enableSystem={false}
-        storageKey="cafe-maps-theme"
-      >
-        <QueryProvider>
-          {children}
-          <Toaster richColors position="top-right" />
-        </QueryProvider>
-      </ThemeProvider>
+      <QueryProvider>
+        {children}
+        <Toaster richColors position="top-right" />
+      </QueryProvider>
     </NextIntlClientProvider>
   );
 }

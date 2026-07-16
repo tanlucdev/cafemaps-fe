@@ -1,5 +1,5 @@
 import type { Cafe, SavedCafeEntry, SavedCollection } from "@/types/cafe"
-import { ApiError, apiFetch } from "@/apis/http"
+import { ApiError, apiFetch, authHeaders } from "@/apis/http"
 import { mapApiCafe } from "@/apis/cafes/mapper"
 import { buildQuery } from "@/apis/cafes/query"
 
@@ -13,7 +13,8 @@ export async function getSavedCafeEntries(
       collectionName?: string
       createdAt?: string
     }>>(`/saved${buildQuery(undefined, locale)}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+      headers: authHeaders(token),
     })
     return raw.map(({ cafe, collectionName, createdAt }) => ({
       cafe: mapApiCafe(cafe, locale),
@@ -28,7 +29,8 @@ export async function getSavedCafeEntries(
 export async function getSavedCollections(token: string): Promise<SavedCollection[]> {
   try {
     const raw = await apiFetch<Array<string | SavedCollection>>("/saved/collections", {
-      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+      headers: authHeaders(token),
     })
     return raw
       .map((item) => (typeof item === "string" ? { name: item } : item))
@@ -41,8 +43,8 @@ export async function getSavedCollections(token: string): Promise<SavedCollectio
 export async function createSavedCollection(name: string, token: string): Promise<SavedCollection> {
   return apiFetch<SavedCollection>("/saved/collections", {
     method: "POST",
+    headers: authHeaders(token),
     body: JSON.stringify({ name }),
-    headers: { Authorization: `Bearer ${token}` },
   })
 }
 
@@ -53,15 +55,15 @@ export async function renameSavedCollection(
 ): Promise<SavedCollection> {
   return apiFetch<SavedCollection>(`/saved/collections/${encodeURIComponent(oldName)}`, {
     method: "PATCH",
+    headers: authHeaders(token),
     body: JSON.stringify({ name }),
-    headers: { Authorization: `Bearer ${token}` },
   })
 }
 
 export async function deleteSavedCollection(name: string, token: string): Promise<void> {
   await apiFetch(`/saved/collections/${encodeURIComponent(name)}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(token),
   })
 }
 
@@ -79,7 +81,7 @@ export async function toggleSaveCafe(
   if (currentlySaved) {
     await apiFetch(`/saved/${cafeId}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: authHeaders(token),
     })
     return { saved: false }
   }
@@ -87,8 +89,8 @@ export async function toggleSaveCafe(
   try {
     const result = await apiFetch<{ saved?: boolean; collectionName?: string | null }>("/saved", {
       method: "POST",
+      headers: authHeaders(token),
       body: JSON.stringify({ cafeId, collectionName }),
-      headers: { Authorization: `Bearer ${token}` },
     })
     return { saved: true, collectionName: result.collectionName ?? collectionName ?? null }
   } catch (error) {
@@ -106,7 +108,7 @@ export async function moveToCollection(
 ): Promise<void> {
   await apiFetch(`/saved/${cafeId}/collection`, {
     method: "PATCH",
+    headers: authHeaders(token),
     body: JSON.stringify({ collectionName }),
-    headers: { Authorization: `Bearer ${token}` },
   })
 }

@@ -241,10 +241,10 @@ export default function QuizExperience({
             <div className="absolute top-16 right-10 rounded-[8px] border border-[#ead5b7] bg-white/85 px-4 py-3 text-xs font-semibold text-[#8a6238]">
               coffee first
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[34%]">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <QuizSticker id={current.sticker} size="lg" />
             </div>
-            <div className="absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#e0c79f] bg-white/90 px-3 py-1 text-xs font-bold text-[#855a2c] shadow-sm">
+            <div className="absolute bottom-20 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#e0c79f] bg-white/90 px-3 py-1 text-xs font-bold text-[#855a2c] shadow-sm">
               <Coffee className="size-3.5 text-[var(--accent)]" />
               {Math.round(progress)}% {t("brewed")}
             </div>

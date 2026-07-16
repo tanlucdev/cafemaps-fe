@@ -3773,6 +3773,11 @@ magic-string@^0.30.21:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.5"
 
+mapbox-gl@^3.26.0:
+  version "3.26.0"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-3.26.0.tgz#cad7597fc328c9057a16cf49b043ce4f2404f0d6"
+  integrity sha512-N+Y8VmvpD6xDeP0hAbegPZeEMY5TtnLcV0gEUBZ/KHq3s/yUKQm0PVG9JEkId0QFMMe5/W+FEjoyV4NI3B/N7A==
+
 math-intrinsics@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz"
@@ -3943,11 +3948,6 @@ next-intl@^4.9.1:
     next-intl-swc-plugin-extractor "^4.11.0"
     po-parser "^2.1.1"
     use-intl "^4.11.0"
-
-next-themes@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.npmjs.org/next-themes/-/next-themes-0.4.6.tgz"
-  integrity sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==
 
 next@^15.3.1:
   version "15.5.15"

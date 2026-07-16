@@ -28,7 +28,8 @@ const STORIES = [
   },
 ];
 
-export default function StorySection({ locale }: StorySectionProps) {
+export default function StorySection({ locale: _locale }: StorySectionProps) {
+  void _locale;
   const t = useTranslations("story");
 
   return (

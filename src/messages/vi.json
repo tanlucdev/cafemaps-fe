@@ -4,6 +4,7 @@
     "blog": "Blog",
     "quiz": "Trắc nghiệm",
     "saved": "Đã lưu",
+    "map": "Bản đồ",
     "contribute": "Đóng góp",
     "login": "Đăng nhập",
     "register": "Đăng ký",
@@ -133,6 +134,9 @@
       "modern": "Hiện đại",
       "nature": "Thiên nhiên",
       "creative": "Sáng tạo",
+      "artistic": "Nghệ thuật",
+      "cozy": "Ấm cúng",
+      "peaceful": "Yên bình",
       "romantic": "Lãng mạn",
       "minimalist": "Minimalist"
     },
@@ -160,6 +164,16 @@
     "savedToAll": "Đã lưu vào Tất cả.",
     "savedToFolder": "Đã lưu vào {folder}.",
     "saved": "Đã lưu",
+    "markVisited": "Đã đi",
+    "unmarkVisited": "Bỏ đã đi",
+    "visited": "Đã đi",
+    "markVisitedSuccess": "Đã thêm vào bản đồ đã đi.",
+    "unmarkVisitedSuccess": "Đã bỏ khỏi bản đồ đã đi.",
+    "vote": "Vote",
+    "voted": "Đã vote",
+    "voteSuccess": "Đã vote quán.",
+    "unvoteSuccess": "Đã hủy vote.",
+    "loginRequiredToVote": "Bạn cần đăng nhập để vote quán.",
     "directions": "Chỉ đường đến đây",
     "notFound": "Không tìm thấy quán",
     "unsave": "Bỏ lưu",
@@ -183,7 +197,10 @@
       "viewOnMap": "Xem bản đồ",
       "distanceAway": "~{km}km",
       "distanceFromYou": "Cách bạn {distance}",
+      "features": "Không gian",
       "idealFor": "Lý tưởng cho",
+      "purpose": "Phù hợp",
+      "vibe": "Vibe chính",
       "parking": "Gửi xe",
       "parkingType": "Chỗ để xe",
       "instagram": "Instagram quán",
@@ -215,7 +232,10 @@
     "weeklyFavourite": "Được yêu thích tuần này",
     "mustVisit": "Những quán không thể bỏ lỡ",
     "viewAll": "Xem tất cả",
-    "viewAllMobile": "Xem tất cả quán"
+    "viewAllMobile": "Xem tất cả quán",
+    "vote": "Vote",
+    "voted": "Đã vote",
+    "voteCount": "{count}"
   },
   "story": {
     "title": "Câu chuyện về cà phê",
@@ -245,7 +265,20 @@
     "noLocation": "Không thể lấy vị trí của bạn",
     "city": "TP. Hồ Chí Minh",
     "statCafes": "Quán được liệt kê",
-    "statDistricts": "Quận / Huyện"
+    "statDistricts": "Quận / Huyện",
+    "eyebrow": "Bản đồ cá nhân",
+    "visitedTitle": "Đã đi {count} quán",
+    "visited": "Đã đi",
+    "unvisited": "Chưa đi",
+    "mark": "Đã đi",
+    "unmark": "Bỏ đánh dấu",
+    "detail": "Chi tiết",
+    "openNow": "Đang mở",
+    "unknownHours": "Giờ mở cửa chưa rõ",
+    "unknownDistrict": "Chưa rõ khu vực",
+    "emptyTitle": "Chưa có quán trên bản đồ",
+    "emptySubtitle": "Đánh dấu quán đã đi để bản đồ cá nhân của bạn bắt đầu có dấu chân.",
+    "missingToken": "Thiếu NEXT_PUBLIC_MAPBOX_TOKEN nên chưa thể mở bản đồ."
   },
   "quiz": {
     "title": "Pha gu cà phê của bạn",
@@ -531,6 +564,11 @@
     "deleteFolderDesc": "Thư mục <strong>{name}</strong> có {count} quán sẽ bị xoá. Các quán vẫn giữ trong \"Tất cả\".",
     "deleteFolder": "Xoá thư mục",
     "rename": "Đổi tên",
+    "folderRenamedToastTitle": "Đã đổi tên thư mục",
+    "folderRenamedToastDesc": "\"{oldName}\" thành \"{newName}\".",
+    "folderDeletedToastTitle": "Đã xoá thư mục",
+    "folderDeletedToastDesc": "\"{name}\" đã được gỡ khỏi bộ sưu tập.",
+    "closeToast": "Đóng thông báo",
     "folderName": "Tên thư mục",
     "folderNamePlaceholder": "vd: Muốn thử, Hẹn hò, Hay ghé...",
     "folderNameEllipsis": "Tên thư mục...",
@@ -584,6 +622,7 @@
     },
     "form": {
       "name": "Tên quán",
+      "namePlaceholder": "Ví dụ: Cà phê Nhà Bên Hẻm",
       "address": "Địa chỉ",
       "district": "Quận / Huyện",
       "description": "Mô tả ngắn",
@@ -623,7 +662,9 @@
       "again": "Chia sẻ thêm quán khác"
     },
     "errors": {
-      "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán."
+      "nameRequired": "Tên quán là bắt buộc để đội ngũ dễ kiểm tra.",
+      "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán.",
+      "submitFailed": "Chưa gửi được đề xuất. Thử lại giúp bọn mình nhé."
     },
     "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
@@ -680,6 +721,9 @@
     "validationError": "Vui lòng nhập email hợp lệ và mật khẩu ít nhất 6 ký tự.",
     "confirmEmail": "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận tài khoản.",
     "loading": "Đang xử lý...",
+    "loginWithGoogle": "Đăng nhập với Google",
+    "googleLoginError": "Không thể đăng nhập với Google lúc này",
+    "googleLoginLoading": "Đang mở Google...",
     "loginWith": "Đăng nhập với {provider}",
     "orContinueWith": "Hoặc tiếp tục với",
     "errors": {
@@ -700,6 +744,7 @@
     "exploreCafes": "Khám phá quán",
     "quiz": "Trắc nghiệm",
     "saved": "Quán đã lưu",
+    "map": "Bản đồ đã đi",
     "contribute": "Đóng góp quán",
     "connectText": "Chia sẻ Cafe Maps với những người bạn mê cà phê.",
     "websiteAria": "Về trang chủ Cafe Maps",
@@ -723,6 +768,7 @@
     "home": "Trang chủ",
     "search": "Tìm kiếm",
     "saved": "Đã lưu",
+    "map": "Bản đồ",
     "profile": "Cá nhân"
   },
   "guidedFilter": {

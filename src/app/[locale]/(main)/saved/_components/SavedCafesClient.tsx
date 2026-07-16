@@ -36,6 +36,7 @@ import { isCafeOpenNow } from "@/lib/opening-hours"
 import { CafeCardSkeleton } from "@/components/ui/Skeleton"
 import { useSavedFolders } from "./useSavedFolders"
 import type { CollectionGroup } from "./saved-folders.types"
+import { showSavedToast } from "./saved-toast"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -444,10 +445,14 @@ function ModalOverlay({ children, onClose }: { children: React.ReactNode; onClos
 // ─── Folder Context Menu ──────────────────────────────────────────────────────
 
 function FolderMenu({
+  triggerRef,
+  position,
   onRename,
   onDelete,
   onClose,
 }: {
+  triggerRef: React.RefObject<HTMLButtonElement | null>
+  position: { right: number; bottom: number }
   onRename: () => void
   onDelete: () => void
   onClose: () => void
@@ -457,16 +462,19 @@ function FolderMenu({
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
+      const target = e.target as Node
+      if (ref.current?.contains(target) || triggerRef.current?.contains(target)) return
+      onClose()
     }
     document.addEventListener("mousedown", handleClick)
     return () => document.removeEventListener("mousedown", handleClick)
-  }, [onClose])
+  }, [onClose, triggerRef])
 
-  return (
+  return createPortal(
     <div
       ref={ref}
-      className="absolute right-0 top-8 z-20 min-w-[140px] overflow-hidden rounded-2xl border border-[#e6dacd] bg-white py-1 shadow-xl dark:border-[#3d2c1e] dark:bg-[#1c1209]"
+      className="fixed z-[90] min-w-[180px] overflow-hidden rounded-2xl border border-[#e6dacd] bg-white py-1 shadow-xl dark:border-[#3d2c1e] dark:bg-[#1c1209]"
+      style={position}
     >
       <button
         type="button"
@@ -484,7 +492,8 @@ function FolderMenu({
         <Trash2 size={14} />
         {t("deleteFolder")}
       </button>
-    </div>
+    </div>,
+    document.body
   )
 }
 
@@ -509,6 +518,8 @@ function FolderCard({
   const preview = group.cafes.slice(0, 4)
   const extra = Math.max(group.cafes.length - 3, 0)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [menuPosition, setMenuPosition] = useState({ right: 16, bottom: 16 })
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
     <div className="group relative min-w-[150px] shrink-0 sm:min-w-[168px]">
@@ -572,14 +583,25 @@ function FolderCard({
       {canManage && (
         <div className="relative">
           <button
+            ref={menuButtonRef}
             type="button"
-            onClick={(e) => { e.stopPropagation(); setMenuOpen((v) => !v) }}
+            onClick={(e) => {
+              e.stopPropagation()
+              const rect = e.currentTarget.getBoundingClientRect()
+              setMenuPosition({
+                right: Math.max(12, window.innerWidth - rect.right),
+                bottom: Math.max(12, window.innerHeight - rect.top + 8),
+              })
+              setMenuOpen((v) => !v)
+            }}
             className="absolute right-2 top-[-112px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#ffe3b7]/60 bg-[#fffaf2]/92 opacity-0 shadow-sm backdrop-blur transition-opacity focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] group-hover:opacity-100 dark:border-white/10 dark:bg-[#2c1a0e]/90"
           >
             <MoreHorizontal size={14} className="text-[#6b5a4a]" />
           </button>
           {menuOpen && (
             <FolderMenu
+              triggerRef={menuButtonRef}
+              position={menuPosition}
               onRename={() => onRename?.()}
               onDelete={() => onDelete?.()}
               onClose={() => setMenuOpen(false)}
@@ -837,6 +859,7 @@ export default function SavedCafesClient({
   const [renameTarget, setRenameTarget] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [moveTarget, setMoveTarget] = useState<Cafe | null>(null)
+  const pendingFolderActionRef = useRef(false)
   const {
     collections,
     collectionNames,
@@ -934,14 +957,42 @@ export default function SavedCafesClient({
     setShowCreateFolder(false)
   }
 
-  function handleRenameFolder(oldName: string, newName: string) {
-    void renameFolder(oldName, newName)
+  async function handleRenameFolder(oldName: string, newName: string) {
+    if (pendingFolderActionRef.current) return
+    pendingFolderActionRef.current = true
     setRenameTarget(null)
+    try {
+      const renamed = await renameFolder(oldName, newName)
+      if (renamed) {
+        showSavedToast({
+          kind: "rename",
+          title: t("folderRenamedToastTitle"),
+          description: t("folderRenamedToastDesc", { oldName, newName }),
+          closeLabel: t("closeToast"),
+        })
+      }
+    } finally {
+      pendingFolderActionRef.current = false
+    }
   }
 
-  function handleDeleteFolder(name: string) {
-    void deleteFolder(name)
+  async function handleDeleteFolder(name: string) {
+    if (pendingFolderActionRef.current) return
+    pendingFolderActionRef.current = true
     setDeleteTarget(null)
+    try {
+      const deleted = await deleteFolder(name)
+      if (deleted) {
+        showSavedToast({
+          kind: "delete",
+          title: t("folderDeletedToastTitle"),
+          description: t("folderDeletedToastDesc", { name }),
+          closeLabel: t("closeToast"),
+        })
+      }
+    } finally {
+      pendingFolderActionRef.current = false
+    }
   }
 
   function handleMoveToCollection(cafe: Cafe, targetCollection: string | null) {
@@ -1294,7 +1345,7 @@ export default function SavedCafesClient({
         <RenameFolderModal
           current={renameTarget}
           existing={collectionNames.filter((n) => n !== renameTarget)}
-          onConfirm={(newName) => handleRenameFolder(renameTarget, newName)}
+          onConfirm={(newName) => { void handleRenameFolder(renameTarget, newName) }}
           onClose={() => setRenameTarget(null)}
         />
       )}
@@ -1303,7 +1354,7 @@ export default function SavedCafesClient({
         <DeleteFolderModal
           name={deleteTarget}
           count={collections.find((c) => c.name === deleteTarget)?.cafes.length ?? 0}
-          onConfirm={() => handleDeleteFolder(deleteTarget)}
+          onConfirm={() => { void handleDeleteFolder(deleteTarget) }}
           onClose={() => setDeleteTarget(null)}
         />
       )}

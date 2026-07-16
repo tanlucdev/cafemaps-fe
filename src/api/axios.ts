@@ -1,11 +1,20 @@
 import axios from "axios"
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 
 const apiClient = axios.create({
   baseURL: "/api-proxy",
+  withCredentials: true,
   timeout: 12000,
   headers: {
     "Content-Type": "application/json",
   },
+})
+
+apiClient.interceptors.request.use((config) => {
+  if (typeof window === "undefined") return config
+  const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
 })
 
 apiClient.interceptors.response.use(

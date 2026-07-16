@@ -3,27 +3,22 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, PenLine, Compass, LogIn } from "lucide-react";
-import ThemeToggle from "@/components/ui/ThemeToggle";
+import { Bookmark, PenLine, Compass, LogIn, MapPinned } from "lucide-react";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
-import { getAuthUser } from "@/lib/auth-client";
+import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const HEADER_SCROLL_ENTER_Y = 24;
 const HEADER_SCROLL_LEAVE_Y = 8;
 
-type HeaderProps = {
-  initialIsLoggedIn?: boolean;
-};
-
-export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
+export default function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [authState, setAuthState] = useState(initialIsLoggedIn);
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
+  const { isLoggedIn } = useAuthState();
 
   useEffect(() => {
     const onScroll = () => {
@@ -41,18 +36,12 @@ export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
   }, []);
 
   useEffect(() => {
-    setAuthState(!!getAuthUser());
-    const onAuthChange = () => setAuthState(!!getAuthUser());
-    window.addEventListener("cafe-auth-change", onAuthChange);
-    return () => window.removeEventListener("cafe-auth-change", onAuthChange);
-  }, []);
-
-  useEffect(() => {
     setPendingPathname(null);
   }, [pathname]);
 
   const navLinks = [
     { href: "/search", label: t("explore"), icon: Compass, primary: true },
+    { href: "/map", label: t("map"), icon: MapPinned },
     // { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },
     { href: "/contribute", label: t("contribute"), icon: PenLine },
@@ -61,10 +50,6 @@ export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
   const activePathname = pendingPathname ?? pathname;
   const isCinematicTop = isHome && !scrolled;
   const shellVariant = isCinematicTop ? "cinematic" : "surface";
-  const iconButtonClass = isCinematicTop
-    ? "text-[#fff0d4] hover:bg-white/12 hover:text-white"
-    : "text-[#6f5133] hover:bg-[#efe0c8] hover:text-[#2c1a0e] dark:text-[#ead6b7] dark:hover:bg-white/10 dark:hover:text-white";
-
   return (
     <header
       className={cn(
@@ -165,11 +150,9 @@ export default function Header({ initialIsLoggedIn = false }: HeaderProps) {
               )}
             />
 
-            <ThemeToggle className={cn("rounded-full", iconButtonClass)} />
-
             <div className="ml-0.5 flex items-center">
-              {authState ? (
-                <UserMenu initialIsLoggedIn={initialIsLoggedIn} />
+              {isLoggedIn ? (
+                <UserMenu />
               ) : (
                 <Link
                   href="/login"

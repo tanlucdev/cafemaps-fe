@@ -107,10 +107,15 @@ function CafeListRow({
       // ref={articleRef}
       // onMouseEnter={handleMouseEnter}
       // onMouseLeave={handleMouseLeave}
+      layout
+      layoutId={`featured-cafe-${cafe.id}`}
       initial={revealInitial}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.18, margin: "0px 0px -6% 0px" }}
-      transition={revealTransition}
+      transition={{
+        ...revealTransition,
+        layout: { type: "spring", stiffness: 260, damping: 28, mass: 0.8 },
+      }}
       whileHover={isCinematic && !reduceMotion ? { y: -3, scale: 1.005 } : undefined}
       className={cn(
         "group relative flex min-h-[140px] overflow-hidden rounded-2xl transition-colors duration-300",

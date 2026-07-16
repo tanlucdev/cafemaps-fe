@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Link, usePathname } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
-import { Home, Search, Heart, User } from "lucide-react"
+import { Home, Search, Heart, MapPinned } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const IOS_BOTTOM_GUARD_VAR = "--ios-bottom-guard-height"
@@ -58,8 +58,8 @@ export default function MobileBottomNav() {
   const tabs = [
     { href: "/", icon: Home, label: t("home") },
     { href: "/search", icon: Search, label: t("search") },
+    { href: "/map", icon: MapPinned, label: t("map") },
     { href: "/saved", icon: Heart, label: t("saved") },
-    { href: "/profile", icon: User, label: t("profile") },
   ]
 
   const isActiveRoute = (href: string) => {

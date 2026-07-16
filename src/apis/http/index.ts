@@ -1,4 +1,5 @@
 import { READ_REVALIDATE_SECONDS } from "@/apis/cafes/constants"
+import { AUTH_COOKIE_KEYS, AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 
 const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
 const BASE_URL =
@@ -29,6 +30,16 @@ export function isUnauthorizedError(error: unknown) {
   return error instanceof ApiError && (error.status === 401 || error.status === 403)
 }
 
+export function authHeaders(token: string): HeadersInit | undefined {
+  return token === AUTH_COOKIE_KEYS.accessToken ? undefined : { Authorization: `Bearer ${token}` }
+}
+
+function storedAuthHeaders(): HeadersInit | undefined {
+  if (typeof window === "undefined") return undefined
+  const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
+  return token ? { Authorization: `Bearer ${token}` } : undefined
+}
+
 export async function apiFetch<T>(
   path: string,
   options?: NextRequestInit
@@ -54,9 +65,11 @@ export async function apiFetch<T>(
         }
       : {}),
     ...fetchOptions,
+    credentials: fetchOptions.credentials ?? "include",
     signal: fetchOptions.signal ?? controller.signal,
     headers: {
       "Content-Type": "application/json",
+      ...storedAuthHeaders(),
       ...fetchOptions.headers,
     },
   }).finally(() => clearTimeout(timeout))
