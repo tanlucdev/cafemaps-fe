@@ -4,7 +4,7 @@ import { AUTH_COOKIE_KEYS } from "./constants/auth-keys"
 import { routing } from "./i18n/routing"
 
 const intlMiddleware = createMiddleware(routing)
-const GUARDED_PATHS = ["/saved", "/profile"]
+const GUARDED_PATHS: string[] = []
 const GUEST_ONLY_PATHS = ["/login", "/register"]
 const locales = routing.locales as readonly string[]
 const PUBLIC_FILE = /\.(?:avif|css|gif|ico|jpg|jpeg|js|json|map|mp4|png|svg|txt|webp|woff2?)$/i

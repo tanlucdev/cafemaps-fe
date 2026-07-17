@@ -56,13 +56,13 @@ export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
   const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
   if (token) return token
-  if (getAuthUser()) return AUTH_COOKIE_KEYS.accessToken
   try {
     const user = await getMeApi()
     if (!user) return null
     setAuthUser(user)
     return AUTH_COOKIE_KEYS.accessToken
   } catch {
+    clearAuthUser()
     return null
   }
 }
