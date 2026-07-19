@@ -53,7 +53,7 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute top-10 right-0 z-50 w-44 rounded-xl border border-[var(--border)] bg-(--background) py-1 shadow-lg">
+        <div className="absolute top-10 right-0 z-50 w-44 overflow-hidden rounded-xl border border-[var(--border)] bg-(--background) py-1 shadow-lg">
           <button
             onClick={() => {
               setOpen(false);
