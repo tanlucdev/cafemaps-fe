@@ -3,23 +3,29 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, Eye, EyeOff, LoaderCircle, Lock, LogIn, Mail } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, LoaderCircle, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useLoginMutation } from "@/api/auth/hooks";
-import { getAuthReturnUrl, redirectAfterAuth, setAccessToken, setAuthUser } from "@/lib/auth-client";
+import {
+  getAuthReturnUrl,
+  redirectAfterAuth,
+  setAccessToken,
+  setAuthUser,
+} from "@/lib/auth-client";
 import { LoginFormValues, createLoginSchema } from "@/lib/schemas/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GoogleLoginButton from "./GoogleLoginButton";
 
 const inputClassName =
-  "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[#fffaf2]/82 text-[16px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
+  "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[#fffaf2]/82 text-[16px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md focus:ring-0 dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
 const errorInputClassName = "auth-input-error";
 const labelClassName =
   "mb-1.5 block text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]";
-const errorClassName = "mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-[#C0392B] dark:text-[#FFB4AA]";
+const errorClassName =
+  "mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-[#C0392B] dark:text-[#FFB4AA]";
 
 export default function LoginForm() {
   const t = useTranslations("auth");
@@ -71,7 +77,6 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-3.5">
-      <GoogleLoginButton disabled={isPending} />
       <div>
         <label className={labelClassName}>{t("emailQuestion")}</label>
         <Input
@@ -80,7 +85,6 @@ export default function LoginForm() {
           autoComplete="email"
           disabled={isPending}
           placeholder={t("emailPlaceholder")}
-          leftIcon={<Mail size={16} aria-hidden="true" />}
           className={`${inputClassName} ${errors.email ? errorInputClassName : ""}`}
         />
         {errors.email && (
@@ -96,7 +100,9 @@ export default function LoginForm() {
           <label className="text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]">
             {t("passwordQuestion")}
           </label>
-          <span className="text-xs font-black text-[var(--accent-hover)] dark:text-[#f0b869]">{t("forgotShort")}</span>
+          <span className="text-xs font-black text-[var(--accent-hover)] dark:text-[#f0b869]">
+            {t("forgotShort")}
+          </span>
         </div>
         <Input
           type={showPassword ? "text" : "password"}
@@ -104,7 +110,6 @@ export default function LoginForm() {
           autoComplete="current-password"
           disabled={isPending}
           placeholder={t("passwordPlaceholder")}
-          leftIcon={<Lock size={16} aria-hidden="true" />}
           className={`${inputClassName} ${errors.password ? errorInputClassName : ""}`}
           rightIcon={
             <button
@@ -152,6 +157,8 @@ export default function LoginForm() {
           </span>
         )}
       </Button>
+
+      <GoogleLoginButton disabled={isPending} />
     </form>
   );
 }
