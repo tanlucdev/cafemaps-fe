@@ -5,7 +5,7 @@ import { getAuthUser, setAuthUser } from "@/lib/auth-client"
 import { getMeApi } from "@/api/auth/api"
 
 export function useAuthState() {
-  const [user, setUser] = useState(() => getAuthUser())
+  const [user, setUser] = useState<ReturnType<typeof getAuthUser>>(null)
 
   useEffect(() => {
     const syncUser = () => setUser(getAuthUser())

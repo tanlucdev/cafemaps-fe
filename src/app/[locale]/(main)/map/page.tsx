@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys";
 import { getVisitedCafeEntries } from "@/apis/visited";
 import { createLocalizedMetadata, normalizeLocale } from "@/lib/metadata";
@@ -29,9 +28,7 @@ export async function generateMetadata({ params }: MapPageProps): Promise<Metada
 export default async function MapPage({ params }: MapPageProps) {
   const { locale } = await params;
   const token = (await cookies()).get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null;
-  if (!token) redirect(`/${locale}/login?returnUrl=${encodeURIComponent(`/${locale}/map`)}`);
-
-  const visitedEntries = await getVisitedCafeEntries(token, locale);
+  const visitedEntries = token ? await getVisitedCafeEntries(token, locale) : [];
 
   return (
     <MapPageClient

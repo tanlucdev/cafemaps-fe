@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
 import { getSavedCafeEntries, getSavedCollections } from "@/lib/api"
@@ -26,13 +25,10 @@ export default async function SavedPage({ params }: PageProps) {
   const { locale } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null
-  if (!token) redirect(`/${locale}/login?returnUrl=${encodeURIComponent(`/${locale}/saved`)}`)
-
   const initialIsLoggedIn = Boolean(token)
-  const [initialEntries, initialFolders] = await Promise.all([
-    getSavedCafeEntries(token, locale),
-    getSavedCollections(token),
-  ])
+  const [initialEntries, initialFolders] = token
+    ? await Promise.all([getSavedCafeEntries(token, locale), getSavedCollections(token)])
+    : [[], []]
 
   return (
     <SavedCafesClient

@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 import { isUnauthorizedError } from "@/apis/http"
 import { markVisitedCafe, unmarkVisitedCafe } from "@/apis/visited"
 import { useRouter } from "@/i18n/navigation"
+import { useVisitedMapData } from "./useVisitedMapData"
 
 type Point = { type: "Point"; coordinates: [number, number] }
 type CafeFeature = {
@@ -51,14 +52,18 @@ export default function MapPageClient({
 }) {
   const t = useTranslations("map")
   const router = useRouter()
+  const redirectToLogin = useCallback(() => {
+    saveAuthReturnUrl()
+    router.push("/login")
+  }, [router])
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const boxRef = useRef<HTMLDivElement>(null)
   const popupRef = useRef<mapboxgl.Popup | null>(null)
-  const [visitedIds, setVisitedIds] = useState(() => new Set(initialVisitedIds))
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-  const visibleCafes = useMemo(() => cafes.filter((cafe) => cafePoint(cafe, visitedIds.has(cafe.id))), [cafes, visitedIds])
+  const { cafes: mapCafes, visitedIds, setVisitedIds } = useVisitedMapData({ initialCafes: cafes, initialVisitedIds, locale, onUnauthorized: redirectToLogin })
+  const visibleCafes = useMemo(() => mapCafes.filter((cafe) => cafePoint(cafe, visitedIds.has(cafe.id))), [mapCafes, visitedIds])
   const selectedCafe = visibleCafes.find((cafe) => cafe.id === selectedId) ?? null
   const data = useMemo<CafeCollection>(
     () => ({
@@ -92,7 +97,7 @@ export default function MapPageClient({
     } finally {
       setBusyId(null)
     }
-  }, [router, visitedIds])
+  }, [router, setVisitedIds, visitedIds])
 
   useEffect(() => {
     if (!token || !boxRef.current || mapRef.current) return

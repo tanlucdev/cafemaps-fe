@@ -1,5 +1,5 @@
 import type { Cafe } from "@/types/cafe";
-import { apiFetch } from "@/apis/http";
+import { apiFetch, isUnauthorizedError } from "@/apis/http";
 import { mapApiCafe } from "@/apis/cafes/mapper";
 import { buildQuery } from "@/apis/cafes/query";
 
@@ -31,7 +31,8 @@ export async function getVisitedCafeEntries(
         };
       })
       .filter((entry) => entry.cafe.id);
-  } catch {
+  } catch (error) {
+    if (isUnauthorizedError(error)) throw error;
     return [];
   }
 }
