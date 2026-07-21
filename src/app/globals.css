@@ -84,7 +84,7 @@ input:focus-visible {
   --app-surface: var(--background);
   --app-muted: rgba(44, 26, 14, 0.58);
   --app-bottom-border: rgba(83, 63, 35, 0.14);
-  --mobile-bottom-nav-height: 72px;
+  --mobile-bottom-nav-height: 84px;
   --cafe-detail-mobile-actions-height: 72px;
   --ios-bottom-guard-height: 65px;
 
@@ -300,8 +300,8 @@ button:disabled {
   align-items: center;
   height: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
   padding-right: 6px;
-  padding-top: 4px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+  padding-top: 8px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
   padding-left: 6px;
   background: transparent;
 }
@@ -322,7 +322,7 @@ button:disabled {
   isolation: isolate;
   display: flex;
   min-width: 0;
-  height: calc(var(--mobile-bottom-nav-height) - 8px);
+  height: calc(var(--mobile-bottom-nav-height) - 20px);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -344,11 +344,11 @@ button:disabled {
 .mobile-bottom-nav-item::before {
   content: "";
   position: absolute;
-  top: 7px;
+  top: 6px;
   left: 50%;
   z-index: -1;
-  width: 42px;
-  height: 28px;
+  width: 44px;
+  height: 32px;
   border: 1px solid rgba(200, 132, 42, 0.24);
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(255, 240, 210, 0.96), rgba(246, 210, 154, 0.9));
