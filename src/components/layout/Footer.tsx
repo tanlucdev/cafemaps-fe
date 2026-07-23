@@ -152,7 +152,7 @@ export default function Footer() {
               <h3 className="text-sm font-extrabold text-[var(--foreground)]">
                 {t("connectTitle")}
               </h3>
-              <p className="mt-2 max-w-xs text-sm leading-5 text-[var(--foreground-muted)]">
+              <p className="mt-2 max-w-sm text-sm leading-5 text-[var(--foreground-muted)]">
                 {t("connectText")}
               </p>
               <div className="mt-3 flex gap-3">
@@ -206,7 +206,7 @@ function FooterNav({ title, children }: { title: string; children: ReactNode }) 
   return (
     <div>
       <h3 className="text-sm font-extrabold text-[var(--foreground)]">{title}</h3>
-      <nav className="mt-2.5 grid gap-2">{children}</nav>
+      <nav className="mt-2.5 grid grid-cols-2 gap-x-6 gap-y-2">{children}</nav>
     </div>
   );
 }
