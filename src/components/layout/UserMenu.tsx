@@ -59,7 +59,7 @@ export default function UserMenu() {
               setOpen(false);
               router.push("/profile");
             }}
-            className="text-foreground flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-(--background-secondary)"
+            className="text-foreground mx-1.5 flex w-[calc(100%-0.75rem)] cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-(--background-secondary)"
           >
             <User size={14} />
             {t("bottomNav.profile")}
@@ -67,7 +67,7 @@ export default function UserMenu() {
           <div className="my-1 border-t border-[var(--border)]" />
           <button
             onClick={handleLogout}
-            className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:bg-(--background-secondary) dark:text-red-400"
+            className="mx-1.5 flex w-[calc(100%-0.75rem)] cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-red-600 transition-colors hover:bg-(--background-secondary) dark:text-red-400"
           >
             <LogOut size={14} />
             {t("auth.logout")}

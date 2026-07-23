@@ -16,6 +16,20 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Google login
+
+Frontend calls `GET /api-proxy/auth/oauth/google/start?returnUrl=/...`; `next.config.ts` rewrites `/api-proxy/*` to `API_URL`.
+
+Local config:
+
+```bash
+API_URL=http://localhost:3001/api
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+Google OAuth Client config belongs to the backend. Add the frontend URL to allowed origins, and add the backend callback URL, usually `http://localhost:3001/api/auth/oauth/google/callback`, to authorized redirect URIs.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
