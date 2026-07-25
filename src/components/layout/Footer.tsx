@@ -23,7 +23,7 @@ export default function Footer() {
     <footer className="site-footer bg-[var(--background)] px-3 pt-4 pb-3 sm:px-4 sm:pt-8 sm:pb-4 lg:px-4 xl:px-6">
       <div className="mx-auto max-w-[1480px]">
         <div className="relative overflow-hidden rounded-[22px] border border-[var(--footer-panel-border)] bg-[var(--footer-panel)] px-4 py-4 shadow-[var(--footer-panel-shadow)] sm:rounded-[28px] sm:px-5 sm:py-5 lg:px-6 lg:py-6">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(255,216,145,0.28),transparent_28%),radial-gradient(circle_at_86%_22%,rgba(200,132,42,0.16),transparent_26%),linear-gradient(180deg,rgba(255,250,242,0.55),transparent_62%)] dark:opacity-40" />
+          <div className="pointer-events-none absolute inset-0 bg-[image:var(--footer-ambient)] dark:opacity-40" />
           <div className="pointer-events-none absolute inset-0 [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.72%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.30%22/%3E%3C/svg%3E')] opacity-[0.045] mix-blend-multiply dark:mix-blend-screen" />
           <div className="pointer-events-none absolute -top-7 right-8 hidden h-24 w-24 rounded-full border border-[var(--footer-decor)] sm:block" />
           <div className="pointer-events-none absolute right-5 bottom-16 hidden rotate-[-8deg] rounded-full border border-[var(--footer-decor)] px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[var(--footer-decor)] uppercase lg:block">
@@ -36,7 +36,7 @@ export default function Footer() {
           <div className="relative hidden overflow-hidden rounded-[20px] border border-[var(--footer-card-border)] bg-[var(--footer-card)] p-4 shadow-[var(--footer-card-shadow)] backdrop-blur-md sm:block lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="pointer-events-none absolute right-8 bottom-4 h-14 w-24 rotate-[-12deg] rounded-[50%] border-t border-dashed border-[var(--footer-decor)]" />
             <div className="max-w-2xl">
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-[11px] font-black tracking-[0.12em] text-[#a86d1e] uppercase backdrop-blur-md">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-[11px] font-black tracking-[0.12em] text-[var(--footer-cta-eyebrow-text)] uppercase backdrop-blur-md">
                 <MapPin size={14} aria-hidden="true" />
                 <span>{t("cta.eyebrow")}</span>
               </div>
@@ -50,14 +50,14 @@ export default function Footer() {
             <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:mt-0 lg:shrink-0">
               <Link
                 href="/search"
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/30 bg-[var(--accent)] px-4 text-sm font-black text-white shadow-[0_12px_28px_rgba(200,132,42,0.24)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[var(--footer-primary-border)] bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[var(--footer-primary-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
               >
                 {t("cta.primary")}
                 <ArrowRight size={16} aria-hidden="true" />
               </Link>
               <Link
                 href="/quiz"
-                className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--footer-secondary-border)] bg-[var(--footer-control-bg-strong)] px-4 text-sm font-black text-[var(--foreground)] shadow-[0_8px_22px_rgba(82,52,25,0.06)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
+                className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--footer-secondary-border)] bg-[var(--footer-control-bg-strong)] px-4 text-sm font-black text-[var(--foreground)] shadow-[var(--footer-secondary-shadow)] transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
               >
                 {t("cta.secondary")}
               </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
                 alt="Cafe Maps"
                 width={34}
                 height={34}
-                className="h-[34px] w-[34px] shrink-0 rounded-[12px] object-cover shadow-[0_8px_20px_rgba(82,52,25,0.12)] ring-1 ring-white/60"
+                className="h-[34px] w-[34px] shrink-0 rounded-[12px] object-cover shadow-[var(--footer-logo-shadow)] ring-1 ring-[var(--footer-logo-ring)]"
                 loading="lazy"
               />
               <div className="min-w-0">
@@ -99,7 +99,7 @@ export default function Footer() {
                 <Link
                   href="/"
                   aria-label={t("websiteAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[0_8px_20px_rgba(82,52,25,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Globe size={17} aria-hidden="true" />
                 </Link>
@@ -108,7 +108,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("shareAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[0_8px_20px_rgba(82,52,25,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Share2 size={17} aria-hidden="true" />
                 </a>
@@ -124,7 +124,7 @@ export default function Footer() {
                   alt="Cafe Maps"
                   width={38}
                   height={38}
-                  className="h-[38px] w-[38px] shrink-0 rounded-[13px] object-cover shadow-[0_8px_20px_rgba(82,52,25,0.12)] ring-1 ring-white/60"
+                  className="h-[38px] w-[38px] shrink-0 rounded-[13px] object-cover shadow-[var(--footer-logo-shadow)] ring-1 ring-[var(--footer-logo-ring)]"
                   loading="lazy"
                 />
                 <span className="font-display text-lg font-extrabold text-[var(--foreground)] transition group-hover:text-[var(--accent-hover)]">
@@ -134,7 +134,7 @@ export default function Footer() {
               <p className="mt-3 max-w-xs text-sm leading-5 text-[var(--foreground-muted)]">
                 {t("tagline")}
               </p>
-              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-xs font-black text-[var(--footer-warm-text)] shadow-[0_8px_20px_rgba(82,52,25,0.06)] backdrop-blur-md">
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-xs font-black text-[var(--footer-warm-text)] shadow-[var(--footer-brand-note-shadow)] backdrop-blur-md">
                 <Coffee size={14} aria-hidden="true" />
                 {t("brandNote")}
               </div>
@@ -159,7 +159,7 @@ export default function Footer() {
                 <Link
                   href="/"
                   aria-label={t("websiteAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[0_8px_20px_rgba(82,52,25,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Globe size={18} aria-hidden="true" />
                 </Link>
@@ -168,7 +168,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("shareAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[0_8px_20px_rgba(82,52,25,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
                 >
                   <Share2 size={18} aria-hidden="true" />
                 </a>
@@ -180,7 +180,11 @@ export default function Footer() {
             <div className="flex flex-col gap-2 text-xs text-[var(--foreground-muted)] sm:flex-row sm:items-center sm:justify-between">
               <p>{t("copyright", { year })}</p>
               <p className="inline-flex items-center gap-1.5 font-semibold text-[var(--footer-warm-text)]">
-                <Heart size={13} aria-hidden="true" className="fill-[#c8842a]/20 text-[#c8842a]" />
+                <Heart
+                  size={13}
+                  aria-hidden="true"
+                  className="fill-[var(--footer-heart-fill)] text-[var(--footer-heart)]"
+                />
                 {t("bottomNote")}
               </p>
             </div>
