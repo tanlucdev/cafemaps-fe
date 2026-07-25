@@ -1,4 +1,73 @@
 :root {
+  --header-focus-ring: #e4ad58;
+  --header-logo-bg: rgba(255, 255, 255, 0.9);
+  --header-logo-bg-dark: #fff7e8;
+  --header-logo-shadow: 0 8px 22px rgba(44, 26, 14, 0.12);
+  --header-shell-cinematic-border: rgba(255, 227, 183, 0.28);
+  --header-shell-cinematic-bg: rgba(31, 18, 9, 0.42);
+  --header-shell-cinematic-text: #fff0d4;
+  --header-shell-cinematic-shadow: 0 16px 46px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 240, 210, 0.12);
+  --header-shell-surface-border: #d8bc94;
+  --header-shell-surface-bg: rgba(255, 247, 232, 0.96);
+  --header-shell-surface-shadow: 0 16px 42px rgba(75, 45, 20, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  --header-subtitle-cinematic: rgba(255, 227, 183, 0.78);
+  --header-subtitle-surface: #8c633a;
+  --header-nav-cinematic-active-bg: #fff0d2;
+  --header-nav-cinematic-active-text: #201006;
+  --header-nav-cinematic-active-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  --header-nav-cinematic-hover-bg: #ffffff;
+  --header-nav-cinematic-text: rgba(255, 227, 183, 0.88);
+  --header-nav-cinematic-muted-hover-bg: rgba(255, 255, 255, 0.12);
+  --header-nav-cinematic-muted-hover-text: #ffffff;
+  --header-nav-active-bg: rgba(255, 240, 210, 0.52);
+  --header-nav-active-text: #7f4f12;
+  --header-nav-active-shadow: inset 0 -1px 0 rgba(200, 132, 42, 0.34);
+  --header-nav-primary-text: #7f4f12;
+  --header-nav-primary-hover-bg: rgba(255, 240, 210, 0.48);
+  --header-nav-text: #8a6848;
+  --header-nav-hover-bg: #efe0c8;
+  --header-nav-hover-text: #2c1a0e;
+  --header-actions-cinematic-border: rgba(255, 227, 183, 0.24);
+  --header-actions-cinematic-bg: rgba(31, 18, 9, 0.42);
+  --header-actions-cinematic-shadow: inset 0 1px 0 rgba(255, 240, 210, 0.1);
+  --header-actions-surface-border: #d9bea0;
+  --header-actions-surface-bg: rgba(241, 225, 201, 0.78);
+  --header-actions-surface-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --header-locale-text: #6f5133;
+  --header-locale-hover-bg: #ead8bf;
+  --header-login-shadow: 0 8px 20px rgba(200, 132, 42, 0.18);
+
+  --footer-panel: #f7ecd8;
+  --footer-panel-border: #ead8bf;
+  --footer-card: rgba(255, 248, 237, 0.8);
+  --footer-card-border: rgba(255, 255, 255, 0.7);
+  --footer-divider: #dfc7a7;
+  --footer-control-bg: rgba(255, 255, 255, 0.4);
+  --footer-control-bg-strong: rgba(255, 255, 255, 0.55);
+  --footer-control-border: #e5cfad;
+  --footer-secondary-border: #d8bd99;
+  --footer-warm-text: #7b5631;
+  --footer-decor: rgba(139, 91, 43, 0.15);
+  --footer-focus-offset: #f7ecd8;
+  --footer-card-focus-offset: #fff8ed;
+  --footer-panel-shadow: 0 16px 42px rgba(91, 58, 29, 0.08);
+  --footer-card-shadow: 0 10px 28px rgba(82, 52, 25, 0.07);
+  --footer-ambient: radial-gradient(circle at 18% 0%, rgba(255, 216, 145, 0.28), transparent 28%),
+    radial-gradient(circle at 86% 22%, rgba(200, 132, 42, 0.16), transparent 26%),
+    linear-gradient(180deg, rgba(255, 250, 242, 0.55), transparent 62%);
+  --footer-cta-eyebrow-text: #a86d1e;
+  --footer-primary-border: rgba(255, 227, 183, 0.3);
+  --footer-primary-shadow: 0 12px 28px rgba(200, 132, 42, 0.24);
+  --footer-secondary-shadow: 0 8px 22px rgba(82, 52, 25, 0.06);
+  --footer-logo-shadow: 0 8px 20px rgba(82, 52, 25, 0.12);
+  --footer-logo-ring: rgba(255, 255, 255, 0.6);
+  --footer-icon-shadow: 0 8px 20px rgba(82, 52, 25, 0.08);
+  --footer-brand-note-shadow: 0 8px 20px rgba(82, 52, 25, 0.06);
+  --footer-heart: #c8842a;
+  --footer-heart-fill: rgba(200, 132, 42, 0.2);
+
   --danger: #b23a2f;
   --contribute-surface: rgba(255, 250, 242, 0.86);
   --contribute-surface-soft: rgba(255, 250, 242, 0.7);
@@ -15,6 +84,41 @@
 }
 
 .dark {
+  --header-logo-bg: var(--header-logo-bg-dark);
+  --header-shell-surface-border: rgba(255, 227, 183, 0.22);
+  --header-shell-surface-bg: rgba(28, 18, 9, 0.88);
+  --header-shell-surface-shadow: 0 16px 42px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 240, 210, 0.08);
+  --header-subtitle-surface: #d7bea0;
+  --header-nav-active-bg: rgba(255, 255, 255, 0.08);
+  --header-nav-active-text: #f0b869;
+  --header-nav-primary-text: #f0b869;
+  --header-nav-primary-hover-bg: rgba(255, 255, 255, 0.1);
+  --header-nav-text: #d7bea0;
+  --header-nav-hover-bg: rgba(255, 255, 255, 0.1);
+  --header-nav-hover-text: #ffffff;
+  --header-actions-surface-border: rgba(255, 227, 183, 0.18);
+  --header-actions-surface-bg: rgba(255, 255, 255, 0.08);
+  --header-locale-text: #ead6b7;
+  --header-locale-hover-bg: rgba(255, 255, 255, 0.1);
+  --header-locale-hover-text: #ffffff;
+
+  --footer-panel: #26211c;
+  --footer-panel-border: rgba(212, 146, 58, 0.22);
+  --footer-card: rgba(42, 38, 33, 0.82);
+  --footer-card-border: rgba(255, 255, 255, 0.08);
+  --footer-divider: rgba(255, 255, 255, 0.1);
+  --footer-control-bg: rgba(255, 255, 255, 0.06);
+  --footer-control-bg-strong: rgba(255, 255, 255, 0.08);
+  --footer-control-border: rgba(212, 146, 58, 0.28);
+  --footer-secondary-border: rgba(212, 146, 58, 0.32);
+  --footer-warm-text: #e6be82;
+  --footer-decor: rgba(230, 190, 130, 0.14);
+  --footer-focus-offset: #26211c;
+  --footer-card-focus-offset: #2a2621;
+  --footer-panel-shadow: 0 18px 54px rgba(0, 0, 0, 0.28);
+  --footer-card-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+
   --contribute-surface: rgba(42, 40, 37, 0.82);
   --contribute-surface-soft: rgba(255, 255, 255, 0.05);
   --contribute-icon-bg: rgba(255, 255, 255, 0.1);
