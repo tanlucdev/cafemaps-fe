@@ -5,6 +5,8 @@ import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Vibe, Purpose } from "@/types/cafe";
 import { AREAS } from "@/types/cafe";
+import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
+import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import {
   VIBES,
   PURPOSES,
@@ -25,14 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface StagedFilter {
-  vibes: Vibe[];
-  purposes: Purpose[];
-  tags: FilterTag[];
-  price: string | undefined;
-  district: string | undefined;
-}
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
@@ -82,79 +76,60 @@ export function FilterDropdownPanel({
     >
       <div className="rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/96 shadow-[0_20px_56px_rgba(44,26,14,0.14)] backdrop-blur-xl dark:bg-[var(--card)]">
         <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
-          {/* Phong cách */}
           <div>
             <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("vibe")}
             </p>
             <div className="flex flex-wrap gap-2">
               {VIBES.map((v) => (
-                <button
+                <FilterChipButton
                   key={v}
+                  active={staged.vibes.includes(v)}
                   onClick={() => onToggleVibeStaged(v)}
-                  className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
-                    staged.vibes.includes(v)
-                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
-                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
-                  )}
                 >
                   {VIBE_ICONS[v]}
                   {tf(`vibes.${VIBE_TRANSLATION_KEYS[v]}`)}
-                </button>
+                </FilterChipButton>
               ))}
             </div>
           </div>
 
-          {/* Mục đích */}
           <div>
             <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("purpose")}
             </p>
             <div className="flex flex-wrap gap-2">
               {PURPOSES.map((p) => (
-                <button
+                <FilterChipButton
                   key={p}
+                  active={staged.purposes.includes(p)}
                   onClick={() => onTogglePurposeStaged(p)}
-                  className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
-                    staged.purposes.includes(p)
-                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
-                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
-                  )}
                 >
                   {PURPOSE_ICONS[p]}
                   {tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p]}`)}
-                </button>
+                </FilterChipButton>
               ))}
             </div>
           </div>
 
-          {/* Tiện ích */}
           <div>
             <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
               {tf("tags.label")}
             </p>
             <div className="flex flex-wrap gap-2">
               {FILTER_TAGS.map((tag) => (
-                <button
+                <FilterChipButton
                   key={tag}
+                  active={staged.tags.includes(tag)}
                   onClick={() => onToggleTagStaged(tag)}
-                  className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
-                    staged.tags.includes(tag)
-                      ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
-                      : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
-                  )}
                 >
                   {TAG_ICONS[tag]}
                   {tf(`tags.${TAG_TRANSLATION_KEYS[tag]}`)}
-                </button>
+                </FilterChipButton>
               ))}
             </div>
           </div>
 
-          {/* Giá + Khu vực */}
           <div className="flex flex-col gap-5">
             <div>
               <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
@@ -162,18 +137,13 @@ export function FilterDropdownPanel({
               </p>
               <div className="flex flex-wrap gap-2">
                 {PRICE_OPTIONS.map((opt) => (
-                  <button
+                  <FilterChipButton
                     key={opt.value}
+                    active={staged.price === opt.value}
                     onClick={() => onSetPriceStaged(opt.value)}
-                    className={cn(
-                      "cursor-pointer rounded-full border px-3 py-1.5 text-xs font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
-                      staged.price === opt.value
-                        ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
-                        : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]",
-                    )}
                   >
                     {tf(`priceRanges.${opt.translationKey}`)}
-                  </button>
+                  </FilterChipButton>
                 ))}
               </div>
             </div>
@@ -203,7 +173,6 @@ export function FilterDropdownPanel({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">
           <button
             onClick={onClearAll}

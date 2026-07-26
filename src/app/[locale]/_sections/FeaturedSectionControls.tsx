@@ -5,7 +5,6 @@ import { motion, type MotionProps } from "framer-motion";
 import { Coffee, Search } from "lucide-react";
 import GuidedFilterBar from "@/components/cafe/GuidedFilterBar";
 import type { CafeFilter as Filter } from "@/types/cafe";
-import type { ViewMode } from "./featured-section-helpers";
 
 interface FeaturedSectionControlsProps {
   activeDistricts?: string[];
@@ -14,10 +13,8 @@ interface FeaturedSectionControlsProps {
   searchInput: string;
   searchInputRef: RefObject<HTMLInputElement | null>;
   setSearchInput: (value: string) => void;
-  setViewMode: (value: ViewMode) => void;
   ts: (key: string) => string;
   locale: string;
-  viewMode: ViewMode;
   onFilterChange: (filter: Filter) => void;
   onSearchSubmit: () => void;
 }
@@ -29,10 +26,8 @@ export default function FeaturedSectionControls({
   searchInput,
   searchInputRef,
   setSearchInput,
-  setViewMode,
   ts,
   locale,
-  viewMode,
   onFilterChange,
   onSearchSubmit,
 }: FeaturedSectionControlsProps) {
@@ -77,13 +72,7 @@ export default function FeaturedSectionControls({
         </motion.div>
 
         <div className="sticky top-16 z-50 -mx-2 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-18 sm:mx-0 sm:px-4">
-          <GuidedFilterBar
-            filter={filter}
-            onChange={onFilterChange}
-            districts={activeDistricts}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
+          <GuidedFilterBar filter={filter} onChange={onFilterChange} districts={activeDistricts} />
         </div>
       </div>
     </section>

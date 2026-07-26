@@ -4,12 +4,16 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import type { CafeFilter as Filter, Vibe, Purpose } from "@/types/cafe";
 import type { FilterTag } from "@/components/cafe/constants/filter-constants";
 
-interface StagedFilter {
+export interface StagedFilter {
   vibes: Vibe[];
   purposes: Purpose[];
   tags: FilterTag[];
   price: string | undefined;
   district: string | undefined;
+}
+
+function toggleInArray<T>(items: T[], item: T) {
+  return items.includes(item) ? items.filter((x) => x !== item) : [...items, item];
 }
 
 interface UseGuidedFilterReturn {
@@ -28,7 +32,6 @@ interface UseGuidedFilterReturn {
   setPriceStaged: (val: string) => void;
   setDistrictStaged: (val: string) => void;
   applyStaged: () => void;
-  cancelStaged: () => void;
 
   // Instant handlers (quick chips — write directly to committed filter)
   toggleVibeInstant: (v: Vibe) => void;
@@ -88,7 +91,6 @@ export function useGuidedFilter(
     else openDropdown();
   }, [dropdownMounted, dropdownOpen, closeDropdown, openDropdown]);
 
-  // Click-outside to close
   useEffect(() => {
     if (!dropdownMounted) return;
     function handler(e: MouseEvent) {
@@ -105,29 +107,24 @@ export function useGuidedFilter(
     return () => document.removeEventListener("mousedown", handler);
   }, [dropdownMounted, closeDropdown]);
 
-  // Staged handlers (panel only — do not call onChange)
   const toggleVibeStaged = useCallback((v: Vibe) => {
     setStaged((prev) => ({
       ...prev,
-      vibes: prev.vibes.includes(v) ? prev.vibes.filter((x) => x !== v) : [...prev.vibes, v],
+      vibes: toggleInArray(prev.vibes, v),
     }));
   }, []);
 
   const togglePurposeStaged = useCallback((p: Purpose) => {
     setStaged((prev) => ({
       ...prev,
-      purposes: prev.purposes.includes(p)
-        ? prev.purposes.filter((x) => x !== p)
-        : [...prev.purposes, p],
+      purposes: toggleInArray(prev.purposes, p),
     }));
   }, []);
 
   const toggleTagStaged = useCallback((tag: FilterTag) => {
     setStaged((prev) => ({
       ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter((x) => x !== tag)
-        : [...prev.tags, tag],
+      tags: toggleInArray(prev.tags, tag),
     }));
   }, []);
 
@@ -157,15 +154,10 @@ export function useGuidedFilter(
     closeDropdown();
   }, [filter, staged, onChange, closeDropdown]);
 
-  const cancelStaged = useCallback(() => {
-    closeDropdown();
-  }, [closeDropdown]);
-
-  // Instant handlers (quick chips — bypass staged, write directly)
   const toggleVibeInstant = useCallback(
     (v: Vibe) => {
       const current = (filter.vibes ?? []) as Vibe[];
-      const next = current.includes(v) ? current.filter((x) => x !== v) : [...current, v];
+      const next = toggleInArray(current, v);
       onChange({ ...filter, vibes: next.length > 0 ? next : undefined });
     },
     [filter, onChange],
@@ -207,7 +199,6 @@ export function useGuidedFilter(
     setPriceStaged,
     setDistrictStaged,
     applyStaged,
-    cancelStaged,
     toggleVibeInstant,
     toggleOpenNow,
     setDistance,
