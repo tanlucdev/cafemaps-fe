@@ -10,15 +10,9 @@ interface GuidedFilterBarProps {
   filter: Filter;
   onChange: (filter: Filter) => void;
   districts?: string[];
-  viewMode?: "grid" | "list";
-  onViewModeChange?: (mode: "grid" | "list") => void;
 }
 
-export default function GuidedFilterBar({
-  filter,
-  onChange,
-  districts,
-}: GuidedFilterBarProps) {
+export default function GuidedFilterBar({ filter, onChange, districts }: GuidedFilterBarProps) {
   const {
     dropdownOpen,
     dropdownMounted,
@@ -43,7 +37,6 @@ export default function GuidedFilterBar({
 
   return (
     <div>
-      {/* ── Filter strip ── */}
       <div className="relative">
         <FilterChipsRow
           filter={filter}
@@ -78,7 +71,6 @@ export default function GuidedFilterBar({
         )}
       </div>
 
-      {/* ── Active filter chips ── */}
       <ActiveFilterChips filter={filter} onChange={onChange} clearAll={clearAll} />
     </div>
   );
