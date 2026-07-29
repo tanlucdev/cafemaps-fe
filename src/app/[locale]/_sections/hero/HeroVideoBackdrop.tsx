@@ -7,7 +7,7 @@ type HeroVideoBackdropProps = {
 export function HeroVideoBackdrop({ poster }: HeroVideoBackdropProps) {
   return (
     <video
-      className="absolute inset-0 z-0 h-full w-full object-cover brightness-[1.08] contrast-[0.98] saturate-[1.06]"
+      className="absolute inset-0 z-0 h-full w-full object-cover"
       autoPlay
       loop
       muted
