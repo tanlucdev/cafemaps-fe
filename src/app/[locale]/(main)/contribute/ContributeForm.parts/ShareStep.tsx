@@ -78,7 +78,7 @@ function PhotoUploader({
     <>
       <div
         className={cn(
-          "group rounded-[16px] border-2 border-dashed px-4 py-2 text-center transition-all duration-150 sm:rounded-[20px] sm:px-5 sm:py-6",
+          "group cursor-pointer rounded-[16px] border-2 border-dashed px-4 py-2 text-center transition-all duration-150 sm:rounded-[20px] sm:px-5 sm:py-6",
           dragOver
             ? "border-[var(--accent)] bg-[var(--accent-light)]"
             : "border-[var(--contribute-upload-border)] bg-[var(--contribute-surface-soft)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)]",
@@ -143,7 +143,7 @@ function PhotoUploader({
                   event.stopPropagation();
                   removePhoto(index);
                 }}
-                className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 focus-visible:ring-2 focus-visible:ring-white/80"
+                className="absolute top-1.5 right-1.5 flex size-6 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 focus-visible:ring-2 focus-visible:ring-white/80"
               >
                 <X className="size-3.5" aria-hidden="true" />
                 <span className="sr-only">{t("form.removePhoto")}</span>
