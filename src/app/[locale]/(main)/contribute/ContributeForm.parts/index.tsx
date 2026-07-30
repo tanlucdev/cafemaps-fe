@@ -79,7 +79,7 @@ export function FormActions({
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[var(--border)] bg-white/40 px-4 py-2.5 text-[13.5px] font-bold text-[var(--foreground-muted)] transition-all duration-150 hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/25 dark:bg-white/5"
+            className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-[var(--border)] bg-white/40 px-4 py-2.5 text-[13.5px] font-bold text-[var(--foreground-muted)] transition-all duration-150 hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/25 dark:bg-white/5"
           >
             <ArrowLeft className="size-4" aria-hidden="true" />
             {t("actions.back")}
@@ -89,7 +89,7 @@ export function FormActions({
           type="button"
           onClick={step === 2 ? onSubmit : onNext}
           disabled={loading}
-          className="flex min-h-10 flex-1 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2 text-[13.5px] font-bold text-white shadow-[0_12px_28px_rgba(201,132,42,0.22)] transition-all duration-150 hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/30 disabled:opacity-60 sm:min-h-11 sm:min-w-36 sm:flex-none sm:py-2.5"
+          className="flex min-h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2 text-[13.5px] font-bold text-white shadow-[0_12px_28px_rgba(201,132,42,0.22)] transition-all duration-150 hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/30 disabled:opacity-60 sm:min-h-11 sm:min-w-36 sm:flex-none sm:py-2.5"
         >
           {loading ? (
             <>
