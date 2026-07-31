@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.9 <25"
+    "node": ">=20.17 <25"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -30,11 +30,11 @@
     "lenis": "^1.3.23",
     "lucide-react": "^1.11.0",
     "mapbox-gl": "^3.26.0",
-    "next": "^15.3.1",
-    "next-intl": "^4.9.1",
-    "react": "19.2.4",
+    "next": "^16.2.12",
+    "next-intl": "^4.13.4",
+    "react": "^19.2.8",
     "react-country-flag": "^3.1.0",
-    "react-dom": "19.2.4",
+    "react-dom": "^19.2.8",
     "react-hook-form": "^7.75.0",
     "shadcn": "^4.5.0",
     "sonner": "^2.0.7",
@@ -49,7 +49,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^15.3.1",
+    "eslint-config-next": "^16.2.12",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
