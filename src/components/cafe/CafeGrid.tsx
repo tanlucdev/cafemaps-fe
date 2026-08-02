@@ -12,6 +12,7 @@ interface CafeGridProps {
   animationType?: "slide" | "fade";
   desktopColumns?: "two" | "three";
   variant?: "default" | "cinematic";
+  eagerFirstImage?: boolean;
 }
 
 export default function CafeGrid({
@@ -21,6 +22,7 @@ export default function CafeGrid({
   animationType = "slide",
   desktopColumns = "three",
   variant = "default",
+  eagerFirstImage = false,
 }: CafeGridProps) {
   const t = useTranslations("search");
 
@@ -58,6 +60,7 @@ export default function CafeGrid({
           index={i}
           animationType={animationType}
           variant={variant}
+          imageEager={eagerFirstImage && i === 0}
         />
       ))}
     </div>

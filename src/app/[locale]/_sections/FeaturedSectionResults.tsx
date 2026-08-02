@@ -110,9 +110,10 @@ export default function FeaturedSectionResults({
               locale={locale}
               animationType={animationType}
               desktopColumns="three"
+              eagerFirstImage
             />
           ) : (
-            <CafeList cafes={paginated} locale={locale} animationType={animationType} />
+            <CafeList cafes={paginated} locale={locale} animationType={animationType} eagerFirstImage />
           )}
 
           <Pagination page={page} total={total} limit={9} onPageChange={onPageChange} />

@@ -102,6 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang={DEFAULT_LOCALE}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={cn("h-full", plusJakarta.variable, lora.variable)}
     >

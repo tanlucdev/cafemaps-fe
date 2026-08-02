@@ -3,10 +3,11 @@
 // import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SaveButton from "@/components/cafe/SaveButton";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 // import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
@@ -22,6 +23,7 @@ interface CafeCardProps {
   index?: number;
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
+  imageEager?: boolean;
   initialSaved?: boolean;
   onSavedChange?: (saved: boolean) => void;
 }
@@ -47,13 +49,14 @@ export default function CafeCard({
   index = 0,
   animationType = "fade",
   variant = "default",
+  imageEager = false,
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
   const tCafe = useTranslations("cafe");
   const tFilters = useTranslations("filters");
   const isSlide = animationType === "slide";
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const isCinematic = variant === "cinematic";
 
   // Hover preview disabled per request. Keep the old code here for easy rollback.
@@ -159,6 +162,8 @@ export default function CafeCard({
                 isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
               )}
               quality={90}
+              loading={imageEager ? "eager" : "lazy"}
+              fetchPriority={imageEager ? "high" : undefined}
               // className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
             />
           ) : (

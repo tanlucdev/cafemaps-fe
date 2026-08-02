@@ -4,9 +4,10 @@ import { useMemo } from "react";
 // import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import SaveButton from "@/components/cafe/SaveButton";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 // import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
@@ -21,6 +22,7 @@ interface CafeListProps {
   locale: string;
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
+  eagerFirstImage?: boolean;
 }
 
 const VIBE_TAG_CLASSES: Record<string, string> = {
@@ -44,12 +46,14 @@ function CafeListRow({
   index,
   animationType,
   variant,
+  imageEager,
 }: {
   cafe: Cafe;
   locale: string;
   index: number;
   animationType: "slide" | "fade";
   variant: "default" | "cinematic";
+  imageEager: boolean;
 }) {
   // Hover preview disabled per request. Keep the old code here for easy rollback.
   // const articleRef = useRef<HTMLElement>(null);
@@ -61,7 +65,7 @@ function CafeListRow({
 
   const t = useTranslations("search");
   const tFilters = useTranslations("filters");
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const isCinematic = variant === "cinematic";
 
   // function handleMouseEnter() {
@@ -147,6 +151,8 @@ function CafeListRow({
                 isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
               )}
               quality={90}
+              loading={imageEager ? "eager" : "lazy"}
+              fetchPriority={imageEager ? "high" : undefined}
               // className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
             />
           ) : (
@@ -327,6 +333,7 @@ export default function CafeList({
   locale,
   animationType = "slide",
   variant = "default",
+  eagerFirstImage = false,
 }: CafeListProps) {
   const t = useTranslations("search");
 
@@ -348,6 +355,7 @@ export default function CafeList({
           index={index}
           animationType={animationType}
           variant={variant}
+          imageEager={eagerFirstImage && index === 0}
         />
       ))}
     </div>
