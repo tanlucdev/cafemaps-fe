@@ -50,7 +50,7 @@ export function FilterChipsRow({
   const extraVibes = VIBES.length - TOP_VIBES.length;
 
   return (
-    <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto pt-3 pb-3.5">
+    <div className="scrollbar-hide -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-3 pb-3.5">
       <FilterChipButton
         ref={toggleBtnRef}
         active={dropdownMounted || activeCount > 0}

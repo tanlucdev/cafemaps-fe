@@ -30,6 +30,7 @@ import {
   type ServerMeta,
   type ViewMode,
 } from "./featured-section-helpers";
+import { useMinimumLoading } from "./useMinimumLoading";
 
 interface FeaturedSectionProps {
   cafes: Cafe[];
@@ -56,6 +57,7 @@ export default function FeaturedSection({
   const [animationType, setAnimationType] = useState<"slide" | "fade">("fade");
   const [searchInput, setSearchInput] = useState(filter.search ?? "");
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLElement>(null);
 
   const page = Number(searchParams.get("page") ?? "1");
   const queryFilter = useMemo(
@@ -94,7 +96,7 @@ export default function FeaturedSection({
   const activeCafes = deferData ? (cafesQuery.data?.cafes ?? cafes) : cafes;
   const activeDistricts = deferData ? (districtsQuery.data ?? districts) : districts;
   const activeMeta = deferData ? cafesQuery.data?.meta : serverMeta;
-  const dataLoading = deferData && cafesQuery.isLoading;
+  const dataLoading = useMinimumLoading(deferData && cafesQuery.isFetching, 900);
   const dataError = deferData && cafesQuery.isError;
 
   const updateUrl = useCallback(
@@ -126,6 +128,7 @@ export default function FeaturedSection({
     setFilter(newFilter);
     setAnimationType("slide");
     updateUrl(newFilter, sortMode, 1);
+    resultsRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   }
 
   function handleSearchSubmit() {
@@ -142,6 +145,7 @@ export default function FeaturedSection({
   function handleSortChange(newSort: SearchSort) {
     setSortMode(newSort);
     updateUrl(filter, newSort, 1);
+    resultsRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   }
 
   function handleViewModeChange(nextMode: ViewMode) {
@@ -259,7 +263,7 @@ export default function FeaturedSection({
         onSearchSubmit={handleSearchSubmit}
       />
 
-      <main className="mx-auto max-w-7xl px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8">
+      <main ref={resultsRef} className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8">
         <FeaturedSectionToolbar
           reduceMotion={reduceMotion}
           sortLabel={sortLabel}
