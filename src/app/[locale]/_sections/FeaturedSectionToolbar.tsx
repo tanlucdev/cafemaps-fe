@@ -39,7 +39,7 @@ export default function FeaturedSectionToolbar({
       <div className="ml-auto flex shrink-0 items-center gap-3">
         <Select value={sortMode} onValueChange={(v) => v && onSortChange(v as SearchSort)}>
           <SelectTrigger
-            className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-sm font-medium text-[var(--foreground)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
+            className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-[13px] font-bold text-[var(--foreground-muted)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
             aria-label={ts("sortLabel")}
           >
             <span className="min-w-0 truncate">{sortLabel}</span>

@@ -1,10 +1,11 @@
 "use client"
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
-import { Coffee } from "lucide-react"
-import CafeGrid from "@/components/cafe/CafeGrid"
+import { Coffee, LoaderCircle } from "lucide-react"
 import CafeList from "@/components/cafe/CafeList"
+import CafeGrid from "@/components/cafe/CafeGrid"
 import Pagination from "@/components/ui/Pagination"
+import { CafeCardSkeleton, Skeleton } from "@/components/ui/Skeleton"
 import type { Cafe } from "@/types/cafe"
 import type { ViewMode } from "./featured-section-helpers"
 
@@ -74,7 +75,7 @@ export default function FeaturedSectionResults({
     )
   }
 
-  if (dataLoading) return <CafeGrid cafes={[]} locale={locale} loading desktopColumns="three" />
+  if (dataLoading) return <CafeFilteringLoader viewMode={viewMode} />
 
   if (total === 0) {
     return (
@@ -119,5 +120,52 @@ export default function FeaturedSectionResults({
         </motion.div>
       </AnimatePresence>
     </LayoutGroup>
+  )
+}
+
+function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex w-full flex-col gap-5"
+    >
+      <div className="flex items-center gap-3">
+        <div className="relative flex size-14 items-center justify-center">
+          <LoaderCircle className="absolute size-14 animate-spin text-[var(--accent)]" aria-hidden="true" />
+          <Coffee className="size-6 text-[var(--accent)]" aria-hidden="true" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-3 w-36 animate-pulse rounded-full bg-[var(--accent)]/50" />
+          <div className="h-2 w-24 animate-pulse rounded-full bg-[#7a9e7e]/45" />
+        </div>
+      </div>
+      {viewMode === "grid" ? (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <CafeCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex min-h-[140px] overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210]"
+            >
+              <Skeleton className="w-32 shrink-0 rounded-none sm:w-44" />
+              <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
+                <Skeleton className="h-5 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-5 w-16 rounded-full" />
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
