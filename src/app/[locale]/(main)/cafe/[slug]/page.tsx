@@ -1,17 +1,13 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { cache } from "react"
-import { getCafeBySlug, getCafesWithMeta } from "@/lib/api"
-import { CAFE_API_PAGE_SIZE_LIMIT } from "@/apis/cafes/constants"
-import { routing } from "@/i18n/routing"
+import { getCafeBySlug } from "@/lib/api"
 import { createLocalizedMetadata, getSiteUrl } from "@/lib/metadata"
 import CafeDetailContent from "./_components/CafeDetailContent"
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>
 }
-
-type CafesPage = Awaited<ReturnType<typeof getCafesWithMeta>>
 
 const getCafe = cache((slug: string, locale: string) => getCafeBySlug(slug, locale))
 
@@ -27,28 +23,6 @@ function getOpenGraphLocale(locale: string) {
     locale: locale === "vi" ? "vi_VN" : "en_US",
     alternateLocale: locale === "vi" ? ["en_US"] : ["vi_VN"],
   }
-}
-
-async function getPublishedCafeParams(locale: string) {
-  const firstPage = await getCafesWithMeta(
-    { page: 1, limit: CAFE_API_PAGE_SIZE_LIMIT },
-    locale,
-    { fallback: false }
-  )
-  const extraPages = await Promise.all(
-    Array.from({ length: Math.max(firstPage.meta.totalPages - 1, 0) }, (_, index) =>
-      getCafesWithMeta(
-        { page: index + 2, limit: CAFE_API_PAGE_SIZE_LIMIT },
-        locale,
-        { fallback: false }
-      )
-    )
-  )
-
-  return [firstPage, ...extraPages]
-    .flatMap((page: CafesPage) => page.cafes)
-    .filter((cafe) => cafe.slug && cafe.isPublished !== false)
-    .map((cafe) => ({ locale, slug: cafe.slug }))
 }
 
 function createCafeJsonLd(
@@ -72,21 +46,6 @@ function createCafeJsonLd(
     image: cafe.images,
     url: new URL(`/${locale}/cafe/${cafe.slug}`, getSiteUrl()).toString(),
   }
-}
-
-export async function generateStaticParams() {
-  const byLocale = await Promise.all(
-    routing.locales.map(async (locale) => {
-      try {
-        return getPublishedCafeParams(locale)
-      } catch (error) {
-        console.error(`generateStaticParams cafes failed for ${locale}:`, error)
-        return []
-      }
-    })
-  )
-
-  return byLocale.flat()
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

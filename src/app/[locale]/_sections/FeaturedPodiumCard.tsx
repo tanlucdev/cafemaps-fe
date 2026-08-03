@@ -4,8 +4,9 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { MapPin } from "lucide-react";
 import Badge from "@/components/ui/Badge";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
@@ -38,7 +39,7 @@ export default function FeaturedPodiumCard({
   votedLabel,
   voteCountLabel,
 }: FeaturedPodiumCardProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
 
   function saveReturnUrl() {
@@ -75,7 +76,8 @@ export default function FeaturedPodiumCard({
               fill
               sizes="(max-width: 640px) 256px, 33vw"
               className="object-cover transition-transform duration-700 group-hover:scale-[1.045]"
-              priority={rank === 1}
+              loading={rank === 1 ? "eager" : "lazy"}
+              fetchPriority={rank === 1 ? "high" : undefined}
             />
           ) : (
             <div className="from-accent absolute inset-0 bg-linear-to-br to-(--accent-hover)" />

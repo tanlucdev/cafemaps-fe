@@ -3,8 +3,8 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
 import {
   buildSearchParams,
@@ -49,7 +49,7 @@ export default function FeaturedSection({
 }: FeaturedSectionProps) {
   const searchParams = useSearchParams();
   const ts = useTranslations("search");
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
 
   const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(searchParams));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
