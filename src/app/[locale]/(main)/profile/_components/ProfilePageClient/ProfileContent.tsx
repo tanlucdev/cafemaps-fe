@@ -20,7 +20,7 @@ export function ProfileContent({
   onChange: (tab: ProfileTab) => void;
 }) {
   return (
-    <section className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-3 shadow-[var(--shadow-sm)] sm:p-4">
+    <section className="min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-[var(--shadow-sm)] sm:p-4">
       <ProfileTabs activeTab={activeTab} copy={copy} onChange={onChange} />
       <div className="mt-4">
         {activeTab === "saved" && <SavedCafeList cafes={cafes} copy={copy} />}
@@ -64,7 +64,7 @@ function ProfileTabs({
             aria-selected={isActive}
             onClick={() => onChange(id)}
             className={cn(
-              "inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 text-sm font-bold transition focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none",
+              "inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl px-3 text-sm font-bold transition focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:px-4",
               isActive
                 ? "bg-[var(--card)] text-[var(--accent)] shadow-[var(--shadow-sm)]"
                 : "text-[var(--foreground-muted)] hover:bg-white/45 hover:text-[var(--foreground)] dark:hover:bg-white/5",
@@ -94,10 +94,10 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
 
   return (
     <div className="grid gap-3">
-      {cafes.map((cafe) => (
+      {cafes.map((cafe, index) => (
         <article
           key={cafe.id}
-          className="grid gap-3 rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-3 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-warm)] sm:grid-cols-[116px_minmax(0,1fr)_auto] sm:items-center dark:bg-white/5"
+          className="grid min-w-0 gap-3 rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-3 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-warm)] sm:grid-cols-[116px_minmax(0,1fr)_auto] sm:items-center dark:bg-white/5"
         >
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[var(--background-secondary)] sm:aspect-auto sm:h-24">
             {cafe.coverImage ? (
@@ -106,6 +106,7 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
                 alt={cafe.name}
                 fill
                 sizes="(max-width: 640px) 100vw, 116px"
+                priority={index === 0}
                 className="object-cover"
               />
             ) : (
@@ -116,9 +117,11 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
           </div>
           <div className="min-w-0">
             <h2 className="truncate text-base font-black text-[var(--foreground)]">{cafe.name}</h2>
-            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-[var(--foreground-muted)]">
-              <MapPin size={14} />
-              {cafe.district || cafe.address || "Ho Chi Minh City"}
+            <p className="mt-1 flex min-w-0 items-center gap-1.5 text-sm font-medium text-[var(--foreground-muted)]">
+              <MapPin size={14} className="shrink-0" />
+              <span className="truncate">
+                {cafe.district || cafe.address || "Ho Chi Minh City"}
+              </span>
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {cafe.vibes.slice(0, 3).map((vibe) => (
@@ -133,7 +136,7 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
           </div>
           <Link
             href={`/cafe/${cafe.slug}`}
-            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-2xl border border-[var(--border)] px-4 text-sm font-bold text-[var(--foreground)] transition hover:bg-[var(--background-secondary)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
+            className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-2xl border border-[var(--border)] px-4 text-sm font-bold text-[var(--foreground)] transition hover:bg-[var(--background-secondary)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
           >
             {copy.view}
           </Link>

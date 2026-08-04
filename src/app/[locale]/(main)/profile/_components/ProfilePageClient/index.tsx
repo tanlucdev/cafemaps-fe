@@ -45,7 +45,7 @@ export default function ProfilePageClient({
   }, []);
 
   return (
-    <main className="min-h-[100svh] bg-[var(--background)] px-4 pt-24 pb-24 sm:px-6 lg:px-8">
+    <main className="min-h-[100svh] bg-[var(--background)] px-3 pt-[88px] pb-28 sm:px-6 sm:pt-24 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <ProfileHeader
           copy={copy}

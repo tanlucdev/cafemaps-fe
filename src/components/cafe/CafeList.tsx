@@ -355,7 +355,7 @@ export default function CafeList({
           index={index}
           animationType={animationType}
           variant={variant}
-          imageEager={eagerFirstImage && index === 0}
+          imageEager={eagerFirstImage && index < 2}
         />
       ))}
     </div>
