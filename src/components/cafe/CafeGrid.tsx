@@ -60,7 +60,7 @@ export default function CafeGrid({
           index={i}
           animationType={animationType}
           variant={variant}
-          imageEager={eagerFirstImage && i === 0}
+          imageEager={eagerFirstImage && i < 2}
         />
       ))}
     </div>

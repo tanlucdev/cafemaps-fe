@@ -28,18 +28,18 @@ export default function FeaturedSectionToolbar({
   onViewModeChange,
 }: FeaturedSectionToolbarProps) {
   return (
-    <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:rounded-[22px] sm:px-4 sm:py-3">
-      <p className="min-w-0 text-sm leading-tight font-medium text-[var(--foreground-muted)]">
+    <div className="mb-5 flex flex-nowrap items-center justify-between gap-2 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:gap-4 sm:rounded-[22px] sm:px-4 sm:py-3">
+      <p className="shrink-0 text-xs leading-tight font-medium text-[var(--foreground-muted)] sm:text-sm">
         {total > 0 && (
           <>
             Hiển thị: <strong className="text-[var(--foreground)]">{total} quán</strong>
           </>
         )}
       </p>
-      <div className="ml-auto flex shrink-0 items-center gap-3">
+      <div className="ml-auto flex min-w-0 shrink items-center gap-1.5 sm:shrink-0 sm:gap-3">
         <Select value={sortMode} onValueChange={(v) => v && onSortChange(v as SearchSort)}>
           <SelectTrigger
-            className="h-9 w-[142px] rounded-full border border-[#e8cfa9] bg-white/86 px-3 text-[13px] font-bold text-[var(--foreground-muted)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] dark:bg-[var(--card)]"
+            className="h-9 w-[116px] rounded-full border border-[#e8cfa9] bg-white/86 px-2.5 text-[13px] font-bold text-[var(--foreground-muted)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] sm:px-3 dark:bg-[var(--card)]"
             aria-label={ts("sortLabel")}
           >
             <span className="min-w-0 truncate">{sortLabel}</span>

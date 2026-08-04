@@ -12,11 +12,7 @@ type CafeHeroCinematicProps = {
   subtitle: string;
 };
 
-export function CafeHeroCinematic({
-  eyebrow,
-  headline,
-  subtitle,
-}: CafeHeroCinematicProps) {
+export function CafeHeroCinematic({ eyebrow, headline, subtitle }: CafeHeroCinematicProps) {
   return (
     <section className="relative isolate h-[100svh] w-full max-w-[100vw] overflow-hidden bg-[var(--background)] p-2 pt-[calc(62px+0.5rem)] text-[var(--header-shell-cinematic-text)] sm:p-3 sm:pt-[calc(62px+0.75rem)] md:p-4 md:pt-[calc(62px+1rem)]">
       <div className="relative h-full min-h-0 w-full max-w-full overflow-hidden rounded-[24px] border border-[color:var(--header-shell-cinematic-border)] bg-[var(--foreground)] shadow-[var(--shadow-warm-hover)] sm:rounded-[30px] md:rounded-[36px]">

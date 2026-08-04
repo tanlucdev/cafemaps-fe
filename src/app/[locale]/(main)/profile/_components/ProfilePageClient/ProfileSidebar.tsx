@@ -105,12 +105,12 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[26px] border border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-sm)]">
+    <section className="min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-sm)]">
       <div className="mb-4 flex items-center gap-2">
         <div className="flex size-9 items-center justify-center rounded-2xl bg-[var(--accent-light)] text-[var(--accent)]">
           <Icon size={17} />
         </div>
-        <h2 className="font-black text-[var(--foreground)]">{title}</h2>
+        <h2 className="min-w-0 font-black text-[var(--foreground)]">{title}</h2>
       </div>
       {children}
     </section>
