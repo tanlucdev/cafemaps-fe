@@ -42,7 +42,7 @@ export const QUIZ_PROFILES: QuizProfile[] = [
 ];
 
 export function resolveQuizPosterImage(slug: string, variant: QuizResultVariant = "woman") {
-  return `/quiz/results/${variant}/${slug}.png`;
+  return `/quiz/results/${variant}/${slug}.webp`;
 }
 
 export function normalizeQuizProfileId(value: unknown) {
