@@ -1,12 +1,20 @@
 import type { Cafe, CafeFilter } from "@/types/cafe";
 
 export type QuizProfileId =
-  | "quiet-work-nook"
-  | "garden-reset"
-  | "vintage-story-corner"
-  | "date-glow"
-  | "creative-hangout"
-  | "minimal-sprint";
+  | "cozy-plant-corner"
+  | "quiet-city-window"
+  | "lively-friends-table"
+  | "late-night-work"
+  | "vintage-tea-nostalgia"
+  | "sunny-iced-coffee"
+  | "lazy-afternoon-nap"
+  | "deadline-chaos"
+  | "aesthetic-latte-shot"
+  | "slow-tea-time"
+  | "cafe-hopping"
+  | "quiet-reading-nook";
+
+export type QuizResultVariant = "man" | "woman";
 
 export type QuizStickerId = "steam" | "sparkle" | "leaf" | "desk" | "date-light" | "city-walk";
 
@@ -43,6 +51,7 @@ export interface QuizProfile {
   id: QuizProfileId;
   code: string;
   sticker: QuizStickerId;
+  posterImageSlug: string;
   posterImage: string;
   vibes: string[];
   purposes: string[];

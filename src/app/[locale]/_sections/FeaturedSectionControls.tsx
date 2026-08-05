@@ -48,7 +48,7 @@ export default function FeaturedSectionControls({
           </p>
         </motion.div>
 
-        <motion.div {...headerMotion} className="pb-3">
+        <motion.div {...headerMotion}>
           <div className="flex max-w-2xl items-center overflow-hidden rounded-full border border-[var(--border)] bg-white/78 shadow-[var(--shadow-sm)] backdrop-blur-md transition-colors outline-none focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/16 dark:bg-[var(--card)]">
             <div className="flex shrink-0 items-center pl-4 text-[var(--foreground-muted)]">
               <Search size={16} />
@@ -71,7 +71,7 @@ export default function FeaturedSectionControls({
           </div>
         </motion.div>
 
-        <div className="sticky top-16 z-50 -mx-2 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-18 sm:mx-0 sm:px-4">
+        <div className="sticky top-16 z-50 -mx-2 mt-6 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-18 sm:mx-0 sm:mt-7 sm:px-4">
           <GuidedFilterBar filter={filter} onChange={onFilterChange} districts={activeDistricts} />
         </div>
       </div>

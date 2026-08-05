@@ -36,6 +36,11 @@ function getBaseUrl() {
   return getSiteUrl().toString().replace(/\/$/, "")
 }
 
+function isLocalApiUrl() {
+  const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ""
+  return apiUrl.includes("localhost") || apiUrl.includes("127.0.0.1")
+}
+
 function localizedUrl(siteUrl: string, locale: string, path: string) {
   return `${siteUrl}/${locale}${path}`
 }
@@ -127,7 +132,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     cafeEntries = await getCafeEntries(siteUrl, now)
   } catch (error) {
-    console.error("sitemap cafes failed:", error)
+    if (!isLocalApiUrl()) console.error("sitemap cafes failed:", error)
   }
 
   return [...staticEntries, ...blogEntries, ...cafeEntries]

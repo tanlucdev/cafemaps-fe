@@ -4,7 +4,13 @@ import { mapApiCafe, type RawCafe } from "./mapper"
 import { buildQuery } from "./query"
 
 async function loadDevFallback(options?: NextRequestInit) {
-  if (process.env.NODE_ENV === "production" || options?.fallback === false || options?.cache === "no-store") {
+  const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ""
+  const localApi = apiUrl.includes("localhost") || apiUrl.includes("127.0.0.1")
+  if (
+    (process.env.NODE_ENV === "production" && !localApi) ||
+    options?.fallback === false ||
+    options?.cache === "no-store"
+  ) {
     return null
   }
   return import("@/apis/cafes/dev-fallback")
@@ -28,9 +34,10 @@ export async function getCafes(filter?: CafeFilter, locale?: string | null): Pro
     const raw = Array.isArray(data) ? data : data.data
     return raw.map((cafe) => mapApiCafe(cafe, locale))
   } catch (err) {
-    console.error("getCafes failed:", err)
     const fallback = await loadDevFallback()
-    return fallback?.fallbackCafes(filter) ?? []
+    if (fallback) return fallback.fallbackCafes(filter)
+    console.error("getCafes failed:", err)
+    return []
   }
 }
 
@@ -63,9 +70,10 @@ export async function getCafesWithMeta(
     }
   } catch (err) {
     if (options?.fallback === false || options?.cache === "no-store") throw err
-    console.error("getCafesWithMeta failed:", err)
     const fallback = await loadDevFallback(options)
-    return fallback?.paginateFallbackCafes(filter) ?? emptyCafesPage(filter)
+    if (fallback) return fallback.paginateFallbackCafes(filter)
+    console.error("getCafesWithMeta failed:", err)
+    return emptyCafesPage(filter)
   }
 }
 
@@ -74,9 +82,10 @@ export async function getCafeBySlug(slug: string, locale?: string | null): Promi
     const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`)
     return mapApiCafe(raw, locale)
   } catch (err) {
-    console.error("getCafeBySlug failed:", err)
     const fallback = await loadDevFallback()
-    return fallback?.fallbackCafeBySlug(slug) ?? null
+    if (fallback) return fallback.fallbackCafeBySlug(slug)
+    console.error("getCafeBySlug failed:", err)
+    return null
   }
 }
 
@@ -106,9 +115,10 @@ export async function getCafeDistricts(locale?: string | null): Promise<string[]
   try {
     return await apiFetch<string[]>(`/cafes/districts${buildQuery(undefined, locale)}`)
   } catch (err) {
-    console.error("getCafeDistricts failed:", err)
     const fallback = await loadDevFallback()
-    return fallback?.fallbackDistricts() ?? []
+    if (fallback) return fallback.fallbackDistricts()
+    console.error("getCafeDistricts failed:", err)
+    return []
   }
 }
 
@@ -121,8 +131,9 @@ export async function getQuizMatchCafes(
     const raw = Array.isArray(data) ? data : data.data
     return raw.map((cafe) => mapApiCafe(cafe, locale))
   } catch (err) {
-    console.error("getQuizMatchCafes failed:", err)
     const fallback = await loadDevFallback()
-    return fallback?.fallbackCafes(filter) ?? []
+    if (fallback) return fallback.fallbackCafes(filter)
+    console.error("getQuizMatchCafes failed:", err)
+    return []
   }
 }
