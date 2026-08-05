@@ -12,7 +12,6 @@ interface PageProps {
 const getCafe = cache((slug: string, locale: string) => getCafeBySlug(slug, locale))
 
 export const revalidate = 300
-export const dynamic = "force-dynamic"
 
 function getDescription(cafe: NonNullable<Awaited<ReturnType<typeof getCafeBySlug>>>) {
   return cafe.oneLiner ?? cafe.description ?? undefined

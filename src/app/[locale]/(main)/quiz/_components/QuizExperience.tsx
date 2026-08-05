@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -54,6 +54,7 @@ import type { LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useTransition, type Ref } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { formatCafeArea } from "@/lib/cafe-labels";
 import {
   getLocalizedQuizQuestions,
@@ -89,7 +90,7 @@ export default function QuizExperience({
   const t = useTranslations("quiz");
   const messages = t.raw("experience") as QuizMessages;
   const questions = useMemo(() => getLocalizedQuizQuestions(messages), [messages]);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [answers, setAnswers] = useState<Record<string, QuizOption>>({});

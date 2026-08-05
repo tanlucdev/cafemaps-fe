@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { AlarmClock, MapPinned, Navigation } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatCafeDistanceParts } from "@/lib/distance";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice } from "@/lib/utils";
 import AboutSection from "./components/AboutSection";
@@ -50,7 +51,7 @@ export default function CafeDetailInfo({
   onVote,
 }: CafeDetailInfoProps) {
   const t = useTranslations("cafe");
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const resolvedDistance = useResolvedCafeDistance(cafe, locale);
   const hours = [formatTime(cafe.openingTime), formatTime(cafe.closingTime)]
     .filter(Boolean)
