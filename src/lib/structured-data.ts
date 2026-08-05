@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/routing"
-import { HOME_DESCRIPTION, SITE_NAME, getSiteUrl, localizedPath } from "@/lib/metadata"
+import { HOME_DESCRIPTION, OG_IMAGE, SITE_NAME, getSiteUrl, localizedPath } from "@/lib/metadata"
 
 type JsonLdValue = Record<string, unknown> | Record<string, unknown>[]
 
@@ -19,7 +19,7 @@ export function createHomeJsonLd(locale: Locale) {
   const quizUrl = absoluteUrl(localizedPath(locale, "/quiz"))
   const contributeUrl = absoluteUrl(localizedPath(locale, "/contribute"))
   const logoUrl = absoluteUrl("/image/logo.png")
-  const imageUrl = absoluteUrl("/image/meta-image.png.png")
+  const imageUrl = absoluteUrl(OG_IMAGE)
   const language = locale === "vi" ? "vi-VN" : "en-US"
   const faq =
     locale === "vi"
