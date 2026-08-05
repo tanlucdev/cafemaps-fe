@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BookOpen, ChevronLeft, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
   getMyCafeVotes,
   isUnauthorizedError,
@@ -32,7 +33,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   const t = useTranslations("cafe");
   const tc = useTranslations("common");
   const router = useRouter();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll();
   const galleryY = useSpring(useTransform(scrollYProgress, [0, 0.22], [0, -34]), {
     stiffness: 120,

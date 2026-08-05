@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Link } from "@/i18n/navigation";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 export default function MapCtaSection() {
   const t = useTranslations("map");
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
 
   return (
     <section className="relative isolate overflow-hidden px-4 py-16 sm:py-20">

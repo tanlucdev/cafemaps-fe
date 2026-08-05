@@ -12,8 +12,9 @@ import {
   Palette,
   Sparkles,
 } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { ComponentType } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { QuizStickerId } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 
@@ -84,7 +85,7 @@ export default function QuizSticker({
   className,
   animated = true,
 }: QuizStickerProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const sticker = STICKERS[id];
   const sizeClass = size === "lg" ? "size-28" : size === "sm" ? "size-14" : "size-20";
 

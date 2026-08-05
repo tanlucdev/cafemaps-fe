@@ -310,18 +310,24 @@
     "experience": {
       "questions": [
         {
-          "id": "deadline-hideout",
-          "text": "If you could hide from deadlines for two hours today, which corner wins?",
+          "id": "cafe-plan",
+          "text": "You have two free café hours today. What should they feel like?",
           "options": [
-            { "id": "quiet-laptop", "label": "A quiet nook, laptop open, latte still warm" },
+            {
+              "id": "quiet-corner",
+              "label": "A quiet corner for reading, studying, or light focus"
+            },
             {
               "id": "green-window",
-              "label": "Plants everywhere, filtered sun, easy to sit for ages"
+              "label": "Plants everywhere, soft sun, easy to sit for ages"
             },
-            { "id": "warm-lamp", "label": "Warm lamps, soft chairs, small talk feels natural" },
+            {
+              "id": "warm-lamp",
+              "label": "Warm lamps, soft chairs, perfect for a date or heart talk"
+            },
             {
               "id": "city-buzz",
-              "label": "Music with a beat, friends around, photos with real vibe"
+              "label": "Friends around, photos looking good, the mood turns brighter"
             }
           ]
         },
@@ -331,11 +337,11 @@
           "options": [
             {
               "id": "book-cup",
-              "label": "A half-open book and an old-school cup that smells amazing"
+              "label": "A half-open book, an easy drink, and slower music"
             },
             {
-              "id": "clean-espresso",
-              "label": "A clean table, crisp espresso, power outlet nearby"
+              "id": "clean-menu",
+              "label": "A clean table, simple menu, and quick ordering"
             },
             { "id": "camera-cake", "label": "A camera, cute cake, and props for playful shots" },
             { "id": "plant-sun", "label": "A little plant, a stripe of sun, ice melting slowly" }
@@ -350,7 +356,7 @@
               "id": "leaves-glass",
               "label": "Leaves moving, ice touching glass, air feeling fresh"
             },
-            { "id": "old-record", "label": "An old record, espresso hum, the day slowing down" },
+            { "id": "old-record", "label": "An old record, café hum, the day slowing down" },
             {
               "id": "friends-laughing",
               "label": "Friends laughing just loud enough, playlist lifting the mood"
@@ -367,7 +373,7 @@
               "id": "photo-booth",
               "label": "Good photo corners, colorful drinks, stories for the group"
             },
-            { "id": "low-key", "label": "Low-key, good coffee, comfortable even solo" }
+            { "id": "low-key", "label": "Low-key, good drinks, comfortable even solo" }
           ]
         },
         {
@@ -376,7 +382,7 @@
           "options": [
             {
               "id": "rain-work",
-              "label": "Dry, quiet, with a table where the laptop can stay open"
+              "label": "Dry, quiet, with a table that stays comfortable"
             },
             { "id": "rain-window", "label": "Window seat, rain outside, greenery in view" },
             { "id": "rain-date", "label": "Warm light, a small dessert, talking until it clears" },
@@ -387,20 +393,20 @@
           ]
         },
         {
-          "id": "coffee-order",
-          "text": "Your first order usually says what about the day?",
+          "id": "drink-mood",
+          "text": "How do you usually choose your drink?",
           "options": [
-            { "id": "filter-calm", "label": "Filter or espresso, clean and focused" },
-            { "id": "sweet-latte", "label": "A soft latte, slightly sweet, nice to look at" },
-            { "id": "old-coffee", "label": "Old-school milk coffee, familiar and honest" },
-            { "id": "iced-tea", "label": "Iced tea, light caffeine, made for lingering" }
+            { "id": "quick-sip", "label": "Something simple, easy to drink, quick to grab" },
+            { "id": "mood-drink", "label": "A mood-matching drink that looks fun and tastes easy" },
+            { "id": "familiar-drink", "label": "A familiar drink that feels honest and close" },
+            { "id": "iced-tea", "label": "A cool, light drink made for lingering" }
           ]
         },
         {
           "id": "photo-style",
           "text": "If you take one photo there, what should it feel like?",
           "options": [
-            { "id": "clean-shot", "label": "Clean table, beautiful cup, modern light" },
+            { "id": "clean-shot", "label": "Clean table, pretty drink, modern light" },
             { "id": "leaf-shot", "label": "Sun through leaves, gentle greens, room to breathe" },
             { "id": "film-shot", "label": "A little film-like, a little old, slower Saigon" },
             { "id": "friends-shot", "label": "People in frame, natural and fun" }
@@ -431,7 +437,7 @@
           "options": [
             {
               "id": "early-focus",
-              "label": "Early morning, just opened, get things done in one stretch"
+              "label": "Early morning, just opened, a quick mood reset"
             },
             { "id": "late-morning", "label": "Late morning, good sun, a gentle reset" },
             { "id": "golden-hour", "label": "Golden hour, pretty light, good for dates or photos" },
@@ -444,7 +450,7 @@
           "options": [
             {
               "id": "student-friendly",
-              "label": "Friendly price, still fine for studying or working long"
+              "label": "Friendly price, still fine for sitting quietly a while"
             },
             { "id": "worth-splurge", "label": "A little more is fine if the date feels worth it" },
             { "id": "stay-long", "label": "As long as the space feels good to stay in" },
@@ -455,14 +461,14 @@
       "profiles": {
         "quiet-work-nook": {
           "title": "Quiet Work Nook",
-          "subtitle": "Deep focus, warm coffee, the world turned down.",
-          "description": "You fit cafés with a softer rhythm, steady tables, kind light, and enough quiet for your brain to settle in. Put the laptop down and the day gets less tangled.",
+          "subtitle": "Quiet, tidy, the world turned down.",
+          "description": "You fit cafés with a softer rhythm, steady tables, kind light, and enough quiet for your brain to settle. Study, work, read, or sit solo while the day gets less tangled.",
           "shareTitle": "I am a Quiet Work Nook",
-          "shareDescription": "My café persona: quiet, tidy, ready for deep work after a few sips.",
-          "reasons": ["quiet", "deep work", "outlet-friendly"],
+          "shareDescription": "My café persona: quiet, tidy, good for focus or solo time.",
+          "reasons": ["quiet", "private corner", "steady rhythm"],
           "personalityTraits": ["soft discipline", "corner-seat loyal", "noise-sensitive"],
-          "bestFor": ["calm deadlines", "2-3 hour focus blocks", "solo café time"],
-          "avoidWhen": ["the room is packed", "music is too strong", "tables are laptop-hostile"]
+          "bestFor": ["focus time", "light study or work", "solo café time"],
+          "avoidWhen": ["the room is packed", "music is too strong", "seating is hard to stay in"]
         },
         "garden-reset": {
           "title": "Garden Reset",
@@ -489,10 +495,10 @@
         },
         "vintage-story-corner": {
           "title": "Vintage Story Corner",
-          "subtitle": "Roasted coffee, old wood, and a story moving slowly.",
-          "description": "You are pulled toward roasted coffee, old wood, slower music, and the feeling that every table has a story. Solo or with company, it has texture.",
+          "subtitle": "Old wood, soft light, and a story moving slowly.",
+          "description": "You are pulled toward old wood, slower music, easy drinks, and the feeling that every table has a story. Solo or with company, it has texture.",
           "shareTitle": "I am a Vintage Story Corner",
-          "shareDescription": "My café persona: old-soul rooms, coffee aroma, and a beautifully slow rhythm.",
+          "shareDescription": "My café persona: old-soul rooms, tiny details, and a beautifully slow rhythm.",
           "reasons": ["vintage", "cozy", "bookish"],
           "personalityTraits": ["quietly nostalgic", "detail-noticer", "good listener"],
           "bestFor": ["reading", "journaling", "a long talk with one person"],
@@ -507,7 +513,7 @@
           "subtitle": "Warm, soft, pretty enough for the conversation to shine.",
           "description": "Your café match is soft, warm, comfortable, and private enough for conversation to unfold. Pretty, but not trying too hard.",
           "shareTitle": "I am Date Glow",
-          "shareDescription": "My café persona: warm light, a small dessert, and a conversation worth lingering over.",
+          "shareDescription": "My café persona: warm light, a solid menu, and a conversation worth lingering over.",
           "reasons": ["romantic", "warm light", "long talks"],
           "personalityTraits": [
             "tuned into shared mood",
@@ -524,7 +530,7 @@
         "creative-hangout": {
           "title": "Creative Hangout",
           "subtitle": "Friends, photos, and energy that arrives right on time.",
-          "description": "You need energy, good photo corners, music that lifts the room, and enough space for friends to gather. Coffee should come with sparkle.",
+          "description": "You need energy, good photo corners, music that lifts the room, and enough space for friends to gather. A café run should come with good drinks, good stories, and a few photos.",
           "shareTitle": "I am a Creative Hangout",
           "shareDescription": "My café persona: good mood, good people, and a few photos that tell the story.",
           "reasons": ["photo corners", "friends", "creative energy"],
@@ -534,21 +540,21 @@
         },
         "minimal-sprint": {
           "title": "Minimal Sprint",
-          "subtitle": "Clean, bright, crisp coffee, done and out.",
-          "description": "You fit clean cafés with crisp coffee, quick service, and fewer distractions. Drop in, get things done, caffeinate, move on.",
+          "subtitle": "Clean, bright, good drinks, done and out.",
+          "description": "You fit clean cafés with simple menus, quick service, and fewer distractions. Drop in, order something reliable, sit for a beat, move on.",
           "shareTitle": "I am a Minimal Sprint",
-          "shareDescription": "My café persona: good coffee, clean table, low friction, and speed.",
-          "reasons": ["minimal", "specialty", "fast focus"],
+          "shareDescription": "My café persona: good drinks, clean table, low friction, and speed.",
+          "reasons": ["minimal", "easy menu", "quick stop"],
           "personalityTraits": ["quick decider", "clarity-seeker", "allergic to clutter"],
-          "bestFor": ["short work sessions", "quick meetings", "caffeine before a packed day"],
+          "bestFor": ["short focus sessions", "quick meetups", "a good drink before a packed day"],
           "avoidWhen": ["the menu is too fussy", "decor is busy", "service is slow"]
         }
       },
       "matchReasons": {
         "quiet-work-nook": [
-          "Quiet enough for a longer work session.",
+          "Quiet enough for focus or solo time.",
           "Clean rhythm without feeling stiff.",
-          "Good for study or focus blocks."
+          "Good for any café stop that needs a steady rhythm."
         ],
         "garden-reset": [
           "Greenery and breathing room match your mood.",
@@ -558,7 +564,7 @@
         "vintage-story-corner": [
           "Warm, old-soul texture with its own story.",
           "Good for reading, solo time, or slow conversation.",
-          "Coffee and space both feel familiar."
+          "The menu and space both feel familiar."
         ],
         "date-glow": [
           "Light and pace fit a sweet café date.",
@@ -571,9 +577,9 @@
           "A more memorable vibe than a regular coffee stop."
         ],
         "minimal-sprint": [
-          "Clean, bright, and good for quick focus.",
-          "Clear coffee, fewer distractions.",
-          "The kind of spot where work starts fast."
+          "Clean, bright, and good for quick stops.",
+          "Easy menu, fewer distractions.",
+          "The kind of spot where ordering feels effortless."
         ]
       }
     }

@@ -5,6 +5,8 @@ import { HeroSearchIsland } from "./HeroSearchIsland";
 
 const HERO_POSTER = "/image/home-hero-video-frame-20260703.webp";
 const HERO_POSTER_MOBILE = "/image/home-hero-video-frame-mobile-20260703.webp";
+const HERO_IMAGE_SIZES =
+  "(max-width: 639px) calc(100vw - 16px), (max-width: 767px) calc(100vw - 24px), calc(100vw - 32px)";
 
 type CafeHeroCinematicProps = {
   eyebrow: string;
@@ -20,17 +22,19 @@ export function CafeHeroCinematic({ eyebrow, headline, subtitle }: CafeHeroCinem
           src={HERO_POSTER_MOBILE}
           alt=""
           fill
-          sizes="100vw"
+          sizes={HERO_IMAGE_SIZES}
           fetchPriority="high"
           className="absolute inset-0 z-0 object-cover md:hidden"
+          loading="eager"
         />
         <Image
           src={HERO_POSTER}
           alt=""
           fill
-          sizes="100vw"
+          sizes={HERO_IMAGE_SIZES}
           fetchPriority="high"
           className="absolute inset-0 z-0 hidden object-cover md:block"
+          loading="eager"
         />
 
         <HeroVideoBackdrop poster={HERO_POSTER} />
