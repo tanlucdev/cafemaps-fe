@@ -282,8 +282,8 @@
   },
   "quiz": {
     "title": "Pha gu cà phê của bạn",
-    "subtitle": "Một quiz nhỏ kiểu scrapbook để gợi ý đúng quán, đúng mood, không đá bạn sang trang tìm kiếm.",
-    "eyebrow": "Cute cafe quiz",
+    "subtitle": "Một quiz nhỏ kiểu scrapbook để gợi ý đúng quán, đúng cảm giác, không đá bạn sang trang tìm kiếm.",
+    "eyebrow": "Quiz chọn gu cà phê",
     "start": "Bắt đầu trắc nghiệm",
     "next": "Qua câu tiếp",
     "back": "Quay lại",
@@ -292,240 +292,651 @@
     "lockTaste": "Chốt gu này",
     "question": "Câu hỏi {current} / {total}",
     "why": "Vì sao hợp bạn",
-    "analysis": "Giải mã persona",
-    "recommendedCafes": "Quán hợp persona này",
+    "analysis": "Giải mã gu",
+    "recommendedCafes": "Quán hợp gu này",
     "downloadImage": "Tải ảnh",
-    "shareResult": "Share",
+    "shareResult": "Chia sẻ",
     "copyLink": "Copy link",
     "copied": "Đã copy link",
     "savedImage": "Đã tải ảnh kết quả",
-    "shareFallback": "Trình duyệt chưa share file được, mình đã tải ảnh và copy link.",
+    "shareFallback": "Đã tải ảnh và copy link.",
+    "sharing": "Đang chuẩn bị ảnh...",
+    "shareCancelled": "Đã hủy chia sẻ.",
+    "shareFailed": "Chưa thể chia sẻ lúc này.",
+    "copyFailed": "Đã tải ảnh. Không copy link tự động được.",
     "traits": "Tính cách cafe",
     "bestFor": "Hợp nhất khi",
     "avoidWhen": "Nên tránh khi",
-    "previewNote": "Đây là bản xem nhanh từ link share. Làm quiz lại để pha DNA đầy đủ.",
+    "compatiblePersonas": "Cùng gu",
+    "incompatiblePersonas": "Khác gu",
+    "pairPersonas": "Đi cùng vui",
+    "previewNote": "Đây là bản xem nhanh từ link chia sẻ. Làm quiz lại để có kết quả đầy đủ.",
     "viewCafe": "Xem quán",
-    "match": "Độ hợp mood",
+    "match": "Độ hợp gu",
     "brewed": "đã pha",
     "experience": {
       "questions": [
         {
-          "id": "cafe-plan",
-          "text": "Chiều nay rảnh 2 tiếng đi cafe, bạn muốn buổi đó giống gì?",
+          "id": "result-variant",
+          "text": "Bạn muốn phong cách ảnh kết quả nào?",
           "options": [
-            { "id": "quiet-corner", "label": "Góc yên để đọc, học hoặc xử lý vài việc nhẹ" },
+            {
+              "id": "man",
+              "label": "Ảnh nam"
+            },
+            {
+              "id": "woman",
+              "label": "Ảnh nữ"
+            }
+          ]
+        },
+        {
+          "id": "deadline-hideout",
+          "text": "Chiều nay có 2 tiếng đi cafe, bạn muốn buổi đó giống gì?",
+          "options": [
+            {
+              "id": "quiet-laptop",
+              "label": "Góc yên để đọc, học hoặc xử lý vài việc nhẹ"
+            },
             {
               "id": "green-window",
               "label": "Nhiều cây, nắng lọc qua cửa, ngồi lâu vẫn nhẹ người"
             },
-            { "id": "warm-lamp", "label": "Đèn vàng, ghế mềm, hợp hẹn hò hoặc tâm sự" },
-            { "id": "city-buzz", "label": "Bạn bè đông đủ, ảnh lên đẹp, mood vui hơn hẳn" }
+            {
+              "id": "warm-lamp",
+              "label": "Đèn vàng, ghế mềm, hợp hẹn hò hoặc tâm sự"
+            },
+            {
+              "id": "city-buzz",
+              "label": "Bạn bè đông đủ, ảnh lên đẹp, cảm giác vui hơn hẳn"
+            }
           ]
         },
         {
           "id": "perfect-table",
           "text": "Bàn cafe lý tưởng của bạn đang có gì?",
           "options": [
-            { "id": "book-cup", "label": "Một cuốn sách mở dở, ly nước hợp mood và nhạc chậm" },
-            { "id": "clean-menu", "label": "Mặt bàn gọn, menu dễ chọn, gọi nhanh là có" },
-            { "id": "camera-cake", "label": "Máy ảnh, bánh xinh, vài món đạo cụ chụp chơi" },
-            { "id": "plant-sun", "label": "Một chậu cây, vệt nắng, ly đá tan thật chậm" }
+            {
+              "id": "book-cup",
+              "label": "Một cuốn sách mở dở, ly nước hợp cảm giác và nhạc chậm"
+            },
+            {
+              "id": "clean-espresso",
+              "label": "Mặt bàn gọn, menu dễ chọn, gọi nhanh là có"
+            },
+            {
+              "id": "camera-cake",
+              "label": "Máy ảnh, bánh xinh, vài món đạo cụ chụp chơi"
+            },
+            {
+              "id": "plant-sun",
+              "label": "Một chậu cây, vệt nắng, ly đá tan thật chậm"
+            }
           ]
         },
         {
           "id": "door-sound",
-          "text": "Bạn mở cửa quán bước vào, âm thanh nào làm bạn thấy đúng mood?",
+          "text": "Bạn mở cửa quán bước vào, âm thanh nào làm bạn thấy đúng gu?",
           "options": [
-            { "id": "keyboard-soft", "label": "Tiếng gõ phím rất khẽ, ai cũng đang tập trung" },
-            { "id": "leaves-glass", "label": "Lá xào xạc, đá chạm ly, không khí mát rượi" },
-            { "id": "old-record", "label": "Đĩa nhạc cũ, tiếng quán rì rầm, câu chuyện chậm lại" },
-            { "id": "friends-laughing", "label": "Bạn bè cười vừa đủ to, playlist kéo mood lên" }
+            {
+              "id": "keyboard-soft",
+              "label": "Tiếng gõ phím rất khẽ, ai cũng đang tập trung"
+            },
+            {
+              "id": "leaves-glass",
+              "label": "Lá xào xạc, đá chạm ly, không khí mát rượi"
+            },
+            {
+              "id": "old-record",
+              "label": "Đĩa nhạc cũ, tiếng quán rì rầm, câu chuyện chậm lại"
+            },
+            {
+              "id": "friends-laughing",
+              "label": "Bạn bè cười vừa đủ to, playlist kéo cảm giác lên"
+            }
           ]
         },
         {
           "id": "cute-date",
           "text": "Một buổi hẹn cafe xinh với bạn cần nhất điều gì?",
           "options": [
-            { "id": "small-talk", "label": "Ánh đèn ấm, bàn nhỏ, nói chuyện lâu không bị vội" },
-            { "id": "walk-after", "label": "Có cây và lối đi gần đó để cafe xong còn dạo" },
+            {
+              "id": "small-talk",
+              "label": "Ánh đèn ấm, bàn nhỏ, nói chuyện lâu không bị vội"
+            },
+            {
+              "id": "walk-after",
+              "label": "Có cây và lối đi gần đó để cafe xong còn dạo"
+            },
             {
               "id": "photo-booth",
               "label": "Góc ảnh đẹp, đồ uống lên màu, cả nhóm có chuyện để kể"
             },
-            { "id": "low-key", "label": "Ít phô trương, đồ uống ngon, đi một mình cũng ổn" }
+            {
+              "id": "low-key",
+              "label": "Ít phô trương, đồ uống ngon, đi một mình cũng ổn"
+            }
           ]
         },
         {
           "id": "rain-plan",
           "text": "Nếu mưa bất chợt, bạn muốn trú vào kiểu quán nào?",
           "options": [
-            { "id": "rain-work", "label": "Khô ráo, yên, có bàn ngồi lâu vẫn thoải mái" },
-            { "id": "rain-window", "label": "Ngồi sát cửa kính, nhìn mưa rơi qua mảng xanh" },
-            { "id": "rain-date", "label": "Đèn vàng, món ngọt nhỏ, nói chuyện tới khi tạnh" },
-            { "id": "rain-group", "label": "Bàn rộng, bạn bè kéo tới, mưa thành cái cớ tụ tập" }
+            {
+              "id": "rain-work",
+              "label": "Khô ráo, yên, có bàn ngồi lâu vẫn thoải mái"
+            },
+            {
+              "id": "rain-window",
+              "label": "Ngồi sát cửa kính, nhìn mưa rơi qua mảng xanh"
+            },
+            {
+              "id": "rain-date",
+              "label": "Đèn vàng, món ngọt nhỏ, nói chuyện tới khi tạnh"
+            },
+            {
+              "id": "rain-group",
+              "label": "Bàn rộng, bạn bè kéo tới, mưa thành cái cớ tụ tập"
+            }
           ]
         },
         {
-          "id": "drink-mood",
-          "text": "Bạn thường chọn đồ uống theo cảm giác nào?",
+          "id": "coffee-order",
+          "text": "Nếu gọi món đầu tiên, bạn nghiêng về ly nào?",
           "options": [
-            { "id": "quick-sip", "label": "Món gọn, dễ uống, gọi nhanh rồi đi tiếp" },
-            { "id": "mood-drink", "label": "Ly nước hợp mood, nhìn vui và uống cũng dễ" },
-            { "id": "familiar-drink", "label": "Món quen miệng, làm bạn thấy thân thuộc" },
-            { "id": "iced-tea", "label": "Đồ uống mát, nhẹ, hợp ngồi lâu" }
+            {
+              "id": "filter-calm",
+              "label": "Cà phê đen pha máy hoặc pour-over, gọn và tỉnh"
+            },
+            {
+              "id": "sweet-latte",
+              "label": "Bạc xỉu hoặc latte sữa mềm, uống là thấy vui"
+            },
+            {
+              "id": "old-coffee",
+              "label": "Cà phê sữa đá kiểu Việt Nam, quen miệng và thật"
+            },
+            {
+              "id": "iced-tea",
+              "label": "Trà đào cam sả hoặc trà sen lạnh, mát và ngồi lâu"
+            }
           ]
         },
         {
           "id": "photo-style",
           "text": "Nếu chụp một tấm ở quán, bạn thích tấm đó có vibe gì?",
           "options": [
-            { "id": "clean-shot", "label": "Bàn sạch, ly nước đẹp, ánh sáng gọn và hiện đại" },
-            { "id": "leaf-shot", "label": "Nắng qua lá, màu xanh dịu, ảnh nhìn rất thở" },
-            { "id": "film-shot", "label": "Hơi film, hơi cũ, có cảm giác Sài Gòn chậm" },
-            { "id": "friends-shot", "label": "Có người trong khung hình, tự nhiên và vui" }
+            {
+              "id": "clean-shot",
+              "label": "Bàn sạch, ly nước đẹp, ánh sáng gọn và hiện đại"
+            },
+            {
+              "id": "leaf-shot",
+              "label": "Nắng qua lá, màu xanh dịu, ảnh nhìn thoáng và dịu"
+            },
+            {
+              "id": "film-shot",
+              "label": "Hơi film, hơi cũ, có cảm giác Sài Gòn chậm"
+            },
+            {
+              "id": "friends-shot",
+              "label": "Có người trong khung hình, tự nhiên và vui"
+            }
           ]
         },
         {
           "id": "seat-choice",
           "text": "Vào quán còn trống nhiều bàn, bạn chọn chỗ nào trước?",
           "options": [
-            { "id": "corner-seat", "label": "Góc sát tường, ít người qua lại, rất dễ tập trung" },
-            { "id": "garden-seat", "label": "Gần cây hoặc sân nhỏ, có chút gió càng tốt" },
-            { "id": "sofa-seat", "label": "Ghế mềm, ánh sáng ấm, ngồi lâu không mỏi" },
-            { "id": "big-table", "label": "Bàn lớn, tiện gọi thêm bạn hoặc bày đồ ra" }
+            {
+              "id": "corner-seat",
+              "label": "Góc sát tường, ít người qua lại, rất dễ tập trung"
+            },
+            {
+              "id": "garden-seat",
+              "label": "Gần cây hoặc sân nhỏ, có chút gió càng tốt"
+            },
+            {
+              "id": "sofa-seat",
+              "label": "Ghế mềm, ánh sáng ấm, ngồi lâu không mỏi"
+            },
+            {
+              "id": "big-table",
+              "label": "Bàn lớn, tiện gọi thêm bạn hoặc bày đồ ra"
+            }
           ]
         },
         {
           "id": "time-of-day",
           "text": "Khung giờ cafe hợp bạn nhất là lúc nào?",
           "options": [
-            { "id": "early-focus", "label": "Sáng sớm, quán vừa mở, ghé nhanh cho tỉnh mood" },
-            { "id": "late-morning", "label": "Gần trưa, nắng đẹp, đi để reset nhẹ" },
-            { "id": "golden-hour", "label": "Chiều vàng, ánh sáng đẹp, hợp hẹn hoặc chụp ảnh" },
-            { "id": "slow-night", "label": "Tối muộn vừa đủ yên, câu chuyện đi chậm lại" }
+            {
+              "id": "early-focus",
+              "label": "Sáng sớm, quán vừa mở, ghé nhanh cho tỉnh người"
+            },
+            {
+              "id": "late-morning",
+              "label": "Gần trưa, nắng đẹp, đi để đổi nhịp nhẹ"
+            },
+            {
+              "id": "golden-hour",
+              "label": "Chiều vàng, ánh sáng đẹp, hợp hẹn hoặc chụp ảnh"
+            },
+            {
+              "id": "slow-night",
+              "label": "Tối muộn vừa đủ yên, câu chuyện đi chậm lại"
+            }
           ]
         },
         {
           "id": "budget-mood",
           "text": "Hôm nay bạn muốn chi cho cafe theo kiểu nào?",
           "options": [
-            { "id": "student-friendly", "label": "Vừa túi tiền, ngồi yên một lúc vẫn ổn" },
-            { "id": "worth-splurge", "label": "Đắt hơn chút cũng được nếu buổi hẹn xứng đáng" },
-            { "id": "stay-long", "label": "Miễn không gian dễ chịu để ở lại lâu" },
-            { "id": "split-table", "label": "Đi với nhóm, chia bill vui là được" }
+            {
+              "id": "student-friendly",
+              "label": "Vừa túi tiền, ngồi yên một lúc vẫn ổn"
+            },
+            {
+              "id": "worth-splurge",
+              "label": "Đắt hơn chút cũng được nếu buổi hẹn xứng đáng"
+            },
+            {
+              "id": "stay-long",
+              "label": "Miễn không gian dễ chịu để ở lại lâu"
+            },
+            {
+              "id": "split-table",
+              "label": "Đi với nhóm, chia bill vui là được"
+            }
           ]
         }
       ],
       "profiles": {
-        "quiet-work-nook": {
-          "title": "Góc Làm Việc Êm",
-          "subtitle": "Yên, gọn, thế giới nhỏ lại vừa đủ.",
-          "description": "Bạn hợp những quán có nhịp nhỏ, bàn ngồi chắc, ánh sáng dễ chịu và đủ yên để đầu óc lắng xuống. Có thể học, làm, đọc hoặc chỉ ngồi một mình cho ngày bớt rối.",
-          "shareTitle": "Mình là Góc Làm Việc Êm",
-          "shareDescription": "Cafe persona của mình: yên, gọn, hợp tập trung hoặc đi một mình.",
-          "reasons": ["yên tĩnh", "góc riêng", "nhịp ổn định"],
-          "personalityTraits": ["kỷ luật mềm", "thích góc riêng", "nhạy với tiếng ồn"],
-          "bestFor": ["cần tập trung", "học/làm nhẹ", "đi cafe một mình"],
-          "avoidWhen": ["quán quá đông", "nhạc mạnh", "bàn ghế khó ngồi lâu"]
-        },
-        "garden-reset": {
+        "cozy-plant-corner": {
           "title": "Vườn Nhỏ Reset",
-          "subtitle": "Cây xanh, nắng dịu, mood được thở lại.",
-          "description": "Mood của bạn cần cây xanh, chút nắng mềm và khoảng thở. Quán hợp nhất là nơi ngồi lâu không mệt, nhìn ra lá cây là thấy người dịu lại.",
+          "subtitle": "Một góc xanh nhỏ, ngồi xuống là thấy ngày dịu lại.",
+          "description": "Bạn hợp những quán có mảng xanh gần tay, ánh sáng dịu và nhịp chậm. Ngồi xuống là thấy ngày mềm lại, đủ yên để thở và đủ ấm để ở lâu.",
           "shareTitle": "Mình là Vườn Nhỏ Reset",
-          "shareDescription": "Cafe persona của mình: cần cây, cần nắng, cần một buổi ngồi lâu không gấp.",
-          "reasons": ["nhiều cây", "chill nhẹ", "ánh sáng tự nhiên"],
+          "shareDescription": "Gu cafe của mình: nhiều cây, thoáng dịu, nhịp được hạ nhẹ.",
+          "reasons": [
+            "nhiều cây",
+            "ấm cúng",
+            "hạ nhịp nhẹ"
+          ],
           "personalityTraits": [
             "dễ hồi năng lượng với thiên nhiên",
-            "thích nhịp chậm",
-            "cần khoảng thở"
+            "thích góc riêng",
+            "chậm mà chắc"
           ],
-          "bestFor": ["sáng cuối tuần", "đổi mood sau ngày mệt", "ngồi đọc hoặc nói chuyện nhẹ"],
-          "avoidWhen": ["trời quá nóng", "không gian kín bí", "bàn chen sát nhau"]
+          "bestFor": [
+            "cuối tuần chậm",
+            "đọc vài trang sách",
+            "ngồi một mình cho dịu lại"
+          ],
+          "avoidWhen": [
+            "trời quá nóng",
+            "không gian bí",
+            "bàn chen sát nhau"
+          ]
         },
-        "vintage-story-corner": {
-          "title": "Góc Chuyện Cũ",
-          "subtitle": "Đồ gỗ cũ, ánh sáng mềm, một câu chuyện đi chậm.",
-          "description": "Bạn dễ rung rinh với đồ gỗ cũ, nhạc chậm, món dễ uống và cảm giác mỗi bàn đều có một câu chuyện. Đi một mình hay đi hai người đều có chất.",
-          "shareTitle": "Mình là Góc Chuyện Cũ",
-          "shareDescription": "Cafe persona của mình: thích quán có tuổi, có nhịp chậm và nhiều chi tiết nhỏ.",
-          "reasons": ["vintage", "ấm cúng", "đọc sách"],
-          "personalityTraits": ["hoài niệm vừa đủ", "thích chi tiết nhỏ", "nghe chuyện giỏi"],
-          "bestFor": ["đọc sách", "viết linh tinh", "hẹn một người muốn nói chuyện lâu"],
-          "avoidWhen": ["decor giả cổ quá tay", "ánh sáng quá tối", "quán bật nhạc ồn"]
-        },
-        "date-glow": {
-          "title": "Hẹn Hò Đèn Vàng",
-          "subtitle": "Ấm, mềm, xinh vừa đủ để câu chuyện tự sáng.",
-          "description": "Gu của bạn là không gian mềm, ánh đèn ấm, ghế ngồi thoải mái và đủ riêng để câu chuyện tự nhiên hơn. Quán phải xinh nhưng không làm quá.",
-          "shareTitle": "Mình là Hẹn Hò Đèn Vàng",
-          "shareDescription": "Cafe persona của mình: ưu tiên ánh đèn ấm, menu ổn và cuộc nói chuyện thật lâu.",
-          "reasons": ["lãng mạn", "đèn ấm", "nói chuyện lâu"],
+        "quiet-city-window": {
+          "title": "Phố Cao Lặng Lẽ",
+          "subtitle": "Nhìn phố chạy, bạn vẫn giữ được nhịp riêng.",
+          "description": "Bạn cần một ô cửa có ánh sáng tốt, tiếng phố vừa xa và mặt bàn đủ gọn. Không tách khỏi thành phố, chỉ chọn một khoảng yên để quan sát nó.",
+          "shareTitle": "Mình là Phố Cao Lặng Lẽ",
+          "shareDescription": "Gu cafe của mình: cửa sổ, phố nhẹ, đầu óc gọn lại.",
+          "reasons": [
+            "cửa sổ",
+            "yên vừa đủ",
+            "nhìn phố"
+          ],
           "personalityTraits": [
-            "để ý cảm giác của người đi cùng",
-            "thích không gian mềm",
-            "gu xinh nhưng tinh tế"
+            "quan sát tốt",
+            "thích khoảng riêng",
+            "tập trung mềm"
           ],
-          "bestFor": ["first date", "kỷ niệm nhỏ", "một buổi chiều muốn nhớ"],
-          "avoidWhen": ["bàn quá sát", "ánh sáng gắt", "quán đông tới mức khó nghe nhau"]
+          "bestFor": [
+            "học nhẹ",
+            "viết note",
+            "ngồi chờ giữa lịch hẹn"
+          ],
+          "avoidWhen": [
+            "view quá ồn",
+            "nắng gắt",
+            "bàn quá nhỏ"
+          ]
         },
-        "creative-hangout": {
-          "title": "Tụ Tập Có Vibe",
-          "subtitle": "Bạn bè, ảnh đẹp, năng lượng bật lên đúng lúc.",
-          "description": "Bạn cần nơi có năng lượng, góc ảnh ổn, nhạc vừa lên mood và đủ rộng để bạn bè tụ lại. Một buổi cafe với bạn nên có ảnh đẹp, chuyện vui và đồ uống ngon.",
-          "shareTitle": "Mình là Tụ Tập Có Vibe",
-          "shareDescription": "Cafe persona của mình: đi cafe là phải có mood, có bạn bè, có vài tấm ảnh kể chuyện.",
-          "reasons": ["góc ảnh", "bạn bè", "năng lượng sáng tạo"],
+        "lively-friends-table": {
+          "title": "Bàn Tròn Rộn Rã",
+          "subtitle": "Có người, có chuyện, có cảm giác bật lên.",
+          "description": "Cafe với bạn vui nhất khi bàn đủ rộng, tiếng cười vừa đủ và playlist kéo cả nhóm vào nhịp. Một quán đúng gu phải có năng lượng để câu chuyện tự chạy.",
+          "shareTitle": "Mình là Bàn Tròn Rộn Rã",
+          "shareDescription": "Gu cafe của mình: đi cùng bạn bè là vui lên liền.",
+          "reasons": [
+            "bạn bè",
+            "bàn nhóm",
+            "playlist vui"
+          ],
           "personalityTraits": [
             "hứng khởi theo nhóm",
-            "nhạy với visual",
-            "thích nơi có câu chuyện"
+            "thích chia sẻ",
+            "dễ bật ý tưởng"
           ],
-          "bestFor": ["gặp nhóm nhỏ", "brainstorm nhẹ", "chụp ảnh cuối tuần"],
-          "avoidWhen": ["quán quá im", "không có bàn nhóm", "ánh sáng chụp ảnh kém"]
+          "bestFor": [
+            "tụ tập nhỏ",
+            "nghĩ ý tưởng vui",
+            "chiều cuối tuần"
+          ],
+          "avoidWhen": [
+            "quán quá im",
+            "khó ghép bàn",
+            "phục vụ chậm"
+          ]
         },
-        "minimal-sprint": {
-          "title": "Sprint Tối Giản",
-          "subtitle": "Gọn, sáng, đồ uống ổn, ghé nhanh rồi đi.",
-          "description": "Bạn hợp quán sạch gọn, menu dễ chọn, service nhanh và ít thứ gây xao nhãng. Ghé vào, gọi món signature ổn, ngồi một nhịp rồi rời đi rất gọn.",
-          "shareTitle": "Mình là Sprint Tối Giản",
-          "shareDescription": "Cafe persona của mình: cần đồ uống ngon, bàn sạch, ít nhiễu và tốc độ.",
-          "reasons": ["minimal", "menu dễ chọn", "ghé nhanh"],
-          "personalityTraits": ["ra quyết định nhanh", "thích sự rõ ràng", "khó chịu với rườm rà"],
-          "bestFor": ["ghé nhanh", "họp nhanh", "lấy mood trước lịch dày"],
-          "avoidWhen": ["menu quá phức tạp", "decor rối", "service chậm"]
+        "late-night-work": {
+          "title": "Đèn Khuya Ý Tưởng",
+          "subtitle": "Đêm xuống, laptop mở, cà phê giữ bạn vào guồng.",
+          "description": "Bạn hợp quán gọn, yên, đủ điện và đủ tỉnh cho những phiên làm việc muộn. Không cần màu mè, chỉ cần không gian giúp bạn vào guồng.",
+          "shareTitle": "Mình là Đèn Khuya Ý Tưởng",
+          "shareDescription": "Gu cafe của mình: laptop mở, đêm xuống, việc vẫn chạy.",
+          "reasons": [
+            "wifi ổn",
+            "ổ điện",
+            "tập trung đêm"
+          ],
+          "personalityTraits": [
+            "chịu deadline",
+            "thích rõ ràng",
+            "ít cần náo nhiệt"
+          ],
+          "bestFor": [
+            "chạy deadline",
+            "làm việc sâu",
+            "họp nhanh"
+          ],
+          "avoidWhen": [
+            "nhạc quá mạnh",
+            "bàn thấp",
+            "đèn quá tối"
+          ]
+        },
+        "vintage-tea-nostalgia": {
+          "title": "Chuyện Cũ Ấm Trà",
+          "subtitle": "Mùi trà, màu gỗ, một câu chuyện đi chậm lại.",
+          "description": "Bạn dễ rung rinh với đồ gỗ cũ, ly trà ấm và cảm giác thân quen. Quán đúng gu là nơi mọi chi tiết nhỏ đều có chút ký ức.",
+          "shareTitle": "Mình là Chuyện Cũ Ấm Trà",
+          "shareDescription": "Gu cafe của mình: vintage, trà ấm, một nhịp thật chậm.",
+          "reasons": [
+            "vintage",
+            "trà ấm",
+            "đồ gỗ cũ"
+          ],
+          "personalityTraits": [
+            "hoài niệm vừa đủ",
+            "để ý chi tiết",
+            "nghe chuyện giỏi"
+          ],
+          "bestFor": [
+            "đọc sách",
+            "viết linh tinh",
+            "nói chuyện lâu"
+          ],
+          "avoidWhen": [
+            "bày trí giả cổ",
+            "ánh sáng quá tối",
+            "quán ồn"
+          ]
+        },
+        "sunny-iced-coffee": {
+          "title": "Nắng Mới Tràn Ly",
+          "subtitle": "Sáng, mát, nhẹ tênh như ly đá vừa tan.",
+          "description": "Bạn hợp những quán có nắng đẹp, đồ uống mát và cảm giác ra ngoài cho ngày sáng hơn. Gu của bạn cần sự tươi, gọn và dễ vui.",
+          "shareTitle": "Mình là Nắng Mới Tràn Ly",
+          "shareDescription": "Gu cafe của mình: nắng đẹp, cà phê đá, thấy tươi lên.",
+          "reasons": [
+            "nắng đẹp",
+            "đồ uống mát",
+            "cảm giác sáng"
+          ],
+          "personalityTraits": [
+            "tươi nhanh",
+            "thích ánh sáng",
+            "dễ rủ đi chơi"
+          ],
+          "bestFor": [
+            "sáng cuối tuần",
+            "gặp bạn nhẹ",
+            "đổi nhịp nhanh"
+          ],
+          "avoidWhen": [
+            "không gian tối",
+            "máy lạnh quá lạnh",
+            "menu nặng"
+          ]
+        },
+        "lazy-afternoon-nap": {
+          "title": "Nắng Trưa Lười Nhác",
+          "subtitle": "Ghế mềm, tiếng nhỏ, thời gian tan thật chậm.",
+          "description": "Bạn cần nơi có ghế êm, ánh sáng mềm và không ai giục phải rời đi. Một buổi cafe đúng gu đôi khi chỉ là được lười một cách tử tế.",
+          "shareTitle": "Mình là Nắng Trưa Lười Nhác",
+          "shareDescription": "Gu cafe của mình: ghế êm, chiều chậm, cảm giác mềm như chăn.",
+          "reasons": [
+            "ghế êm",
+            "chill lâu",
+            "ấm cúng"
+          ],
+          "personalityTraits": [
+            "biết nghỉ ngơi",
+            "thích nhịp chậm",
+            "dễ mềm lòng"
+          ],
+          "bestFor": [
+            "ngồi lâu",
+            "đọc chậm",
+            "trốn nóng chiều"
+          ],
+          "avoidWhen": [
+            "ghế cứng",
+            "quán đông",
+            "nhạc dồn dập"
+          ]
+        },
+        "deadline-chaos": {
+          "title": "Deadline Không Ngủ",
+          "subtitle": "Càng gấp càng cần bàn rộng và cà phê đúng lúc.",
+          "description": "Bạn không sợ nhịp nhanh nếu quán đủ tiện: bàn rộng, wifi ổn, gọi món nhanh và năng lượng vừa căng để kéo deadline về đích.",
+          "shareTitle": "Mình là Deadline Không Ngủ",
+          "shareDescription": "Gu cafe của mình: hơi rối, rất tỉnh, xong việc đã.",
+          "reasons": [
+            "deadline",
+            "bàn rộng",
+            "cà phê mạnh"
+          ],
+          "personalityTraits": [
+            "xoay sở nhanh",
+            "chịu áp lực",
+            "thích tiện dụng"
+          ],
+          "bestFor": [
+            "nước rút dự án",
+            "họp nhóm",
+            "làm việc sát giờ"
+          ],
+          "avoidWhen": [
+            "wifi yếu",
+            "ổ điện xa",
+            "gọi món lâu"
+          ]
+        },
+        "aesthetic-latte-shot": {
+          "title": "Góc Sống Ảo Xịn",
+          "subtitle": "Ly đẹp, góc đẹp, ảnh lên là có chuyện kể.",
+          "description": "Bạn hợp quán có ánh sáng đẹp, đồ uống lên hình và vài góc đủ tinh tế. Cafe với bạn cũng là một cách lưu lại cảm giác của ngày.",
+          "shareTitle": "Mình là Góc Sống Ảo Xịn",
+          "shareDescription": "Gu cafe của mình: ly đẹp, ánh sáng xinh, ảnh có vibe.",
+          "reasons": [
+            "góc ảnh",
+            "ly đẹp",
+            "hình ảnh tinh tế"
+          ],
+          "personalityTraits": [
+            "nhạy hình ảnh",
+            "thích chi tiết",
+            "biết làm cảm giác đẹp"
+          ],
+          "bestFor": [
+            "chụp ảnh",
+            "hẹn bạn thân",
+            "đi chơi cuối tuần"
+          ],
+          "avoidWhen": [
+            "ánh sáng phẳng",
+            "ly trình bày sơ sài",
+            "quá đông khó chụp"
+          ]
+        },
+        "slow-tea-time": {
+          "title": "Trà Chiều Chậm Rãi",
+          "subtitle": "Ấm, dịu, đủ riêng để câu chuyện nở ra.",
+          "description": "Bạn hợp những quán có ánh đèn ấm, trà thơm và nhịp đủ chậm cho một cuộc trò chuyện dài. Không gian cần mềm, gần gũi và không quá phô.",
+          "shareTitle": "Mình là Trà Chiều Chậm Rãi",
+          "shareDescription": "Gu cafe của mình: trà chậm, đèn ấm, nói chuyện lâu.",
+          "reasons": [
+            "trà thơm",
+            "đèn ấm",
+            "hẹn nhẹ"
+          ],
+          "personalityTraits": [
+            "tinh tế",
+            "quan tâm cảm giác",
+            "thích sự mềm mại"
+          ],
+          "bestFor": [
+            "buổi hẹn đầu",
+            "kỷ niệm nhỏ",
+            "nói chuyện thật lâu"
+          ],
+          "avoidWhen": [
+            "bàn quá sát",
+            "ánh sáng gắt",
+            "ồn tới khó nghe"
+          ]
+        },
+        "cafe-hopping": {
+          "title": "Bước Chân Đổi Quán",
+          "subtitle": "Một quán chưa đủ, gu cần thêm trạm kế tiếp.",
+          "description": "Bạn thích quán có vị riêng, địa điểm tiện đi tiếp và chút mới mẻ để khám phá. Cafe không chỉ để ngồi, mà còn là một hành trình nhỏ.",
+          "shareTitle": "Mình là Bước Chân Đổi Quán",
+          "shareDescription": "Gu cafe của mình: thử quán mới, đi tiếp, lưu thêm một địa chỉ.",
+          "reasons": [
+            "khám phá",
+            "specialty",
+            "đi nhiều điểm"
+          ],
+          "personalityTraits": [
+            "tò mò",
+            "ra quyết định nhanh",
+            "thích cái mới"
+          ],
+          "bestFor": [
+            "cuối tuần rảnh",
+            "tour quán mới",
+            "gặp bạn năng động"
+          ],
+          "avoidWhen": [
+            "quán khó đi",
+            "menu quá giống nhau",
+            "không có gì để nhớ"
+          ]
+        },
+        "quiet-reading-nook": {
+          "title": "Góc Riêng Yên Ả",
+          "subtitle": "Một góc nhỏ, trang sách mở, tiếng đời giảm âm.",
+          "description": "Bạn hợp nơi thật yên, ánh sáng vừa đọc và ghế đủ thoải mái để ở lại lâu. Quán đúng gu là nơi mỗi trang sách được đọc chậm hơn.",
+          "shareTitle": "Mình là Góc Riêng Yên Ả",
+          "shareDescription": "Gu cafe của mình: sách mở, góc yên, cà phê còn ấm.",
+          "reasons": [
+            "đọc sách",
+            "yên tĩnh",
+            "góc riêng"
+          ],
+          "personalityTraits": [
+            "tập trung sâu",
+            "thích một mình",
+            "nhạy với ồn"
+          ],
+          "bestFor": [
+            "đọc lâu",
+            "học nhẹ",
+            "viết nhật ký"
+          ],
+          "avoidWhen": [
+            "nhạc lớn",
+            "thiếu ánh sáng",
+            "người qua lại nhiều"
+          ]
         }
       },
       "matchReasons": {
-        "quiet-work-nook": [
-          "Có vibe yên cho lúc cần tập trung hoặc ngồi một mình.",
-          "Không gian đủ gọn để bạn tập trung mà không bị cứng.",
-          "Hợp những buổi cần nhịp ổn định."
+        "cozy-plant-corner": [
+          "Có cây, ánh sáng dịu và góc ngồi đủ riêng.",
+          "Hợp lúc bạn muốn hạ nhịp sau một ngày dài.",
+          "Ưu tiên quán thoáng, không quá đông, ngồi lâu vẫn dễ chịu."
         ],
-        "garden-reset": [
-          "Có mảng xanh và cảm giác thở nhẹ đúng gu.",
-          "Hợp buổi cafe cần reset hơn là vội vàng.",
-          "Không gian dễ ngồi lâu, mood mềm."
+        "quiet-city-window": [
+          "Có cửa sổ sáng, nhìn được phố mà vẫn đủ yên.",
+          "Hợp lúc bạn cần ngồi gọn lại giữa một ngày nhiều lịch.",
+          "Ưu tiên quán bàn vừa tầm, nắng không gắt và tiếng ồn thấp."
         ],
-        "vintage-story-corner": [
-          "Có chất ấm cũ và câu chuyện riêng.",
-          "Hợp đọc sách, ngồi một mình, hoặc nói chuyện chậm.",
-          "Menu và không gian đều có cảm giác thân quen."
+        "lively-friends-table": [
+          "Bàn nhóm rộng và không khí vui là phần chính.",
+          "Hợp lúc bạn muốn gặp bạn bè, nói chuyện nhiều mà không ngại ồn.",
+          "Ưu tiên quán dễ ghép bàn, phục vụ nhanh và có nhạc vừa phải."
         ],
-        "date-glow": [
-          "Ánh sáng và nhịp quán hợp một buổi hẹn dễ thương.",
-          "Đủ xinh để nhớ, đủ ấm để nói chuyện lâu.",
-          "Mood mềm, không quá ồn, không quá nghiêm."
+        "late-night-work": [
+          "Không gian yên, đèn đủ sáng và ổ điện gần chỗ ngồi.",
+          "Hợp lúc bạn cần làm việc muộn mà vẫn muốn ra khỏi nhà.",
+          "Ưu tiên quán wifi ổn, bàn cao vừa và không đóng quá sớm."
         ],
-        "creative-hangout": [
-          "Có năng lượng cho bạn bè và vài tấm ảnh vui.",
-          "Không gian sáng tạo, hợp gặp nhóm nhỏ.",
-          "Quán có vibe nổi bật hơn một buổi cafe thường."
+        "vintage-tea-nostalgia": [
+          "Đồ gỗ, ánh đèn ấm và vài chi tiết cũ làm quán có duyên.",
+          "Hợp lúc bạn muốn ngồi chậm, uống trà và nghe chuyện lâu.",
+          "Ưu tiên quán bày trí thật tay, không giả cổ quá đà."
         ],
-        "minimal-sprint": [
-          "Gọn, sáng, hợp xử lý việc nhanh.",
-          "Menu dễ chọn và không gian ít nhiễu.",
-          "Đúng kiểu ghé nhanh, gọn, không cần nghĩ nhiều."
+        "sunny-iced-coffee": [
+          "Nắng đẹp, đồ uống mát và không gian sáng sẽ hợp bạn.",
+          "Hợp lúc bạn muốn ra ngoài cho ngày tươi hơn.",
+          "Ưu tiên quán có chỗ ngồi thoáng, menu dễ gọi và cà phê uống gọn."
+        ],
+        "lazy-afternoon-nap": [
+          "Ghế êm, ánh sáng mềm và tiếng quán nhỏ là điểm cộng.",
+          "Hợp lúc bạn muốn nghỉ một nhịp, không cần làm gì nhiều.",
+          "Ưu tiên quán ngồi lâu không bị vội, máy lạnh không quá gắt."
+        ],
+        "deadline-chaos": [
+          "Bàn rộng, wifi ổn và gọi món nhanh là điểm cộng lớn.",
+          "Hợp lúc bạn cần xử lý việc gấp ngoài nhà.",
+          "Tránh quán thiếu ổ điện hoặc nhạc quá dày."
+        ],
+        "aesthetic-latte-shot": [
+          "Ánh sáng đẹp và đồ uống lên hình là phần quan trọng.",
+          "Hợp buổi đi chơi muốn có vài tấm ảnh tử tế.",
+          "Ưu tiên quán có góc chụp thoáng, không chen bàn."
+        ],
+        "slow-tea-time": [
+          "Đèn ấm, bàn đủ riêng và món trà dịu sẽ hợp nhịp.",
+          "Hợp lúc bạn muốn một cuộc trò chuyện dài, không bị thúc.",
+          "Ưu tiên quán bàn không quá sát và âm lượng dễ nghe."
+        ],
+        "cafe-hopping": [
+          "Quán có vị riêng và khu vực tiện đi tiếp sẽ hợp bạn.",
+          "Hợp lúc bạn muốn thử chỗ mới hơn là ngồi yên cả buổi.",
+          "Ưu tiên quán có menu khác biệt, địa chỉ dễ ghé và đáng lưu lại."
+        ],
+        "quiet-reading-nook": [
+          "Góc ngồi yên, ánh sáng vừa đọc và ghế đủ thoải mái.",
+          "Hợp lúc bạn muốn đọc lâu, học nhẹ hoặc viết một mình.",
+          "Ưu tiên quán ít người qua lại, nhạc nhỏ và bàn không chật."
         ]
       }
     }

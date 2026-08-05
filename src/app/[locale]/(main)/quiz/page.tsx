@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { createLocalizedMetadata } from "@/lib/metadata";
 import { getQuizMatchCafes } from "@/lib/api";
-import { isQuizProfileId } from "@/lib/quiz";
+import { normalizeQuizProfileId, normalizeQuizResultVariant } from "@/lib/quiz";
 import QuizExperience from "./_components/QuizExperience";
 
 interface PageProps {
@@ -26,14 +26,16 @@ export default async function QuizPage({ params, searchParams }: PageProps) {
   const query = await searchParams;
   const type = firstParam(query?.type);
   const dna = firstParam(query?.dna);
+  const variant = normalizeQuizResultVariant(firstParam(query?.variant));
   const cafes = await getQuizMatchCafes({ limit: 36 }, locale);
 
   return (
     <QuizExperience
       cafes={cafes}
       locale={locale}
-      initialProfileId={isQuizProfileId(type) ? type : undefined}
+      initialProfileId={normalizeQuizProfileId(type)}
       initialDna={dna}
+      initialVariant={variant}
     />
   );
 }
