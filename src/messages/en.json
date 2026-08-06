@@ -318,15 +318,19 @@
       "questions": [
         {
           "id": "result-variant",
-          "text": "Which result image vibe do you want?",
+          "text": "You are...",
           "options": [
+            {
+              "id": "woman",
+              "label": "Woman"
+            },
             {
               "id": "man",
               "label": "Man"
             },
             {
-              "id": "woman",
-              "label": "Woman"
+              "id": "random",
+              "label": "Prefer not to answer"
             }
           ]
         },
@@ -398,7 +402,7 @@
         },
         {
           "id": "cute-date",
-          "text": "A cute café date needs what most?",
+          "text": "What makes a café feel cute to you?",
           "options": [
             {
               "id": "small-talk",
@@ -410,11 +414,11 @@
             },
             {
               "id": "photo-booth",
-              "label": "Good photo corners, colorful drinks, stories for the group"
+              "label": "Pretty check-in corners, flattering light, stories for the group"
             },
             {
               "id": "low-key",
-              "label": "Low-key, good drinks, comfortable even solo"
+              "label": "Not too showy, comfortable even when you go solo"
             }
           ]
         },
@@ -468,7 +472,7 @@
           "options": [
             {
               "id": "clean-shot",
-              "label": "Clean table, pretty drink, modern light"
+              "label": "A cute table, pretty drink, clear modern light"
             },
             {
               "id": "leaf-shot",
@@ -480,7 +484,15 @@
             },
             {
               "id": "friends-shot",
-              "label": "People in frame, natural and fun"
+              "label": "A check-in with friends, natural, fun, and memorable"
+            },
+            {
+              "id": "solo-selfie",
+              "label": "A solo selfie with good light and a clear mood"
+            },
+            {
+              "id": "group-photo",
+              "label": "A group photo with friends, fun and memorable right away"
             }
           ]
         },
@@ -547,6 +559,20 @@
             {
               "id": "split-table",
               "label": "With a group, shared bill and good mood are enough"
+            }
+          ]
+        },
+        {
+          "id": "check-in-mood",
+          "text": "If today's café plan needs a good photo, what kind of check-in do you want?",
+          "options": [
+            {
+              "id": "neon-mirror",
+              "label": "A solo selfie with good light, bright and a little playful"
+            },
+            {
+              "id": "photo-corner-crew",
+              "label": "A group photo corner where friends instantly look fun together"
             }
           ]
         }
@@ -795,6 +821,60 @@
             "too crowded to shoot"
           ]
         },
+        "neon-wall-selfie": {
+          "title": "Neon Wall Selfie",
+          "subtitle": "One mirror shot, one neon glow, instant mood.",
+          "description": "You fit cafés with a bold wall, a good mirror, and playful light. Coffee should give you a corner where the photo feels bright, natural, and a little cheeky.",
+          "shareTitle": "I am Neon Wall Selfie",
+          "shareDescription": "My café persona: mirror selfie, neon wall, photo with mood.",
+          "reasons": [
+            "mirror selfie",
+            "neon wall",
+            "bold light"
+          ],
+          "personalityTraits": [
+            "angle-aware",
+            "likes a little spotlight",
+            "quick mood-lifter"
+          ],
+          "bestFor": [
+            "quick check-ins",
+            "new profile photos",
+            "weekend wandering"
+          ],
+          "avoidWhen": [
+            "the mirror is dim",
+            "neon is too harsh",
+            "the photo corner is blocked"
+          ]
+        },
+        "friends-photo-corner": {
+          "title": "Friends Photo Corner",
+          "subtitle": "The group steps in, the memory already has a frame.",
+          "description": "You fit cafés with a roomy photo spot, kind light, and enough fun energy for the group to relax. The right café leaves everyone with a photo worth keeping.",
+          "shareTitle": "I am Friends Photo Corner",
+          "shareDescription": "My café persona: friends together, easy photo corner, saved memory.",
+          "reasons": [
+            "group photos",
+            "roomy corner",
+            "fun mood"
+          ],
+          "personalityTraits": [
+            "group-powered",
+            "memory-keeper",
+            "easy inviter"
+          ],
+          "bestFor": [
+            "best-friend catchups",
+            "small birthdays",
+            "weekends with a group photo"
+          ],
+          "avoidWhen": [
+            "there is no standing room",
+            "the café is too packed",
+            "lighting is messy"
+          ]
+        },
         "slow-tea-time": {
           "title": "Slow Tea Time",
           "subtitle": "Warm, gentle, private enough for stories.",
@@ -922,6 +1002,16 @@
           "The space carries the aesthetic latte shot mood well.",
           "Its details match the rhythm you picked.",
           "It can turn this coffee stop into something memorable."
+        ],
+        "neon-wall-selfie": [
+          "The space has the mirror-and-neon energy you picked.",
+          "It fits a quick check-in with brighter, bolder light.",
+          "It can turn this coffee stop into a photo worth posting."
+        ],
+        "friends-photo-corner": [
+          "The space fits a friends photo corner mood well.",
+          "It gives the group enough room and energy to feel natural.",
+          "It can turn this coffee stop into a shared memory."
         ],
         "slow-tea-time": [
           "The space carries the slow tea time mood well.",

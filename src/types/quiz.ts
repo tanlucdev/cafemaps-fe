@@ -12,7 +12,9 @@ export type QuizProfileId =
   | "aesthetic-latte-shot"
   | "slow-tea-time"
   | "cafe-hopping"
-  | "quiet-reading-nook";
+  | "quiet-reading-nook"
+  | "neon-wall-selfie"
+  | "friends-photo-corner";
 
 export type QuizResultVariant = "man" | "woman";
 

@@ -4,9 +4,11 @@ import {
   BookOpen,
   BriefcaseBusiness,
   Camera,
+  CircleSlash,
   Clock,
   CloudRain,
   Coffee,
+  ContactRound,
   CupSoda,
   Dessert,
   Disc3,
@@ -23,6 +25,7 @@ import {
   Laptop,
   Laugh,
   Landmark,
+  Mars,
   MessagesSquare,
   Moon,
   PartyPopper,
@@ -36,6 +39,7 @@ import {
   Trees,
   Umbrella,
   UsersRound,
+  Venus,
   Wallet,
   Zap,
 } from "lucide-react";
@@ -54,9 +58,13 @@ export const QUESTION_ICONS: Record<string, LucideIcon> = {
   "seat-choice": Armchair,
   "time-of-day": Clock,
   "budget-mood": Wallet,
+  "check-in-mood": Camera,
 };
 
 const OPTION_ICON_BY_ID: Record<string, LucideIcon> = {
+  man: Mars,
+  woman: Venus,
+  random: CircleSlash,
   "quiet-laptop": Laptop,
   "green-window": Trees,
   "warm-lamp": LampDesk,
@@ -97,6 +105,8 @@ const OPTION_ICON_BY_ID: Record<string, LucideIcon> = {
   "worth-splurge": Gem,
   "stay-long": Hourglass,
   "split-table": BadgeDollarSign,
+  "neon-mirror": ContactRound,
+  "photo-corner-crew": UsersRound,
 };
 
 export function getOptionIcon(optionId: string, index: number) {

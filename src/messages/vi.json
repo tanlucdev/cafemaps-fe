@@ -318,15 +318,19 @@
       "questions": [
         {
           "id": "result-variant",
-          "text": "Bạn muốn phong cách ảnh kết quả nào?",
+          "text": "Bạn là...",
           "options": [
             {
-              "id": "man",
-              "label": "Ảnh nam"
+              "id": "woman",
+              "label": "Nữ"
             },
             {
-              "id": "woman",
-              "label": "Ảnh nữ"
+              "id": "man",
+              "label": "Nam"
+            },
+            {
+              "id": "random",
+              "label": "Không muốn trả lời"
             }
           ]
         },
@@ -398,7 +402,7 @@
         },
         {
           "id": "cute-date",
-          "text": "Một buổi hẹn cafe xinh với bạn cần nhất điều gì?",
+          "text": "Đi cafe xinh với bạn là cảm giác nào?",
           "options": [
             {
               "id": "small-talk",
@@ -410,11 +414,11 @@
             },
             {
               "id": "photo-booth",
-              "label": "Góc ảnh đẹp, đồ uống lên màu, cả nhóm có chuyện để kể"
+              "label": "Góc check-in đẹp, ánh sáng lên hình, cả nhóm có chuyện để kể"
             },
             {
               "id": "low-key",
-              "label": "Ít phô trương, đồ uống ngon, đi một mình cũng ổn"
+              "label": "Không quá phô trương, ngồi một mình cũng thấy thoải mái"
             }
           ]
         },
@@ -446,7 +450,7 @@
           "options": [
             {
               "id": "filter-calm",
-              "label": "Cà phê đen pha máy hoặc pour-over, gọn và tỉnh"
+              "label": "Matcha, trà sữa nhẹ hoặc một ly ít ngọt, gọn và dễ uống"
             },
             {
               "id": "sweet-latte",
@@ -468,7 +472,7 @@
           "options": [
             {
               "id": "clean-shot",
-              "label": "Bàn sạch, ly nước đẹp, ánh sáng gọn và hiện đại"
+              "label": "Bàn xinh, ly nước đẹp, ánh sáng trong và hiện đại"
             },
             {
               "id": "leaf-shot",
@@ -480,7 +484,15 @@
             },
             {
               "id": "friends-shot",
-              "label": "Có người trong khung hình, tự nhiên và vui"
+              "label": "Check-in cùng bạn, tự nhiên, vui và nhìn có kỷ niệm"
+            },
+            {
+              "id": "solo-selfie",
+              "label": "Selfie một mình, góc sáng đẹp, ảnh lên mood rõ"
+            },
+            {
+              "id": "group-photo",
+              "label": "Ảnh nhóm bạn, đứng vào là thấy vui và có kỷ niệm"
             }
           ]
         },
@@ -547,6 +559,20 @@
             {
               "id": "split-table",
               "label": "Đi với nhóm, chia bill vui là được"
+            }
+          ]
+        },
+        {
+          "id": "check-in-mood",
+          "text": "Nếu hôm nay đi cafe để có ảnh đẹp, bạn muốn kiểu check-in nào?",
+          "options": [
+            {
+              "id": "neon-mirror",
+              "label": "Selfie một mình, ánh sáng đẹp, lên hình sáng và hơi nghịch"
+            },
+            {
+              "id": "photo-corner-crew",
+              "label": "Góc chụp nhóm, bạn bè đứng vào là có ảnh vui ngay"
             }
           ]
         }
@@ -795,6 +821,60 @@
             "quá đông khó chụp"
           ]
         },
+        "neon-wall-selfie": {
+          "title": "Gương Neon Bắt Sáng",
+          "subtitle": "Một tấm selfie, một vệt neon, mood bật lên liền.",
+          "description": "Bạn hợp quán có tường trang trí nổi bật, gương đẹp và ánh sáng đủ chơi. Cafe với bạn nên có một góc làm ảnh nhìn sáng, tự nhiên và hơi nghịch.",
+          "shareTitle": "Mình là Gương Neon Bắt Sáng",
+          "shareDescription": "Gu cafe của mình: mirror selfie, tường neon, ảnh lên mood.",
+          "reasons": [
+            "mirror selfie",
+            "tường neon",
+            "ánh sáng nổi"
+          ],
+          "personalityTraits": [
+            "nhạy góc ảnh",
+            "thích chút nổi bật",
+            "dễ kéo mood lên"
+          ],
+          "bestFor": [
+            "check-in nhanh",
+            "đổi avatar",
+            "đi chơi cuối tuần"
+          ],
+          "avoidWhen": [
+            "gương quá tối",
+            "ánh neon gắt",
+            "góc chụp bị chắn"
+          ]
+        },
+        "friends-photo-corner": {
+          "title": "Góc Bạn Bè Lên Hình",
+          "subtitle": "Cả nhóm đứng vào, câu chuyện đã có ảnh giữ lại.",
+          "description": "Bạn hợp quán có góc chụp rộng, ánh sáng dễ chịu và không khí vui để cả nhóm tự nhiên hơn. Một buổi cafe đúng gu là có ảnh chung đủ đẹp để nhớ.",
+          "shareTitle": "Mình là Góc Bạn Bè Lên Hình",
+          "shareDescription": "Gu cafe của mình: đi cùng bạn bè, góc chụp đẹp, ảnh có kỷ niệm.",
+          "reasons": [
+            "ảnh nhóm",
+            "góc rộng",
+            "không khí vui"
+          ],
+          "personalityTraits": [
+            "vui theo nhóm",
+            "thích lưu kỷ niệm",
+            "dễ rủ rê"
+          ],
+          "bestFor": [
+            "tụ tập bạn thân",
+            "sinh nhật nhỏ",
+            "cuối tuần có ảnh chung"
+          ],
+          "avoidWhen": [
+            "không đủ chỗ đứng",
+            "quán quá đông",
+            "ánh sáng lộn xộn"
+          ]
+        },
         "slow-tea-time": {
           "title": "Trà Chiều Chậm Rãi",
           "subtitle": "Ấm, dịu, đủ riêng để câu chuyện nở ra.",
@@ -922,6 +1002,16 @@
           "Ánh sáng đẹp và đồ uống lên hình là phần quan trọng.",
           "Hợp buổi đi chơi muốn có vài tấm ảnh tử tế.",
           "Ưu tiên quán có góc chụp thoáng, không chen bàn."
+        ],
+        "neon-wall-selfie": [
+          "Có gương, tường neon và ánh sáng đủ nổi để chụp nhanh.",
+          "Hợp lúc bạn muốn một tấm check-in nhìn sáng và có cá tính.",
+          "Ưu tiên quán có góc trang trí rõ, không bị chen người."
+        ],
+        "friends-photo-corner": [
+          "Góc chụp rộng và không khí vui sẽ hợp cả nhóm.",
+          "Hợp buổi cafe muốn có ảnh chung tự nhiên, nhìn có kỷ niệm.",
+          "Ưu tiên quán dễ đứng chụp, ánh sáng đều và bàn nhóm thoải mái."
         ],
         "slow-tea-time": [
           "Đèn ấm, bàn đủ riêng và món trà dịu sẽ hợp nhịp.",

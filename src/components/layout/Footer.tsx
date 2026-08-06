@@ -67,11 +67,11 @@ export default function Footer() {
           <div className="relative sm:hidden">
             <div className="flex items-center gap-3">
               <Image
-                src="/image/logo-icon.png"
+                src="/image/logo-icon-transparent.png"
                 alt="Cafe Maps"
                 width={34}
                 height={34}
-                className="h-[34px] w-[34px] shrink-0 rounded-[12px] object-cover shadow-[var(--footer-logo-shadow)] ring-1 ring-[var(--footer-logo-ring)]"
+                className="h-10 w-10 shrink-0 object-contain"
                 loading="lazy"
               />
               <div className="min-w-0">
@@ -120,11 +120,11 @@ export default function Footer() {
             <div>
               <Link href="/" className="group flex w-fit items-center gap-3" aria-label="Cafe Maps">
                 <Image
-                  src="/image/logo-icon.png"
+                  src="/image/logo-icon-transparent.png"
                   alt="Cafe Maps"
                   width={38}
                   height={38}
-                  className="h-[38px] w-[38px] shrink-0 rounded-[13px] object-cover shadow-[var(--footer-logo-shadow)] ring-1 ring-[var(--footer-logo-ring)]"
+                  className="h-11 w-11 shrink-0 object-contain"
                   loading="lazy"
                 />
                 <span className="font-display text-lg font-extrabold text-[var(--foreground)] transition group-hover:text-[var(--accent-hover)]">

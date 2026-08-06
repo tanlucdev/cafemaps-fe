@@ -1,4 +1,4 @@
-import { Coffee, Moon, Sparkles } from "lucide-react";
+import { CircleOff, Coffee, Sparkles } from "lucide-react";
 import type { Ref } from "react";
 import { getPersonaRelations } from "@/lib/quiz/persona-relations";
 import { cn } from "@/lib/utils";
@@ -93,7 +93,7 @@ export default function QuizResultBoardCard({
         <div className="grid grid-cols-3 gap-3">
           <AnalysisColumn title={labels.traits} items={result.profile.personalityTraits} icon={Sparkles} />
           <AnalysisColumn title={labels.bestFor} items={result.profile.bestFor} icon={Coffee} />
-          <AnalysisColumn title={labels.avoidWhen} items={result.profile.avoidWhen} icon={Moon} />
+          <AnalysisColumn title={labels.avoidWhen} items={result.profile.avoidWhen} icon={CircleOff} />
         </div>
         <div className="grid flex-1 grid-cols-3 gap-3">
           <RelationColumn title={labels.compatiblePersonas} items={relations.compatible} />

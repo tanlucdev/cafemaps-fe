@@ -98,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={cn("h-full", plusJakarta.variable, lora.variable)}
     >
-      <body className="flex min-h-full flex-col antialiased">
+      <body className="flex min-h-full flex-col antialiased" suppressHydrationWarning>
         {children}
         <GoogleAnalyticsProvider />
         <Analytics />
