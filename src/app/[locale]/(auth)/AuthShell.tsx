@@ -46,7 +46,7 @@ export default function AuthShell({ children }: AuthShellProps) {
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(31,18,9,0.94),rgba(31,18,9,0.78)_42%,rgba(31,18,9,0.52))]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,rgba(31,18,9,0.96),rgba(31,18,9,0))]" />
 
-      <div className="relative mx-auto grid min-h-[calc(100dvh-2rem)] w-full min-w-0 max-w-6xl items-center gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+      <div className="relative mx-auto grid min-h-[calc(100dvh-2rem)] w-full max-w-6xl min-w-0 items-center gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <aside className="hidden min-h-[620px] overflow-hidden rounded-[32px] border border-[#ffe3b7]/18 bg-[#1f1209]/38 shadow-[0_24px_72px_rgba(0,0,0,0.34)] backdrop-blur-md lg:block">
           <div className="relative h-full min-h-[620px]">
             <Image
@@ -87,7 +87,7 @@ export default function AuthShell({ children }: AuthShellProps) {
           </div>
         </aside>
 
-        <section className="mx-auto w-full min-w-0 max-w-full rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/94 p-4 text-[var(--foreground)] shadow-[0_20px_58px_rgba(31,18,9,0.28)] backdrop-blur-xl sm:max-w-[440px] sm:p-5 dark:border-[#ffe3b7]/16 dark:bg-[#21170f]/92 dark:text-[#fff7e8]">
+        <section className="mx-auto w-full max-w-full min-w-0 rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/94 p-4 text-[var(--foreground)] shadow-[0_20px_58px_rgba(31,18,9,0.28)] backdrop-blur-xl sm:max-w-[440px] sm:p-5 dark:border-[#ffe3b7]/16 dark:bg-[#21170f]/92 dark:text-[#fff7e8]">
           <div className="mb-4 flex items-center justify-between gap-3">
             <Link
               href="/"
@@ -95,7 +95,7 @@ export default function AuthShell({ children }: AuthShellProps) {
               aria-label="Cafe Maps"
             >
               <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_8px_22px_rgba(44,26,14,0.14)] dark:bg-[#fff7e8]">
-                <Image src="/image/logo-96.png" alt="" width={34} height={34} loading="lazy" />
+                <Image src="/image/logo-icon.png" alt="" width={34} height={34} loading="lazy" />
               </span>
               <span className="min-w-0 text-sm font-black text-[var(--foreground)] dark:text-[#fff7e8]">
                 {t("brand")}
@@ -159,7 +159,7 @@ export default function AuthShell({ children }: AuthShellProps) {
           {children}
 
           <p className="mt-4 text-center text-[13px] text-[var(--foreground-muted)] dark:text-[#fff0d2]/68">
-            {isLogin ? t("noAccount") : t("hasAccount")} {" "}
+            {isLogin ? t("noAccount") : t("hasAccount")}{" "}
             <Link
               href={isLogin ? "/register" : "/login"}
               prefetch={true}

@@ -27,7 +27,7 @@ Trước khi sửa code, agent phải đọc các file này:
 - Home: video/image-first cinematic hero, cream/coffee/amber, editorial headline.
 - Search/list: warm textured background, glass filter surfaces, cafe cards remain scannable.
 - Contribute: first viewport fits; mobile shows intro + form in one screen; desktop shows intro + visual + trust notes + form.
-- Metadata: default canonical should resolve to `https://cafemaps.net`; OG image uses `/image/meta-image.webp`.
+- Metadata: default canonical should resolve to `https://cafemaps.net`; OG image uses `/image/meta-image.png`.
 
 ## Global Visual Rules
 

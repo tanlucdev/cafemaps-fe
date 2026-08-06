@@ -42,14 +42,6 @@ export const metadata: Metadata = {
     template: "%s | Cafe Maps",
   },
   description: HOME_DESCRIPTION,
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/image/logo.png", type: "image/png", sizes: "1024x1024" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: [{ url: "/image/logo.png", type: "image/png", sizes: "1024x1024" }],
-  },
   robots: {
     index: true,
     follow: true,
