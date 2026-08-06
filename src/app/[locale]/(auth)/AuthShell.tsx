@@ -95,7 +95,7 @@ export default function AuthShell({ children }: AuthShellProps) {
               aria-label="Cafe Maps"
             >
               <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_8px_22px_rgba(44,26,14,0.14)] dark:bg-[#fff7e8]">
-                <Image src="/image/logo-96.png" alt="" width={34} height={34} loading="lazy" />
+                <Image src="/image/logo-icon.png" alt="" width={34} height={34} loading="lazy" />
               </span>
               <span className="min-w-0 text-sm font-black text-[var(--foreground)] dark:text-[#fff7e8]">
                 {t("brand")}

@@ -74,7 +74,7 @@ export default function Header() {
           >
             <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--header-logo-bg)] shadow-[var(--header-logo-shadow)] min-[390px]:size-10">
               <Image
-                src="/image/logo-96.png"
+                src="/image/logo-icon.png"
                 alt=""
                 width={34}
                 height={34}

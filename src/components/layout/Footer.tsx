@@ -67,7 +67,7 @@ export default function Footer() {
           <div className="relative sm:hidden">
             <div className="flex items-center gap-3">
               <Image
-                src="/image/logo-96.png"
+                src="/image/logo-icon.png"
                 alt="Cafe Maps"
                 width={34}
                 height={34}
@@ -120,7 +120,7 @@ export default function Footer() {
             <div>
               <Link href="/" className="group flex w-fit items-center gap-3" aria-label="Cafe Maps">
                 <Image
-                  src="/image/logo-96.png"
+                  src="/image/logo-icon.png"
                   alt="Cafe Maps"
                   width={38}
                   height={38}
