@@ -13,6 +13,8 @@ const ids = [
   "slow-tea-time",
   "cafe-hopping",
   "quiet-reading-nook",
+  "neon-wall-selfie",
+  "friends-photo-corner",
 ] as const satisfies readonly QuizProfileId[];
 
 export const QUIZ_PROFILE_IDS = ids;
@@ -39,10 +41,16 @@ export const QUIZ_PROFILES: QuizProfile[] = [
   p("slow-tea-time", "ST", "date-light", ["lãng mạn", "vintage"], ["hẹn hò"], ["warm-light", "tea"], "100k_150k"),
   p("cafe-hopping", "CH", "city-walk", ["hiện đại", "nhộn nhịp"], ["gặp bạn bè"], ["specialty", "photo"]),
   p("quiet-reading-nook", "QR", "steam", ["yên tĩnh", "vintage"], ["học tập", "chill một mình"], ["books", "quiet"]),
+  p("neon-wall-selfie", "NW", "sparkle", ["sáng tạo", "hiện đại"], ["gặp bạn bè"], ["photo", "neon"]),
+  p("friends-photo-corner", "FP", "sparkle", ["nhộn nhịp", "sáng tạo"], ["gặp bạn bè", "họp nhóm"], ["photo", "group"]),
 ];
 
 export function resolveQuizPosterImage(slug: string, variant: QuizResultVariant = "woman") {
   return `/quiz/results/${variant}/${slug}.webp`;
+}
+
+export function resolveQuizWideImage(slug: string, variant: QuizResultVariant = "woman") {
+  return `/quiz/wide/${variant}/${slug}.webp`;
 }
 
 export function normalizeQuizProfileId(value: unknown) {
