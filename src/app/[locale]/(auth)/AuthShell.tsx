@@ -94,8 +94,8 @@ export default function AuthShell({ children }: AuthShellProps) {
               className="group inline-flex min-h-10 min-w-0 items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:focus-visible:ring-offset-[#21170f]"
               aria-label="Cafe Maps"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_8px_22px_rgba(44,26,14,0.14)] dark:bg-[#fff7e8]">
-                <Image src="/image/logo-icon.png" alt="" width={34} height={34} loading="lazy" />
+              <span className="flex size-11 shrink-0 items-center justify-center">
+                <Image src="/image/logo-icon-transparent.png" alt="" width={42} height={42} loading="lazy" />
               </span>
               <span className="min-w-0 text-sm font-black text-[var(--foreground)] dark:text-[#fff7e8]">
                 {t("brand")}

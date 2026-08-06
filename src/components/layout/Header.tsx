@@ -72,14 +72,14 @@ export default function Header() {
             className="group flex min-w-0 shrink-0 items-center gap-1.5 rounded-full pr-0.5 pl-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-[390px]:gap-2 min-[390px]:pr-1 min-[390px]:pl-1.5"
             aria-label="Cafe Maps"
           >
-            <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--header-logo-bg)] shadow-[var(--header-logo-shadow)] min-[390px]:size-10">
+            <span className="flex size-9 shrink-0 items-center justify-center min-[390px]:size-10">
               <Image
-                src="/image/logo-icon.png"
+                src="/image/logo-icon-transparent.png"
                 alt=""
                 width={34}
                 height={34}
                 priority
-                className="size-[31px] min-[390px]:size-[34px]"
+                className="size-9 min-[390px]:size-10"
               />
             </span>
             <span className="hidden min-w-0 flex-col leading-none sm:flex">

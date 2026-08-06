@@ -72,7 +72,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    qualities: [48, 58, 75, 85, 90],
+    qualities: [48, 58, 75, 85, 88, 90],
     remotePatterns: [
       {
         protocol: "https",
@@ -92,6 +92,9 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
+  },
+  logging: {
+    browserToTerminal: false,
   },
   allowedDevOrigins: [
     "192.168.2.89:3000",
