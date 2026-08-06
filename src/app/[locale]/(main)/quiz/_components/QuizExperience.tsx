@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
@@ -14,6 +14,8 @@ import type { Cafe } from "@/types/cafe";
 import type { QuizOption, QuizProfileId, QuizResultVariant } from "@/types/quiz";
 import QuizQuestionScene from "./QuizQuestionScene";
 import QuizResultScene from "./QuizResultScene";
+
+type VariantChoiceId = QuizResultVariant | "random";
 
 interface QuizExperienceProps {
   cafes: Cafe[];
@@ -35,13 +37,15 @@ export default function QuizExperience({
   const questions = useMemo(() => getLocalizedQuizQuestions(messages), [messages]);
   const reduceMotion = usePrefersReducedMotion();
   const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [highestStep, setHighestStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, QuizOption>>({});
   const [resultVariant, setResultVariant] = useState<QuizResultVariant | undefined>(
     initialProfileId ? initialVariant : undefined,
   );
+  const [variantChoice, setVariantChoice] = useState<VariantChoiceId | undefined>(
+    initialProfileId ? initialVariant : undefined,
+  );
   const [submitted, setSubmitted] = useState(false);
-  const [, startTransition] = useTransition();
   const autoAdvanceTimer = useRef<number | null>(null);
   const [previewProfileId, setPreviewProfileId] = useState<QuizProfileId | undefined>(
     initialProfileId,
@@ -50,19 +54,21 @@ export default function QuizExperience({
   const variantQuestion = {
     id: "result-variant",
     sticker: "sparkle" as const,
-    text: variantCopy?.text ?? "Bạn muốn ảnh kết quả theo vibe nào?",
+    text: variantCopy?.text ?? "Bạn là...",
     options: (variantCopy?.options ?? [
-      { id: "man", label: "Nam" },
       { id: "woman", label: "Nữ" },
-    ]) as Array<{ id: QuizResultVariant; label: string }>,
+      { id: "man", label: "Nam" },
+      { id: "random", label: "Không muốn trả lời" },
+    ]) as Array<{ id: VariantChoiceId; label: string }>,
   };
   const isVariantStep = step === 0;
   const current = isVariantStep ? variantQuestion : questions[step - 1];
-  const selected = isVariantStep ? resultVariant : answers[current.id];
-  const isComplete = Boolean(resultVariant) && Object.keys(answers).length === questions.length;
+  const selected = isVariantStep ? variantChoice : answers[current.id];
   const answeredOptions = questions.map((question) => answers[question.id]).filter(Boolean);
+  const isComplete = Boolean(resultVariant) && answeredOptions.length === questions.length;
   const answeredCount = answeredOptions.length + (resultVariant ? 1 : 0);
   const totalQuestions = questions.length + 1;
+  const isLastStep = step === totalQuestions - 1;
   const selectedId = typeof selected === "string" ? selected : selected?.id;
   const result =
     isComplete && submitted
@@ -82,6 +88,7 @@ export default function QuizExperience({
           })
         : null;
   const progress = (answeredCount / totalQuestions) * 100;
+  const canContinue = !isLastStep && Boolean(selectedId) && highestStep > step;
 
   useEffect(() => {
     return () => {
@@ -89,51 +96,56 @@ export default function QuizExperience({
     };
   }, []);
 
-  function selectOption(option: QuizOption | { id: QuizResultVariant; label: string }) {
+  function selectOption(option: QuizOption | { id: string; label: string }) {
     setPreviewProfileId(undefined);
     setSubmitted(false);
-    if (isVariantStep) setResultVariant(option.id as QuizResultVariant);
-    else setAnswers((prev) => ({ ...prev, [current.id]: option as QuizOption }));
-    if (step < totalQuestions - 1) {
-      setDirection(1);
+    if (isVariantStep) {
+      const id = option.id as VariantChoiceId;
+      setVariantChoice(id);
+      setResultVariant(id === "random" ? (Math.random() < 0.5 ? "woman" : "man") : id);
+    } else {
+      setAnswers((prev) => ({ ...prev, [current.id]: option as QuizOption }));
+    }
+    if (!isLastStep && highestStep <= step) {
       if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
       autoAdvanceTimer.current = window.setTimeout(
-        () => startTransition(() => setStep((value) => value + 1)),
-        reduceMotion ? 0 : 110,
+        () => {
+          setStep((value) => value + 1);
+          setHighestStep((value) => Math.max(value, step + 1));
+        },
+        reduceMotion ? 0 : 140,
       );
-    }
-  }
-
-  function next() {
-    if (!selected) return;
-    if (step < totalQuestions - 1) {
-      if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
-      setDirection(1);
-      setStep((value) => value + 1);
     }
   }
 
   function back() {
     if (step === 0) return;
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
-    setDirection(-1);
     setStep((value) => value - 1);
   }
 
   function restart() {
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
-    setDirection(-1);
     setPreviewProfileId(undefined);
     setSubmitted(false);
     setAnswers({});
     setResultVariant(undefined);
+    setVariantChoice(undefined);
     setStep(0);
+    setHighestStep(0);
   }
 
   function submit() {
-    if (!isComplete) return;
+    if (!isComplete || !isLastStep || !selectedId) return;
     setPreviewProfileId(undefined);
     setSubmitted(true);
+  }
+
+  function next() {
+    if (!selectedId || isLastStep) return;
+    if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
+    setStep((value) => value + 1);
+    setHighestStep((value) => Math.max(value, step + 1));
   }
 
   if (result) {
@@ -153,13 +165,11 @@ export default function QuizExperience({
           match: t("match"),
           downloadImage: t("downloadImage"),
           shareResult: t("shareResult"),
+          copyLink: t("copyLink"),
           copied: t("copied"),
           savedImage: t("savedImage"),
-          shareFallback: t("shareFallback"),
           sharing: t("sharing"),
-          shareCancelled: t("shareCancelled"),
           shareFailed: t("shareFailed"),
-          copyFailed: t("copyFailed"),
           traits: t("traits"),
           bestFor: t("bestFor"),
           avoidWhen: t("avoidWhen"),
@@ -179,10 +189,9 @@ export default function QuizExperience({
       selectedId={selectedId}
       progress={progress}
       step={step}
-      totalQuestions={totalQuestions}
       reduceMotion={Boolean(reduceMotion)}
-      direction={direction}
-      isComplete={isComplete}
+      canSubmit={isLastStep && Boolean(selectedId) && isComplete}
+      canContinue={canContinue}
       labels={{
         eyebrow: t("eyebrow"),
         title: t("title"),
