@@ -2,7 +2,7 @@
   "nav": {
     "explore": "Explore",
     "blog": "Blog",
-    "quiz": "Quiz",
+    "quiz": "Find your vibe",
     "saved": "Saved",
     "map": "Map",
     "contribute": "Contribute",
@@ -1246,7 +1246,7 @@
     "connectTitle": "Connect",
     "home": "Home",
     "exploreCafes": "Explore cafés",
-    "quiz": "Quiz",
+    "quiz": "Find your vibe",
     "saved": "Saved cafés",
     "map": "Visited map",
     "contribute": "Submit a café",
@@ -1271,6 +1271,7 @@
   "bottomNav": {
     "home": "Home",
     "search": "Search",
+    "quiz": "Vibe",
     "saved": "Saved",
     "map": "Map",
     "profile": "Profile"

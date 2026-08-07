@@ -4,7 +4,17 @@ import { getPersonaRelations } from "@/lib/quiz/persona-relations";
 import { resolveQuizWideImage } from "@/lib/quiz/profiles";
 import { cn } from "@/lib/utils";
 import type { LocalizedQuizProfile, QuizResult, QuizResultVariant } from "@/types/quiz";
-import type { BoardLabels } from "../QuizResultBoardCard";
+
+export type BoardLabels = {
+  result: string;
+  match: string;
+  traits: string;
+  bestFor: string;
+  avoidWhen: string;
+  compatiblePersonas: string;
+  incompatiblePersonas: string;
+  pairPersonas: string;
+};
 
 export default function MobileQuizResultExportCard({
   result,

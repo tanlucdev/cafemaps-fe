@@ -1,5 +1,5 @@
-import type { BoardLabels } from "../QuizResultBoardCard";
 import MobileQuizResultExportCard from "../MobileQuizResultExportCard";
+import type { BoardLabels } from "../MobileQuizResultExportCard";
 import type { LocalizedQuizProfile, QuizResult, QuizResultVariant } from "@/types/quiz";
 
 export default function MobileQuizResultBoardPreview({
