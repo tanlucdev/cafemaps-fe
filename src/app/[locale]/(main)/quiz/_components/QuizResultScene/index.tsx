@@ -4,19 +4,17 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, CircleOff, Coffee, Download, Heart, RotateCcw, Share2, Shuffle, Sparkles, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { downloadQuizResultImage } from "@/apis/quiz";
 import { Link } from "@/i18n/navigation";
 import ShareLinkModal from "@/components/share/ShareLinkModal";
 import { formatCafeArea } from "@/lib/cafe-labels";
 import { getPersonaRelations } from "@/lib/quiz/persona-relations";
-import { resolveQuizWideImage } from "@/lib/quiz/profiles";
 import { cn, formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import type { LocalizedQuizProfile, QuizResult, QuizResultVariant } from "@/types/quiz";
-import MobileQuizResultExportCard from "../MobileQuizResultExportCard";
 import MobileQuizResultBoardPreview from "../MobileQuizResultBoardPreview";
-import QuizResultBoardCard from "../QuizResultBoardCard";
-import type { BoardLabels } from "../QuizResultBoardCard";
+import type { BoardLabels } from "../MobileQuizResultExportCard";
 
 export type ResultLabels = BoardLabels & {
   recommendedCafes: string;
@@ -51,28 +49,15 @@ export default function QuizResultScene({
   labels: ResultLabels;
   isPreview: boolean;
 }) {
-  const exportRef = useRef<HTMLDivElement>(null);
-  const mobileExportRef = useRef<HTMLDivElement>(null);
   const exportCacheRef = useRef<{ key: string; file: Promise<File> } | null>(null);
   const [status, setStatus] = useState("");
   const [shareBusy, setShareBusy] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const exportKey = `${variant}:${result.profile.id}:${result.dna}`;
-  const mobileBoardImage = resolveQuizWideImage(result.profile.posterImageSlug, variant);
   const previewUrl =
     typeof window === "undefined"
       ? ""
       : `${window.location.origin}/${locale}/quiz?type=${result.profile.id}&dna=${result.dna}&variant=${variant}`;
-
-  const waitForShareAssets = useCallback(async () => {
-    await document.fonts?.ready;
-    await new Promise<void>((resolve, reject) => {
-      const image = new window.Image();
-      image.onload = () => resolve();
-      image.onerror = () => reject(new Error("Poster image failed to load"));
-      image.src = mobileBoardImage;
-    });
-  }, [mobileBoardImage]);
 
   const getExportFormat = useCallback(
     () => (window.matchMedia("(min-width: 1024px)").matches ? "desktop" : "mobile"),
@@ -81,22 +66,18 @@ export default function QuizResultScene({
 
   const renderShareFile = useCallback(
     async (format: "desktop" | "mobile") => {
-      const node = format === "desktop" ? exportRef.current : mobileExportRef.current;
-      if (!node) throw new Error("Missing result board");
-      await waitForShareAssets();
-      const { toBlob } = await import("html-to-image");
-      const width = format === "desktop" ? 1600 : 1080;
-      const height = format === "desktop" ? 1000 : Math.ceil(node.getBoundingClientRect().height);
-      const blob = await toBlob(node, {
-        cacheBust: true,
-        pixelRatio: 2,
-        width,
-        height,
-        canvasWidth: width * 2,
-        canvasHeight: height * 2,
-        backgroundColor: "#fbf4e8",
+      const blob = await downloadQuizResultImage(locale, {
+        format,
+        variant,
+        result: {
+          profile: result.profile,
+          score: result.score,
+          dna: result.dna,
+          chips: result.chips,
+        },
+        profiles,
+        labels,
       });
-      if (!blob) throw new Error("Failed to render result board");
       return new File(
         [blob],
         `cafe-persona-board-${format}-${result.profile.id}-${result.dna}.png`,
@@ -105,7 +86,7 @@ export default function QuizResultScene({
         },
       );
     },
-    [result.dna, result.profile.id, waitForShareAssets],
+    [labels, locale, profiles, result.chips, result.dna, result.profile, result.score, variant],
   );
 
   const getShareFile = useCallback(() => {
@@ -117,21 +98,13 @@ export default function QuizResultScene({
     return exportCacheRef.current.file;
   }, [exportKey, getExportFormat, renderShareFile]);
 
-  useEffect(() => {
-    const prewarm = () => void getShareFile().catch(() => undefined);
-    const idleId = window.requestIdleCallback?.(prewarm);
-    if (idleId) return () => window.cancelIdleCallback?.(idleId);
-    const timeoutId = window.setTimeout(prewarm, 0);
-    return () => window.clearTimeout(timeoutId);
-  }, [getShareFile]);
-
   function saveFile(file: File) {
     const url = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = url;
     link.download = file.name;
     link.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   async function downloadImage(nextStatus = labels.savedImage) {
@@ -149,7 +122,7 @@ export default function QuizResultScene({
   }
 
   return (
-    <section className="relative min-h-[100svh] bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+4.5rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+1.25rem)] min-[390px]:px-4 sm:px-6 lg:px-10 lg:pt-24 dark:bg-[#1e1c1a]">
+    <section className="relative min-h-[100svh] bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+1.25rem)] min-[390px]:px-4 sm:px-6 lg:px-10 lg:pt-24 dark:bg-[#1e1c1a]">
       <div className="relative mx-auto w-full max-w-[82rem]">
         <motion.div
           className="relative"
@@ -231,23 +204,6 @@ export default function QuizResultScene({
             reduceMotion={reduceMotion}
           />
         </motion.div>
-        <div className="pointer-events-none fixed top-0 left-[-12000px]">
-          <QuizResultBoardCard
-            cardRef={exportRef}
-            result={result}
-            profiles={profiles}
-            labels={labels}
-            className="h-[1000px] w-[1600px]"
-          />
-          <MobileQuizResultExportCard
-            cardRef={mobileExportRef}
-            result={result}
-            profiles={profiles}
-            variant={variant}
-            labels={labels}
-            className="mt-4 w-[1080px]"
-          />
-        </div>
         <ShareLinkModal
           open={shareOpen}
           onClose={() => setShareOpen(false)}

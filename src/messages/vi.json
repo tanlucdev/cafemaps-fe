@@ -2,7 +2,7 @@
   "nav": {
     "explore": "Khám phá",
     "blog": "Blog",
-    "quiz": "Trắc nghiệm",
+    "quiz": "Khám phá gu",
     "saved": "Đã lưu",
     "map": "Bản đồ",
     "contribute": "Đóng góp",
@@ -1246,7 +1246,7 @@
     "connectTitle": "Kết nối",
     "home": "Trang chủ",
     "exploreCafes": "Khám phá quán",
-    "quiz": "Trắc nghiệm",
+    "quiz": "Khám phá gu",
     "saved": "Quán đã lưu",
     "map": "Bản đồ đã đi",
     "contribute": "Đóng góp quán",
@@ -1271,6 +1271,7 @@
   "bottomNav": {
     "home": "Trang chủ",
     "search": "Tìm kiếm",
+    "quiz": "Gu",
     "saved": "Đã lưu",
     "map": "Bản đồ",
     "profile": "Cá nhân"

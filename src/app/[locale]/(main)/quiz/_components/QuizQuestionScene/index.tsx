@@ -69,9 +69,10 @@ export default function QuizQuestionScene({
   onSubmit: () => void;
 }) {
   const QuestionIcon = QUESTION_ICONS[current.id] ?? Sparkles;
+  const compactOptions = current.options.length > 4;
 
   return (
-    <section className="relative flex min-h-[100svh] items-center bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+3.75rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+0.75rem)] min-[390px]:px-4 sm:pt-[calc(env(safe-area-inset-top,0px)+4.5rem)] lg:px-5 lg:pt-24 lg:pb-8 dark:bg-[#1e1c1a]">
+    <section className="relative flex min-h-[100svh] items-start bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+5rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+0.75rem)] min-[390px]:px-4 sm:pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] lg:px-5 lg:pt-24 lg:pb-8 dark:bg-[#1e1c1a]">
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-4 sm:gap-6">
         <div className="grid items-end gap-2 sm:grid-cols-[1fr_auto] sm:gap-3">
           <div>
@@ -96,9 +97,9 @@ export default function QuizQuestionScene({
             transition={{ duration: reduceMotion ? 0 : 0.45, ease: "easeOut" }}
           />
         </div>
-        <div className="grid gap-4 lg:grid-cols-[0.78fr_1.22fr] lg:gap-6">
+        <div className="grid gap-4 lg:grid-cols-[0.82fr_1fr] lg:gap-5">
           <DesktopSticker current={current} progress={progress} labels={labels} />
-          <div className="relative rounded-[8px] border border-[#e5cfad] bg-[#fffdf8] p-2.5 shadow-[0_18px_46px_rgba(88,55,24,0.1)] min-[390px]:p-3 sm:p-5 dark:bg-[var(--card)]">
+          <div className="relative rounded-[8px] border border-[#e5cfad] bg-[#fffdf8] p-2.5 shadow-[0_18px_46px_rgba(88,55,24,0.1)] min-[390px]:p-3 sm:p-5 lg:p-4 dark:bg-[var(--card)]">
             <div className="mb-2 flex items-center justify-between gap-3 sm:mb-4">
               <span className="rounded-full bg-[#fff1d2] px-2.5 py-0.5 text-[11px] font-bold text-[#9a672f] sm:px-3 sm:py-1 sm:text-xs">
                 {labels.question}
@@ -114,13 +115,21 @@ export default function QuizQuestionScene({
               <h2 className="font-display text-[clamp(1.18rem,5.6vw,1.55rem)] leading-[1.02] font-extrabold text-[var(--foreground)] sm:text-[1.7rem] lg:text-3xl">
                 {current.text}
               </h2>
-              <div className="mt-6 grid gap-4 sm:mt-8 sm:gap-5">
+              <div
+                className={cn(
+                  "grid",
+                  compactOptions
+                    ? "mt-4 gap-2.5 sm:mt-5 sm:gap-3 lg:grid-cols-2 lg:gap-2.5"
+                    : "mt-6 gap-4 sm:mt-8 sm:gap-5 lg:mt-5 lg:gap-3",
+                )}
+              >
                 {current.options.map((option, index) => (
                   <OptionButton
                     key={option.id}
                     option={option}
                     index={index}
                     active={selectedId === option.id}
+                    compact={compactOptions}
                     QuestionIcon={QuestionIcon}
                     reduceMotion={reduceMotion}
                     onSelect={onSelect}
@@ -200,6 +209,7 @@ function OptionButton({
   option,
   index,
   active,
+  compact,
   QuestionIcon,
   reduceMotion,
   onSelect,
@@ -207,6 +217,7 @@ function OptionButton({
   option: QuestionOption;
   index: number;
   active: boolean;
+  compact: boolean;
   QuestionIcon: LucideIcon;
   reduceMotion: boolean;
   onSelect: (option: QuestionOption) => void;
@@ -218,9 +229,12 @@ function OptionButton({
     <button
       type="button"
       className={cn(
-        "group relative flex min-h-[clamp(72px,9svh,92px)] items-center gap-3 overflow-hidden rounded-[8px] border bg-white/80 p-3 text-left text-[13px] leading-snug font-semibold transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-[#d8b77f] hover:bg-[#fffaf2] active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100 min-[390px]:p-3.5 sm:min-h-[88px] sm:gap-4 sm:p-4 sm:text-sm sm:leading-relaxed lg:min-h-[96px] dark:bg-white/5",
+        "group relative flex cursor-pointer items-center overflow-hidden rounded-[8px] border bg-white/80 text-left text-[13px] leading-snug font-semibold transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-[#d8b77f] hover:bg-[#fffaf2] active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100 sm:text-sm sm:leading-relaxed dark:bg-white/5",
+        compact
+          ? "min-h-[58px] gap-2.5 p-2.5 min-[390px]:p-3 sm:min-h-[68px] sm:gap-3 lg:min-h-[62px] lg:px-3 lg:py-2.5"
+          : "min-h-[clamp(72px,9svh,92px)] gap-3 p-3 min-[390px]:p-3.5 sm:min-h-[88px] sm:gap-4 sm:p-4 lg:min-h-[72px] lg:gap-3 lg:px-3.5 lg:py-3",
         active
-          ? "max-sm:scale-[1.01] border-[#c8842a] bg-[#fff4df] text-[var(--foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.16)] ring-1 ring-[#c8842a]/18 motion-reduce:scale-100"
+          ? "border-[#c8842a] bg-[#fff4df] text-[var(--foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.16)] ring-1 ring-[#c8842a]/18"
           : "border-[#ecd9bb] text-[var(--foreground)] shadow-sm",
       )}
       onClick={() => onSelect(option)}
@@ -245,7 +259,12 @@ function OptionButton({
           createElement(SceneIcon, { className: "size-4 stroke-[2.35]" })
         )}
       </span>
-      <span className="line-clamp-2 min-w-0 flex-1 break-words whitespace-normal sm:line-clamp-none">
+      <span
+        className={cn(
+          "line-clamp-2 min-w-0 flex-1 break-words whitespace-normal",
+          !compact && "sm:line-clamp-none",
+        )}
+      >
         {option.label}
       </span>
       <QuestionIcon
