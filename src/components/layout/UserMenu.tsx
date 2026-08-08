@@ -1,17 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { User, LogOut } from "lucide-react";
-import { logout } from "@/lib/auth-client";
-import { useAuthState } from "@/components/layout/useAuthState";
+import { logout, type AuthUser } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-export default function UserMenu() {
+export default function UserMenu({ user }: { user: AuthUser | null }) {
   const t = useTranslations();
   const router = useRouter();
-  const { user } = useAuthState();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,9 +27,8 @@ export default function UserMenu() {
 
   if (!user) return null;
 
-  const initials = user
-    ? (user.displayName || user.email).slice(0, 2).toUpperCase()
-    : null;
+  const displayName = user.displayName || user.email;
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   async function handleLogout() {
     await logout();
@@ -44,12 +42,19 @@ export default function UserMenu() {
       <button
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-xs font-semibold",
+          "flex h-8 max-w-36 cursor-pointer items-center gap-1.5 rounded-full pr-2 pl-1 text-xs font-black",
           "bg-[var(--accent)] text-white transition-opacity hover:opacity-90",
         )}
         aria-label="Tài khoản"
       >
-        {initials ?? <User size={15} aria-hidden />}
+        <span className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/18">
+          {user.avatarUrl ? (
+            <Image src={user.avatarUrl} alt="" fill sizes="24px" className="object-cover" />
+          ) : (
+            initials || <User size={15} aria-hidden />
+          )}
+        </span>
+        <span className="hidden min-w-0 truncate sm:block">{displayName}</span>
       </button>
 
       {open && (

@@ -18,7 +18,7 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
-  const { isLoggedIn } = useAuthState();
+  const { user, isLoggedIn } = useAuthState();
 
   useEffect(() => {
     const onScroll = () => {
@@ -156,7 +156,7 @@ export default function Header() {
 
             <div className="ml-0.5 flex items-center">
               {isLoggedIn ? (
-                <UserMenu />
+                <UserMenu user={user} />
               ) : (
                 <Link
                   href="/login"
