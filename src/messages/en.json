@@ -312,7 +312,7 @@
     "pairPersonas": "Good pair",
     "previewNote": "This is a quick preview from a shared link. Retake the quiz for a full DNA code.",
     "viewCafe": "View café",
-    "match": "Taste match",
+    "match": "Fit",
     "brewed": "brewed",
     "experience": {
       "questions": [
@@ -737,7 +737,7 @@
           "avoidWhen": [
             "dark rooms",
             "freezing aircon",
-            "heavy menus"
+            "overly filling menus"
           ]
         },
         "lazy-afternoon-nap": {

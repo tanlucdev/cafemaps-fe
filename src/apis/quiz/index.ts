@@ -3,6 +3,7 @@ import type { LocalizedQuizProfile, QuizResultVariant } from "@/types/quiz";
 export type QuizResultImagePayload = {
   format: "desktop" | "mobile";
   variant: QuizResultVariant;
+  scale?: 1 | 2;
   result: {
     profile: LocalizedQuizProfile;
     score: number;
