@@ -50,9 +50,9 @@ export default function MobileQuizResultExportCard({
           style={{ backgroundImage: `url(${image})` }}
         />
       </div>
-      <div className="flex min-h-0 flex-col gap-[2.6cqw] p-[4cqw]">
-        <div className="rounded-[8px] border border-[#ead1aa] bg-white/72 p-[3cqw] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
-          <div className="mb-[2.2cqw] flex items-center justify-between gap-[2cqw]">
+      <div className="flex min-h-0 flex-col gap-[3cqw] p-[4cqw]">
+        <div className="rounded-[8px] border border-[#ead1aa] bg-white/72 p-[3.4cqw] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+          <div className="mb-[2.7cqw] flex items-center justify-between gap-[2cqw]">
             <span className="rounded-full border border-[#dfbf8f] bg-[#fffaf2] px-[2cqw] py-[0.85cqw] text-[1.7cqw] font-black tracking-[0.12em] text-[#8b521b] uppercase">
               {labels.result}
             </span>
@@ -63,20 +63,20 @@ export default function MobileQuizResultExportCard({
           <h1 className="font-lora text-[7.8cqw] leading-[0.98] font-extrabold text-[#24150b]">
             {result.profile.title}
           </h1>
-          <p className="mt-[1.2cqw] text-[2.8cqw] leading-tight font-black text-[#9b5f20] first-letter:uppercase">
+          <p className="mt-[1.7cqw] text-[2.8cqw] leading-tight font-black text-[#9b5f20] first-letter:uppercase">
             {result.profile.subtitle}
           </p>
-          <p className="mt-[1.8cqw] line-clamp-3 text-[2.45cqw] leading-[1.42] font-semibold text-[#5f4932] first-letter:uppercase">
+          <p className="mt-[2.2cqw] line-clamp-3 text-[2.45cqw] leading-[1.45] font-semibold text-[#5f4932] first-letter:uppercase">
             {result.profile.description}
           </p>
-          <div className="mt-[2.2cqw] flex items-center gap-[2cqw]">
+          <div className="mt-[2.8cqw] flex items-center gap-[2cqw]">
             <span className="text-[4cqw] leading-none font-black text-[#9b5f20]">{result.score}%</span>
             <span className="text-[1.8cqw] font-black text-[#6b4a28]">{labels.match}</span>
             <div className="h-[1.3cqw] flex-1 overflow-hidden rounded-full bg-[#ead1aa]">
               <div className="h-full rounded-full bg-[#9b5f20]" style={{ width: `${result.score}%` }} />
             </div>
           </div>
-          <div className="mt-[2.4cqw] flex flex-wrap gap-[1cqw]">
+          <div className="mt-[3cqw] flex flex-wrap gap-[1cqw]">
             {result.chips.slice(0, 6).map((chip) => (
               <span
                 key={chip}
@@ -179,7 +179,7 @@ function RelationColumn({
 }) {
   return (
     <div className="min-w-0 rounded-[8px] border border-[#e5cfad] bg-white/65 p-[1.4cqw] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-      <div className="mb-[1cqw] flex items-center gap-[0.8cqw] text-[1.7cqw] font-black text-[#8b521b]">
+      <div className="mb-[1cqw] flex items-center gap-[0.8cqw] text-[1.45cqw] font-medium text-[#8b521b]">
         <Icon className="size-[2.2cqw] shrink-0 text-[#c8842a]" />
         <span className="truncate">{title}</span>
       </div>
@@ -193,7 +193,7 @@ function RelationColumn({
               className="size-[3.5cqw] shrink-0 rounded-[6px] border border-white bg-cover bg-center shadow-sm"
               style={{ backgroundImage: `url(${profile.posterImage})` }}
             />
-            <span className="line-clamp-2 min-w-0 text-[clamp(9px,1.12cqw,12px)] leading-tight font-bold break-words text-[#5f4932] first-letter:uppercase">
+            <span className="line-clamp-2 min-w-0 text-[clamp(8px,1cqw,11px)] leading-tight font-medium break-words text-[#5f4932] first-letter:uppercase">
               {profile.title}
             </span>
           </div>
