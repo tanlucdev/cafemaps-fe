@@ -312,7 +312,7 @@
     "pairPersonas": "Đi cùng vui",
     "previewNote": "Đây là bản xem nhanh từ link chia sẻ. Làm quiz lại để có kết quả đầy đủ.",
     "viewCafe": "Xem quán",
-    "match": "Độ hợp gu",
+    "match": "Khớp gu",
     "brewed": "đã pha",
     "experience": {
       "questions": [
@@ -737,7 +737,7 @@
           "avoidWhen": [
             "không gian tối",
             "máy lạnh quá lạnh",
-            "menu nặng"
+            "món quá nặng bụng"
           ]
         },
         "lazy-afternoon-nap": {
@@ -824,7 +824,7 @@
         "neon-wall-selfie": {
           "title": "Gương Neon Bắt Sáng",
           "subtitle": "Một tấm selfie, một vệt neon, mood bật lên liền.",
-          "description": "Bạn hợp quán có tường trang trí nổi bật, gương đẹp và ánh sáng đủ chơi. Cafe với bạn nên có một góc làm ảnh nhìn sáng, tự nhiên và hơi nghịch.",
+          "description": "Bạn hợp quán có tường trang trí nổi bật, gương đẹp và ánh sáng đủ ấn tượng. Cafe với bạn nên có một góc làm ảnh nhìn sáng, tự nhiên và hơi nghịch.",
           "shareTitle": "Mình là Gương Neon Bắt Sáng",
           "shareDescription": "Gu cafe của mình: mirror selfie, tường neon, ảnh lên mood.",
           "reasons": [
@@ -850,7 +850,7 @@
         },
         "friends-photo-corner": {
           "title": "Góc Bạn Bè Lên Hình",
-          "subtitle": "Cả nhóm đứng vào, câu chuyện đã có ảnh giữ lại.",
+          "subtitle": "Cả nhóm đứng vào, khoảnh khắc tự có hình để nhớ.",
           "description": "Bạn hợp quán có góc chụp rộng, ánh sáng dễ chịu và không khí vui để cả nhóm tự nhiên hơn. Một buổi cafe đúng gu là có ảnh chung đủ đẹp để nhớ.",
           "shareTitle": "Mình là Góc Bạn Bè Lên Hình",
           "shareDescription": "Gu cafe của mình: đi cùng bạn bè, góc chụp đẹp, ảnh có kỷ niệm.",
