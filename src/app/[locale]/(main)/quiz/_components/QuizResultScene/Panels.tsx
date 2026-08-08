@@ -64,7 +64,7 @@ function RelationColumn({
 }) {
   return (
     <div className="min-h-0 rounded-[8px] border border-[#e5cfad] bg-white/70 p-3 shadow-[0_12px_30px_rgba(88,55,24,0.08)] lg:p-2.5 dark:bg-[var(--card)]">
-      <div className="mb-1.5 flex items-center gap-2 text-sm font-black text-[#8b521b]">
+      <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-[#8b521b]">
         <Icon className="size-4 text-[#c8842a]" />
         {title}
       </div>
@@ -78,7 +78,7 @@ function RelationColumn({
               className="size-9 shrink-0 rounded-[7px] border border-white bg-cover bg-center shadow-sm"
               style={{ backgroundImage: `url(${profile.posterImage})` }}
             />
-            <span className="min-w-0 text-[11px] leading-tight font-black first-letter:uppercase xl:text-xs">
+            <span className="min-w-0 text-[10px] leading-tight font-medium first-letter:uppercase xl:text-[11px]">
               {profile.title}
             </span>
           </div>
