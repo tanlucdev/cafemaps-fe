@@ -14,7 +14,7 @@ export function stringifyJsonLd(value: JsonLdValue) {
 export function createHomeJsonLd(locale: Locale) {
   const homePath = localizedPath(locale)
   const homeUrl = absoluteUrl(homePath)
-  const searchUrl = absoluteUrl(localizedPath(locale, "/search"))
+  const searchUrl = homeUrl
   const blogUrl = absoluteUrl(localizedPath(locale, "/blog"))
   const quizUrl = absoluteUrl(localizedPath(locale, "/quiz"))
   const contributeUrl = absoluteUrl(localizedPath(locale, "/contribute"))
@@ -98,7 +98,7 @@ export function createHomeJsonLd(locale: Locale) {
         publisher: { "@id": `${homeUrl}#organization` },
         potentialAction: {
           "@type": "SearchAction",
-          target: `${searchUrl}?search={search_term_string}`,
+          target: `${homeUrl}?search={search_term_string}`,
           "query-input": "required name=search_term_string",
         },
       },
