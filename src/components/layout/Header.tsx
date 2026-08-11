@@ -40,7 +40,7 @@ export default function Header() {
   }, [pathname]);
 
   const navLinks = [
-    { href: "/search", label: t("explore"), icon: Compass, primary: true },
+    { href: "/", label: t("explore"), icon: Compass, primary: true },
     { href: "/quiz", label: t("quiz"), icon: Sparkles },
     // { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },

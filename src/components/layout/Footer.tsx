@@ -5,8 +5,7 @@ import type { ReactNode } from "react";
 import { ArrowRight, Coffee, Globe, Heart, MapPin, Share2 } from "lucide-react";
 
 const exploreLinks = [
-  { href: "/", labelKey: "home" },
-  { href: "/search", labelKey: "exploreCafes" },
+  { href: "/", labelKey: "exploreCafes" },
   { href: "/map", labelKey: "map" },
   { href: "/quiz", labelKey: "quiz" },
   { href: "/saved", labelKey: "saved" },
@@ -49,7 +48,7 @@ export default function Footer() {
             </div>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:mt-0 lg:shrink-0">
               <Link
-                href="/search"
+                href="/"
                 className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[var(--footer-primary-border)] bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[var(--footer-primary-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-card-focus-offset)] focus-visible:outline-none"
               >
                 {t("cta.primary")}
@@ -85,7 +84,7 @@ export default function Footer() {
             </div>
 
             <nav className="mt-4 flex flex-wrap gap-2">
-              <FooterChip href="/search">{t("exploreCafes")}</FooterChip>
+              <FooterChip href="/">{t("exploreCafes")}</FooterChip>
               <FooterChip href="/map">{t("map")}</FooterChip>
               <FooterChip href="/quiz">{t("quiz")}</FooterChip>
               <FooterChip href="/contribute">{t("contribute")}</FooterChip>

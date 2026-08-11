@@ -91,6 +91,9 @@
     "quickFilterWork": "Work-friendly"
   },
   "search": {
+    "eyebrow": "CafeMaps search",
+    "heading": "Find the right café today",
+    "subtitle": "Filter by mood, area, price, and open status.",
     "placeholder": "Search cafés...",
     "button": "Search",
     "results": "{count} cafés found",

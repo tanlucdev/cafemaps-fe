@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         destination: "/:locale/profile",
         permanent: false,
       },
+      {
+        source: "/:locale/search",
+        destination: "/:locale",
+        permanent: false,
+      },
     ];
   },
   async headers() {

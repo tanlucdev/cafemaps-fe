@@ -1,31 +1,19 @@
-import type { Metadata } from "next";
-import { createLocalizedMetadata, normalizeLocale } from "@/lib/metadata";
-import FeaturedSection from "@/app/[locale]/_sections/FeaturedSection";
+import { redirect } from "next/navigation";
+import { normalizeLocale } from "@/lib/metadata";
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
+export default async function SearchPage({ params, searchParams }: SearchPageProps) {
   const { locale } = await params;
-  const normalizedLocale = normalizeLocale(locale);
+  const query = new URLSearchParams();
 
-  return createLocalizedMetadata({
-    locale,
-    pathname: "/search",
-    title: normalizedLocale === "vi" ? "Tìm quán" : "Find cafés",
-    description:
-      normalizedLocale === "vi"
-        ? "Tìm kiếm và lọc quán cà phê tại TP.HCM theo vibe, quận, giá cả."
-        : "Search and filter cafés in Ho Chi Minh City by vibe, area, and price.",
-  });
-}
+  for (const [key, value] of Object.entries(await searchParams)) {
+    if (Array.isArray(value)) value.forEach((item) => query.append(key, item));
+    else if (value !== undefined) query.set(key, value);
+  }
 
-export default async function SearchPage({ params }: SearchPageProps) {
-  const { locale } = await params;
-  return (
-    <div className="pt-16">
-      <FeaturedSection cafes={[]} locale={locale} deferData />
-    </div>
-  );
+  redirect(`/${normalizeLocale(locale)}${query.size ? `?${query}` : ""}`);
 }

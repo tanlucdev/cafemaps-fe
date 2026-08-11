@@ -14,7 +14,6 @@ interface FeaturedSectionControlsProps {
   searchInputRef: RefObject<HTMLInputElement | null>;
   setSearchInput: (value: string) => void;
   ts: (key: string) => string;
-  locale: string;
   onFilterChange: (filter: Filter) => void;
   onSearchSubmit: () => void;
 }
@@ -27,24 +26,21 @@ export default function FeaturedSectionControls({
   searchInputRef,
   setSearchInput,
   ts,
-  locale,
   onFilterChange,
   onSearchSubmit,
 }: FeaturedSectionControlsProps) {
-  const isVi = locale.startsWith("vi");
-
   return (
-    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-7 pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-9 sm:pb-5">
+    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-14 pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-16 sm:pb-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div {...headerMotion} className="max-w-3xl pb-5">
           <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
-            <Coffee size={13} aria-hidden /> {isVi ? "Tìm kiếm " : "CafeMaps search"}
+            <Coffee size={13} aria-hidden /> {ts("eyebrow")}
           </p>
-          <h1 className="font-lora text-[34px] leading-tight font-bold text-[var(--foreground)] sm:text-[44px]">
-            Tìm quán phù hợp hôm nay
+          <h1 className="max-w-[13ch] font-lora text-[30px] leading-tight font-bold text-[var(--foreground)] sm:max-w-none sm:text-[44px]">
+            {ts("heading")}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 font-medium text-[var(--foreground-muted)] sm:text-base">
-            Lọc theo mood, khu vực, mức giá và trạng thái mở cửa.
+          <p className="mt-2 max-w-[32ch] text-sm leading-6 font-medium text-[var(--foreground-muted)] sm:max-w-2xl sm:text-base">
+            {ts("subtitle")}
           </p>
         </motion.div>
 
@@ -60,7 +56,7 @@ export default function FeaturedSectionControls({
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
               placeholder={ts("placeholder")}
-              className="flex-1 appearance-none border-0 bg-transparent py-3 pr-2 pl-3 text-[13.5px] text-[var(--foreground)] shadow-none ring-0 outline-0 placeholder:text-[var(--foreground-muted)] focus:border-0 focus:shadow-none focus:ring-0 focus:outline-none"
+              className="min-w-0 flex-1 appearance-none border-0 bg-transparent py-3 pr-2 pl-3 text-[13.5px] text-[var(--foreground)] shadow-none ring-0 outline-0 placeholder:text-[var(--foreground-muted)] focus:border-0 focus:shadow-none focus:ring-0 focus:outline-none"
             />
             <button
               onClick={onSearchSubmit}

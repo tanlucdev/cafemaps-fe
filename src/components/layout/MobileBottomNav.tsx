@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Link, usePathname } from "@/i18n/navigation"
 import { useTranslations } from "next-intl"
-import { Heart, Home, Search, Sparkles, UserRound } from "lucide-react"
+import { Heart, Search, Sparkles, UserRound } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const IOS_BOTTOM_GUARD_VAR = "--ios-bottom-guard-height"
@@ -56,8 +56,7 @@ export default function MobileBottomNav() {
   }, [pathname])
 
   const tabs = [
-    { href: "/", icon: Home, label: t("home") },
-    { href: "/search", icon: Search, label: t("search") },
+    { href: "/", icon: Search, label: t("search") },
     { href: "/quiz", icon: Sparkles, label: t("quiz") },
     { href: "/saved", icon: Heart, label: t("saved") },
     { href: "/profile", icon: UserRound, label: t("profile") },

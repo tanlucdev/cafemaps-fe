@@ -91,6 +91,9 @@
     "quickFilterWork": "Work-friendly"
   },
   "search": {
+    "eyebrow": "Tìm kiếm",
+    "heading": "Tìm quán phù hợp hôm nay",
+    "subtitle": "Lọc theo mood, khu vực, mức giá và trạng thái mở cửa.",
     "placeholder": "Tìm quán cà phê...",
     "button": "Tìm kiếm",
     "results": "{count} quán được tìm thấy",
