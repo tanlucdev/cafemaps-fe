@@ -21,6 +21,12 @@ input:focus-visible {
   --font-lora: var(--font-lora), "Lora", Georgia, serif;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 /* ─── Color tokens — Warm Coffee palette ─── */
 :root {
   /* Core */
@@ -84,7 +90,7 @@ input:focus-visible {
   --app-surface: var(--background);
   --app-muted: rgba(44, 26, 14, 0.58);
   --app-bottom-border: rgba(83, 63, 35, 0.14);
-  --mobile-bottom-nav-height: 84px;
+  --mobile-bottom-nav-height: 74px;
   --cafe-detail-mobile-actions-height: 72px;
   --ios-bottom-guard-height: 65px;
 
@@ -266,12 +272,12 @@ button:disabled {
 .mobile-bottom-nav-inner {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
   height: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
   padding-right: 6px;
-  padding-top: 8px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  padding-top: 6px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
   padding-left: 6px;
   background: transparent;
 }
@@ -292,7 +298,7 @@ button:disabled {
   isolation: isolate;
   display: flex;
   min-width: 0;
-  height: calc(var(--mobile-bottom-nav-height) - 20px);
+  height: calc(var(--mobile-bottom-nav-height) - 12px);
   flex-direction: column;
   align-items: center;
   justify-content: center;

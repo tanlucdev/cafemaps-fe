@@ -30,7 +30,7 @@ export default function FeaturedSectionControls({
   onSearchSubmit,
 }: FeaturedSectionControlsProps) {
   return (
-    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-14 pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-16 sm:pb-5">
+    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-[76px] pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-16 sm:pb-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div {...headerMotion} className="max-w-3xl pb-5">
           <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
