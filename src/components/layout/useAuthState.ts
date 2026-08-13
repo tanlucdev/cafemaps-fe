@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { clearAuthUser, getAuthUser, setAuthUser } from "@/lib/auth-client"
-import { getMeApi } from "@/api/auth/api"
+import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
+import { clearAuthUser, getAuthUser, refreshAuthUser } from "@/lib/auth-client"
 
 export function useAuthState() {
   const [user, setUser] = useState<ReturnType<typeof getAuthUser>>(null)
@@ -11,13 +11,18 @@ export function useAuthState() {
     const syncUser = () => setUser(getAuthUser())
     syncUser()
     window.addEventListener("cafe-auth-change", syncUser)
-    getMeApi()
+    const cachedUser = getAuthUser()
+    const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
+    if (!token && !cachedUser) return () => window.removeEventListener("cafe-auth-change", syncUser)
+
+    refreshAuthUser()
       .then((me) => {
-        if (me) setAuthUser(me)
-        else clearAuthUser()
         setUser(me)
       })
-      .catch(() => {
+      .catch((error) => {
+        const status = error instanceof Error ? (error as Error & { status?: number }).status : undefined
+        if (!status || ![401, 403].includes(status)) return
+        localStorage.removeItem(AUTH_STORAGE_KEYS.accessToken)
         clearAuthUser()
         setUser(null)
       })

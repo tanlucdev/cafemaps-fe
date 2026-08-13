@@ -42,19 +42,18 @@ export default function UserMenu({ user }: { user: AuthUser | null }) {
       <button
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex h-8 max-w-36 cursor-pointer items-center gap-1.5 rounded-full pr-2 pl-1 text-xs font-black",
+          "flex size-8 cursor-pointer items-center justify-center rounded-full p-0 text-xs font-black",
           "bg-[var(--accent)] text-white transition-opacity hover:opacity-90",
         )}
         aria-label="Tài khoản"
       >
-        <span className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/18">
+        <span className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/18">
           {user.avatarUrl ? (
-            <Image src={user.avatarUrl} alt="" fill sizes="24px" className="object-cover" />
+            <Image src={user.avatarUrl} alt="" fill sizes="32px" className="object-cover" />
           ) : (
             initials || <User size={15} aria-hidden />
           )}
         </span>
-        <span className="hidden min-w-0 truncate sm:block">{displayName}</span>
       </button>
 
       {open && (

@@ -11,6 +11,17 @@ export interface AuthUser {
   role: string
 }
 
+let meRequest: Promise<AuthUser | null> | null = null
+let authProbeFailed = false
+
+function hasLocalAuthSignal() {
+  if (typeof window === "undefined") return false
+  return Boolean(
+    localStorage.getItem(AUTH_STORAGE_KEYS.accessToken) ||
+      localStorage.getItem(AUTH_STORAGE_KEYS.user)
+  )
+}
+
 export function dispatchAuthChange() {
   if (typeof window === "undefined") return
   window.dispatchEvent(new Event("cafe-auth-change"))
@@ -18,6 +29,7 @@ export function dispatchAuthChange() {
 
 export function setAccessToken(token: string) {
   if (typeof window === "undefined") return
+  authProbeFailed = false
   localStorage.setItem(AUTH_STORAGE_KEYS.accessToken, token)
 }
 
@@ -28,6 +40,7 @@ export function clearAccessToken() {
 
 export function setAuthUser(user: AuthUser) {
   if (typeof window === "undefined") return
+  authProbeFailed = false
   localStorage.setItem(AUTH_STORAGE_KEYS.user, JSON.stringify(user))
   dispatchAuthChange()
 }
@@ -44,12 +57,42 @@ export function clearAuthUser() {
   localStorage.removeItem(AUTH_STORAGE_KEYS.user)
 }
 
+export async function refreshAuthUser(): Promise<AuthUser | null> {
+  if (typeof window === "undefined" || authProbeFailed || !hasLocalAuthSignal()) return null
+  if (meRequest) return meRequest
+
+  meRequest = getMeApi()
+    .then((user) => {
+      if (user) {
+        setAuthUser(user)
+        return user
+      }
+      authProbeFailed = true
+      clearAuthUser()
+      return null
+    })
+    .catch((error) => {
+      const status = error instanceof Error ? (error as Error & { status?: number }).status : undefined
+      if (!status || ![401, 403].includes(status)) throw error
+      authProbeFailed = true
+      clearAccessToken()
+      clearAuthUser()
+      return null
+    })
+    .finally(() => {
+      meRequest = null
+    })
+
+  return meRequest
+}
+
 export async function logout() {
   try {
     await logoutApi()
   } catch {}
   clearAccessToken()
   clearAuthUser()
+  authProbeFailed = true
   dispatchAuthChange()
 }
 
@@ -57,13 +100,10 @@ export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
   const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
   if (token) return token
+  if (!hasLocalAuthSignal()) return null
   try {
-    const user = await getMeApi()
-    if (!user) return null
-    setAuthUser(user)
-    return AUTH_COOKIE_KEYS.accessToken
+    return (await refreshAuthUser()) ? AUTH_COOKIE_KEYS.accessToken : null
   } catch {
-    clearAuthUser()
     return null
   }
 }
