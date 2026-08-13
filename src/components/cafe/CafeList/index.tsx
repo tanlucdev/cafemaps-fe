@@ -1,44 +1,19 @@
 "use client";
 
 import { useMemo } from "react";
-// import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
+import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import SaveButton from "@/components/cafe/SaveButton";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-// import CafePreviewPopup from "@/components/cafe/CafePreviewPopup";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
-import { formatCafeRating } from "@/lib/cafe-rating";
 import { formatPrice, cn } from "@/lib/utils";
+import { ratingFor, VIBE_TAG_CLASSES, type CafeListProps } from "@/components/cafe/shared";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
-
-interface CafeListProps {
-  cafes: Cafe[];
-  locale: string;
-  animationType?: "slide" | "fade";
-  variant?: "default" | "cinematic";
-  eagerFirstImage?: boolean;
-}
-
-const VIBE_TAG_CLASSES: Record<string, string> = {
-  quiet: "bg-[#E6EEF8] text-[#2A5278] dark:bg-[#12203A] dark:text-[#90B4D8]",
-  lively: "bg-[#FEF2E6] text-[#B85C0A] dark:bg-[#3A2010] dark:text-[#F3A66A]",
-  vintage: "bg-[#F5E8F3] text-[#893568] dark:bg-[#3A1630] dark:text-[#E09AC8]",
-  modern: "bg-[#E6F2ED] text-[#1E6640] dark:bg-[#12321E] dark:text-[#7DC89E]",
-  nature: "bg-[#E8F2E8] text-[#2B6E2B] dark:bg-[#142814] dark:text-[#90C890]",
-  creative: "bg-[#FFF1E6] text-[#B84E0A] dark:bg-[#3A1E0A] dark:text-[#F3A66A]",
-  romantic: "bg-[#FDEEF4] text-[#B4325E] dark:bg-[#3A1224] dark:text-[#E890B4]",
-  minimalist: "bg-[#EEEAF8] text-[#5B4A8A] dark:bg-[#22183A] dark:text-[#B8A8E0]",
-};
-
-function ratingFor(cafe: Cafe, index: number) {
-  return formatCafeRating(cafe, 4.5 + (index % 5) * 0.1);
-}
 
 function CafeListRow({
   cafe,
@@ -55,35 +30,10 @@ function CafeListRow({
   variant: "default" | "cinematic";
   imageEager: boolean;
 }) {
-  // Hover preview disabled per request. Keep the old code here for easy rollback.
-  // const articleRef = useRef<HTMLElement>(null);
-  // const imageRef = useRef<HTMLDivElement>(null);
-  // const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // const [popupVisible, setPopupVisible] = useState(false);
-  // const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
-  // const [hovered, setHovered] = useState(false);
-
   const t = useTranslations("search");
   const tFilters = useTranslations("filters");
   const reduceMotion = usePrefersReducedMotion();
   const isCinematic = variant === "cinematic";
-
-  // function handleMouseEnter() {
-  //   setHovered(true);
-  //   hoverTimer.current = setTimeout(() => {
-  //     const target = imageRef.current ?? articleRef.current;
-  //     if (target) {
-  //       setAnchorRect(target.getBoundingClientRect());
-  //       setPopupVisible(true);
-  //     }
-  //   }, 150);
-  // }
-  //
-  // function handleMouseLeave() {
-  //   setHovered(false);
-  //   if (hoverTimer.current) clearTimeout(hoverTimer.current);
-  //   setPopupVisible(false);
-  // }
 
   const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const district = formatCafeArea(cafe.district, locale);
@@ -108,9 +58,6 @@ function CafeListRow({
 
   return (
     <motion.article
-      // ref={articleRef}
-      // onMouseEnter={handleMouseEnter}
-      // onMouseLeave={handleMouseLeave}
       layout
       layoutId={`featured-cafe-${cafe.id}`}
       initial={revealInitial}
@@ -128,7 +75,7 @@ function CafeListRow({
           : "bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
       )}
     >
-      <Link
+      <IntentPrefetchLink
         href={`/cafe/${cafe.slug}`}
         className="flex min-w-0 flex-1 outline-none focus-visible:ring-2 focus-visible:ring-[#ffe3b7]"
       >
@@ -153,7 +100,6 @@ function CafeListRow({
               quality={90}
               loading={imageEager ? "eager" : "lazy"}
               fetchPriority={imageEager ? "high" : undefined}
-              // className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
             />
           ) : (
             <div
@@ -187,24 +133,6 @@ function CafeListRow({
             </span>
           )}
 
-          {/* Old state-driven hover description kept for rollback.
-            {cafe.oneLiner && (
-              <div
-                className="pointer-events-none absolute inset-0 flex items-end p-2.5 transition-opacity duration-200"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(10,5,1,0.88) 0%, rgba(10,5,1,0.20) 55%, transparent 80%)",
-                  opacity: hovered ? 1 : 0,
-                }}
-              >
-                <p
-                  className="text-[11px] leading-normal text-white/92 italic transition-transform duration-250"
-                  style={{ transform: hovered ? "translateY(0)" : "translateY(5px)" }}
-                >
-                  &ldquo;{cafe.oneLiner}&rdquo;
-                </p>
-              </div>
-            )} */}
         </div>
 
         {/* Content */}
@@ -218,7 +146,6 @@ function CafeListRow({
                   isCinematic ? "text-[#fff7e8]" : "text-[#1C1209] dark:text-[#FFE3D3]",
                 )}
               >
-                {/* className="line-clamp-1 text-[15px] font-bold text-[#1C1209] transition-colors group-hover:text-[#C9870C] dark:text-[#FFE3D3] dark:group-hover:text-[#F0A830]" */}
                 {cafe.name}
               </h3>
               <span
@@ -301,7 +228,7 @@ function CafeListRow({
             )}
           </div>
         </div>
-      </Link>
+      </IntentPrefetchLink>
 
       {/* Save button */}
       <SaveButton
@@ -315,15 +242,6 @@ function CafeListRow({
         )}
       />
 
-      {/* Hover preview popup disabled per request.
-      {anchorRect && (
-        <CafePreviewPopup
-          cafe={cafe}
-          anchorRect={anchorRect}
-          locale={locale}
-          visible={popupVisible}
-        />
-      )} */}
     </motion.article>
   );
 }
