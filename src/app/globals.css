@@ -24,7 +24,7 @@ input:focus-visible {
 html,
 body {
   max-width: 100%;
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 /* ─── Color tokens — Warm Coffee palette ─── */
@@ -169,7 +169,7 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   overflow-x: hidden;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
 }
 
 button:not(:disabled),

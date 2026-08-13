@@ -87,7 +87,7 @@ export default function FeaturedSection({
         };
       }
 
-      return getCafesWithMeta(queryFilter, locale, { cache: "no-store", signal });
+      return getCafesWithMeta(queryFilter, locale, { signal });
     },
     enabled: deferData,
     staleTime: 60 * 1000,
