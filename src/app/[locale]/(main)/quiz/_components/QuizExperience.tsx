@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
@@ -13,7 +14,8 @@ import {
 import type { Cafe } from "@/types/cafe";
 import type { QuizOption, QuizProfileId, QuizResultVariant } from "@/types/quiz";
 import QuizQuestionScene from "./QuizQuestionScene";
-import QuizResultScene from "./QuizResultScene";
+
+const QuizResultScene = dynamic(() => import("./QuizResultScene"));
 
 type VariantChoiceId = QuizResultVariant | "random";
 

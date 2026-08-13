@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
 import { MapPin } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import { motion } from "framer-motion";
+import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
@@ -67,7 +67,7 @@ export default function FeaturedPodiumCard({
       )}
     >
       <div className="pointer-events-none absolute inset-0 z-10 rounded-[24px] bg-[radial-gradient(circle_at_24%_8%,rgba(255,229,178,0.16),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.06),transparent_42%)] opacity-90" />
-      <Link href={`/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
+      <IntentPrefetchLink href={`/cafe/${cafe.slug}`} className="block" onClick={saveReturnUrl}>
         <div className={cn("relative overflow-hidden bg-(--background-secondary)", heightClass)}>
           {cafe.coverImage ? (
             <Image
@@ -143,7 +143,7 @@ export default function FeaturedPodiumCard({
             )}
           </div>
         </div>
-      </Link>
+      </IntentPrefetchLink>
       <FeaturedVoteButton
         cafeId={cafe.id}
         initialCount={cafe.weeklyVoteCount ?? 0}
