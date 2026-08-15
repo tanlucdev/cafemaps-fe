@@ -582,10 +582,10 @@
       ],
       "profiles": {
         "cozy-plant-corner": {
-          "title": "Vườn Nhỏ Reset",
+          "title": "Ôm Cây Cho Hong Cháy Não",
           "subtitle": "Một góc xanh nhỏ, ngồi xuống là thấy ngày dịu lại.",
           "description": "Bạn hợp những quán có mảng xanh gần tay, ánh sáng dịu và nhịp chậm. Ngồi xuống là thấy ngày mềm lại, đủ yên để thở và đủ ấm để ở lâu.",
-          "shareTitle": "Mình là Vườn Nhỏ Reset",
+          "shareTitle": "Mình là Ôm Cây Cho Hong Cháy Não",
           "shareDescription": "Gu cafe của mình: nhiều cây, thoáng dịu, nhịp được hạ nhẹ.",
           "reasons": [
             "nhiều cây",
@@ -609,10 +609,10 @@
           ]
         },
         "quiet-city-window": {
-          "title": "Phố Cao Lặng Lẽ",
+          "title": "Rình Đời Từ Xa, Slay",
           "subtitle": "Nhìn phố chạy, bạn vẫn giữ được nhịp riêng.",
           "description": "Bạn cần một ô cửa có ánh sáng tốt, tiếng phố vừa xa và mặt bàn đủ gọn. Không tách khỏi thành phố, chỉ chọn một khoảng yên để quan sát nó.",
-          "shareTitle": "Mình là Phố Cao Lặng Lẽ",
+          "shareTitle": "Mình là Rình Đời Từ Xa, Slay",
           "shareDescription": "Gu cafe của mình: cửa sổ, phố nhẹ, đầu óc gọn lại.",
           "reasons": [
             "cửa sổ",
@@ -636,10 +636,10 @@
           ]
         },
         "lively-friends-table": {
-          "title": "Bàn Tròn Rộn Rã",
+          "title": "Chưa Ngồi Đã Auto Ồn",
           "subtitle": "Có người, có chuyện, có cảm giác bật lên.",
           "description": "Cafe với bạn vui nhất khi bàn đủ rộng, tiếng cười vừa đủ và playlist kéo cả nhóm vào nhịp. Một quán đúng gu phải có năng lượng để câu chuyện tự chạy.",
-          "shareTitle": "Mình là Bàn Tròn Rộn Rã",
+          "shareTitle": "Mình là Chưa Ngồi Đã Auto Ồn",
           "shareDescription": "Gu cafe của mình: đi cùng bạn bè là vui lên liền.",
           "reasons": [
             "bạn bè",
@@ -663,10 +663,10 @@
           ]
         },
         "late-night-work": {
-          "title": "Đèn Khuya Ý Tưởng",
+          "title": "Não Chỉ Slay Sau 11 Giờ",
           "subtitle": "Đêm xuống, laptop mở, cà phê giữ bạn vào guồng.",
           "description": "Bạn hợp quán gọn, yên, đủ điện và đủ tỉnh cho những phiên làm việc muộn. Không cần màu mè, chỉ cần không gian giúp bạn vào guồng.",
-          "shareTitle": "Mình là Đèn Khuya Ý Tưởng",
+          "shareTitle": "Mình là Não Chỉ Slay Sau 11 Giờ",
           "shareDescription": "Gu cafe của mình: laptop mở, đêm xuống, việc vẫn chạy.",
           "reasons": [
             "wifi ổn",
@@ -690,10 +690,10 @@
           ]
         },
         "vintage-tea-nostalgia": {
-          "title": "Chuyện Cũ Ấm Trà",
+          "title": "Thu Thập Dữ Liệu Xã Hội Chuyên Nghiệp",
           "subtitle": "Mùi trà, màu gỗ, một câu chuyện đi chậm lại.",
           "description": "Bạn dễ rung rinh với đồ gỗ cũ, ly trà ấm và cảm giác thân quen. Quán đúng gu là nơi mọi chi tiết nhỏ đều có chút ký ức.",
-          "shareTitle": "Mình là Chuyện Cũ Ấm Trà",
+          "shareTitle": "Mình là Thu Thập Dữ Liệu Xã Hội Chuyên Nghiệp",
           "shareDescription": "Gu cafe của mình: vintage, trà ấm, một nhịp thật chậm.",
           "reasons": [
             "vintage",
@@ -717,10 +717,10 @@
           ]
         },
         "sunny-iced-coffee": {
-          "title": "Nắng Mới Tràn Ly",
+          "title": "Sáng Nào Cũng Tuyệt Đối Điện Ảnh",
           "subtitle": "Sáng, mát, nhẹ tênh như ly đá vừa tan.",
           "description": "Bạn hợp những quán có nắng đẹp, đồ uống mát và cảm giác ra ngoài cho ngày sáng hơn. Gu của bạn cần sự tươi, gọn và dễ vui.",
-          "shareTitle": "Mình là Nắng Mới Tràn Ly",
+          "shareTitle": "Mình là Sáng Nào Cũng Tuyệt Đối Điện Ảnh",
           "shareDescription": "Gu cafe của mình: nắng đẹp, cà phê đá, thấy tươi lên.",
           "reasons": [
             "nắng đẹp",
@@ -744,10 +744,10 @@
           ]
         },
         "lazy-afternoon-nap": {
-          "title": "Nắng Trưa Lười Nhác",
+          "title": "Trưa Này Xin Hong Làm Gì",
           "subtitle": "Ghế mềm, tiếng nhỏ, thời gian tan thật chậm.",
           "description": "Bạn cần nơi có ghế êm, ánh sáng mềm và không ai giục phải rời đi. Một buổi cafe đúng gu đôi khi chỉ là được lười một cách tử tế.",
-          "shareTitle": "Mình là Nắng Trưa Lười Nhác",
+          "shareTitle": "Mình là Trưa Này Xin Hong Làm Gì",
           "shareDescription": "Gu cafe của mình: ghế êm, chiều chậm, cảm giác mềm như chăn.",
           "reasons": [
             "ghế êm",
@@ -825,10 +825,10 @@
           ]
         },
         "neon-wall-selfie": {
-          "title": "Gương Neon Bắt Sáng",
+          "title": "Góc Này Auto Lên Story",
           "subtitle": "Một tấm selfie, một vệt neon, mood bật lên liền.",
           "description": "Bạn hợp quán có tường trang trí nổi bật, gương đẹp và ánh sáng đủ ấn tượng. Cafe với bạn nên có một góc làm ảnh nhìn sáng, tự nhiên và hơi nghịch.",
-          "shareTitle": "Mình là Gương Neon Bắt Sáng",
+          "shareTitle": "Mình là Góc Này Auto Lên Story",
           "shareDescription": "Gu cafe của mình: mirror selfie, tường neon, ảnh lên mood.",
           "reasons": [
             "mirror selfie",
@@ -852,10 +852,10 @@
           ]
         },
         "friends-photo-corner": {
-          "title": "Góc Bạn Bè Lên Hình",
+          "title": "Cả Hội Chen Khung, Slay Gòi",
           "subtitle": "Cả nhóm đứng vào, khoảnh khắc tự có hình để nhớ.",
           "description": "Bạn hợp quán có góc chụp rộng, ánh sáng dễ chịu và không khí vui để cả nhóm tự nhiên hơn. Một buổi cafe đúng gu là có ảnh chung đủ đẹp để nhớ.",
-          "shareTitle": "Mình là Góc Bạn Bè Lên Hình",
+          "shareTitle": "Mình là Cả Hội Chen Khung, Slay Gòi",
           "shareDescription": "Gu cafe của mình: đi cùng bạn bè, góc chụp đẹp, ảnh có kỷ niệm.",
           "reasons": [
             "ảnh nhóm",
@@ -879,10 +879,10 @@
           ]
         },
         "slow-tea-time": {
-          "title": "Trà Chiều Chậm Rãi",
+          "title": "Chiều Nay Xin Đại Đại Nghỉ",
           "subtitle": "Ấm, dịu, đủ riêng để câu chuyện nở ra.",
           "description": "Bạn hợp những quán có ánh đèn ấm, trà thơm và nhịp đủ chậm cho một cuộc trò chuyện dài. Không gian cần mềm, gần gũi và không quá phô.",
-          "shareTitle": "Mình là Trà Chiều Chậm Rãi",
+          "shareTitle": "Mình là Chiều Nay Xin Đại Đại Nghỉ",
           "shareDescription": "Gu cafe của mình: trà chậm, đèn ấm, nói chuyện lâu.",
           "reasons": [
             "trà thơm",
@@ -906,10 +906,10 @@
           ]
         },
         "cafe-hopping": {
-          "title": "Bước Chân Đổi Quán",
+          "title": "Đứng Núi Này Trông Quán Nọ Hong Ngừng",
           "subtitle": "Một quán chưa đủ, gu cần thêm trạm kế tiếp.",
           "description": "Bạn thích quán có vị riêng, địa điểm tiện đi tiếp và chút mới mẻ để khám phá. Cafe không chỉ để ngồi, mà còn là một hành trình nhỏ.",
-          "shareTitle": "Mình là Bước Chân Đổi Quán",
+          "shareTitle": "Mình là Đứng Núi Này Trông Quán Nọ Hong Ngừng",
           "shareDescription": "Gu cafe của mình: thử quán mới, đi tiếp, lưu thêm một địa chỉ.",
           "reasons": [
             "khám phá",
@@ -933,10 +933,10 @@
           ]
         },
         "quiet-reading-nook": {
-          "title": "Góc Riêng Yên Ả",
+          "title": "Một Mình Cũng Chill Xỉu",
           "subtitle": "Một góc nhỏ, trang sách mở, tiếng đời giảm âm.",
           "description": "Bạn hợp nơi thật yên, ánh sáng vừa đọc và ghế đủ thoải mái để ở lại lâu. Quán đúng gu là nơi mỗi trang sách được đọc chậm hơn.",
-          "shareTitle": "Mình là Góc Riêng Yên Ả",
+          "shareTitle": "Mình là Một Mình Cũng Chill Xỉu",
           "shareDescription": "Gu cafe của mình: sách mở, góc yên, cà phê còn ấm.",
           "reasons": [
             "đọc sách",
