@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys"
+import { getQuizStats } from "@/apis/quiz"
 import { getSavedCafeEntries } from "@/lib/api"
 import { createLocalizedMetadata } from "@/lib/metadata"
 import type { SavedCafeEntry } from "@/types/cafe"
@@ -37,13 +38,17 @@ export default async function ProfilePage({ params }: PageProps) {
   const { locale } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(AUTH_COOKIE_KEYS.accessToken)?.value ?? null
-  const initialSavedEntries: SavedCafeEntry[] = token ? await getSavedCafeEntries(token, locale) : []
+  const [initialSavedEntries, quizStats]: [SavedCafeEntry[], { quizCompletedCount: number }] =
+    token
+      ? await Promise.all([getSavedCafeEntries(token, locale), getQuizStats(token)])
+      : [[], { quizCompletedCount: 0 }]
 
   return (
     <ProfilePageClient
       locale={locale}
       initialIsLoggedIn={Boolean(token)}
       initialSavedEntries={initialSavedEntries}
+      initialQuizCompletedCount={quizStats.quizCompletedCount}
     />
   )
 }

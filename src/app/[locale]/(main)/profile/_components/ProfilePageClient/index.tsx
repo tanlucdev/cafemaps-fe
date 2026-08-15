@@ -15,12 +15,14 @@ interface ProfilePageClientProps {
   locale: string;
   initialIsLoggedIn: boolean;
   initialSavedEntries: SavedCafeEntry[];
+  initialQuizCompletedCount: number;
 }
 
 export default function ProfilePageClient({
   locale,
   initialIsLoggedIn,
   initialSavedEntries,
+  initialQuizCompletedCount,
 }: ProfilePageClientProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>("saved");
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -35,7 +37,7 @@ export default function ProfilePageClient({
   );
   const stats: ProfileStat[] = [
     { label: copy.savedCafes, value: initialSavedEntries.length, icon: Bookmark },
-    { label: copy.quizResults, value: 0, icon: Sparkles },
+    { label: copy.quizResults, value: initialQuizCompletedCount, icon: Sparkles },
     { label: copy.contributions, value: 0, icon: PlusCircle },
     { label: copy.reviews, value: 0, icon: MessageCircle },
   ];
@@ -69,6 +71,7 @@ export default function ProfilePageClient({
             activeTab={activeTab}
             cafes={savedCafes}
             copy={copy}
+            quizCompletedCount={initialQuizCompletedCount}
             onChange={setActiveTab}
           />
         </div>

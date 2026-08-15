@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { recordQuizCompletion } from "@/apis/quiz";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { getCurrentAccessToken } from "@/lib/auth-client";
 import {
   getLocalizedQuizProfiles,
   getLocalizedQuizQuestions,
@@ -49,6 +51,7 @@ export default function QuizExperience({
   );
   const [submitted, setSubmitted] = useState(false);
   const autoAdvanceTimer = useRef<number | null>(null);
+  const completionRecorded = useRef(false);
   const [previewProfileId, setPreviewProfileId] = useState<QuizProfileId | undefined>(
     initialProfileId,
   );
@@ -101,6 +104,7 @@ export default function QuizExperience({
   function selectOption(option: QuizOption | { id: string; label: string }) {
     setPreviewProfileId(undefined);
     setSubmitted(false);
+    completionRecorded.current = false;
     if (isVariantStep) {
       const id = option.id as VariantChoiceId;
       setVariantChoice(id);
@@ -130,6 +134,7 @@ export default function QuizExperience({
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
     setPreviewProfileId(undefined);
     setSubmitted(false);
+    completionRecorded.current = false;
     setAnswers({});
     setResultVariant(undefined);
     setVariantChoice(undefined);
@@ -141,6 +146,11 @@ export default function QuizExperience({
     if (!isComplete || !isLastStep || !selectedId) return;
     setPreviewProfileId(undefined);
     setSubmitted(true);
+    if (completionRecorded.current) return;
+    completionRecorded.current = true;
+    void getCurrentAccessToken().then((token) => {
+      if (token) void recordQuizCompletion(token).catch(() => {});
+    });
   }
 
   function next() {

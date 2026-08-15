@@ -1,4 +1,9 @@
 import type { LocalizedQuizProfile, QuizResultVariant } from "@/types/quiz";
+import { apiFetch, authHeaders } from "@/apis/http";
+
+export type QuizStats = {
+  quizCompletedCount: number;
+};
 
 export type QuizResultImagePayload = {
   format: "desktop" | "mobile";
@@ -31,4 +36,22 @@ export async function downloadQuizResultImage(locale: string, payload: QuizResul
   });
   if (!response.ok) throw new Error("Failed to render result image");
   return response.blob();
+}
+
+export async function getQuizStats(token: string): Promise<QuizStats> {
+  try {
+    return await apiFetch<QuizStats>("/quiz/me", {
+      cache: "no-store",
+      headers: authHeaders(token),
+    });
+  } catch {
+    return { quizCompletedCount: 0 };
+  }
+}
+
+export async function recordQuizCompletion(token: string): Promise<QuizStats> {
+  return apiFetch<QuizStats>("/quiz/completions", {
+    method: "POST",
+    headers: authHeaders(token),
+  });
 }

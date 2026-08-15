@@ -12,11 +12,13 @@ export function ProfileContent({
   activeTab,
   cafes,
   copy,
+  quizCompletedCount,
   onChange,
 }: {
   activeTab: ProfileTab;
   cafes: Cafe[];
   copy: ProfileCopy;
+  quizCompletedCount: number;
   onChange: (tab: ProfileTab) => void;
 }) {
   return (
@@ -24,7 +26,9 @@ export function ProfileContent({
       <ProfileTabs activeTab={activeTab} copy={copy} onChange={onChange} />
       <div className="mt-4">
         {activeTab === "saved" && <SavedCafeList cafes={cafes} copy={copy} />}
-        {activeTab === "quiz" && <QuizResultCard copy={copy} hasResult={false} />}
+        {activeTab === "quiz" && (
+          <QuizResultCard copy={copy} quizCompletedCount={quizCompletedCount} />
+        )}
         {activeTab === "submitted" && <SubmittedCafeList copy={copy} submissions={[]} />}
         {activeTab === "activity" && <RecentActivity copy={copy} activities={[]} />}
       </div>
@@ -146,8 +150,14 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
   );
 }
 
-function QuizResultCard({ copy, hasResult }: { copy: ProfileCopy; hasResult: boolean }) {
-  if (!hasResult) {
+function QuizResultCard({
+  copy,
+  quizCompletedCount,
+}: {
+  copy: ProfileCopy;
+  quizCompletedCount: number;
+}) {
+  if (quizCompletedCount === 0) {
     return (
       <EmptyState
         icon={Sparkles}
@@ -165,7 +175,9 @@ function QuizResultCard({ copy, hasResult }: { copy: ProfileCopy; hasResult: boo
         <Sparkles size={22} />
       </div>
       <h2 className="text-xl font-black text-[var(--foreground)]">{copy.quizTitle}</h2>
-      <p className="mt-2 max-w-xl text-sm text-[var(--foreground-muted)]">{copy.quizBody}</p>
+      <p className="mt-2 max-w-xl text-sm text-[var(--foreground-muted)]">
+        {copy.quizCompletedSummary.replace("{count}", String(quizCompletedCount))}
+      </p>
       <Link
         href="/quiz"
         className="mt-5 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-white transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"

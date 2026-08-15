@@ -25,9 +25,8 @@ export const copyByLocale = {
     view: "View",
     noSavedTitle: "No saved cafés yet.",
     noSavedBody: "Start exploring and save your favorites.",
-    quizTitle: "Your vibe: Quiet Nature Café",
-    quizBody:
-      "You seem to like calm corners, warm light, leafy tables, and enough quiet for deep work.",
+    quizTitle: "Quiz completed",
+    quizCompletedSummary: "You have completed the café vibe quiz {count} time(s).",
     retakeQuiz: "Retake quiz",
     quizEmptyTitle: "Find your café vibe.",
     quizEmptyBody: "Take the quiz to get a simple recommendation style for your next café hunt.",
@@ -66,9 +65,8 @@ export const copyByLocale = {
     view: "Xem",
     noSavedTitle: "Chưa lưu quán nào.",
     noSavedBody: "Bắt đầu khám phá và lưu lại những quán bạn thích.",
-    quizTitle: "Gu của bạn: Quiet Nature Café",
-    quizBody:
-      "Bạn có vẻ thích góc ngồi yên tĩnh, ánh sáng ấm, nhiều cây xanh và đủ riêng tư để tập trung.",
+    quizTitle: "Đã hoàn tất quiz",
+    quizCompletedSummary: "Bạn đã hoàn tất quiz chọn gu cà phê {count} lần.",
     retakeQuiz: "Làm lại quiz",
     quizEmptyTitle: "Tìm gu cà phê của bạn.",
     quizEmptyBody: "Làm quiz để Cafe Maps gợi ý vibe phù hợp cho lần đi cà phê tiếp theo.",

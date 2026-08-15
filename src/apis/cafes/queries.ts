@@ -79,7 +79,9 @@ export async function getCafesWithMeta(
 
 export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`)
+    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`, {
+      next: { tags: ["cafes", `cafe:${slug}`] },
+    })
     return mapApiCafe(raw, locale)
   } catch (err) {
     const fallback = await loadDevFallback()
