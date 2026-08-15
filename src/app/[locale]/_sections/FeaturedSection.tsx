@@ -90,7 +90,8 @@ export default function FeaturedSection({
       return getCafesWithMeta(queryFilter, locale, { signal });
     },
     enabled: deferData,
-    staleTime: 60 * 1000,
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
     placeholderData: keepPreviousData,
   });
   const activeCafes = deferData ? (cafesQuery.data?.cafes ?? cafes) : cafes;
