@@ -68,7 +68,8 @@ export default function FeaturedSection({
     queryKey: ["cafe-districts", locale],
     queryFn: () => getCafeDistricts(locale),
     enabled: deferData,
-    staleTime: 60 * 60 * 1000,
+    staleTime: 30_000,
+    refetchOnWindowFocus: "always",
   });
   const cafesQuery = useQuery({
     queryKey: cafeListQueryKey(queryFilter, locale),
@@ -91,7 +92,7 @@ export default function FeaturedSection({
     },
     enabled: deferData,
     staleTime: 30_000,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: "always",
     placeholderData: keepPreviousData,
   });
   const activeCafes = deferData ? (cafesQuery.data?.cafes ?? cafes) : cafes;
