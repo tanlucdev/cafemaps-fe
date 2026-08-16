@@ -37,7 +37,7 @@ function getDuplicateLocaleRedirectPath(pathname: string) {
 export default function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
-  if (request.nextUrl.pathname.startsWith("/api-proxy")) {
+  if (request.nextUrl.pathname.startsWith("/api/") || request.nextUrl.pathname.startsWith("/api-proxy")) {
     return NextResponse.next()
   }
 
@@ -93,6 +93,6 @@ export default function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }
