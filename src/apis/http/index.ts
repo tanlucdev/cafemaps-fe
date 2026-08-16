@@ -47,9 +47,10 @@ export async function apiFetch<T>(
   const { fallback: _fallback, ...fetchOptions } = options ?? {}
   void _fallback
   const method = fetchOptions.method?.toUpperCase() ?? "GET"
+  const isServer = typeof window === "undefined"
   const isPublicRead =
     method === "GET" && !(fetchOptions.headers && "Authorization" in fetchOptions.headers)
-  const useReadCache = isPublicRead && fetchOptions.cache !== "no-store"
+  const useReadCache = isServer && isPublicRead && fetchOptions.cache !== "no-store"
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
 
@@ -63,7 +64,9 @@ export async function apiFetch<T>(
             ...fetchOptions.next,
           },
         }
-      : {}),
+      : !isServer && isPublicRead
+        ? { cache: "no-store" as const }
+        : {}),
     ...fetchOptions,
     credentials: fetchOptions.credentials ?? "include",
     signal: fetchOptions.signal ?? controller.signal,
