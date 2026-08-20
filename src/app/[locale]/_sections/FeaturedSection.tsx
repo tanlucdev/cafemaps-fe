@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
@@ -15,8 +14,6 @@ import {
   type SearchSort,
 } from "@/lib/search-state";
 import { isCafeOpenNow } from "@/lib/opening-hours";
-import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
-import { cafeListQueryKey } from "@/apis/cafes/query";
 import FeaturedSectionControls from "./FeaturedSectionControls";
 import FeaturedSectionResults from "./FeaturedSectionResults";
 import FeaturedSectionToolbar from "./FeaturedSectionToolbar";
@@ -24,12 +21,12 @@ import {
   cafeCreatedTime,
   cafePopularity,
   cafeRating,
-  filterNearbyCafes,
   haversineKm,
   PAGE_SIZE,
   type ServerMeta,
   type ViewMode,
 } from "./featured-section-helpers";
+import { useFeaturedSectionData } from "./useFeaturedSectionData";
 import { useMinimumLoading } from "./useMinimumLoading";
 
 interface FeaturedSectionProps {
@@ -64,57 +61,34 @@ export default function FeaturedSection({
     () => ({ ...filter, page, limit: PAGE_SIZE, sort: sortMode }),
     [filter, page, sortMode],
   );
-  const districtsQuery = useQuery({
-    queryKey: ["cafe-districts", locale],
-    queryFn: () => getCafeDistricts(locale),
-    enabled: deferData,
-    staleTime: 60 * 60 * 1000,
-  });
-  const cafesQuery = useQuery({
-    queryKey: cafeListQueryKey(queryFilter, locale),
-    queryFn: async ({ signal }) => {
-      if (queryFilter.nearMe && queryFilter.lat != null && queryFilter.lng != null) {
-        const nearbyCafes = await getNearbyCafes(
-          queryFilter.lat,
-          queryFilter.lng,
-          queryFilter.radiusKm ?? 2,
-          locale,
-        );
-        const nextCafes = filterNearbyCafes(nearbyCafes, queryFilter);
-        return {
-          cafes: nextCafes,
-          meta: { total: nextCafes.length, page: 1, limit: nextCafes.length, totalPages: 1 },
-        };
-      }
+  const { activeCafes, activeDistricts, activeMeta, cafesQuery, dataError, shouldFetchCafes } =
+    useFeaturedSectionData({
+      cafes,
+      deferData,
+      districts,
+      filter: queryFilter,
+      locale,
+      serverMeta,
+    });
+  const dataLoading = useMinimumLoading(shouldFetchCafes && cafesQuery.isFetching, 900);
 
-      return getCafesWithMeta(queryFilter, locale, { signal });
-    },
-    enabled: deferData,
-    staleTime: 30_000,
-    placeholderData: keepPreviousData,
-  });
-  const activeCafes = deferData ? (cafesQuery.data?.cafes ?? cafes) : cafes;
-  const activeDistricts = deferData ? (districtsQuery.data ?? districts) : districts;
-  const activeMeta = deferData ? cafesQuery.data?.meta : serverMeta;
-  const dataLoading = useMinimumLoading(deferData && cafesQuery.isFetching, 900);
-  const dataError = deferData && cafesQuery.isError;
-
-  const updateUrl = useCallback(
-    (newFilter: Filter, newSort: SearchSort, newPage: number) => {
-      const params = buildSearchParams(newFilter, newSort, newPage);
-      const query = params.toString();
-      window.history.pushState(null, "", query ? `${window.location.pathname}?${query}` : window.location.pathname);
-      if (query && hasActiveSearchFilters(newFilter)) {
-        setLastSearchState({
-          query: newFilter.search,
-          filter: newFilter,
-          sort: newSort,
-          params: query,
-        });
-      }
-    },
-    [],
-  );
+  const updateUrl = useCallback((newFilter: Filter, newSort: SearchSort, newPage: number) => {
+    const params = buildSearchParams(newFilter, newSort, newPage);
+    const query = params.toString();
+    window.history.pushState(
+      null,
+      "",
+      query ? `${window.location.pathname}?${query}` : window.location.pathname,
+    );
+    if (query && hasActiveSearchFilters(newFilter)) {
+      setLastSearchState({
+        query: newFilter.search,
+        filter: newFilter,
+        sort: newSort,
+        params: query,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const nextFilter = filterFromSearchParams(searchParams);
@@ -128,7 +102,10 @@ export default function FeaturedSection({
     setFilter(newFilter);
     setAnimationType("slide");
     updateUrl(newFilter, sortMode, 1);
-    resultsRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    resultsRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   }
 
   function handleSearchSubmit() {
@@ -145,7 +122,10 @@ export default function FeaturedSection({
   function handleSortChange(newSort: SearchSort) {
     setSortMode(newSort);
     updateUrl(filter, newSort, 1);
-    resultsRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    resultsRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   }
 
   function handleViewModeChange(nextMode: ViewMode) {
@@ -155,7 +135,6 @@ export default function FeaturedSection({
   }
 
   const filtered = useMemo(() => {
-    // Server already filtered — only apply location checks that require browser coordinates.
     if (activeMeta) {
       let result = activeCafes;
       if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
@@ -227,7 +206,6 @@ export default function FeaturedSection({
     return filtered;
   }, [filtered, sortMode]);
 
-  // When serverMeta is present, API already paginated the data — use server total and render cafes as-is
   const total = activeMeta ? activeMeta.total : sorted.length;
   const paginated = activeMeta ? sorted : sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const sortLabel =
@@ -262,7 +240,10 @@ export default function FeaturedSection({
         onSearchSubmit={handleSearchSubmit}
       />
 
-      <main ref={resultsRef} className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8">
+      <main
+        ref={resultsRef}
+        className="mx-auto max-w-7xl scroll-mt-24 px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:px-8"
+      >
         <FeaturedSectionToolbar
           reduceMotion={reduceMotion}
           sortLabel={sortLabel}
