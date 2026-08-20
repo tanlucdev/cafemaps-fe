@@ -1,26 +1,48 @@
 "use client";
 
 import Image from "next/image";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowRight, Coffee, Sparkles } from "lucide-react";
+import { getQuizMatchCafes } from "@/apis/cafes";
 import { Link } from "@/i18n/navigation";
 import { formatCafeArea } from "@/lib/cafe-labels";
+import { rankCafesForQuiz } from "@/lib/quiz/scoring";
 import { formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
-import type { QuizResult } from "@/types/quiz";
+import type { QuizMessages } from "@/lib/quiz";
+import type { QuizOption, QuizResult } from "@/types/quiz";
 import type { ResultLabels } from ".";
 
 export default function RecommendedCafes({
   result,
   labels,
   locale,
+  answers,
+  messages,
   reduceMotion,
 }: {
   result: QuizResult;
   labels: ResultLabels;
   locale: string;
+  answers: QuizOption[];
+  messages: QuizMessages;
   reduceMotion: boolean;
 }) {
+  const cafesQuery = useQuery({
+    queryKey: ["quiz-match-cafes", locale],
+    queryFn: ({ signal }) => getQuizMatchCafes({ limit: 36 }, locale, { signal }),
+    staleTime: 30_000,
+  });
+  const cafes = useMemo(
+    () =>
+      cafesQuery.data
+        ? rankCafesForQuiz(result.profile, cafesQuery.data, messages, answers)
+        : result.cafes,
+    [answers, cafesQuery.data, messages, result.cafes, result.profile],
+  );
+
   return (
     <section className="mt-6 sm:mt-8">
       <div className="mb-3 flex items-center gap-2 text-sm font-bold text-[var(--foreground)] sm:mb-4">
@@ -28,7 +50,7 @@ export default function RecommendedCafes({
         {labels.recommendedCafes}
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {result.cafes.map((cafe, index) => (
+        {cafes.map((cafe, index) => (
           <CafeRecommendationCard
             key={cafe.id}
             cafe={cafe}
@@ -38,9 +60,24 @@ export default function RecommendedCafes({
             reduceMotion={reduceMotion}
           />
         ))}
+        {cafesQuery.isLoading ? <CafeRecommendationSkeleton /> : null}
       </div>
+      {!cafesQuery.isLoading && !cafes.length ? (
+        <div className="rounded-[8px] border border-dashed border-[#dfbf8f] bg-white/60 p-4 text-sm font-semibold text-[var(--foreground-muted)] dark:bg-white/5">
+          {locale === "vi" ? "Chưa có quán phù hợp để gợi ý." : "No matching cafes to recommend yet."}
+        </div>
+      ) : null}
     </section>
   );
+}
+
+function CafeRecommendationSkeleton() {
+  return Array.from({ length: 3 }).map((_, index) => (
+    <div
+      key={index}
+      className="h-[21rem] animate-pulse rounded-[8px] border border-[#e3ca9f] bg-white/60 dark:bg-white/5"
+    />
+  ));
 }
 
 function CafeRecommendationCard({

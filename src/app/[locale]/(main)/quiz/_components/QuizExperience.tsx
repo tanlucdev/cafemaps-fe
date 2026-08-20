@@ -13,7 +13,6 @@ import {
   resolveQuizResult,
   type QuizMessages,
 } from "@/lib/quiz";
-import type { Cafe } from "@/types/cafe";
 import type { QuizOption, QuizProfileId, QuizResultVariant } from "@/types/quiz";
 import QuizQuestionScene from "./QuizQuestionScene";
 
@@ -22,7 +21,6 @@ const QuizResultScene = dynamic(() => import("./QuizResultScene"));
 type VariantChoiceId = QuizResultVariant | "random";
 
 interface QuizExperienceProps {
-  cafes: Cafe[];
   locale: string;
   initialProfileId?: QuizProfileId;
   initialDna?: string;
@@ -30,7 +28,6 @@ interface QuizExperienceProps {
 }
 
 export default function QuizExperience({
-  cafes,
   locale,
   initialProfileId,
   initialDna,
@@ -79,7 +76,7 @@ export default function QuizExperience({
     isComplete && submitted
       ? resolveQuizResult({
           answers: questions.map((question) => answers[question.id]),
-          cafes,
+          cafes: [],
           messages,
           variant: resultVariant,
         })
@@ -87,7 +84,7 @@ export default function QuizExperience({
         ? resolveQuizPreviewResult({
             profileId: previewProfileId,
             dna: initialDna,
-            cafes,
+            cafes: [],
             messages,
             variant: resultVariant,
           })
@@ -167,6 +164,8 @@ export default function QuizExperience({
         profiles={getLocalizedQuizProfiles(messages, resultVariant ?? "woman")}
         variant={resultVariant ?? "woman"}
         locale={locale}
+        answers={questions.map((question) => answers[question.id]).filter(Boolean)}
+        messages={messages}
         onRestart={restart}
         reduceMotion={Boolean(reduceMotion)}
         labels={{

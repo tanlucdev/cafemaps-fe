@@ -126,10 +126,11 @@ export async function getCafeDistricts(locale?: string | null): Promise<string[]
 
 export async function getQuizMatchCafes(
   filter?: CafeFilter,
-  locale?: string | null
+  locale?: string | null,
+  options?: NextRequestInit
 ): Promise<Cafe[]> {
   try {
-    const data = await apiFetch<CafesResponse | Cafe[]>(`/cafes/quiz-match${buildQuery(filter, locale)}`)
+    const data = await apiFetch<CafesResponse | Cafe[]>(`/cafes/quiz-match${buildQuery(filter, locale)}`, options)
     const raw = Array.isArray(data) ? data : data.data
     return raw.map((cafe) => mapApiCafe(cafe, locale))
   } catch (err) {
