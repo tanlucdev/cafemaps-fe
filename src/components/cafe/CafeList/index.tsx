@@ -61,8 +61,7 @@ function CafeListRow({
       layout
       layoutId={`featured-cafe-${cafe.id}`}
       initial={revealInitial}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.18, margin: "0px 0px -6% 0px" }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
         ...revealTransition,
         layout: { type: "spring", stiffness: 260, damping: 28, mass: 0.8 },
