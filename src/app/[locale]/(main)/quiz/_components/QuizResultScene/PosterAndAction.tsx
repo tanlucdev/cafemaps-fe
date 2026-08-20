@@ -16,7 +16,8 @@ export function QuizPosterCard({ result, className }: { result: QuizResult; clas
         alt={result.profile.title}
         fill
         sizes="(min-width: 1280px) 390px, (min-width: 640px) 360px, 76vw"
-        priority
+        loading="eager"
+        fetchPriority="high"
         quality={90}
         className="object-cover"
       />
