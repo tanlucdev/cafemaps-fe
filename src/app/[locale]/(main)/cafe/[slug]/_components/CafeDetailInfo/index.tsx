@@ -116,22 +116,18 @@ export default function CafeDetailInfo({
         : { duration: 0.34, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
     },
   };
-  const revealInitial = reduceMotion ? false : "hidden";
-  const revealViewport = { once: true, amount: 0.28, margin: "0px 0px -8% 0px" };
-
   return (
     <>
       <motion.div
         variants={panelVariants}
-        initial="hidden"
+        initial={false}
         animate="show"
         className="mx-auto w-full max-w-[720px] min-w-0 space-y-5 rounded-[28px] border border-[#ffe3b7]/38 bg-[#fffaf2]/76 px-4 py-5 shadow-[0_18px_54px_rgba(44,26,14,0.08)] backdrop-blur-md sm:px-6 sm:py-6 dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/54 dark:shadow-[0_18px_54px_rgba(0,0,0,0.26)]"
       >
         <motion.h1
           variants={itemVariants}
-          initial={revealInitial}
-          whileInView="show"
-          viewport={revealViewport}
+          initial={false}
+          animate="show"
           className="text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]"
         >
           {cafe.name}
@@ -139,9 +135,8 @@ export default function CafeDetailInfo({
 
         <motion.div
           variants={itemVariants}
-          initial={revealInitial}
-          whileInView="show"
-          viewport={revealViewport}
+          initial={false}
+          animate="show"
           className="flex flex-wrap items-center gap-3"
         >
           {openStatus !== null && (
@@ -166,9 +161,8 @@ export default function CafeDetailInfo({
 
         <motion.div
           variants={itemVariants}
-          initial={revealInitial}
-          whileInView="show"
-          viewport={revealViewport}
+          initial={false}
+          animate="show"
           className="flex flex-col gap-x-5 gap-y-2.5 text-[13.5px] font-medium text-[var(--foreground-muted)] sm:flex-row sm:flex-wrap"
         >
           {cafe.address && (
@@ -195,7 +189,7 @@ export default function CafeDetailInfo({
           )}
         </motion.div>
 
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <DetailTags
             cafe={cafe}
             displayTags={displayTags}
@@ -204,35 +198,35 @@ export default function CafeDetailInfo({
             vibeLabel={vibeLabel}
           />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <DetailDivider />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <AboutSection paragraphs={aboutParagraphs} />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <AmenitiesSection amenities={cafe.amenities} locale={locale} />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <ParkingSection
             parkingLabel={parkingLabel}
             parkingTypeLabel={parkingTypeLabel}
             parkingLocation={parkingLocation}
           />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <GoodForSection label={idealForLabel} items={goodForItems} />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <DetailDivider />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <SignatureDrinkSection signatureDrink={cafe.signatureDrink} label={t("signatureDrink")} />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <PriceSection price={price} label={t("priceRange")} />
         </motion.div>
-        <motion.div variants={itemVariants} initial={revealInitial} whileInView="show" viewport={revealViewport}>
+        <motion.div variants={itemVariants} initial={false} animate="show">
           <SocialSection
             cafeInstagram={cafeInstagram}
             photoCredits={photoCredits}
@@ -243,9 +237,8 @@ export default function CafeDetailInfo({
 
         <motion.div
           variants={itemVariants}
-          initial={revealInitial}
-          whileInView="show"
-          viewport={revealViewport}
+          initial={false}
+          animate="show"
           className="hidden pt-8 lg:block"
         >
           <DetailActions

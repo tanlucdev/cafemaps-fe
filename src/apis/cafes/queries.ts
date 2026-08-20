@@ -113,11 +113,12 @@ export async function getNearbyCafes(
   }
 }
 
-export async function getCafeDistricts(locale?: string | null): Promise<string[]> {
+export async function getCafeDistricts(locale?: string | null, options?: NextRequestInit): Promise<string[]> {
   try {
-    return await apiFetch<string[]>(`/cafes/districts${buildQuery(undefined, locale)}`)
+    return await apiFetch<string[]>(`/cafes/districts${buildQuery(undefined, locale)}`, options)
   } catch (err) {
-    const fallback = await loadDevFallback()
+    if (options?.fallback === false || options?.cache === "no-store") throw err
+    const fallback = await loadDevFallback(options)
     if (fallback) return fallback.fallbackDistricts()
     console.error("getCafeDistricts failed:", err)
     return []
