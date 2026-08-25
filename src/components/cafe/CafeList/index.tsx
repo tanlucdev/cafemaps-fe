@@ -7,6 +7,7 @@ import { MapPin, Star } from "lucide-react";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import SaveButton from "@/components/cafe/SaveButton";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
@@ -172,7 +173,6 @@ function CafeListRow({
                 <span className="truncate">{locationText}</span>
               </p>
             )}
-
             {/* Description — 2 lines */}
             {cafe.oneLiner && (
               <p
@@ -225,6 +225,14 @@ function CafeListRow({
                 {openStatus ? t("openNow") : t("closed")}
               </span>
             )}
+            <span className="ml-auto">
+              <CafeStatsBadge
+                cafeId={cafe.id}
+                viewCount={cafe.viewCount}
+                locale={locale}
+                variant={isCinematic ? "cinematic" : "default"}
+              />
+            </span>
           </div>
         </div>
       </IntentPrefetchLink>

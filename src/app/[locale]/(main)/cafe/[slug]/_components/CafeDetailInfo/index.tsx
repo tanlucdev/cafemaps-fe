@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { AlarmClock, MapPinned, Navigation } from "lucide-react";
 import { useTranslations } from "next-intl";
+import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
@@ -157,6 +158,7 @@ export default function CafeDetailInfo({
             </span>
           )}
           <RatingStars rating={rating} />
+          <CafeStatsBadge cafeId={cafe.id} viewCount={cafe.viewCount} locale={locale} variant="detail" />
         </motion.div>
 
         <motion.div

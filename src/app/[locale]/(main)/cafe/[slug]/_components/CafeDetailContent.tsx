@@ -23,6 +23,7 @@ import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
 import { useCafeVisited } from "./useCafeVisited";
+import { useTrackCafeView } from "./useTrackCafeView";
 
 interface CafeDetailContentProps {
   cafe: Cafe;
@@ -47,6 +48,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   const [pickerToken, setPickerToken] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const viewCount = useTrackCafeView(cafe.id, cafe.viewCount);
 
   const cafeUrl =
     typeof window !== "undefined"
@@ -241,7 +243,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         </motion.div>
 
         <CafeDetailInfo
-          cafe={cafe}
+          cafe={{ ...cafe, viewCount }}
           locale={locale}
             saved={saved}
             loadingSave={loadingSave}

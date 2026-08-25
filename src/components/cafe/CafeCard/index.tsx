@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
+import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
 import SaveButton from "@/components/cafe/SaveButton";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
@@ -245,8 +246,8 @@ export default function CafeCard({
             )}
           </div>
 
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+          {(tags.length > 0 || cafe.viewCount !== undefined) && (
+            <div className="flex flex-wrap items-center gap-1.5">
               {tags.map((tag) => {
                 const translation = getCafeTagTranslation(tag);
                 const classKey = VIBE_TRANSLATION_KEYS[tag] ?? tag;
@@ -270,6 +271,14 @@ export default function CafeCard({
                   </span>
                 );
               })}
+              <span className="ml-auto">
+                <CafeStatsBadge
+                  cafeId={cafe.id}
+                  viewCount={cafe.viewCount}
+                  locale={locale}
+                  variant={isCinematic ? "cinematic" : "default"}
+                />
+              </span>
             </div>
           )}
         </div>
