@@ -74,6 +74,7 @@ src/
 - **Fetch code**: Nằm trong `src/apis/[feature]/index.ts`; không thêm feature API mới vào `src/lib`.
 - **Split code**: Tách `hooks`, `helpers`, `constants` khi file vượt 300 lines hoặc logic được tái sử dụng.
 - **Next docs**: Trước khi chạm Next APIs, kiểm tra installed version và `node_modules/next/dist/docs/`; nếu thiếu thì dùng official Next docs.
+- **Branch names**: Chỉ mô tả nội dung công việc; không thêm ngày kiểu `-20250820`.
 
 ## Types quan trọng (`src/types/cafe.ts`)
 
