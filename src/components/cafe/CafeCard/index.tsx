@@ -57,15 +57,10 @@ export default function CafeCard({
 
   return (
     <motion.article
-      layout
-      layoutId={`featured-cafe-${cafe.id}`}
-      initial={revealInitial}
+      initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        ...revealTransition,
-        layout: { type: "spring", stiffness: 260, damping: 28, mass: 0.8 },
-      }}
-      whileHover={isCinematic && !reduceMotion ? { y: -4, scale: 1.01 } : undefined}
+      transition={revealTransition}
+      whileHover={!reduceMotion ? { y: isCinematic ? -4 : -3, scale: isCinematic ? 1.01 : 1 } : undefined}
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
@@ -90,12 +85,12 @@ export default function CafeCard({
               src={cafe.coverImage}
               alt={cafe.name}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (min-width: 1280px) 400px, 33vw"
               className={cn(
-                "object-cover",
-                isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
+                "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                isCinematic && "group-hover:scale-[1.04]",
               )}
-              quality={90}
+              quality={75}
               loading={imageEager ? "eager" : "lazy"}
               fetchPriority={imageEager ? "high" : undefined}
             />
@@ -140,24 +135,6 @@ export default function CafeCard({
             </span>
           )}
 
-          {/* Old state-driven hover description kept for rollback.
-          {cafe.oneLiner && (
-            <div
-              className="pointer-events-none absolute inset-0 flex items-end p-3.5 transition-opacity duration-200"
-              style={{
-                background:
-                  "linear-gradient(to top, rgba(10,5,1,0.80) 0%, rgba(10,5,1,0.12) 52%, transparent 72%)",
-                opacity: hovered ? 1 : 0,
-              }}
-            >
-              <p
-                className="text-[12.5px] leading-[1.55] text-white/90 italic transition-transform duration-250"
-                style={{ transform: hovered ? "translateY(0)" : "translateY(6px)" }}
-              >
-                &ldquo;{cafe.oneLiner}&rdquo;
-              </p>
-            </div>
-          )} */}
         </div>
       </IntentPrefetchLink>
 

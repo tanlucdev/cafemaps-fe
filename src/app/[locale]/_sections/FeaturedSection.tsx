@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
@@ -34,6 +33,7 @@ interface FeaturedSectionProps {
   locale: string;
   districts?: string[];
   serverMeta?: ServerMeta;
+  serverFilter?: Filter;
   deferData?: boolean;
 }
 
@@ -42,21 +42,23 @@ export default function FeaturedSection({
   locale,
   districts,
   serverMeta,
+  serverFilter,
   deferData = false,
 }: FeaturedSectionProps) {
-  const searchParams = useSearchParams();
   const ts = useTranslations("search");
   const reduceMotion = usePrefersReducedMotion();
+  const [urlSearchParams, setUrlSearchParams] = useState(() => new URLSearchParams());
+  const [canAnimate, setCanAnimate] = useState(false);
 
-  const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(searchParams));
+  const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(urlSearchParams));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [sortMode, setSortMode] = useState<SearchSort>(() => sortFromSearchParams(searchParams));
+  const [sortMode, setSortMode] = useState<SearchSort>(() => sortFromSearchParams(urlSearchParams));
   const [animationType, setAnimationType] = useState<"slide" | "fade">("fade");
   const [searchInput, setSearchInput] = useState(filter.search ?? "");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLElement>(null);
 
-  const page = Number(searchParams.get("page") ?? "1");
+  const page = Number(urlSearchParams.get("page") ?? "1");
   const queryFilter = useMemo(
     () => ({ ...filter, page, limit: PAGE_SIZE, sort: sortMode }),
     [filter, page, sortMode],
@@ -68,6 +70,7 @@ export default function FeaturedSection({
       districts,
       filter: queryFilter,
       locale,
+      serverFilter,
       serverMeta,
     });
   const dataLoading = useMinimumLoading(shouldFetchCafes && cafesQuery.isFetching, 900);
@@ -88,15 +91,26 @@ export default function FeaturedSection({
         params: query,
       });
     }
+    setUrlSearchParams(new URLSearchParams(params));
   }, []);
 
   useEffect(() => {
-    const nextFilter = filterFromSearchParams(searchParams);
-    const nextSort = sortFromSearchParams(searchParams);
-    setFilter(nextFilter);
-    setSortMode(nextSort);
-    setSearchInput(nextFilter.search ?? "");
-  }, [searchParams]);
+    setCanAnimate(true);
+
+    function syncSearchParams() {
+      const nextParams = new URLSearchParams(window.location.search);
+      const nextFilter = filterFromSearchParams(nextParams);
+      const nextSort = sortFromSearchParams(nextParams);
+      setUrlSearchParams(nextParams);
+      setFilter(nextFilter);
+      setSortMode(nextSort);
+      setSearchInput(nextFilter.search ?? "");
+    }
+
+    syncSearchParams();
+    window.addEventListener("popstate", syncSearchParams);
+    return () => window.removeEventListener("popstate", syncSearchParams);
+  }, []);
 
   function handleFilterChange(newFilter: Filter) {
     setFilter(newFilter);
@@ -215,13 +229,15 @@ export default function FeaturedSection({
         ? ts("sortNewest")
         : ts("sortPopular");
 
-  const headerMotion = reduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : {
-        initial: { opacity: 0, y: 18 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-      };
+  const headerMotion =
+    canAnimate && !reduceMotion
+      ? {
+          initial: false,
+          animate: { opacity: 1 },
+          whileHover: { y: -1 },
+          transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+        }
+      : { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } };
 
   return (
     <div className="relative isolate min-h-screen w-full max-w-full overflow-x-hidden bg-[var(--background)] text-[var(--foreground)]">
@@ -263,6 +279,7 @@ export default function FeaturedSection({
           page={page}
           paginated={paginated}
           reduceMotion={reduceMotion}
+          canAnimate={canAnimate}
           total={total}
           ts={ts}
           viewMode={viewMode}

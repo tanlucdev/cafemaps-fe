@@ -2,9 +2,15 @@ import { READ_REVALIDATE_SECONDS } from "@/apis/cafes/constants"
 import { AUTH_COOKIE_KEYS, AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 
 const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
+const configuredApiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
+const serverApiUrl =
+  configuredApiUrl?.startsWith("http://localhost:3001/api") ||
+  configuredApiUrl?.startsWith("http://127.0.0.1:3001/api")
+    ? DEFAULT_API_URL
+    : (configuredApiUrl ?? DEFAULT_API_URL)
 const BASE_URL =
   typeof window === "undefined"
-    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_API_URL)
+    ? serverApiUrl
     : "/api-proxy"
 const API_TIMEOUT_MS = 12000
 
