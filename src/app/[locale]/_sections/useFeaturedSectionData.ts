@@ -11,6 +11,7 @@ export function useFeaturedSectionData({
   districts,
   filter,
   locale,
+  serverFilter,
   serverMeta,
 }: {
   cafes: Cafe[];
@@ -18,11 +19,14 @@ export function useFeaturedSectionData({
   districts?: string[];
   filter: Filter;
   locale: string;
+  serverFilter?: Filter;
   serverMeta?: ServerMeta;
 }) {
   const queryKey = cafeListQueryKey(filter, locale);
   const serializedQueryKey = JSON.stringify(queryKey);
-  const [initialQueryKey] = useState(() => serializedQueryKey);
+  const [initialQueryKey] = useState(() =>
+    JSON.stringify(cafeListQueryKey(serverFilter ?? filter, locale)),
+  );
   const shouldFetchCafes =
     deferData || (!deferData && Boolean(serverMeta) && serializedQueryKey !== initialQueryKey);
   const districtsQuery = useQuery({

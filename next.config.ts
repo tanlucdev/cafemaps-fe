@@ -4,7 +4,12 @@ import path from "node:path";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-const BACKEND_URL = process.env.API_URL ?? "https://cafe-finder-be.onrender.com/api";
+const DEFAULT_BACKEND_URL = "https://cafe-finder-be.onrender.com/api";
+const API_URL = process.env.API_URL ?? DEFAULT_BACKEND_URL;
+const BACKEND_URL =
+  API_URL.startsWith("http://localhost:3001/api") || API_URL.startsWith("http://127.0.0.1:3001/api")
+    ? DEFAULT_BACKEND_URL
+    : API_URL;
 
 const nextConfig: NextConfig = {
   async redirects() {
@@ -109,6 +114,7 @@ const nextConfig: NextConfig = {
     "192.168.2.191:3000",
     "192.168.10.239",
     "192.168.1.125",
+    "192.168.1.90",
   ],
 };
 

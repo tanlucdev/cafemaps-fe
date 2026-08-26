@@ -9,34 +9,19 @@ import FeaturedSection from "../_sections/FeaturedSection";
 import { PAGE_SIZE } from "../_sections/featured-section-helpers";
 // import HomeSeoContent from "../_sections/HomeSeoContent";
 
-type HomeSearchParams = Record<string, string | string[] | undefined>;
+export const revalidate = 300;
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
-  searchParams?: Promise<HomeSearchParams>;
 }
 
-function createHomeSearchParams(searchParams: HomeSearchParams = {}) {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(searchParams)) {
-    if (Array.isArray(value)) value.forEach((item) => params.append(key, item));
-    else if (value !== undefined) params.set(key, value);
-  }
-  return params;
-}
-
-async function withHomeSsrTimeout<T>(
-  run: (signal: AbortSignal) => Promise<T>,
-  ms: number,
-): Promise<T> {
-  const controller = new AbortController();
+async function withHomeSsrTimeout<T>(run: () => Promise<T>, ms: number): Promise<T> {
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
     return await Promise.race([
-      run(controller.signal),
+      run(),
       new Promise<never>((_, reject) => {
         timeout = setTimeout(() => {
-          controller.abort();
           reject(new Error("Timed out"));
         }, ms);
       }),
@@ -58,10 +43,10 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   });
 }
 
-export default async function HomePage({ params, searchParams }: HomePageProps) {
+export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const normalizedLocale = locale === "en" ? "en" : routing.defaultLocale;
-  const urlSearchParams = createHomeSearchParams(await searchParams);
+  const urlSearchParams = new URLSearchParams();
   const parsedFilter = filterFromSearchParams(urlSearchParams);
   const initialFilter = {
     ...parsedFilter,
@@ -75,17 +60,18 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
 
   if (!initialFilter.nearMe) {
     try {
-      // ponytail: hardcoded 1500ms ceiling; upgrade to env/observability when latency data exists.
+      // ponytail: hardcoded 5000ms ceiling; upgrade to env/observability when latency data exists.
       const [data, districts] = await withHomeSsrTimeout(
-        (signal) =>
+        () =>
           Promise.all([
-            getCafesWithMeta(initialFilter, locale, { fallback: false, signal }),
-            getCafeDistricts(locale, { fallback: false, signal }),
+            getCafesWithMeta(initialFilter, locale, { fallback: false }),
+            getCafeDistricts(locale, { fallback: false }),
           ]),
-        1500,
+        5000,
       );
       initialData = { ...data, districts };
-    } catch {
+    } catch (error) {
+      console.warn("Home SSR data unavailable:", error);
       initialData = null;
     }
   }
@@ -102,6 +88,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
           districts={initialData.districts}
           locale={locale}
           serverMeta={initialData.meta}
+          serverFilter={initialFilter}
           deferData={false}
         />
       ) : (

@@ -59,15 +59,10 @@ function CafeListRow({
 
   return (
     <motion.article
-      layout
-      layoutId={`featured-cafe-${cafe.id}`}
-      initial={revealInitial}
+      initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        ...revealTransition,
-        layout: { type: "spring", stiffness: 260, damping: 28, mass: 0.8 },
-      }}
-      whileHover={isCinematic && !reduceMotion ? { y: -3, scale: 1.005 } : undefined}
+      transition={revealTransition}
+      whileHover={!reduceMotion ? { y: isCinematic ? -3 : -2, scale: isCinematic ? 1.005 : 1 } : undefined}
       className={cn(
         "group relative flex min-h-[140px] overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
@@ -94,10 +89,10 @@ function CafeListRow({
               fill
               sizes="(max-width: 640px) 128px, 176px"
               className={cn(
-                "object-cover",
-                isCinematic && "transition-transform duration-500 group-hover:scale-[1.04]",
+                "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                isCinematic && "group-hover:scale-[1.04]",
               )}
-              quality={90}
+              quality={75}
               loading={imageEager ? "eager" : "lazy"}
               fetchPriority={imageEager ? "high" : undefined}
             />
@@ -280,7 +275,7 @@ export default function CafeList({
           index={index}
           animationType={animationType}
           variant={variant}
-          imageEager={eagerFirstImage && index < 2}
+          imageEager={eagerFirstImage && index === 0}
         />
       ))}
     </div>

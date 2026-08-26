@@ -30,7 +30,7 @@ export default function FeaturedSectionControls({
   onSearchSubmit,
 }: FeaturedSectionControlsProps) {
   return (
-    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-[76px] pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-16 sm:pb-5">
+    <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-[104px] pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-[108px] sm:pb-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div {...headerMotion} className="max-w-3xl pb-5">
           <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
@@ -67,7 +67,7 @@ export default function FeaturedSectionControls({
           </div>
         </motion.div>
 
-        <div className="sticky top-16 z-50 -mx-2 mt-6 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-18 sm:mx-0 sm:mt-7 sm:px-4">
+        <div className="sticky top-[76px] z-50 -mx-2 mt-6 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-[82px] sm:mx-0 sm:mt-7 sm:px-4">
           <GuidedFilterBar filter={filter} onChange={onFilterChange} districts={activeDistricts} />
         </div>
       </div>

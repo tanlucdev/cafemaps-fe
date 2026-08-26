@@ -56,7 +56,7 @@ export function HeroSearchControls({
             }}
             className="w-full min-w-0"
           >
-            <div className="flex h-[54px] w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border border-[#ffe3b7]/32 bg-[#3a2112]/48 p-1.5 pl-4 pr-4 shadow-[0_16px_40px_rgba(0,0,0,0.18),0_10px_30px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-colors focus-within:border-[#ffe3b7]/58 sm:h-[58px] sm:gap-2 sm:pl-6 lg:pr-5">
+            <div className="flex h-[54px] w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border border-[#ffe3b7]/32 bg-[#3a2112]/48 p-1.5 pl-4 pr-4 shadow-[0_16px_40px_rgba(0,0,0,0.18),0_10px_30px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#ffe3b7]/46 hover:shadow-[0_20px_46px_rgba(0,0,0,0.2),0_12px_32px_rgba(245,166,58,0.1)] focus-within:-translate-y-0.5 focus-within:border-[#ffe3b7]/58 motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:focus-within:translate-y-0 sm:h-[58px] sm:gap-2 sm:pl-6 lg:pr-5">
               <Search
                 size={20}
                 className={cn(
