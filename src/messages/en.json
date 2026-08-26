@@ -11,6 +11,14 @@
     "menu": "Menu",
     "profile": "Profile"
   },
+  "donate": {
+    "aria": "Support Cafe Maps",
+    "title": "Buy Cafe Maps a coffee",
+    "description": "If this little map helped you find a good coffee corner, you can support us as we keep making it better.",
+    "scanHint": "Scan the QR code to donate",
+    "downloadQr": "Download QR",
+    "close": "Close donation panel"
+  },
   "metadata": {
     "home": {
       "title": "Cafe Maps — Discover cafés in Ho Chi Minh City",
