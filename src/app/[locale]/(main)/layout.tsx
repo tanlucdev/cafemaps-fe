@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import PageTransition from "@/components/providers/PageTransition";
 import RouteAwareFooter from "@/components/layout/RouteAwareFooter";
+import DonateFloatingButton from "@/components/layout/DonateFloatingButton";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Header />
       <PageTransition>{children}</PageTransition>
       <RouteAwareFooter />
+      <DonateFloatingButton />
       <MobileBottomNav />
     </div>
   );

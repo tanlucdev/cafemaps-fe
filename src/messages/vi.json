@@ -11,6 +11,13 @@
     "menu": "Menu",
     "profile": "Cá nhân"
   },
+  "donate": {
+    "aria": "Ủng hộ Cafe Maps",
+    "title": "Mời Cafe Maps một ly",
+    "description": "Nếu bản đồ nhỏ này giúp bạn tìm được góc cà phê vừa ý, bạn có thể ủng hộ tụi mình tiếp tục chăm chút nó.",
+    "scanHint": "Quét mã QR để ủng hộ",
+    "close": "Đóng donate"
+  },
   "metadata": {
     "home": {
       "title": "Cafe Maps — Khám phá quán cà phê TP.HCM",
