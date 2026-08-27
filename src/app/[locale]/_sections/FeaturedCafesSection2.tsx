@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { MapPin, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
@@ -45,6 +46,7 @@ function HeroCard({ cafe }: HeroCardProps) {
               fill
               sizes="(max-width: 640px) 100vw, 66vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
+              style={{ objectPosition: coverObjectPosition(cafe) }}
               priority
             />
           ) : (
@@ -129,6 +131,7 @@ function SmallCard({ cafe, delay, rank }: SmallCardProps) {
               fill
               sizes="(max-width: 640px) 100vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              style={{ objectPosition: coverObjectPosition(cafe) }}
             />
           ) : (
             <div className="absolute inset-0 bg-linear-to-br from-[#C8842A]/60 to-[#6B3F1A]/60" />

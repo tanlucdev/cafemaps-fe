@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Coffee, Sparkles } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { formatCafeArea } from "@/lib/cafe-labels";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import type { QuizResult } from "@/types/quiz";
@@ -71,6 +72,7 @@ function CafeRecommendationCard({
             fill
             sizes="(min-width: 1024px) 360px, 50vw"
             className="object-cover"
+            style={{ objectPosition: coverObjectPosition(cafe) }}
           />
         ) : null}
       </div>

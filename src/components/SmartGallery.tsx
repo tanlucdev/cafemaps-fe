@@ -10,7 +10,7 @@ interface MobileMainImageProps {
   images: string[];
   activeIndex: number;
   setActiveIndex: (i: number) => void;
-  isPortrait: (i: number) => boolean;
+  objectPosition: (i: number) => string;
   cafeName: string;
   onTap: () => void;
 }
@@ -19,7 +19,7 @@ function MobileMainImage({
   images,
   activeIndex,
   setActiveIndex,
-  isPortrait,
+  objectPosition,
   cafeName,
   onTap,
 }: MobileMainImageProps) {
@@ -70,7 +70,7 @@ function MobileMainImage({
             fill
             sizes="100vw"
             className={`object-cover transition-opacity duration-200 ${isActive ? "opacity-100" : "pointer-events-none opacity-0"}`}
-            style={{ objectPosition: isPortrait(i) ? "center 42%" : "center" }}
+            style={{ objectPosition: objectPosition(i) }}
             priority={i === 0}
             quality={90}
             aria-hidden={!isActive}
@@ -89,10 +89,11 @@ function MobileMainImage({
 interface SmartGalleryProps {
   images: string[];
   orientations?: string[];
+  coverImageCrop?: { x: number; y: number } | null;
   cafeName: string;
 }
 
-export default function SmartGallery({ images, orientations = [], cafeName }: SmartGalleryProps) {
+export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName }: SmartGalleryProps) {
   const t = useTranslations("gallery");
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -103,6 +104,10 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
   const getO = useCallback((i: number) => orientations[i] || "landscape", [orientations]);
 
   const isPortrait = useCallback((i: number) => getO(i) === "portrait", [getO]);
+  const objectPosition = useCallback(
+    (i: number) => (i === 0 ? `${coverImageCrop?.x ?? 50}% ${coverImageCrop?.y ?? 50}%` : isPortrait(i) ? "center 42%" : "center"),
+    [coverImageCrop, isPortrait],
+  );
 
   const openLightbox = useCallback((index: number) => {
     setActiveIndex(index);
@@ -182,7 +187,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
           fill
           sizes={sizes}
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          style={{ objectPosition: isPortrait(index) ? "center 42%" : "center" }}
+          style={{ objectPosition: objectPosition(index) }}
           priority={priority}
           quality={90}
         />
@@ -205,7 +210,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
         images={images}
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
-        isPortrait={isPortrait}
+        objectPosition={objectPosition}
         cafeName={cafeName}
         onTap={() => openLightbox(activeIndex)}
       />
@@ -238,6 +243,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
                   height={44}
                   sizes="60px"
                   className="h-full w-full object-cover"
+                  style={{ objectPosition: objectPosition(i) }}
                   quality={85}
                 />
               </span>
@@ -403,6 +409,7 @@ export default function SmartGallery({ images, orientations = [], cafeName }: Sm
                           fill
                           sizes="56px"
                           className="object-cover"
+                          style={{ objectPosition: objectPosition(index) }}
                           quality={85}
                         />
                       </button>

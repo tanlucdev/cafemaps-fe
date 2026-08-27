@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
@@ -76,6 +77,7 @@ export default function FeaturedPodiumCard({
               fill
               sizes="(max-width: 640px) 256px, 33vw"
               className="object-cover transition-transform duration-700 group-hover:scale-[1.045]"
+              style={{ objectPosition: coverObjectPosition(cafe) }}
               loading={rank === 1 ? "eager" : "lazy"}
               fetchPriority={rank === 1 ? "high" : undefined}
             />
