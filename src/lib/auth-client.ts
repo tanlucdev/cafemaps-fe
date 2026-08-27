@@ -14,14 +14,6 @@ export interface AuthUser {
 let meRequest: Promise<AuthUser | null> | null = null
 let authProbeFailed = false
 
-function hasLocalAuthSignal() {
-  if (typeof window === "undefined") return false
-  return Boolean(
-    localStorage.getItem(AUTH_STORAGE_KEYS.accessToken) ||
-      localStorage.getItem(AUTH_STORAGE_KEYS.user)
-  )
-}
-
 export function dispatchAuthChange() {
   if (typeof window === "undefined") return
   window.dispatchEvent(new Event("cafe-auth-change"))
@@ -58,7 +50,7 @@ export function clearAuthUser() {
 }
 
 export async function refreshAuthUser(): Promise<AuthUser | null> {
-  if (typeof window === "undefined" || authProbeFailed || !hasLocalAuthSignal()) return null
+  if (typeof window === "undefined" || authProbeFailed) return null
   if (meRequest) return meRequest
 
   meRequest = getMeApi()
@@ -77,6 +69,7 @@ export async function refreshAuthUser(): Promise<AuthUser | null> {
       authProbeFailed = true
       clearAccessToken()
       clearAuthUser()
+      dispatchAuthChange()
       return null
     })
     .finally(() => {
@@ -100,7 +93,6 @@ export async function getCurrentAccessToken(): Promise<string | null> {
   if (typeof window === "undefined") return null
   const token = localStorage.getItem(AUTH_STORAGE_KEYS.accessToken)
   if (token) return token
-  if (!hasLocalAuthSignal()) return null
   try {
     return (await refreshAuthUser()) ? AUTH_COOKIE_KEYS.accessToken : null
   } catch {
