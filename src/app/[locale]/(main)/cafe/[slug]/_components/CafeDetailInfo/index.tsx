@@ -191,6 +191,29 @@ export default function CafeDetailInfo({
           )}
         </motion.div>
 
+        <motion.div variants={itemVariants} initial={false} animate="show" className="lg:hidden">
+          <DetailActions
+            saved={saved}
+            loadingSave={loadingSave}
+            visited={visited}
+            loadingVisited={loadingVisited}
+            voted={voted}
+            loadingVote={loadingVote}
+            saveLabel={saveLabel}
+            visitedLabel={visitedLabel}
+            voteLabel={voteLabel}
+            votedLabel={votedLabel}
+            directionsLabel={directionsLabel}
+            saveAriaLabel={saveAriaLabel}
+            visitedAriaLabel={visitedAriaLabel}
+            mapsUrl={mapsUrl}
+            onSave={onSave}
+            onVisited={onVisited}
+            onVote={onVote}
+            variant="compact"
+          />
+        </motion.div>
+
         <motion.div variants={itemVariants} initial={false} animate="show">
           <DetailTags
             cafe={cafe}
@@ -263,35 +286,6 @@ export default function CafeDetailInfo({
             onVote={onVote}
           />
         </motion.div>
-      </motion.div>
-
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={reduceMotion ? { duration: 0 } : { duration: 0.32, delay: 0.18 }}
-        className="cafe-detail-mobile-actions fixed right-0 left-0 z-[60] border-t border-[#ffe3b7]/34 bg-[#fffaf2]/88 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl lg:hidden dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/88"
-      >
-        <div className="mx-auto w-full max-w-[720px] min-w-0 px-4">
-          <DetailActions
-            saved={saved}
-            loadingSave={loadingSave}
-            visited={visited}
-            loadingVisited={loadingVisited}
-            voted={voted}
-            loadingVote={loadingVote}
-            saveLabel={saveLabel}
-            visitedLabel={visitedLabel}
-            voteLabel={voteLabel}
-            votedLabel={votedLabel}
-            directionsLabel={directionsLabel}
-            saveAriaLabel={saveAriaLabel}
-            visitedAriaLabel={visitedAriaLabel}
-            mapsUrl={mapsUrl}
-            onSave={onSave}
-            onVisited={onVisited}
-            onVote={onVote}
-          />
-        </div>
       </motion.div>
     </>
   );

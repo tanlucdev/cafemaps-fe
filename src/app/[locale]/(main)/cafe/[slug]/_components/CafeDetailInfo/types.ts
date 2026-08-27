@@ -33,6 +33,7 @@ export interface CafeDetailInfoProps {
 export type DetailActionsProps = Omit<CafeDetailInfoProps, "cafe" | "locale"> & {
   saveAriaLabel: string;
   visitedAriaLabel: string;
+  variant?: "default" | "compact";
 };
 
 export type GoodForItem = {

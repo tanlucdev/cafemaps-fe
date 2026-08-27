@@ -23,7 +23,7 @@ export default function DonateFloatingButton() {
   }, [open]);
 
   return (
-    <div className="fixed right-4 bottom-[calc(var(--ios-bottom-guard-height,80px)+72px)] z-50 flex flex-col items-end gap-3 md:right-6 md:bottom-6">
+    <div className="fixed right-4 bottom-[calc(var(--ios-bottom-guard-height,80px)+72px)] z-50 hidden flex-col items-end gap-3 md:right-6 md:bottom-6 md:flex">
       {open && (
         <aside
           id={panelId}
