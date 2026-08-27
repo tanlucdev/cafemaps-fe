@@ -24,6 +24,7 @@ import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
 import { useCafeVisited } from "./useCafeVisited";
 import { useTrackCafeView } from "./useTrackCafeView";
+import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
 
 interface CafeDetailContentProps {
   cafe: Cafe;
@@ -31,6 +32,7 @@ interface CafeDetailContentProps {
 }
 
 export default function CafeDetailContent({ cafe, locale }: CafeDetailContentProps) {
+  useFeedbackCafeId(cafe.id);
   const t = useTranslations("cafe");
   const tc = useTranslations("common");
   const router = useRouter();

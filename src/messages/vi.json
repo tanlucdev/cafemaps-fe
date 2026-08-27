@@ -17,7 +17,27 @@
     "description": "Nếu bản đồ nhỏ này giúp bạn tìm được góc cà phê vừa ý, bạn có thể ủng hộ tụi mình tiếp tục chăm chút nó.",
     "scanHint": "Quét mã QR để ủng hộ",
     "downloadQr": "Tải QR",
-    "close": "Đóng donate"
+    "close": "Đóng donate",
+    "feedbackCta": "Góp ý cải thiện",
+    "feedbackTitle": "Góp ý cải thiện",
+    "feedbackDescription": "Gửi nhanh điều bạn muốn tụi mình chỉnh tốt hơn.",
+    "backToDonate": "Ủng hộ bằng QR",
+    "messagePlaceholder": "Bạn muốn Cafe Maps cải thiện điều gì?",
+    "emailPlaceholder": "Email liên hệ (không bắt buộc)",
+    "messageRequired": "Bạn nhập nội dung góp ý giúp tụi mình nhé.",
+    "messageTooShort": "Góp ý cần ít nhất 10 ký tự.",
+    "emailInvalid": "Email chưa đúng định dạng.",
+    "submit": "Gửi góp ý",
+    "submitting": "Đang gửi...",
+    "success": "Cảm ơn bạn, tụi mình đã nhận góp ý.",
+    "again": "Gửi góp ý khác",
+    "error": "Chưa gửi được. Nội dung vẫn còn đây, thử lại giúp tụi mình nhé.",
+    "types": {
+      "idea": "Ý tưởng",
+      "bug": "Báo lỗi",
+      "content": "Nội dung quán",
+      "other": "Khác"
+    }
   },
   "metadata": {
     "home": {
