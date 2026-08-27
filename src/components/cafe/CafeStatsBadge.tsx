@@ -41,7 +41,7 @@ export default function CafeStatsBadge({
       className={cn(
         "inline-flex shrink-0 items-center gap-1 rounded-full font-bold tabular-nums",
         variant === "detail"
-          ? "border border-[#ead7bd]/42 bg-[#fff6e8]/36 px-2.5 py-1 text-[11.5px] text-[#7a6043] shadow-none dark:border-[#ffe3b7]/10 dark:bg-[#fff1d6]/6 dark:text-[#d9c4b2]/86"
+          ? "border border-[#ffe3b7]/38 bg-white/58 px-3 py-1.5 text-xs text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/42"
           : "px-2 py-0.5 text-[11px]",
         variant === "cinematic"
           ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#fff0d4]/78"

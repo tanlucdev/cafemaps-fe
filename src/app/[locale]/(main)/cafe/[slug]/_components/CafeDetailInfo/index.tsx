@@ -57,7 +57,6 @@ export default function CafeDetailInfo({
   const hours = [formatTime(cafe.openingTime), formatTime(cafe.closingTime)]
     .filter(Boolean)
     .join(" – ");
-  const closingTime = formatTime(cafe.closingTime);
   const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const distanceText = formatCafeDistanceParts(resolvedDistance, locale).join(" • ");
   const rating = getCafeRating(cafe);
@@ -66,12 +65,6 @@ export default function CafeDetailInfo({
   const aboutParagraphs = aboutText ? getTextParagraphs(aboutText) : [];
   const goodForItems = getGoodForItems(cafe, locale);
   const displayTags = getDisplayTags(cafe, locale);
-  const openStatusText =
-    openStatus && closingTime
-      ? locale.toLowerCase().startsWith("en")
-        ? `Open until ${closingTime}`
-        : `Đang mở đến ${closingTime}`
-      : [openStatus ? t("openNow") : t("closedNow"), hours].filter(Boolean).join(" • ");
   const featureLabel = t("detail.features");
   const idealForLabel = t("detail.idealFor");
   const purposeLabel = t("detail.purpose");
@@ -145,14 +138,14 @@ export default function CafeDetailInfo({
           variants={itemVariants}
           initial={false}
           animate="show"
-          className="flex flex-wrap items-center gap-2.5"
+          className="flex flex-wrap items-center gap-3"
         >
           {openStatus !== null && (
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-bold ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
                 openStatus
-                  ? "border border-[#75c79b]/20 bg-[#e6f6ef]/36 text-[#1d6b45] dark:bg-[#123028]/34 dark:text-[#8ed7ad]"
-                  : "border border-[#e9a7a7]/22 bg-[#fff0ee]/36 text-[#9e3636] dark:bg-[#351514]/34 dark:text-[#f1a0a0]"
+                  ? "border border-[#75c79b]/28 bg-[#e6f6ef]/78 text-[#1d6b45] shadow-[var(--shadow-sm)] dark:bg-[#123028]/72 dark:text-[#8ed7ad]"
+                  : "border border-[#e9a7a7]/32 bg-[#fff0ee]/78 text-[#9e3636] shadow-[var(--shadow-sm)] dark:bg-[#351514]/72 dark:text-[#f1a0a0]"
               }`}
             >
               <span className="relative flex h-2 w-2">
@@ -161,7 +154,7 @@ export default function CafeDetailInfo({
                 )}
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
               </span>
-              {openStatusText}
+              {openStatus ? t("openNow") : t("closedNow")}
             </span>
           )}
           <RatingStars rating={rating} />
@@ -182,7 +175,7 @@ export default function CafeDetailInfo({
               {cafe.address}
             </span>
           )}
-          {openStatus === null && hours && (
+          {hours && (
             <span className="flex items-center gap-1.5">
               <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e6f6ef] text-[#1d6b45] dark:bg-[#123028] dark:text-[#8ed7ad]">
                 <AlarmClock size={12} />
