@@ -224,6 +224,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
           <SmartGallery
             images={cafe.images ?? []}
             orientations={cafe.image_orientations ?? []}
+            coverImageCrop={cafe.coverImageCrop}
             cafeName={cafe.name}
           />
           {cafe.menuImage && (

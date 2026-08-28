@@ -12,6 +12,7 @@ import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice, cn } from "@/lib/utils";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { ratingFor, VIBE_TAG_CLASSES, type CafeListProps } from "@/components/cafe/shared";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -92,6 +93,7 @@ function CafeListRow({
                 "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
                 isCinematic && "group-hover:scale-[1.04]",
               )}
+              style={{ objectPosition: coverObjectPosition(cafe) }}
               quality={75}
               loading={imageEager ? "eager" : "lazy"}
               fetchPriority={imageEager ? "high" : undefined}

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Check, Coffee, ExternalLink, MapPinned } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Cafe } from "@/types/cafe";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { cn } from "@/lib/utils";
 
 export function MapPanel({
@@ -83,6 +84,7 @@ export function MapPanel({
                     sizes="76px"
                     priority={index === 0}
                     className="h-full w-full object-cover"
+                    style={{ objectPosition: coverObjectPosition(cafe) }}
                   />
                 ) : (
                   <Coffee size={22} className="text-[#875200]" />
