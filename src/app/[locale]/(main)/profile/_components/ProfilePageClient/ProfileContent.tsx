@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Bookmark, Coffee, Heart, History, MapPin, PlusCircle, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import type { ProfileCopy } from "./constants";
@@ -112,6 +113,7 @@ function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
                 sizes="(max-width: 640px) 100vw, 116px"
                 priority={index === 0}
                 className="object-cover"
+                style={{ objectPosition: coverObjectPosition(cafe) }}
               />
             ) : (
               <div className="flex h-full items-center justify-center text-[var(--accent)]">

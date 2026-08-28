@@ -230,24 +230,24 @@ export default function DonateFloatingButton() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold">
-                  {mode === "donate" ? t("title") : t("feedbackTitle")}
-                </h2>
-                <p className="mt-1 text-sm leading-5 text-[var(--foreground)]/75">
-                  {mode === "donate" ? t("description") : t("feedbackDescription")}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={t("close")}
-                className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full border border-[var(--border)] text-[var(--foreground)]/70 transition hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:outline-none"
-              >
-                <X className="size-4" aria-hidden="true" />
-              </button>
+                {mode === "donate" ? t("title") : t("feedbackTitle")}
+              </h2>
+              <p className="mt-1 text-sm leading-5 text-[var(--foreground)]/75">
+                {mode === "donate" ? t("description") : t("feedbackDescription")}
+              </p>
             </div>
-            {mode === "donate"
-              ? renderDonateBody("mx-auto h-auto w-full max-w-44 md:max-w-full")
-              : renderFeedbackBody()}
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label={t("close")}
+              className="grid size-8 shrink-0 cursor-pointer place-items-center rounded-full border border-[var(--border)] text-[var(--foreground)]/70 transition hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:outline-none"
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+          {mode === "donate"
+            ? renderDonateBody("mx-auto h-auto w-full max-w-44 md:max-w-full")
+            : renderFeedbackBody()}
           </aside>
         )}
         <button

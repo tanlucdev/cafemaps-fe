@@ -3,11 +3,10 @@ import { AUTH_COOKIE_KEYS, AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 
 const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
 const configuredApiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
-const serverApiUrl =
-  configuredApiUrl?.startsWith("http://localhost:3001/api") ||
-  configuredApiUrl?.startsWith("http://127.0.0.1:3001/api")
-    ? DEFAULT_API_URL
-    : (configuredApiUrl ?? DEFAULT_API_URL)
+const serverApiUrl = configuredApiUrl ?? DEFAULT_API_URL
+const isLocalApiUrl = Boolean(
+  configuredApiUrl?.includes("localhost") || configuredApiUrl?.includes("127.0.0.1")
+)
 const BASE_URL =
   typeof window === "undefined"
     ? serverApiUrl
@@ -66,7 +65,7 @@ export async function apiFetch<T>(
   const isServer = typeof window === "undefined"
   const isPublicRead =
     method === "GET" && !(fetchOptions.headers && "Authorization" in fetchOptions.headers)
-  const useReadCache = isServer && isPublicRead && fetchOptions.cache !== "no-store"
+  const useReadCache = isServer && isPublicRead && !isLocalApiUrl && fetchOptions.cache !== "no-store"
   const requestTimeout = timeoutSignal(fetchOptions.signal, API_TIMEOUT_MS)
 
   const res = await fetch(`${BASE_URL}${path}`, {
