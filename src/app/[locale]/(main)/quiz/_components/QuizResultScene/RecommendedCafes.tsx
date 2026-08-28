@@ -8,6 +8,7 @@ import { ArrowRight, Coffee, Sparkles } from "lucide-react";
 import { getQuizMatchCafes } from "@/apis/cafes";
 import { Link } from "@/i18n/navigation";
 import { formatCafeArea } from "@/lib/cafe-labels";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { rankCafesForQuiz } from "@/lib/quiz/scoring";
 import { formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
@@ -108,6 +109,7 @@ function CafeRecommendationCard({
             fill
             sizes="(min-width: 1024px) 360px, 50vw"
             className="object-cover"
+            style={{ objectPosition: coverObjectPosition(cafe) }}
           />
         ) : null}
       </div>

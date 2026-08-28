@@ -7,6 +7,7 @@ import type mapboxgl from "mapbox-gl";
 import { useTranslations } from "next-intl";
 import type { Cafe } from "@/types/cafe";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
+import { coverObjectPosition } from "@/lib/cover-image";
 import { isUnauthorizedError } from "@/apis/http";
 import { markVisitedCafe, unmarkVisitedCafe } from "@/apis/visited";
 import { useRouter } from "@/i18n/navigation";
@@ -223,7 +224,7 @@ export default function MapPageClient({
     if (!point) return;
     const el = document.createElement("div");
     el.className = "w-[230px] overflow-hidden rounded-2xl bg-[#fffaf2] text-[#2c1a0e] shadow-xl";
-    el.innerHTML = `<img src="${selectedCafe.coverImage ?? selectedCafe.images[0] ?? "/image/logo.png"}" alt="" class="h-24 w-full object-cover"><div class="p-3"><p class="font-black">${selectedCafe.name}</p><p class="mt-1 text-xs text-[#8c6d4f]">${selectedCafe.district ?? ""} · ${statusLabel(selectedCafe, t)}</p><div class="mt-3 flex gap-2"><button data-visit class="min-h-9 flex-1 rounded-full bg-[#875200] px-3 text-xs font-black text-white">${visitedIds.has(selectedCafe.id) ? t("unmark") : t("mark")}</button><a class="inline-flex min-h-9 items-center rounded-full border border-[#e6dacd] px-3 text-xs font-black" href="${cafeHref(locale, selectedCafe)}">${t("detail")}</a></div></div>`;
+    el.innerHTML = `<img src="${selectedCafe.coverImage ?? selectedCafe.images[0] ?? "/image/logo.png"}" alt="" class="h-24 w-full object-cover" style="object-position:${coverObjectPosition(selectedCafe)}"><div class="p-3"><p class="font-black">${selectedCafe.name}</p><p class="mt-1 text-xs text-[#8c6d4f]">${selectedCafe.district ?? ""} · ${statusLabel(selectedCafe, t)}</p><div class="mt-3 flex gap-2"><button data-visit class="min-h-9 flex-1 rounded-full bg-[#875200] px-3 text-xs font-black text-white">${visitedIds.has(selectedCafe.id) ? t("unmark") : t("mark")}</button><a class="inline-flex min-h-9 items-center rounded-full border border-[#e6dacd] px-3 text-xs font-black" href="${cafeHref(locale, selectedCafe)}">${t("detail")}</a></div></div>`;
     el.querySelector("[data-visit]")?.addEventListener(
       "click",
       () => void toggleVisited(selectedCafe),

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Cafe } from "@/types/cafe";
+import { coverObjectPosition } from "@/lib/cover-image";
 
 const POPUP_WIDTH = 320;
 const IMG_H = 220;
@@ -64,6 +65,7 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
             fill
             sizes="320px"
             className="object-cover"
+            style={{ objectPosition: coverObjectPosition(cafe) }}
             priority={false}
             quality={90}
           />
