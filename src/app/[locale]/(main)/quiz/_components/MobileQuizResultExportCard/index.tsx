@@ -1,4 +1,5 @@
 import { CircleOff, Coffee, Heart, Shuffle, Sparkles, Users } from "lucide-react";
+import Image from "next/image";
 import type { Ref } from "react";
 import { getPersonaRelations } from "@/lib/quiz/persona-relations";
 import { resolveQuizWideImage } from "@/lib/quiz/profiles";
@@ -45,9 +46,15 @@ export default function MobileQuizResultExportCard({
       style={{ fontFeatureSettings: '"ss01", "cv05", "kern"' }}
     >
       <div className="relative aspect-[1080/460] shrink-0 overflow-hidden bg-[#f5e0c1]">
-        <div
-          className="absolute inset-0 scale-[1.02] bg-cover bg-center"
-          style={{ backgroundImage: `url(${image})` }}
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="100vw"
+          loading="eager"
+          fetchPriority="high"
+          quality={90}
+          className="scale-[1.02] object-cover"
         />
       </div>
       <div className="flex min-h-0 flex-col gap-[3cqw] p-[4cqw]">
@@ -107,7 +114,7 @@ export default function MobileQuizResultExportCard({
             tone="rose"
           />
         </div>
-        <div className="grid grid-cols-3 gap-[1.2cqw]">
+        <div className="grid grid-cols-1 gap-[1.6cqw] @[520px]:grid-cols-2">
           <RelationColumn
             title={labels.compatiblePersonas}
             items={relations.compatible}
@@ -178,8 +185,8 @@ function RelationColumn({
   icon: typeof Heart;
 }) {
   return (
-    <div className="min-w-0 rounded-[8px] border border-[#e5cfad] bg-white/65 p-[1.4cqw] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-      <div className="mb-[1cqw] flex items-center gap-[0.8cqw] text-[1.45cqw] font-medium text-[#8b521b]">
+    <div className="min-w-0 overflow-hidden rounded-[8px] border border-[#e5cfad] bg-white/65 p-[1.6cqw] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+      <div className="mb-[1cqw] flex items-center gap-[0.8cqw] text-[1.3cqw] font-medium text-[#8b521b]">
         <Icon className="size-[2.2cqw] shrink-0 text-[#c8842a]" />
         <span className="truncate">{title}</span>
       </div>
@@ -187,13 +194,13 @@ function RelationColumn({
         {items.slice(0, 2).map((profile) => (
           <div
             key={profile.id}
-            className="flex min-h-[5.2cqw] items-center gap-[0.75cqw] rounded-[7px] border border-[#ead5b7] bg-[#fffaf2] px-[0.85cqw] py-[0.6cqw] shadow-[0_1px_0_rgba(92,55,24,0.05)]"
+            className="flex min-h-[7cqw] min-w-0 items-center gap-[1cqw] overflow-hidden rounded-[7px] border border-[#ead5b7] bg-[#fffaf2] px-[1.1cqw] py-[0.8cqw] shadow-[0_1px_0_rgba(92,55,24,0.05)]"
           >
             <div
-              className="size-[3.5cqw] shrink-0 rounded-[6px] border border-white bg-cover bg-center shadow-sm"
+              className="size-[4.4cqw] shrink-0 rounded-[6px] border border-white bg-cover bg-center shadow-sm"
               style={{ backgroundImage: `url(${profile.posterImage})` }}
             />
-            <span className="line-clamp-2 min-w-0 text-[clamp(8px,1cqw,11px)] leading-tight font-medium break-words text-[#5f4932] first-letter:uppercase">
+            <span className="line-clamp-2 min-w-0 overflow-hidden text-[clamp(9px,1.4cqw,12.5px)] leading-tight font-medium break-words text-[#5f4932] first-letter:uppercase">
               {profile.title}
             </span>
           </div>
