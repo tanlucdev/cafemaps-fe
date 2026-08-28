@@ -5,7 +5,8 @@ import { Download, RotateCcw, Share2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { downloadQuizResultImage } from "@/apis/quiz";
 import ShareLinkModal from "@/components/share/ShareLinkModal";
-import type { LocalizedQuizProfile, QuizResult, QuizResultVariant } from "@/types/quiz";
+import type { QuizMessages } from "@/lib/quiz";
+import type { LocalizedQuizProfile, QuizOption, QuizResult, QuizResultVariant } from "@/types/quiz";
 import MobileQuizResultBoardPreview from "../MobileQuizResultBoardPreview";
 import type { BoardLabels } from "../MobileQuizResultExportCard";
 import { PersonaAnalysis, PersonaRelations } from "./Panels";
@@ -32,6 +33,8 @@ export default function QuizResultScene({
   profiles,
   variant,
   locale,
+  answers,
+  messages,
   onRestart,
   reduceMotion,
   labels,
@@ -41,6 +44,8 @@ export default function QuizResultScene({
   profiles: LocalizedQuizProfile[];
   variant: QuizResultVariant;
   locale: string;
+  answers: QuizOption[];
+  messages: QuizMessages;
   onRestart: () => void;
   reduceMotion: boolean;
   labels: ResultLabels;
@@ -198,6 +203,8 @@ export default function QuizResultScene({
             result={result}
             labels={labels}
             locale={locale}
+            answers={answers}
+            messages={messages}
             reduceMotion={reduceMotion}
           />
         </motion.div>

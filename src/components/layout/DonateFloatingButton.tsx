@@ -221,16 +221,15 @@ export default function DonateFloatingButton() {
   }, [open]);
 
   return (
-    <>
-      <div className="fixed right-4 bottom-[calc(var(--ios-bottom-guard-height,80px)+72px)] z-50 flex flex-col items-end gap-3 md:right-6 md:bottom-6">
-        {open && (
-          <aside
-            id={panelId}
-            className="max-h-[calc(100svh-var(--ios-bottom-guard-height,80px)-156px)] w-[min(calc(100vw-2rem),18rem)] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--background)] p-4 text-[var(--foreground)] shadow-[0_24px_64px_rgba(44,26,14,0.18)] md:max-h-[calc(100svh-7rem)]"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-base font-semibold">
+    <div className="fixed right-4 bottom-[calc(var(--ios-bottom-guard-height,80px)+72px)] z-50 hidden flex-col items-end gap-3 md:right-6 md:bottom-6 md:flex">
+      {open && (
+        <aside
+          id={panelId}
+          className="max-h-[calc(100svh-var(--ios-bottom-guard-height,80px)-156px)] w-[min(calc(100vw-2rem),18rem)] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--background)] p-4 text-[var(--foreground)] shadow-xl md:max-h-[calc(100svh-7rem)]"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold">
                   {mode === "donate" ? t("title") : t("feedbackTitle")}
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-[var(--foreground)]/75">
@@ -262,6 +261,5 @@ export default function DonateFloatingButton() {
           <Coffee className="size-6" aria-hidden="true" />
         </button>
       </div>
-    </>
   );
 }
