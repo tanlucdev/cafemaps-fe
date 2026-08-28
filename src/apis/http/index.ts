@@ -3,11 +3,10 @@ import { AUTH_COOKIE_KEYS, AUTH_STORAGE_KEYS } from "@/constants/auth-keys"
 
 const DEFAULT_API_URL = "https://cafe-finder-be.onrender.com/api"
 const configuredApiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
-const serverApiUrl =
-  configuredApiUrl?.startsWith("http://localhost:3001/api") ||
-  configuredApiUrl?.startsWith("http://127.0.0.1:3001/api")
-    ? DEFAULT_API_URL
-    : (configuredApiUrl ?? DEFAULT_API_URL)
+const serverApiUrl = configuredApiUrl ?? DEFAULT_API_URL
+const isLocalApiUrl = Boolean(
+  configuredApiUrl?.includes("localhost") || configuredApiUrl?.includes("127.0.0.1")
+)
 const BASE_URL =
   typeof window === "undefined"
     ? serverApiUrl
@@ -46,6 +45,16 @@ function storedAuthHeaders(): HeadersInit | undefined {
   return token ? { Authorization: `Bearer ${token}` } : undefined
 }
 
+function timeoutSignal(signal: AbortSignal | null | undefined, timeoutMs: number) {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), timeoutMs)
+  const signals = signal ? [signal, controller.signal] : [controller.signal]
+  return {
+    signal: AbortSignal.any(signals),
+    clear: () => clearTimeout(timeout),
+  }
+}
+
 export async function apiFetch<T>(
   path: string,
   options?: NextRequestInit
@@ -56,9 +65,8 @@ export async function apiFetch<T>(
   const isServer = typeof window === "undefined"
   const isPublicRead =
     method === "GET" && !(fetchOptions.headers && "Authorization" in fetchOptions.headers)
-  const useReadCache = isServer && isPublicRead && fetchOptions.cache !== "no-store"
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+  const useReadCache = isServer && isPublicRead && !isLocalApiUrl && fetchOptions.cache !== "no-store"
+  const requestTimeout = timeoutSignal(fetchOptions.signal, API_TIMEOUT_MS)
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...(useReadCache
@@ -75,13 +83,13 @@ export async function apiFetch<T>(
         : {}),
     ...fetchOptions,
     credentials: fetchOptions.credentials ?? "include",
-    signal: fetchOptions.signal ?? controller.signal,
+    signal: requestTimeout.signal,
     headers: {
       "Content-Type": "application/json",
       ...storedAuthHeaders(),
       ...fetchOptions.headers,
     },
-  }).finally(() => clearTimeout(timeout))
+  }).finally(requestTimeout.clear)
 
   if (!res.ok) {
     throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status)

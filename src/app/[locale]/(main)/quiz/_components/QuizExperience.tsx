@@ -16,7 +16,6 @@ import {
   resolveQuizResult,
   type QuizMessages,
 } from "@/lib/quiz";
-import type { Cafe } from "@/types/cafe";
 import type { QuizOption, QuizProfileId, QuizResultVariant } from "@/types/quiz";
 import QuizQuestionScene from "./QuizQuestionScene";
 
@@ -216,6 +215,8 @@ export default function QuizExperience({
         profiles={getLocalizedQuizProfiles(messages, resultVariant ?? "woman")}
         variant={resultVariant ?? "woman"}
         locale={locale}
+        answers={questions.map((question) => answers[question.id]).filter(Boolean)}
+        messages={messages}
         onRestart={restart}
         reduceMotion={Boolean(reduceMotion)}
         labels={{
