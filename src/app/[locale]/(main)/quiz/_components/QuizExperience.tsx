@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { getQuizMatchCafes } from "@/apis/cafes/queries";
 import { recordQuizCompletion } from "@/apis/quiz";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { getCurrentAccessToken } from "@/lib/auth-client";
 import {
   getLocalizedQuizProfiles,
   getLocalizedQuizQuestions,
+  normalizeQuizProfileId,
+  normalizeQuizResultVariant,
   resolveQuizPreviewResult,
   resolveQuizResult,
   type QuizMessages,
@@ -22,39 +25,30 @@ const QuizResultScene = dynamic(() => import("./QuizResultScene"));
 type VariantChoiceId = QuizResultVariant | "random";
 
 interface QuizExperienceProps {
-  cafes: Cafe[];
   locale: string;
-  initialProfileId?: QuizProfileId;
-  initialDna?: string;
-  initialVariant?: QuizResultVariant;
 }
 
 export default function QuizExperience({
-  cafes,
   locale,
-  initialProfileId,
-  initialDna,
-  initialVariant = "woman",
 }: QuizExperienceProps) {
   const t = useTranslations("quiz");
   const messages = t.raw("experience") as QuizMessages;
   const questions = useMemo(() => getLocalizedQuizQuestions(messages), [messages]);
   const reduceMotion = usePrefersReducedMotion();
+  const [cafes, setCafes] = useState<Cafe[]>([]);
+  const [cafesReady, setCafesReady] = useState(false);
   const [step, setStep] = useState(0);
   const [highestStep, setHighestStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, QuizOption>>({});
-  const [resultVariant, setResultVariant] = useState<QuizResultVariant | undefined>(
-    initialProfileId ? initialVariant : undefined,
-  );
-  const [variantChoice, setVariantChoice] = useState<VariantChoiceId | undefined>(
-    initialProfileId ? initialVariant : undefined,
-  );
+  const [initialDna, setInitialDna] = useState<string | undefined>();
+  const [resultVariant, setResultVariant] = useState<QuizResultVariant | undefined>();
+  const [variantChoice, setVariantChoice] = useState<VariantChoiceId | undefined>();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const autoAdvanceTimer = useRef<number | null>(null);
+  const cafesPromise = useRef<Promise<Cafe[]> | null>(null);
   const completionRecorded = useRef(false);
-  const [previewProfileId, setPreviewProfileId] = useState<QuizProfileId | undefined>(
-    initialProfileId,
-  );
+  const [previewProfileId, setPreviewProfileId] = useState<QuizProfileId | undefined>();
   const variantCopy = messages.questions.find((item) => item.id === "result-variant");
   const variantQuestion = {
     id: "result-variant",
@@ -75,25 +69,65 @@ export default function QuizExperience({
   const totalQuestions = questions.length + 1;
   const isLastStep = step === totalQuestions - 1;
   const selectedId = typeof selected === "string" ? selected : selected?.id;
-  const result =
-    isComplete && submitted
-      ? resolveQuizResult({
-          answers: questions.map((question) => answers[question.id]),
-          cafes,
-          messages,
-          variant: resultVariant,
-        })
-      : previewProfileId && !answeredOptions.length
-        ? resolveQuizPreviewResult({
-            profileId: previewProfileId,
-            dna: initialDna,
-            cafes,
-            messages,
-            variant: resultVariant,
-          })
-        : null;
+  const result = useMemo(() => {
+    if (isComplete && submitted) {
+      return resolveQuizResult({
+        answers: questions.map((question) => answers[question.id]),
+        cafes,
+        messages,
+        variant: resultVariant,
+      });
+    }
+    if (previewProfileId && cafesReady) {
+      return resolveQuizPreviewResult({
+        profileId: previewProfileId,
+        dna: initialDna,
+        cafes,
+        messages,
+        variant: resultVariant,
+      });
+    }
+    return null;
+  }, [
+    answers,
+    cafes,
+    cafesReady,
+    initialDna,
+    isComplete,
+    messages,
+    previewProfileId,
+    questions,
+    resultVariant,
+    submitted,
+  ]);
   const progress = (answeredCount / totalQuestions) * 100;
   const canContinue = !isLastStep && Boolean(selectedId) && highestStep > step;
+
+  const warmCafes = useCallback(() => {
+    if (!cafesPromise.current) {
+      cafesPromise.current = getQuizMatchCafes({ limit: 36 }, locale).then((items) => {
+        setCafes(items);
+        setCafesReady(true);
+        return items;
+      }).catch(() => {
+        setCafesReady(true);
+        return [];
+      });
+    }
+    return cafesPromise.current;
+  }, [locale]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const profileId = normalizeQuizProfileId(params.get("type"));
+    if (!profileId) return;
+    const variant = normalizeQuizResultVariant(params.get("variant"));
+    setPreviewProfileId(profileId);
+    setInitialDna(params.get("dna") ?? undefined);
+    setResultVariant(variant);
+    setVariantChoice(variant);
+    void warmCafes();
+  }, [warmCafes]);
 
   useEffect(() => {
     return () => {
@@ -104,7 +138,9 @@ export default function QuizExperience({
   function selectOption(option: QuizOption | { id: string; label: string }) {
     setPreviewProfileId(undefined);
     setSubmitted(false);
+    setSubmitting(false);
     completionRecorded.current = false;
+    void warmCafes();
     if (isVariantStep) {
       const id = option.id as VariantChoiceId;
       setVariantChoice(id);
@@ -134,6 +170,7 @@ export default function QuizExperience({
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
     setPreviewProfileId(undefined);
     setSubmitted(false);
+    setSubmitting(false);
     completionRecorded.current = false;
     setAnswers({});
     setResultVariant(undefined);
@@ -143,9 +180,13 @@ export default function QuizExperience({
   }
 
   function submit() {
-    if (!isComplete || !isLastStep || !selectedId) return;
-    setPreviewProfileId(undefined);
-    setSubmitted(true);
+    if (submitting || !isComplete || !isLastStep || !selectedId) return;
+    setSubmitting(true);
+    void warmCafes().finally(() => {
+      setPreviewProfileId(undefined);
+      setSubmitted(true);
+      setSubmitting(false);
+    });
     if (completionRecorded.current) return;
     completionRecorded.current = true;
     void getCurrentAccessToken().then((token) => {
@@ -158,6 +199,14 @@ export default function QuizExperience({
     if (autoAdvanceTimer.current) window.clearTimeout(autoAdvanceTimer.current);
     setStep((value) => value + 1);
     setHighestStep((value) => Math.max(value, step + 1));
+  }
+
+  if (previewProfileId && !cafesReady) {
+    return (
+      <section className="grid min-h-[100svh] place-items-center bg-[#fbf4e8] px-4 text-center dark:bg-[#1e1c1a]">
+        <p className="text-sm font-black text-[#8b6437]">{t("brewingResult")}</p>
+      </section>
+    );
   }
 
   if (result) {
@@ -182,6 +231,7 @@ export default function QuizExperience({
           savedImage: t("savedImage"),
           sharing: t("sharing"),
           shareFailed: t("shareFailed"),
+          shareNudge: t("shareNudge"),
           traits: t("traits"),
           bestFor: t("bestFor"),
           avoidWhen: t("avoidWhen"),
@@ -203,6 +253,7 @@ export default function QuizExperience({
       step={step}
       reduceMotion={Boolean(reduceMotion)}
       canSubmit={isLastStep && Boolean(selectedId) && isComplete}
+      submitBusy={submitting}
       canContinue={canContinue}
       labels={{
         eyebrow: t("eyebrow"),
@@ -211,7 +262,7 @@ export default function QuizExperience({
         brewed: t("brewed"),
         back: t("back"),
         next: t("next"),
-        lockTaste: t("lockTaste"),
+        lockTaste: submitting ? t("brewingResult") : t("lockTaste"),
         question: t("question", { current: step + 1, total: totalQuestions }),
       }}
       onSelect={selectOption}

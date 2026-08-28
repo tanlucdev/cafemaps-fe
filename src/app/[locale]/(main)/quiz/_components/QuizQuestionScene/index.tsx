@@ -48,6 +48,7 @@ export default function QuizQuestionScene({
   step,
   reduceMotion,
   canSubmit,
+  submitBusy,
   canContinue,
   labels,
   onSelect,
@@ -61,6 +62,7 @@ export default function QuizQuestionScene({
   step: number;
   reduceMotion: boolean;
   canSubmit: boolean;
+  submitBusy: boolean;
   canContinue: boolean;
   labels: Labels;
   onSelect: (option: QuestionOption) => void;
@@ -160,6 +162,7 @@ export default function QuizQuestionScene({
                 <button
                   type="button"
                   onClick={onSubmit}
+                  disabled={submitBusy}
                   className="inline-flex h-9 appearance-none items-center gap-2 rounded-full bg-[#c8842a] px-4 text-sm font-black text-white shadow-[0_12px_26px_rgba(200,132,42,0.26)] transition-colors hover:bg-[#a96b22] sm:h-11 sm:px-5"
                 >
                   {labels.lockTaste}
