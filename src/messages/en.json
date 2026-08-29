@@ -17,7 +17,27 @@
     "description": "If this little map helped you find a good coffee corner, you can support us as we keep making it better.",
     "scanHint": "Scan the QR code to donate",
     "downloadQr": "Download QR",
-    "close": "Close donation panel"
+    "close": "Close donation panel",
+    "feedbackCta": "Suggest an improvement",
+    "feedbackTitle": "Suggest an improvement",
+    "feedbackDescription": "Send a quick note on what we can make better.",
+    "backToDonate": "Support by QR",
+    "messagePlaceholder": "What should Cafe Maps improve?",
+    "emailPlaceholder": "Contact email (optional)",
+    "messageRequired": "Please enter your feedback.",
+    "messageTooShort": "Feedback needs at least 10 characters.",
+    "emailInvalid": "Please enter a valid email address.",
+    "submit": "Send feedback",
+    "submitting": "Sending...",
+    "success": "Thanks, your feedback is in.",
+    "again": "Send another",
+    "error": "Could not send yet. Your text is still here, try again.",
+    "types": {
+      "idea": "Idea",
+      "bug": "Bug",
+      "content": "Cafe content",
+      "other": "Other"
+    }
   },
   "metadata": {
     "home": {

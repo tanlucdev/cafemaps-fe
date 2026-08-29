@@ -1,17 +1,18 @@
-import { apiFetch } from "@/apis/http";
+import { apiFetch } from "@/apis/http"
+
+export type FeedbackType = "idea" | "bug" | "content" | "other"
 
 export interface CreateFeedbackInput {
-  type: "content";
-  message: string;
-  cafeId?: string;
-  pageUrl: string;
+  type: FeedbackType
+  message: string
+  contactEmail?: string
+  pageUrl?: string
+  cafeId?: string | null
 }
 
-export type Feedback = Record<string, unknown>;
-
 export function createFeedback(data: CreateFeedbackInput) {
-  return apiFetch<Feedback>("/feedback", {
+  return apiFetch<{ id: string; status: "new" }>("/feedback", {
     method: "POST",
     body: JSON.stringify(data),
-  });
+  })
 }
