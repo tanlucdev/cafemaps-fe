@@ -265,6 +265,7 @@ export default function FeaturedSection({
           sortLabel={sortLabel}
           sortMode={sortMode}
           total={total}
+          loading={dataLoading}
           ts={ts}
           viewMode={viewMode}
           onSortChange={handleSortChange}

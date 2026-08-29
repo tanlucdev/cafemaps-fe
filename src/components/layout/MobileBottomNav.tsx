@@ -13,6 +13,7 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
   const t = useTranslations("bottomNav")
   const [pendingPathname, setPendingPathname] = useState<string | null>(null)
+  const disablePrefetch = pathname === "/quiz"
 
   useEffect(() => {
     let frame = 0
@@ -77,6 +78,7 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
+              prefetch={disablePrefetch ? false : undefined}
               onClick={() => setPendingPathname(href)}
               aria-current={isActive ? "page" : undefined}
               className={cn(

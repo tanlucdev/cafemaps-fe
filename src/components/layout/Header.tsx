@@ -47,6 +47,7 @@ export default function Header() {
     { href: "/contribute", label: t("contribute"), icon: PenLine },
   ];
   const isHome = pathname === "/";
+  const disablePrefetch = pathname === "/quiz";
   const activePathname = pendingPathname ?? pathname;
   const isCinematicTop = isHome && !scrolled;
   const shellVariant = isCinematicTop ? "cinematic" : "surface";
@@ -115,6 +116,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={disablePrefetch ? false : undefined}
                   onClick={() => setPendingPathname(link.href)}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
@@ -160,6 +162,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
+                  prefetch={disablePrefetch ? false : undefined}
                   className={cn(
                     "inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-black transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:px-3 md:px-4 md:text-sm",
                     isCinematicTop

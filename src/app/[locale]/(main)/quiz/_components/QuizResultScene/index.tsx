@@ -25,6 +25,7 @@ export type ResultLabels = BoardLabels & {
   savedImage: string;
   sharing: string;
   shareFailed: string;
+  shareNudge: string;
   previewNote: string;
 };
 
@@ -139,6 +140,12 @@ export default function QuizResultScene({
               variant={variant}
               labels={labels}
             />
+            <div className="-mt-1 flex items-start gap-2.5 rounded-[8px] border border-[#d7a05f]/80 bg-[#fff4df]/95 px-3.5 py-3 text-[#7a5528] shadow-[0_10px_26px_rgba(139,100,55,0.1)] ring-1 ring-white/70 dark:border-[#7b5633] dark:bg-[#2a241f] dark:text-[#e7c591]">
+              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#f3dfbd] text-[#c67b20] dark:bg-[#3a2d21]">
+                <Share2 size={14} aria-hidden="true" />
+              </span>
+              <p className="text-sm leading-5 font-extrabold">{labels.shareNudge}</p>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               <ActionButton
                 icon={Download}
@@ -168,6 +175,12 @@ export default function QuizResultScene({
                   className="aspect-[9/16] max-h-[min(70svh,44rem)] w-full"
                 />
               </div>
+              <div className="mx-auto mt-2 flex w-[min(100%,18rem)] items-start gap-2.5 rounded-[8px] border border-[#d7a05f]/80 bg-[#fff4df]/95 px-3.5 py-3 text-left text-[#7a5528] shadow-[0_10px_26px_rgba(139,100,55,0.1)] ring-1 ring-white/70 sm:w-full sm:max-w-[330px] xl:max-w-[360px] dark:border-[#7b5633] dark:bg-[#2a241f] dark:text-[#e7c591]">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#f3dfbd] text-[#c67b20] dark:bg-[#3a2d21]">
+                  <Share2 size={14} aria-hidden="true" />
+                </span>
+                <span className="text-sm leading-5 font-extrabold">{labels.shareNudge}</span>
+              </div>
               <div className="mx-auto mt-2 grid w-[min(100%,18rem)] grid-cols-3 gap-2 sm:w-full sm:max-w-[330px] xl:max-w-[360px]">
                 <ActionButton
                   icon={Download}
@@ -183,18 +196,14 @@ export default function QuizResultScene({
                 <ActionButton icon={RotateCcw} label={labels.retake} onClick={onRestart} />
               </div>
               <p
-                className="mt-2 min-h-5 text-center text-xs font-semibold text-[#8b6437] lg:absolute lg:top-full lg:right-0 lg:left-0"
+                className="mt-2 min-h-5 text-center text-xs font-semibold text-[#8b6437]"
                 aria-live="polite"
               >
                 {status}
               </p>
             </div>
             <div className="grid min-h-0 content-start gap-3">
-              <ResultSummary
-                result={result}
-                labels={labels}
-                isPreview={isPreview}
-              />
+              <ResultSummary result={result} labels={labels} isPreview={isPreview} />
               <PersonaAnalysis result={result} labels={labels} />
               <PersonaRelations result={result} profiles={profiles} labels={labels} />
             </div>
