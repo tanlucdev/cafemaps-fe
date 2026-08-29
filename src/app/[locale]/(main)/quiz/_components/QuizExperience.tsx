@@ -16,6 +16,7 @@ import {
   resolveQuizResult,
   type QuizMessages,
 } from "@/lib/quiz";
+import type { Cafe } from "@/types/cafe";
 import type { QuizOption, QuizProfileId, QuizResultVariant } from "@/types/quiz";
 import QuizQuestionScene from "./QuizQuestionScene";
 
