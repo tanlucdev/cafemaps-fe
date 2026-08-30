@@ -239,6 +239,23 @@
       "photoCredit": "Photos by",
       "openAllDay": "Open all day",
       "closedToday": "Closed today",
+      "updateInfo": {
+        "cta": "Update cafe info",
+        "helper": "Spot something outdated? Send one quick note and we'll review it.",
+        "title": "What information needs updating?",
+        "placeholder": "Example: New opening hours, updated menu, incorrect address...",
+        "submit": "Send update",
+        "submitting": "Sending...",
+        "cancel": "Cancel",
+        "done": "Close",
+        "success": "Thanks, we'll review this information.",
+        "errors": {
+          "required": "Please enter what needs updating.",
+          "tooShort": "Message must be at least {min} characters.",
+          "tooLong": "Message must be at most {max} characters.",
+          "submitFailed": "Could not send this yet. Please try again."
+        }
+      },
       "amenities": {
         "wifi": "Free WiFi",
         "ac": "Air conditioning",

@@ -239,6 +239,23 @@
       "photoCredit": "Ảnh từ",
       "openAllDay": "Mở cả ngày",
       "closedToday": "Đóng cửa hôm nay",
+      "updateInfo": {
+        "cta": "Cập nhật thông tin quán",
+        "helper": "Thấy thông tin chưa đúng? Gửi một ghi chú ngắn để tụi mình kiểm tra.",
+        "title": "Thông tin nào cần cập nhật?",
+        "placeholder": "Ví dụ: Quán đổi giờ mở cửa, menu mới, địa chỉ chưa đúng...",
+        "submit": "Gửi cập nhật",
+        "submitting": "Đang gửi...",
+        "cancel": "Hủy",
+        "done": "Đóng",
+        "success": "Cảm ơn bạn, tụi mình sẽ kiểm tra lại thông tin này.",
+        "errors": {
+          "required": "Vui lòng nhập nội dung cần cập nhật.",
+          "tooShort": "Nội dung cần ít nhất {min} ký tự.",
+          "tooLong": "Nội dung tối đa {max} ký tự.",
+          "submitFailed": "Chưa gửi được. Vui lòng thử lại."
+        }
+      },
       "amenities": {
         "wifi": "Wifi miễn phí",
         "ac": "Điều hoà",

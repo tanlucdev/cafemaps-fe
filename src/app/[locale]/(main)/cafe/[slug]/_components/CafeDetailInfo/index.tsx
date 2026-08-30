@@ -10,8 +10,10 @@ import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice } from "@/lib/utils";
 import AboutSection from "./components/AboutSection";
 import AmenitiesSection from "./components/AmenitiesSection";
+import CafeInfoUpdateSection from "./components/CafeInfoUpdateSection";
 import DetailActions from "./components/DetailActions";
 import DetailDivider from "./components/DetailDivider";
+import DesktopDetailActions from "./components/DesktopDetailActions";
 import DetailTags from "./components/DetailTags";
 import GoodForSection from "./components/GoodForSection";
 import ParkingSection from "./components/ParkingSection";
@@ -65,7 +67,9 @@ export default function CafeDetailInfo({
   const aboutParagraphs = aboutText ? getTextParagraphs(aboutText) : [];
   const goodForItems = getGoodForItems(cafe, locale);
   const displayTags = getDisplayTags(cafe, locale);
-  const openStatusText = [openStatus ? t("openNow") : t("closedNow"), hours].filter(Boolean).join(" • ");
+  const openStatusText = [openStatus ? t("openNow") : t("closedNow"), hours]
+    .filter(Boolean)
+    .join(" • ");
   const featureLabel = t("detail.features");
   const idealForLabel = t("detail.idealFor");
   const purposeLabel = t("detail.purpose");
@@ -78,6 +82,25 @@ export default function CafeDetailInfo({
   const photoCreditLabel = t("detail.photoCredit");
   const saveAriaLabel = saved ? t("unsave") : t("save");
   const visitedAriaLabel = visited ? t("unmarkVisited") : t("markVisited");
+  const actionProps = {
+    saved,
+    loadingSave,
+    visited,
+    loadingVisited,
+    voted,
+    loadingVote,
+    saveLabel,
+    visitedLabel,
+    voteLabel,
+    votedLabel,
+    directionsLabel,
+    saveAriaLabel,
+    visitedAriaLabel,
+    mapsUrl,
+    onSave,
+    onVisited,
+    onVote,
+  };
   const cafeInstagram = resolveInstagramLink(cafe.instagramUrl);
   const photoCredits =
     cafe.photoCredits
@@ -159,7 +182,12 @@ export default function CafeDetailInfo({
             </span>
           )}
           <RatingStars rating={rating} />
-          <CafeStatsBadge cafeId={cafe.id} viewCount={cafe.viewCount} locale={locale} variant="detail" />
+          <CafeStatsBadge
+            cafeId={cafe.id}
+            viewCount={cafe.viewCount}
+            locale={locale}
+            variant="detail"
+          />
         </motion.div>
 
         <motion.div
@@ -193,26 +221,7 @@ export default function CafeDetailInfo({
         </motion.div>
 
         <motion.div variants={itemVariants} initial={false} animate="show" className="lg:hidden">
-          <DetailActions
-            saved={saved}
-            loadingSave={loadingSave}
-            visited={visited}
-            loadingVisited={loadingVisited}
-            voted={voted}
-            loadingVote={loadingVote}
-            saveLabel={saveLabel}
-            visitedLabel={visitedLabel}
-            voteLabel={voteLabel}
-            votedLabel={votedLabel}
-            directionsLabel={directionsLabel}
-            saveAriaLabel={saveAriaLabel}
-            visitedAriaLabel={visitedAriaLabel}
-            mapsUrl={mapsUrl}
-            onSave={onSave}
-            onVisited={onVisited}
-            onVote={onVote}
-            variant="compact"
-          />
+          <DetailActions {...actionProps} variant="compact" />
         </motion.div>
 
         <motion.div variants={itemVariants} initial={false} animate="show">
@@ -260,32 +269,12 @@ export default function CafeDetailInfo({
             photoCreditLabel={photoCreditLabel}
           />
         </motion.div>
+        <motion.div variants={itemVariants} initial={false} animate="show">
+          <CafeInfoUpdateSection cafeId={cafe.id} />
+        </motion.div>
 
-        <motion.div
-          variants={itemVariants}
-          initial={false}
-          animate="show"
-          className="hidden pt-8 lg:block"
-        >
-          <DetailActions
-            saved={saved}
-            loadingSave={loadingSave}
-            visited={visited}
-            loadingVisited={loadingVisited}
-            voted={voted}
-            loadingVote={loadingVote}
-            saveLabel={saveLabel}
-            visitedLabel={visitedLabel}
-            voteLabel={voteLabel}
-            votedLabel={votedLabel}
-            directionsLabel={directionsLabel}
-            saveAriaLabel={saveAriaLabel}
-            visitedAriaLabel={visitedAriaLabel}
-            mapsUrl={mapsUrl}
-            onSave={onSave}
-            onVisited={onVisited}
-            onVote={onVote}
-          />
+        <motion.div variants={itemVariants} initial={false} animate="show">
+          <DesktopDetailActions {...actionProps} />
         </motion.div>
       </motion.div>
     </>

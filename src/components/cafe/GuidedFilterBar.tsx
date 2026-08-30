@@ -24,6 +24,8 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     toggleTagStaged,
     setPriceStaged,
     setDistrictStaged,
+    districtSelectOpen,
+    setDistrictSelectOpen,
     applyStaged,
     toggleVibeInstant,
     toggleOpenNow,
@@ -64,6 +66,8 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
             onToggleTagStaged={toggleTagStaged}
             onSetPriceStaged={setPriceStaged}
             onSetDistrictStaged={setDistrictStaged}
+            districtSelectOpen={districtSelectOpen}
+            onDistrictSelectOpenChange={setDistrictSelectOpen}
             districts={districts}
             onApply={applyStaged}
             onClearAll={clearAll}
