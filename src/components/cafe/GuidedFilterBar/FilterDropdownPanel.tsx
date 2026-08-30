@@ -32,12 +32,14 @@ interface FilterDropdownPanelProps {
   staged: StagedFilter;
   dropdownOpen: boolean;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
+  districtSelectOpen: boolean;
   districts?: string[];
   onToggleVibeStaged: (v: Vibe) => void;
   onTogglePurposeStaged: (p: Purpose) => void;
   onToggleTagStaged: (tag: FilterTag) => void;
   onSetPriceStaged: (val: string) => void;
   onSetDistrictStaged: (val: string) => void;
+  onDistrictSelectOpenChange: (open: boolean) => void;
   onApply: () => void;
   onClearAll: () => void;
 }
@@ -46,12 +48,14 @@ export function FilterDropdownPanel({
   staged,
   dropdownOpen,
   dropdownRef,
+  districtSelectOpen,
   districts,
   onToggleVibeStaged,
   onTogglePurposeStaged,
   onToggleTagStaged,
   onSetPriceStaged,
   onSetDistrictStaged,
+  onDistrictSelectOpenChange,
   onApply,
   onClearAll,
 }: FilterDropdownPanelProps) {
@@ -153,6 +157,8 @@ export function FilterDropdownPanel({
                 {tf("district")}
               </p>
               <Select
+                open={districtSelectOpen}
+                onOpenChange={onDistrictSelectOpenChange}
                 value={staged.district ?? ""}
                 onValueChange={(val) => onSetDistrictStaged(val ?? "")}
               >
