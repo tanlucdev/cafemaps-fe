@@ -1,40 +1,11 @@
 import type { CafeFilter } from "@/types/cafe"
-import { normalizeCafeLocale, type ApiLocale } from "./mapper"
-
-const EN_VIBE_VALUES: Record<string, string> = {
-  "yên tĩnh": "Quiet",
-  "nhộn nhịp": "Lively",
-  vintage: "Vintage",
-  "hiện đại": "Modern",
-  "thiên nhiên": "Nature",
-  "sáng tạo": "Creative",
-  "lãng mạn": "Romantic",
-  minimalist: "Minimalist",
-}
-
-const EN_PURPOSE_VALUES: Record<string, string> = {
-  "làm việc": "Work",
-  "học tập": "Study",
-  "hẹn hò": "Date",
-  "họp nhóm": "Group",
-  "chill một mình": "Solo",
-  "gặp bạn bè": "Friends",
-}
-
-const EN_TAG_VALUES: Record<string, string> = {
-  "ngoài trời": "outdoor seating",
-  "chỗ hút thuốc": "smoking allowed",
-}
-
-function localizeFilterValues(
-  values: string[] | undefined,
-  map: Record<string, string>,
-  locale: ApiLocale
-): string[] | undefined {
-  if (!values?.length) return undefined
-  if (locale !== "en") return values
-  return values.map((value) => map[value] ?? value)
-}
+import { normalizeCafeLocale } from "./mapper"
+import {
+  EN_PURPOSE_VALUES,
+  EN_TAG_VALUES,
+  EN_VIBE_VALUES,
+  localizeFilterValues,
+} from "./filter-normalization"
 
 export function buildQuery(filter?: CafeFilter, locale?: string | null): string {
   const params = new URLSearchParams()

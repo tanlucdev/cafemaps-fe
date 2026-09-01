@@ -1,11 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, MapPin, SlidersHorizontal, X } from "lucide-react";
 import NearMeButton from "@/components/cafe/NearMeButton";
 import { cn } from "@/lib/utils";
+import { AREAS } from "@/types/cafe";
 import type { CafeFilter as Filter, Vibe } from "@/types/cafe";
 import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   TOP_VIBES,
   VIBES,
@@ -25,8 +27,10 @@ interface FilterChipsRowProps {
   extraVibeBtnRef: React.RefObject<HTMLButtonElement | null>;
   toggleVibeInstant: (v: Vibe) => void;
   toggleOpenNow: () => void;
+  setDistrict: (val: string) => void;
   setDistance: (km: number) => void;
   clearAll: () => void;
+  districts?: string[];
 }
 
 export function FilterChipsRow({
@@ -41,13 +45,16 @@ export function FilterChipsRow({
   extraVibeBtnRef,
   toggleVibeInstant,
   toggleOpenNow,
+  setDistrict,
   setDistance,
   clearAll,
+  districts,
 }: FilterChipsRowProps) {
   const tf = useTranslations("filters");
   const tg = useTranslations("guidedFilter");
 
   const extraVibes = VIBES.length - TOP_VIBES.length;
+  const districtOptions = districts?.length ? districts : [...AREAS];
 
   return (
     <div className="scrollbar-hide -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-3 pb-3.5">
@@ -118,6 +125,32 @@ export function FilterChipsRow({
             {"< " + km + "km"}
           </FilterChipButton>
         ))}
+
+      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
+
+      <Select value={filter.district ?? ""} onValueChange={(val) => setDistrict(val ?? "")}>
+        <SelectTrigger
+          className={cn(
+            "h-8 w-[148px] flex-none cursor-pointer rounded-full border px-3 text-[13px] font-bold shadow-[var(--shadow-sm)] backdrop-blur-md hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] data-[size=default]:h-8",
+            filter.district
+              ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
+              : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] dark:bg-[var(--card)]",
+          )}
+        >
+          <MapPin size={14} />
+          <SelectValue placeholder={tg("allDistricts")} />
+        </SelectTrigger>
+        <SelectContent align="start" sideOffset={6}>
+          <SelectItem className="cursor-pointer" value="">
+            {tg("allDistricts")}
+          </SelectItem>
+          {districtOptions.map((area) => (
+            <SelectItem className="cursor-pointer" key={area} value={area}>
+              {area}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
 

@@ -1,10 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Vibe, Purpose } from "@/types/cafe";
-import { AREAS } from "@/types/cafe";
 import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import {
@@ -20,26 +18,15 @@ import {
   TAG_TRANSLATION_KEYS,
   type FilterTag,
 } from "@/components/cafe/constants/filter-constants";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
   dropdownOpen: boolean;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
-  districtSelectOpen: boolean;
-  districts?: string[];
   onToggleVibeStaged: (v: Vibe) => void;
   onTogglePurposeStaged: (p: Purpose) => void;
   onToggleTagStaged: (tag: FilterTag) => void;
   onSetPriceStaged: (val: string) => void;
-  onSetDistrictStaged: (val: string) => void;
-  onDistrictSelectOpenChange: (open: boolean) => void;
   onApply: () => void;
   onClearAll: () => void;
 }
@@ -48,27 +35,20 @@ export function FilterDropdownPanel({
   staged,
   dropdownOpen,
   dropdownRef,
-  districtSelectOpen,
-  districts,
   onToggleVibeStaged,
   onTogglePurposeStaged,
   onToggleTagStaged,
   onSetPriceStaged,
-  onSetDistrictStaged,
-  onDistrictSelectOpenChange,
   onApply,
   onClearAll,
 }: FilterDropdownPanelProps) {
   const tf = useTranslations("filters");
-  const tg = useTranslations("guidedFilter");
-  const districtOptions = districts?.length ? districts : [...AREAS];
 
   const stagedActiveCount =
     staged.vibes.length +
     staged.purposes.length +
     staged.tags.length +
-    (staged.price != null ? 1 : 0) +
-    (staged.district ? 1 : 0);
+    (staged.price != null ? 1 : 0);
 
   return (
     <div
@@ -134,47 +114,20 @@ export function FilterDropdownPanel({
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
-            <div>
-              <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-                {tf("price")}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {PRICE_OPTIONS.map((opt) => (
-                  <FilterChipButton
-                    key={opt.value}
-                    active={staged.price === opt.value}
-                    onClick={() => onSetPriceStaged(opt.value)}
-                  >
-                    {tf(`priceRanges.${opt.translationKey}`)}
-                  </FilterChipButton>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-                {tf("district")}
-              </p>
-              <Select
-                open={districtSelectOpen}
-                onOpenChange={onDistrictSelectOpenChange}
-                value={staged.district ?? ""}
-                onValueChange={(val) => onSetDistrictStaged(val ?? "")}
-              >
-                <SelectTrigger className="h-9 w-full rounded-full border border-[var(--border)] bg-white/68 px-3 text-xs font-bold text-[var(--foreground)] shadow-[var(--shadow-sm)] backdrop-blur-md focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]/18 dark:bg-[var(--card)]">
-                  <MapPin size={12} className="shrink-0 text-[var(--foreground-muted)]" />
-                  <SelectValue placeholder={tg("allDistricts")} />
-                </SelectTrigger>
-                <SelectContent align="start" sideOffset={4}>
-                  <SelectItem value="">{tg("allDistricts")}</SelectItem>
-                  {districtOptions.map((area) => (
-                    <SelectItem key={area} value={area}>
-                      {area}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div>
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
+              {tf("price")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {PRICE_OPTIONS.map((opt) => (
+                <FilterChipButton
+                  key={opt.value}
+                  active={staged.price === opt.value}
+                  onClick={() => onSetPriceStaged(opt.value)}
+                >
+                  {tf(`priceRanges.${opt.translationKey}`)}
+                </FilterChipButton>
+              ))}
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "check:filters": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/filter-normalization.self-check.mjs",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",

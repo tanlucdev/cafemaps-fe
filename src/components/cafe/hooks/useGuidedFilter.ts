@@ -9,7 +9,6 @@ export interface StagedFilter {
   purposes: Purpose[];
   tags: FilterTag[];
   price: string | undefined;
-  district: string | undefined;
 }
 
 function toggleInArray<T>(items: T[], item: T) {
@@ -26,18 +25,16 @@ interface UseGuidedFilterReturn {
 
   // Staged state (for dropdown panel only)
   staged: StagedFilter;
-  districtSelectOpen: boolean;
   toggleVibeStaged: (v: Vibe) => void;
   togglePurposeStaged: (p: Purpose) => void;
   toggleTagStaged: (tag: FilterTag) => void;
   setPriceStaged: (val: string) => void;
-  setDistrictStaged: (val: string) => void;
-  setDistrictSelectOpen: (open: boolean) => void;
   applyStaged: () => void;
 
   // Instant handlers (quick chips — write directly to committed filter)
   toggleVibeInstant: (v: Vibe) => void;
   toggleOpenNow: () => void;
+  setDistrict: (val: string) => void;
   setDistance: (km: number) => void;
   clearAll: () => void;
 
@@ -61,28 +58,21 @@ export function useGuidedFilter(
     purposes: [],
     tags: [],
     price: undefined,
-    district: undefined,
   });
-  const [districtSelectOpen, setDistrictSelectOpen] = useState(false);
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ignoreOutsideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ignoreNextOutsideMouseDownRef = useRef(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
   const extraVibeBtnRef = useRef<HTMLButtonElement>(null);
 
   const openDropdown = useCallback(() => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    if (ignoreOutsideTimerRef.current) clearTimeout(ignoreOutsideTimerRef.current);
-    ignoreNextOutsideMouseDownRef.current = false;
     // Snapshot current committed filter into staged state
     setStaged({
       vibes: (filter.vibes ?? []) as Vibe[],
       purposes: (filter.purposes ?? []) as Purpose[],
       tags: (filter.tags ?? []) as FilterTag[],
       price: filter.priceRange,
-      district: filter.district,
     });
     setDropdownMounted(true);
     requestAnimationFrame(() => setDropdownOpen(true));
@@ -90,8 +80,6 @@ export function useGuidedFilter(
 
   const closeDropdown = useCallback(() => {
     setDropdownOpen(false);
-    if (ignoreOutsideTimerRef.current) clearTimeout(ignoreOutsideTimerRef.current);
-    ignoreNextOutsideMouseDownRef.current = false;
     closeTimerRef.current = setTimeout(() => setDropdownMounted(false), 250);
   }, []);
 
@@ -103,12 +91,7 @@ export function useGuidedFilter(
   useEffect(() => {
     if (!dropdownMounted) return;
     function handler(e: MouseEvent) {
-      if (ignoreNextOutsideMouseDownRef.current) {
-        ignoreNextOutsideMouseDownRef.current = false;
-        return;
-      }
       if (
-        !districtSelectOpen &&
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node) &&
         !toggleBtnRef.current?.contains(e.target as Node) &&
@@ -119,7 +102,7 @@ export function useGuidedFilter(
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [dropdownMounted, districtSelectOpen, closeDropdown]);
+  }, [dropdownMounted, closeDropdown]);
 
   const toggleVibeStaged = useCallback((v: Vibe) => {
     setStaged((prev) => ({
@@ -149,27 +132,6 @@ export function useGuidedFilter(
     }));
   }, []);
 
-  const setDistrictStaged = useCallback((val: string) => {
-    setStaged((prev) => ({
-      ...prev,
-      district: val === "" ? undefined : val,
-    }));
-  }, []);
-
-  const handleDistrictSelectOpenChange = useCallback(
-    (open: boolean) => {
-      if (districtSelectOpen && !open) {
-        ignoreNextOutsideMouseDownRef.current = true;
-        if (ignoreOutsideTimerRef.current) clearTimeout(ignoreOutsideTimerRef.current);
-        ignoreOutsideTimerRef.current = setTimeout(() => {
-          ignoreNextOutsideMouseDownRef.current = false;
-        }, 0);
-      }
-      setDistrictSelectOpen(open);
-    },
-    [districtSelectOpen],
-  );
-
   const applyStaged = useCallback(() => {
     onChange({
       ...filter,
@@ -177,10 +139,8 @@ export function useGuidedFilter(
       purposes: staged.purposes.length > 0 ? staged.purposes : undefined,
       tags: staged.tags.length > 0 ? staged.tags : undefined,
       priceRange: staged.price,
-      district: staged.district,
     });
     closeDropdown();
-    setDistrictSelectOpen(false);
   }, [filter, staged, onChange, closeDropdown]);
 
   const toggleVibeInstant = useCallback(
@@ -195,6 +155,13 @@ export function useGuidedFilter(
   const toggleOpenNow = useCallback(() => {
     onChange({ ...filter, openNow: !filter.openNow });
   }, [filter, onChange]);
+
+  const setDistrict = useCallback(
+    (val: string) => {
+      onChange({ ...filter, district: val === "" ? undefined : val });
+    },
+    [filter, onChange],
+  );
 
   const setDistance = useCallback(
     (km: number) => {
@@ -212,7 +179,6 @@ export function useGuidedFilter(
     (filter.purposes?.length ?? 0) +
     (filter.tags?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
-    (filter.district ? 1 : 0) +
     (filter.openNow ? 1 : 0);
 
   return {
@@ -222,16 +188,14 @@ export function useGuidedFilter(
     closeDropdown,
     toggleDropdown,
     staged,
-    districtSelectOpen,
     toggleVibeStaged,
     togglePurposeStaged,
     toggleTagStaged,
     setPriceStaged,
-    setDistrictStaged,
-    setDistrictSelectOpen: handleDistrictSelectOpenChange,
     applyStaged,
     toggleVibeInstant,
     toggleOpenNow,
+    setDistrict,
     setDistance,
     clearAll,
     activeCount,
