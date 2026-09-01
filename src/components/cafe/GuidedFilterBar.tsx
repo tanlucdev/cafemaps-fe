@@ -23,12 +23,10 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     togglePurposeStaged,
     toggleTagStaged,
     setPriceStaged,
-    setDistrictStaged,
-    districtSelectOpen,
-    setDistrictSelectOpen,
     applyStaged,
     toggleVibeInstant,
     toggleOpenNow,
+    setDistrict,
     setDistance,
     clearAll,
     activeCount,
@@ -52,8 +50,10 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
           extraVibeBtnRef={extraVibeBtnRef}
           toggleVibeInstant={toggleVibeInstant}
           toggleOpenNow={toggleOpenNow}
+          setDistrict={setDistrict}
           setDistance={setDistance}
           clearAll={clearAll}
+          districts={districts}
         />
 
         {dropdownMounted && (
@@ -65,10 +65,6 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
             onTogglePurposeStaged={togglePurposeStaged}
             onToggleTagStaged={toggleTagStaged}
             onSetPriceStaged={setPriceStaged}
-            onSetDistrictStaged={setDistrictStaged}
-            districtSelectOpen={districtSelectOpen}
-            onDistrictSelectOpenChange={setDistrictSelectOpen}
-            districts={districts}
             onApply={applyStaged}
             onClearAll={clearAll}
           />
