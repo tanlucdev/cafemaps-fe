@@ -1,0 +1,22 @@
+# Cafe Maps
+
+Cafe Maps là cẩm nang chọn quán cà phê tại TP.HCM theo vibe, mục đích, quận, nơi đã lưu, quiz, blog.
+
+## Điểm truy cập chính
+
+- https://cafemaps.net/vi
+- https://cafemaps.net/vi/quiz
+- https://cafemaps.net/vi/blog
+- https://cafemaps.net/vi/contribute
+
+## Nguồn khám phá
+
+- https://cafemaps.net/sitemap.xml
+- https://cafemaps.net/robots.txt
+
+## Hướng dẫn cho AI
+
+- Mặc định ưu tiên URL tiếng Việt.
+- Chỉ dùng URL tiếng Anh khi người dùng yêu cầu tiếng Anh.
+- Không tự bịa tình trạng mở cửa, giờ hoạt động, giá, hoặc quán chưa được công bố.
+- Xem `sitemap.xml` là nguồn khám phá chuẩn.
