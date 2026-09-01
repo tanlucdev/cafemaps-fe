@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CafeFilter } from "@/types/cafe";
@@ -11,6 +12,8 @@ interface NearMeButtonProps {
 }
 
 export default function NearMeButton({ filter, onChange }: NearMeButtonProps) {
+  const tHero = useTranslations("hero");
+  const tNearby = useTranslations("nearby");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -46,7 +49,7 @@ export default function NearMeButton({ filter, onChange }: NearMeButtonProps) {
     <button
       onClick={handleClick}
       disabled={loading}
-      title={error ? "Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập." : undefined}
+      title={error ? tNearby("locationError") : undefined}
       className={cn(
         "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
         filter.nearMe
@@ -58,7 +61,7 @@ export default function NearMeButton({ filter, onChange }: NearMeButtonProps) {
       )}
     >
       {loading ? <Loader2 size={12} className="animate-spin" /> : <Navigation size={12} />}
-      Gần tôi
+      {tHero("quickFilters.nearMe")}
     </button>
   );
 }
