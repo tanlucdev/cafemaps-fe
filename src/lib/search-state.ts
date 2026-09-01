@@ -1,5 +1,4 @@
-import type { CafeFilter } from "@/types/cafe"
-import { VIBES } from "@/types/cafe"
+import type { CafeFilter, Vibe } from "@/types/cafe"
 
 export const LAST_SEARCH_STORAGE_KEY = "cafemaps_last_search"
 
@@ -10,6 +9,57 @@ export interface LastSearchState {
   filter: CafeFilter
   sort: SearchSort
   params: string
+}
+
+const VIBE_PARAM_VALUES: Record<string, string> = {
+  "yên tĩnh": "yên tĩnh",
+  quiet: "yên tĩnh",
+  "nhộn nhịp": "nhộn nhịp",
+  lively: "nhộn nhịp",
+  vintage: "vintage",
+  "hiện đại": "hiện đại",
+  modern: "hiện đại",
+  "thiên nhiên": "thiên nhiên",
+  nature: "thiên nhiên",
+  "sáng tạo": "sáng tạo",
+  creative: "sáng tạo",
+  "lãng mạn": "lãng mạn",
+  romantic: "lãng mạn",
+  minimalist: "minimalist",
+}
+
+const PURPOSE_PARAM_VALUES: Record<string, string> = {
+  "làm việc": "làm việc",
+  work: "làm việc",
+  "học tập": "học tập",
+  study: "học tập",
+  "hẹn hò": "hẹn hò",
+  date: "hẹn hò",
+  "họp nhóm": "họp nhóm",
+  group: "họp nhóm",
+  "chill một mình": "chill một mình",
+  solo: "chill một mình",
+  "gặp bạn bè": "gặp bạn bè",
+  friends: "gặp bạn bè",
+}
+
+const TAG_PARAM_VALUES: Record<string, string> = {
+  "ngoài trời": "ngoài trời",
+  outdoor: "ngoài trời",
+  "outdoor seating": "ngoài trời",
+  "chỗ hút thuốc": "chỗ hút thuốc",
+  smoking: "chỗ hút thuốc",
+  "smoking allowed": "chỗ hút thuốc",
+}
+
+const VIBE_VALUES = Object.values(VIBE_PARAM_VALUES).filter(
+  (value, index, values): value is Vibe => values.indexOf(value) === index,
+)
+
+function normalizeParamValues(values: string[] | undefined, map: Record<string, string>): string[] | undefined {
+  if (!values?.length) return undefined
+  const normalized = values.map((value) => map[value.toLowerCase()] ?? map[value] ?? value).filter(Boolean)
+  return normalized.length ? normalized : undefined
 }
 
 export function splitParam(value: string | null): string[] | undefined {
@@ -24,12 +74,17 @@ export function splitParam(value: string | null): string[] | undefined {
 type SearchParamsReader = Pick<URLSearchParams, "get" | "getAll">
 
 export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFilter {
-  const tagParams = splitParam(searchParams.get("tags")) ?? []
-  const legacyVibes = tagParams.filter((tag) => VIBES.includes(tag as (typeof VIBES)[number]))
+  const tagParams = normalizeParamValues(splitParam(searchParams.get("tags")), TAG_PARAM_VALUES) ?? []
+  const legacyVibes = tagParams.filter((tag) => VIBE_VALUES.includes(tag as Vibe))
   const tags = tagParams.filter((tag) => !legacyVibes.includes(tag))
-  const vibes = splitParam(searchParams.get("vibes")) ?? searchParams.getAll("vibe")
+  const vibes =
+    normalizeParamValues(splitParam(searchParams.get("vibes")) ?? searchParams.getAll("vibe"), VIBE_PARAM_VALUES) ??
+    []
   const allVibes = [...vibes, ...legacyVibes]
-  const purposes = splitParam(searchParams.get("purposes")) ?? searchParams.getAll("purpose")
+  const purposes = normalizeParamValues(
+    splitParam(searchParams.get("purposes")) ?? searchParams.getAll("purpose"),
+    PURPOSE_PARAM_VALUES,
+  )
   const rawSort = searchParams.get("sort")
   const sort: SearchSort | undefined =
     rawSort === "rating" || rawSort === "newest" || rawSort === "popular" ? rawSort : undefined
@@ -39,7 +94,7 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
   return {
     search: searchParams.get("search") ?? undefined,
     vibes: allVibes.length ? allVibes : undefined,
-    purposes: purposes.length ? purposes : undefined,
+    purposes: purposes?.length ? purposes : undefined,
     tags: tags.length ? tags : undefined,
     district: searchParams.get("district") ?? undefined,
     priceRange: searchParams.get("priceRange") ?? undefined,
