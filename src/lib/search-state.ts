@@ -106,7 +106,8 @@ function isSearchWordChar(value: string | undefined) {
 function isDistrictBoundary(text: string, index: number, direction: -1 | 1) {
   const adjacent = text[index]
   if (isSearchWordChar(adjacent)) return false
-  if (adjacent === "/" || adjacent === "." || adjacent === ",") {
+  if (adjacent === "," || adjacent === ";" || adjacent === ":") return true
+  if (adjacent === "/" || adjacent === ".") {
     return !isSearchWordChar(text[index + direction])
   }
   return true
