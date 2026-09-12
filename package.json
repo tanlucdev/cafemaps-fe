@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "test:agent-readiness": "node --test --experimental-strip-types scripts/agent-content.test.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
