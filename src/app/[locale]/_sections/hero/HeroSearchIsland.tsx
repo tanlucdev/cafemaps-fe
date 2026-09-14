@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import {
   buildSearchParams,
+  parseDistrictSearch,
   setLastSearchState,
 } from "@/lib/search-state";
 import { HeroSearchControls } from "./HeroSearchControls";
@@ -16,6 +17,7 @@ import type { CafeSuggestion, QuickFilter } from "./types";
 const NAME_SUGGESTIONS: CafeSuggestion[] = [];
 
 export function HeroSearchIsland() {
+  const locale = useLocale() === "en" ? "en" : "vi";
   const t = useTranslations("hero");
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -30,8 +32,8 @@ export function HeroSearchIsland() {
       getSmartSuggestions(search, {
         vibeInDistrict: (vibe, district) =>
           t("smartSuggestions.vibeInDistrict", { vibe, district }),
-      }),
-    [search, t],
+      }, locale),
+    [locale, search, t],
   );
   const showDropdown =
     focused && search.length >= 2 && smartSuggestions.length > 0;
@@ -69,10 +71,12 @@ export function HeroSearchIsland() {
 
   function handleSearch() {
     const q = search.trim().toLowerCase();
+    const districtSearch = parseDistrictSearch(search, locale);
     const filter = {
       search: undefined as string | undefined,
       vibes: [] as string[],
       purposes: [] as string[],
+      district: districtSearch.matched ? districtSearch.district : undefined,
       nearMe: undefined as boolean | undefined,
     };
 
@@ -86,7 +90,7 @@ export function HeroSearchIsland() {
     }
 
     if (q.includes("gần")) filter.nearMe = true;
-    if (!matched && q) filter.search = q;
+    if (!matched && districtSearch.search) filter.search = districtSearch.search.toLowerCase();
 
     setFocused(false);
     const query = buildSearchParams(
@@ -94,6 +98,7 @@ export function HeroSearchIsland() {
         search: filter.search,
         vibes: filter.vibes.length ? filter.vibes : undefined,
         purposes: filter.purposes.length ? filter.purposes : undefined,
+        district: filter.district,
         nearMe: filter.nearMe,
       },
       "popular",
@@ -106,6 +111,7 @@ export function HeroSearchIsland() {
           search: filter.search,
           vibes: filter.vibes.length ? filter.vibes : undefined,
           purposes: filter.purposes.length ? filter.purposes : undefined,
+          district: filter.district,
           nearMe: filter.nearMe,
         },
         sort: "popular",
@@ -166,10 +172,11 @@ export function HeroSearchIsland() {
     setFocused(false);
     setSearch(searchQuery);
     const lower = searchQuery.toLowerCase();
+    const districtSearch = parseDistrictSearch(searchQuery, locale);
     const filter = {
       vibes: [] as string[],
       purposes: [] as string[],
-      district: undefined as string | undefined,
+      district: districtSearch.matched ? districtSearch.district : undefined,
     };
 
     for (const mapping of KEYWORD_TO_FILTER) {
@@ -177,11 +184,6 @@ export function HeroSearchIsland() {
         if (mapping.vibe) filter.vibes.push(mapping.vibe);
         if (mapping.purpose) filter.purposes.push(mapping.purpose);
       }
-    }
-
-    const districtMatch = lower.match(/qu[aậ]n\s*(\d+|[a-zÀ-ɏ\s]+)/i);
-    if (districtMatch) {
-      filter.district = districtMatch[0].replace(/qu[aậ]n/i, "Quận").trim();
     }
 
     const query = buildSearchParams(
