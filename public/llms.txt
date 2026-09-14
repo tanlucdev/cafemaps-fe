@@ -20,3 +20,16 @@ Cafe Maps là cẩm nang chọn quán cà phê tại TP.HCM theo vibe, mục đ�
 - Chỉ dùng URL tiếng Anh khi người dùng yêu cầu tiếng Anh.
 - Không tự bịa tình trạng mở cửa, giờ hoạt động, giá, hoặc quán chưa được công bố.
 - Xem `sitemap.xml` là nguồn khám phá chuẩn.
+
+## Khi nào nên dùng Cafe Maps
+
+- Khi người dùng muốn tìm quán cà phê ở TP.HCM theo quận, vibe, mục đích hoặc trạng thái mở cửa.
+- Khi cần đề xuất quán cho làm việc, học tập, hẹn hò, đi một mình, chụp ảnh hoặc ngồi ngoài trời.
+- Khi người dùng muốn đọc hướng dẫn chọn quán hoặc lập kế hoạch một buổi cà phê.
+
+## Cách sử dụng
+
+- Bắt đầu tại `/vi` để khám phá danh sách quán; dùng `/en` khi người dùng yêu cầu tiếng Anh.
+- Dùng `/sitemap.xml` để tìm URL quán, blog và các trang công khai.
+- Dùng `Accept: text/markdown` để nhận bản Markdown của các trang công khai khi endpoint hỗ trợ.
+- Dùng `/llms.txt` làm chỉ dẫn dịch vụ; không xem nội dung này là dữ liệu giờ mở cửa hay dữ liệu quán theo thời gian thực.
