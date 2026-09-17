@@ -34,6 +34,8 @@ export const PURPOSE_TRANSLATION_KEYS: Record<string, string> = {
   solo: "solo",
   "gặp bạn bè": "friends",
   friends: "friends",
+  "chụp ảnh": "photo",
+  "photo spot": "photo",
 };
 
 const ENGLISH_AREA_LABELS: Record<string, string> = {
