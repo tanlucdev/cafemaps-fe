@@ -41,6 +41,13 @@ const PURPOSE_PARAM_VALUES: Record<string, string> = {
   solo: "chill một mình",
   "gặp bạn bè": "gặp bạn bè",
   friends: "gặp bạn bè",
+  "chụp ảnh": "chụp ảnh",
+  "chup anh": "chụp ảnh",
+  checkin: "chụp ảnh",
+  "check-in": "chụp ảnh",
+  photo: "chụp ảnh",
+  photo_spot: "chụp ảnh",
+  "photo spot": "chụp ảnh",
 }
 
 const TAG_PARAM_VALUES: Record<string, string> = {

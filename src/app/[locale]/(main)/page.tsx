@@ -13,6 +13,7 @@ export const revalidate = 300;
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 async function withHomeSsrTimeout<T>(run: () => Promise<T>, ms: number): Promise<T> {
@@ -43,10 +44,19 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   });
 }
 
-export default async function HomePage({ params }: HomePageProps) {
+function toUrlSearchParams(params: Record<string, string | string[] | undefined>) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) value.forEach((item) => query.append(key, item));
+    else if (value !== undefined) query.set(key, value);
+  }
+  return query;
+}
+
+export default async function HomePage({ params, searchParams }: HomePageProps) {
   const { locale } = await params;
   const normalizedLocale = locale === "en" ? "en" : routing.defaultLocale;
-  const urlSearchParams = new URLSearchParams();
+  const urlSearchParams = toUrlSearchParams(await searchParams);
   const parsedFilter = filterFromSearchParams(urlSearchParams);
   const initialFilter = {
     ...parsedFilter,

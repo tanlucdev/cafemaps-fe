@@ -13,6 +13,7 @@ import {
   User,
   TreePine,
   Cigarette,
+  Camera,
 } from "lucide-react";
 import { createElement } from "react";
 import type { Vibe, Purpose } from "@/types/cafe";
@@ -54,6 +55,7 @@ export const PURPOSE_TRANSLATION_KEYS: Record<Purpose, string> = {
   "họp nhóm": "group",
   "chill một mình": "solo",
   "gặp bạn bè": "friends",
+  "chụp ảnh": "photo",
 };
 
 // Map from priceRange value to translation key in filters.priceRanges
@@ -87,6 +89,7 @@ export const PURPOSE_ICONS: Record<Purpose, ReactNode> = {
   "họp nhóm": createElement(Users, { size: 11 }),
   "chill một mình": createElement(User, { size: 11 }),
   "gặp bạn bè": createElement(Users, { size: 11 }),
+  "chụp ảnh": createElement(Camera, { size: 11 }),
 };
 
 export const TAG_ICONS: Record<FilterTag, ReactNode> = {

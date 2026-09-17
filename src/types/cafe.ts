@@ -15,6 +15,7 @@ export type Purpose =
   | "họp nhóm"
   | "chill một mình"
   | "gặp bạn bè"
+  | "chụp ảnh"
 
 export interface PhotoCredit {
   ig: string
@@ -190,4 +191,5 @@ export const PURPOSES: Purpose[] = [
   "họp nhóm",
   "chill một mình",
   "gặp bạn bè",
+  "chụp ảnh",
 ]
