@@ -305,19 +305,19 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
     lightboxIndex !== null && typeof document !== "undefined"
       ? createPortal(
           <div
-            className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-[#2c1a0e]/54 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] text-white backdrop-blur-md sm:p-5"
+            className="fixed inset-0 z-[2147483647] h-[100dvh] overflow-hidden bg-[#120b06] text-white md:grid md:place-items-center md:bg-[#2c1a0e]/54 md:px-3 md:pt-[max(0.75rem,env(safe-area-inset-top))] md:pb-[max(0.75rem,env(safe-area-inset-bottom))] md:backdrop-blur-md lg:p-5"
             onClick={closeLightbox}
             role="dialog"
             aria-modal="true"
             aria-label={t("imageOf", { index: lightboxIndex + 1, cafeName })}
           >
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="flex h-full min-h-0 w-full items-center justify-center">
               <div
-                className="flex h-full max-h-[860px] w-full max-w-5xl flex-col overflow-hidden rounded-[28px] border border-[#ffe3b7]/28 bg-[#120b06]/92 shadow-[0_28px_90px_rgba(18,10,5,0.46),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/10 sm:rounded-[34px]"
+                className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#120b06]/92 md:max-h-[860px] md:max-w-5xl md:rounded-[28px] md:border md:border-[#ffe3b7]/28 md:shadow-[0_28px_90px_rgba(18,10,5,0.46),inset_0_1px_0_rgba(255,255,255,0.08)] md:ring-1 md:ring-white/10 lg:rounded-[34px]"
                 onClick={(event) => event.stopPropagation()}
               >
                 {/* Header */}
-                <div className="flex shrink-0 items-center justify-between border-b border-[#ffe3b7]/12 bg-[#fff8ed]/6 px-4 py-3 text-white sm:px-5">
+                <div className="flex shrink-0 items-center justify-between border-b border-[#ffe3b7]/12 bg-[#fff8ed]/6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 text-white sm:px-5 md:pt-3">
                   <span className="rounded-full bg-black/24 px-3 py-1 text-sm font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                     {lightboxIndex + 1} / {images.length}
                   </span>
@@ -333,7 +333,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
 
                 {/* Main image — fills remaining space between header and thumbnails */}
                 <div
-                  className="relative min-h-0 flex-1 bg-[radial-gradient(circle_at_top,#3a2415_0%,#120b06_54%,#080503_100%)]"
+                  className="relative min-h-0 flex-1 overflow-hidden bg-[radial-gradient(circle_at_top,#3a2415_0%,#120b06_54%,#080503_100%)] p-3 sm:p-5"
                   onTouchStart={(e) => {
                     lightboxTouchX.current = e.touches[0].clientX;
                   }}
@@ -345,23 +345,25 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                     moveLightbox(dx < 0 ? 1 : -1);
                   }}
                 >
-                  {images.map((url, index) => {
-                    if (!renderedIndices.has(index)) return null;
-                    const isActive = index === lightboxIndex;
-                    return (
-                      <Image
-                        key={index}
-                        src={url}
-                        alt={`${cafeName} ${index + 1}`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 960px"
-                        className={`object-contain p-3 transition-opacity duration-200 sm:p-5 ${isActive ? "opacity-100" : "pointer-events-none opacity-0"}`}
-                        aria-hidden={!isActive}
-                        priority={isActive && index === 0}
-                        quality={90}
-                      />
-                    );
-                  })}
+                  <div className="relative h-full w-full overflow-hidden rounded-[18px] bg-black/20 ring-1 ring-[#ffe3b7]/12">
+                    {images.map((url, index) => {
+                      if (!renderedIndices.has(index)) return null;
+                      const isActive = index === lightboxIndex;
+                      return (
+                        <Image
+                          key={index}
+                          src={url}
+                          alt={`${cafeName} ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 960px"
+                          className={`object-contain transition-opacity duration-200 ${isActive ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                          aria-hidden={!isActive}
+                          priority={isActive && index === 0}
+                          quality={90}
+                        />
+                      );
+                    })}
+                  </div>
 
                   {images.length > 1 && (
                     <>
