@@ -28,6 +28,10 @@ export const EN_PURPOSE_VALUES: Record<string, string> = {
   solo: "solo",
   "gặp bạn bè": "friends",
   friends: "friends",
+  "chụp ảnh": "photo spot",
+  photo: "photo spot",
+  photo_spot: "photo spot",
+  "photo spot": "photo spot",
 }
 
 export const EN_TAG_VALUES: Record<string, string> = {
