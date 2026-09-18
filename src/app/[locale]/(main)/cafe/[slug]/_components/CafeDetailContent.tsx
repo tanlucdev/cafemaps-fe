@@ -22,6 +22,7 @@ import SaveToFolderModal from "@/components/cafe/SaveToFolderModal";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
+import CafeReviews from "./CafeReviews";
 import { useCafeVisited } from "./useCafeVisited";
 import { useTrackCafeView } from "./useTrackCafeView";
 import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
@@ -264,6 +265,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             onVisited={handleVisited}
             onVote={handleVote}
           />
+        <CafeReviews cafeId={cafe.id} locale={locale} />
       </div>
 
       <ShareModal
