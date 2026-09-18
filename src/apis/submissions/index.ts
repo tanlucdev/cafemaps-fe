@@ -10,6 +10,7 @@ export interface CreateSubmissionInput {
 export interface CafeSubmission {
   id: string
   submittedById?: string | null
+  createdCafeId?: string | null
   name: string
   address?: string | null
   googleMapsUrl?: string | null
@@ -17,6 +18,15 @@ export interface CafeSubmission {
   reviewNote?: string | null
   status: "pending" | "approved" | "rejected"
   createdAt: string
+  createdCafe?: {
+    id: string
+    name: string
+    slug: string
+    address?: string | null
+    district?: string | null
+    coverImage?: string | null
+    isPublished?: boolean
+  } | null
 }
 
 export async function createSubmission(data: CreateSubmissionInput, token: string) {
@@ -25,4 +35,15 @@ export async function createSubmission(data: CreateSubmissionInput, token: strin
     headers: authHeaders(token),
     body: JSON.stringify(data),
   })
+}
+
+export async function getMySubmissions(token: string): Promise<CafeSubmission[]> {
+  try {
+    return await apiFetch<CafeSubmission[]>("/submissions/me", {
+      cache: "no-store",
+      headers: authHeaders(token),
+    })
+  } catch {
+    return []
+  }
 }

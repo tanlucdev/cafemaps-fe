@@ -1,25 +1,35 @@
-import Image from "next/image";
-import { Bookmark, Coffee, Heart, History, MapPin, PlusCircle, Sparkles } from "lucide-react";
+import { Bookmark, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Link } from "@/i18n/navigation";
-import { coverObjectPosition } from "@/lib/cover-image";
 import { cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import type { ProfileCopy } from "./constants";
-import { EmptyState, StatusBadge } from "./ProfileShared";
-import type { ActivityPreview, ProfileTab, SubmittedCafePreview } from "./types";
+import { QuizResultList } from "./QuizResultList";
+import { ProfileReviewList } from "./ProfileReviewList";
+import { SavedCafeList } from "./SavedCafeList";
+import { SubmittedCafeList } from "./SubmittedCafeList";
+import type { ProfileQuizResult, ProfileReviewItem, ProfileSubmission, ProfileTab } from "./types";
 
 export function ProfileContent({
   activeTab,
   cafes,
   copy,
+  locale,
   quizCompletedCount,
+  quizResults,
+  reviewCount,
+  reviews,
+  submissions,
   onChange,
 }: {
   activeTab: ProfileTab;
   cafes: Cafe[];
   copy: ProfileCopy;
+  locale: string;
   quizCompletedCount: number;
+  quizResults: ProfileQuizResult[];
+  reviewCount: number;
+  reviews: ProfileReviewItem[];
+  submissions: ProfileSubmission[];
   onChange: (tab: ProfileTab) => void;
 }) {
   return (
@@ -28,10 +38,17 @@ export function ProfileContent({
       <div className="mt-4">
         {activeTab === "saved" && <SavedCafeList cafes={cafes} copy={copy} />}
         {activeTab === "quiz" && (
-          <QuizResultCard copy={copy} quizCompletedCount={quizCompletedCount} />
+          <QuizResultList
+            copy={copy}
+            locale={locale}
+            quizCompletedCount={quizCompletedCount}
+            results={quizResults}
+          />
         )}
-        {activeTab === "submitted" && <SubmittedCafeList copy={copy} submissions={[]} />}
-        {activeTab === "activity" && <RecentActivity copy={copy} activities={[]} />}
+        {activeTab === "submitted" && <SubmittedCafeList copy={copy} submissions={submissions} />}
+        {activeTab === "reviews" && (
+          <ProfileReviewList copy={copy} initialReviews={reviews} total={reviewCount} />
+        )}
       </div>
     </section>
   );
@@ -50,7 +67,7 @@ function ProfileTabs({
     { id: "saved", label: copy.savedTab, icon: Bookmark },
     { id: "quiz", label: copy.quizTab, icon: Sparkles },
     { id: "submitted", label: copy.submittedTab, icon: PlusCircle },
-    { id: "activity", label: copy.activityTab, icon: History },
+    { id: "reviews", label: copy.reviewsTab, icon: MessageCircle },
   ];
 
   return (
@@ -80,185 +97,6 @@ function ProfileTabs({
           </button>
         );
       })}
-    </div>
-  );
-}
-
-function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
-  if (cafes.length === 0) {
-    return (
-      <EmptyState
-        icon={Heart}
-        title={copy.noSavedTitle}
-        body={copy.noSavedBody}
-        actionHref="/search"
-        actionLabel={copy.exploreCafes}
-      />
-    );
-  }
-
-  return (
-    <div className="grid gap-3">
-      {cafes.map((cafe, index) => (
-        <article
-          key={cafe.id}
-          className="grid min-w-0 gap-3 rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-3 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-warm)] sm:grid-cols-[116px_minmax(0,1fr)_auto] sm:items-center dark:bg-white/5"
-        >
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[var(--background-secondary)] sm:aspect-auto sm:h-24">
-            {cafe.coverImage ? (
-              <Image
-                src={cafe.coverImage}
-                alt={cafe.name}
-                fill
-                sizes="(max-width: 640px) 100vw, 116px"
-                priority={index === 0}
-                className="object-cover"
-                style={{ objectPosition: coverObjectPosition(cafe) }}
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-[var(--accent)]">
-                <Coffee size={24} />
-              </div>
-            )}
-          </div>
-          <div className="min-w-0">
-            <h2 className="truncate text-base font-black text-[var(--foreground)]">{cafe.name}</h2>
-            <p className="mt-1 flex min-w-0 items-center gap-1.5 text-sm font-medium text-[var(--foreground-muted)]">
-              <MapPin size={14} className="shrink-0" />
-              <span className="truncate">
-                {cafe.district || cafe.address || "Ho Chi Minh City"}
-              </span>
-            </p>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {cafe.vibes.slice(0, 3).map((vibe) => (
-                <span
-                  key={vibe}
-                  className="rounded-full bg-[var(--accent-light)] px-2.5 py-1 text-xs font-bold text-[#875200] dark:text-[#f0b869]"
-                >
-                  {vibe}
-                </span>
-              ))}
-            </div>
-          </div>
-          <Link
-            href={`/cafe/${cafe.slug}`}
-            className="inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-2xl border border-[var(--border)] px-4 text-sm font-bold text-[var(--foreground)] transition hover:bg-[var(--background-secondary)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
-          >
-            {copy.view}
-          </Link>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function QuizResultCard({
-  copy,
-  quizCompletedCount,
-}: {
-  copy: ProfileCopy;
-  quizCompletedCount: number;
-}) {
-  if (quizCompletedCount === 0) {
-    return (
-      <EmptyState
-        icon={Sparkles}
-        title={copy.quizEmptyTitle}
-        body={copy.quizEmptyBody}
-        actionHref="/quiz"
-        actionLabel={copy.takeQuiz}
-      />
-    );
-  }
-
-  return (
-    <div className="rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-5 dark:bg-white/5">
-      <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-[var(--accent-light)] text-[var(--accent)]">
-        <Sparkles size={22} />
-      </div>
-      <h2 className="text-xl font-black text-[var(--foreground)]">{copy.quizTitle}</h2>
-      <p className="mt-2 max-w-xl text-sm text-[var(--foreground-muted)]">
-        {copy.quizCompletedSummary.replace("{count}", String(quizCompletedCount))}
-      </p>
-      <Link
-        href="/quiz"
-        className="mt-5 inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-white transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
-      >
-        <Sparkles size={15} />
-        {copy.retakeQuiz}
-      </Link>
-    </div>
-  );
-}
-
-function SubmittedCafeList({
-  copy,
-  submissions,
-}: {
-  copy: ProfileCopy;
-  submissions: SubmittedCafePreview[];
-}) {
-  if (submissions.length === 0) {
-    return (
-      <EmptyState
-        icon={PlusCircle}
-        title={copy.submittedEmptyTitle}
-        body={copy.submittedEmptyBody}
-        actionHref="/contribute"
-        actionLabel={copy.submitCafe}
-      />
-    );
-  }
-
-  return (
-    <div className="grid gap-3">
-      {submissions.map((submission) => (
-        <div
-          key={submission.name}
-          className="flex items-center justify-between gap-4 rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-4 dark:bg-white/5"
-        >
-          <div>
-            <h2 className="font-black text-[var(--foreground)]">{submission.name}</h2>
-            <p className="text-sm text-[var(--foreground-muted)]">{submission.area}</p>
-          </div>
-          <StatusBadge status={submission.status} copy={copy} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function RecentActivity({
-  copy,
-  activities,
-}: {
-  copy: ProfileCopy;
-  activities: ActivityPreview[];
-}) {
-  if (activities.length === 0) {
-    return (
-      <EmptyState icon={History} title={copy.activityEmptyTitle} body={copy.activityEmptyBody} />
-    );
-  }
-
-  return (
-    <div className="space-y-1">
-      {activities.map(({ icon: Icon, title, time }, index) => (
-        <div key={title} className="grid grid-cols-[36px_minmax(0,1fr)] gap-3">
-          <div className="flex flex-col items-center">
-            <div className="flex size-9 items-center justify-center rounded-full bg-[var(--accent-light)] text-[var(--accent)]">
-              <Icon size={16} />
-            </div>
-            {index < activities.length - 1 && (
-              <div className="h-8 border-l border-dashed border-[var(--border)]" />
-            )}
-          </div>
-          <div className="pb-5">
-            <p className="font-bold text-[var(--foreground)]">{title}</p>
-            <p className="text-sm text-[var(--foreground-muted)]">{time}</p>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

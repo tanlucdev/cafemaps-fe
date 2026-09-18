@@ -1,5 +1,10 @@
 import { apiFetch, authHeaders } from "@/apis/http";
-import type { CafeReview, CafeReviewListResponse, UpsertCafeReviewInput } from "@/types/review";
+import type {
+  CafeReview,
+  CafeReviewListResponse,
+  ProfileReviewListResponse,
+  UpsertCafeReviewInput,
+} from "@/types/review";
 
 export function getCafeReviews(cafeId: string, page = 1, limit = 10) {
   return apiFetch<CafeReviewListResponse>(
@@ -13,6 +18,17 @@ export function getMyCafeReview(cafeId: string, token: string) {
     cache: "no-store",
     headers: authHeaders(token),
   });
+}
+
+export async function getMyReviews(token: string, page = 1, limit = 5) {
+  try {
+    return await apiFetch<ProfileReviewListResponse>(`/reviews/me?page=${page}&limit=${limit}`, {
+      cache: "no-store",
+      headers: authHeaders(token),
+    });
+  } catch {
+    return { data: [], total: 0, meta: { total: 0, page, limit, totalPages: 0 } };
+  }
 }
 
 export function upsertCafeReview(cafeId: string, token: string, data: UpsertCafeReviewInput) {
