@@ -4,18 +4,23 @@ import { useEffect, useMemo, useState } from "react";
 import { Bookmark, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import { getAuthUser, type AuthUser } from "@/lib/auth-client";
 import type { SavedCafeEntry } from "@/types/cafe";
+import type { ProfileReview } from "@/types/review";
 import { copyByLocale } from "./constants";
 import { ProfileContent } from "./ProfileContent";
 import { ProfileHeader, ProfileStats } from "./ProfileHeader";
 import { ProfileInfoCard, PreferencesCard, QuickActions } from "./ProfileSidebar";
 import { getInitials } from "./helpers";
-import type { ProfileStat, ProfileTab } from "./types";
+import type { ProfileQuizResult, ProfileStat, ProfileSubmission, ProfileTab } from "./types";
 
 interface ProfilePageClientProps {
   locale: string;
   initialIsLoggedIn: boolean;
   initialSavedEntries: SavedCafeEntry[];
   initialQuizCompletedCount: number;
+  initialQuizResults: ProfileQuizResult[];
+  initialSubmissions: ProfileSubmission[];
+  initialReviews: ProfileReview[];
+  initialReviewCount: number;
 }
 
 export default function ProfilePageClient({
@@ -23,6 +28,10 @@ export default function ProfilePageClient({
   initialIsLoggedIn,
   initialSavedEntries,
   initialQuizCompletedCount,
+  initialQuizResults,
+  initialSubmissions,
+  initialReviews,
+  initialReviewCount,
 }: ProfilePageClientProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>("saved");
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -38,8 +47,8 @@ export default function ProfilePageClient({
   const stats: ProfileStat[] = [
     { label: copy.savedCafes, value: initialSavedEntries.length, icon: Bookmark },
     { label: copy.quizResults, value: initialQuizCompletedCount, icon: Sparkles },
-    { label: copy.contributions, value: 0, icon: PlusCircle },
-    { label: copy.reviews, value: 0, icon: MessageCircle },
+    { label: copy.contributions, value: initialSubmissions.length, icon: PlusCircle },
+    { label: copy.reviews, value: initialReviewCount, icon: MessageCircle },
   ];
 
   useEffect(() => {
@@ -71,7 +80,12 @@ export default function ProfilePageClient({
             activeTab={activeTab}
             cafes={savedCafes}
             copy={copy}
+            locale={locale}
             quizCompletedCount={initialQuizCompletedCount}
+            quizResults={initialQuizResults}
+            reviewCount={initialReviewCount}
+            reviews={initialReviews}
+            submissions={initialSubmissions}
             onChange={setActiveTab}
           />
         </div>

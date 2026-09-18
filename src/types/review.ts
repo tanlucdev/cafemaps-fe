@@ -25,3 +25,21 @@ export interface UpsertCafeReviewInput {
   rating?: number | null
   content?: string | null
 }
+
+export type ProfileReview = CafeReview & {
+  cafe: {
+    id: string
+    name: string
+    slug: string
+    address?: string | null
+    district?: string | null
+    coverImage?: string | null
+    isPublished: boolean
+  }
+}
+
+export interface ProfileReviewListResponse {
+  data: ProfileReview[]
+  total: number
+  meta: { total: number; page: number; limit: number; totalPages: number }
+}
