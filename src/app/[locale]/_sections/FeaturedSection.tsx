@@ -8,6 +8,7 @@ import {
   buildSearchParams,
   filterFromSearchParams,
   hasActiveSearchFilters,
+  parseDistrictSearch,
   setLastSearchState,
   sortFromSearchParams,
   type SearchSort,
@@ -123,7 +124,12 @@ export default function FeaturedSection({
   }
 
   function handleSearchSubmit() {
-    const newFilter = { ...filter, search: searchInput.trim() || undefined };
+    const parsed = parseDistrictSearch(searchInput, locale === "en" ? "en" : "vi");
+    const newFilter = {
+      ...filter,
+      search: parsed.matched ? parsed.search : searchInput.trim() || undefined,
+      district: parsed.matched ? parsed.district : filter.district,
+    };
     handleFilterChange(newFilter);
   }
 

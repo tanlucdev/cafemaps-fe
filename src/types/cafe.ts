@@ -15,6 +15,7 @@ export type Purpose =
   | "họp nhóm"
   | "chill một mình"
   | "gặp bạn bè"
+  | "chụp ảnh"
 
 export interface PhotoCredit {
   ig: string
@@ -61,6 +62,7 @@ export interface Cafe {
   coverImage?: string | null
   coverImageCrop?: { x: number; y: number } | null
   menuImage?: string | null
+  menuImages?: string[] | null
   instagramUrl?: string | null
   photoCredits?: PhotoCredit[] | null
   isFeatured?: boolean | null
@@ -190,4 +192,5 @@ export const PURPOSES: Purpose[] = [
   "họp nhóm",
   "chill một mình",
   "gặp bạn bè",
+  "chụp ảnh",
 ]

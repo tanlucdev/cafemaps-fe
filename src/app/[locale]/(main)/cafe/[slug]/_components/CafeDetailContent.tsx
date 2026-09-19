@@ -22,6 +22,7 @@ import SaveToFolderModal from "@/components/cafe/SaveToFolderModal";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
 import CafeMenuModal from "./CafeMenuModal";
+import CafeReviews from "./CafeReviews";
 import { useCafeVisited } from "./useCafeVisited";
 import { useTrackCafeView } from "./useTrackCafeView";
 import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
@@ -52,6 +53,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
   const [shareOpen, setShareOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const viewCount = useTrackCafeView(cafe.id, cafe.viewCount);
+  const menuImages = (cafe.menuImages?.length ? cafe.menuImages : cafe.menuImage ? [cafe.menuImage] : []).filter(Boolean) as string[];
 
   const cafeUrl =
     typeof window !== "undefined"
@@ -238,7 +240,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             coverImageCrop={cafe.coverImageCrop}
             cafeName={cafe.name}
           />
-          {cafe.menuImage && (
+          {menuImages.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-3 px-1 pb-1">
               <motion.button
                 type="button"
@@ -273,6 +275,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             onVisited={handleVisited}
             onVote={handleVote}
           />
+        <CafeReviews cafeId={cafe.id} locale={locale} />
       </div>
 
       <ShareModal
@@ -283,12 +286,12 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
         mapsUrl={mapsUrl}
         websiteUrl={cafe.websiteUrl ?? cafeUrl}
       />
-      {cafe.menuImage && (
+      {menuImages.length > 0 && (
         <CafeMenuModal
           open={menuOpen}
           onClose={() => setMenuOpen(false)}
           cafeName={cafe.name}
-          menuImage={cafe.menuImage}
+          menuImages={menuImages}
         />
       )}
       <SaveToFolderModal

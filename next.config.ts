@@ -78,6 +78,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
+    unoptimized: true,
     qualities: [48, 58, 75, 85, 88, 90],
     remotePatterns: [
       {
@@ -112,6 +113,8 @@ const nextConfig: NextConfig = {
     "192.168.1.125",
     "192.168.1.90",
     "192.168.2.225",
+    "192.168.2.94",
+    "192.168.1.18",
   ],
 };
 

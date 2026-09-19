@@ -1,4 +1,4 @@
-import type { LastSearchState } from "@/lib/search-state";
+import { parseDistrictSearch, type LastSearchState } from "@/lib/search-state";
 import type { Cafe } from "@/types/cafe";
 import { VIBE_MAP } from "./data";
 import type { SmartSuggestion } from "./types";
@@ -31,6 +31,7 @@ type LastSearchCopy = {
 export function getSmartSuggestions(
   input: string,
   copy: SmartSuggestionCopy,
+  locale: "vi" | "en",
 ): SmartSuggestion[] {
   if (input.length < 2) return [];
   const lower = input.toLowerCase();
@@ -45,14 +46,8 @@ export function getSmartSuggestions(
     }
   }
 
-  let detectedDistrict: string | null = null;
-  const districtMatch = lower.match(/qu[aậ]n\s*(\d+|[a-zÀ-ɏ\s]+)/i);
-  if (districtMatch) {
-    detectedDistrict = districtMatch[0]
-      .replace(/qu[aậ]n/i, "Quận")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
+  const districtSearch = parseDistrictSearch(input, locale);
+  const detectedDistrict = districtSearch.matched ? districtSearch.district ?? null : null;
 
   if (detectedVibe && !detectedDistrict) {
     const popular = ["Quận 1", "Quận 3", "Bình Thạnh", "Phú Nhuận", "Quận 7"];

@@ -3,6 +3,33 @@ import { apiFetch, authHeaders } from "@/apis/http";
 
 export type QuizStats = {
   quizCompletedCount: number;
+  results: QuizHistoryResult[];
+};
+
+export type QuizHistoryResult = {
+  id: string;
+  profileId: string;
+  profileTitle: string;
+  variant?: QuizResultVariant | string | null;
+  score?: number | null;
+  dna?: string | null;
+  chips?: string[] | null;
+  answers?: unknown;
+  createdAt: string;
+};
+
+export type QuizCompletionResultPayload = {
+  profileId: string;
+  profileTitle: string;
+  variant: QuizResultVariant;
+  score: number;
+  dna: string;
+  chips: string[];
+  answers: Array<{ id: string }>;
+};
+
+export type QuizCompletionResponse = {
+  quizCompletedCount: number;
 };
 
 export type QuizResultImagePayload = {
@@ -45,13 +72,17 @@ export async function getQuizStats(token: string): Promise<QuizStats> {
       headers: authHeaders(token),
     });
   } catch {
-    return { quizCompletedCount: 0 };
+    return { quizCompletedCount: 0, results: [] };
   }
 }
 
-export async function recordQuizCompletion(token: string): Promise<QuizStats> {
-  return apiFetch<QuizStats>("/quiz/completions", {
+export async function recordQuizCompletion(
+  token: string,
+  result?: QuizCompletionResultPayload,
+): Promise<QuizCompletionResponse> {
+  return apiFetch<QuizCompletionResponse>("/quiz/completions", {
     method: "POST",
     headers: authHeaders(token),
+    body: JSON.stringify(result ? { result } : {}),
   });
 }

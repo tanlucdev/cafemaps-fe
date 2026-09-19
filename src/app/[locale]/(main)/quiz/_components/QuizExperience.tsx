@@ -181,17 +181,33 @@ export default function QuizExperience({
 
   function submit() {
     if (submitting || !isComplete || !isLastStep || !selectedId) return;
+    const variant = resultVariant;
+    if (!variant) return;
     setSubmitting(true);
-    void warmCafes().finally(() => {
+    void warmCafes().then((items) => {
+      const resolved = resolveQuizResult({
+        answers: questions.map((question) => answers[question.id]),
+        cafes: items,
+        messages,
+        variant,
+      });
       setPreviewProfileId(undefined);
       setSubmitted(true);
-      setSubmitting(false);
-    });
-    if (completionRecorded.current) return;
-    completionRecorded.current = true;
-    void getCurrentAccessToken().then((token) => {
-      if (token) void recordQuizCompletion(token).catch(() => {});
-    });
+      if (completionRecorded.current) return;
+      completionRecorded.current = true;
+      void getCurrentAccessToken().then((token) => {
+        if (!token) return;
+        void recordQuizCompletion(token, {
+          profileId: resolved.profile.id,
+          profileTitle: resolved.profile.title,
+          variant,
+          score: resolved.score,
+          dna: resolved.dna,
+          chips: resolved.chips,
+          answers: questions.map((question) => ({ id: answers[question.id].id })),
+        }).catch(() => {});
+      });
+    }).finally(() => setSubmitting(false));
   }
 
   function next() {
