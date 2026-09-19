@@ -62,6 +62,7 @@ export interface Cafe {
   coverImage?: string | null
   coverImageCrop?: { x: number; y: number } | null
   menuImage?: string | null
+  menuImages?: string[] | null
   instagramUrl?: string | null
   photoCredits?: PhotoCredit[] | null
   isFeatured?: boolean | null

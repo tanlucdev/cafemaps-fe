@@ -81,6 +81,7 @@ export type RawCafe = Omit<
   image_orientation?: string[] | null
   imageOrientation?: string[] | null
   menu_image?: string | null
+  menu_images?: string[] | null
   website_url?: string | null
   website?: string | null
   opening_time?: string | null
@@ -142,6 +143,10 @@ function pickLocalized<T>(locale: ApiLocale, base: T, localized: T | null | unde
   if (locale !== "en") return base
   if (Array.isArray(localized)) return (localized.length > 0 ? localized : base) as T
   return (localized ?? base) as T
+}
+
+function cleanUrls(urls?: string[] | null): string[] {
+  return (urls ?? []).map((url) => url.trim()).filter(Boolean)
 }
 
 export function normalizeLabelKey(value: string): string {
@@ -226,6 +231,8 @@ export function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
   const tags = raw.tags ?? []
   const parkingLocation = raw.parkingLocation ?? raw.parking_location ?? null
   const localizedTags = pickLocalized(apiLocale, tags, tagsEn)
+  const legacyMenuImage = raw.menuImage ?? raw.menu_image ?? null
+  const menuImages = cleanUrls(raw.menuImages ?? raw.menu_images)
 
   return {
     ...raw,
@@ -264,7 +271,8 @@ export function mapApiCafe(raw: RawCafe, locale?: string | null): Cafe {
       raw.image_orientation ??
       raw.imageOrientation ??
       null,
-    menuImage: raw.menuImage ?? raw.menu_image ?? null,
+    menuImage: legacyMenuImage,
+    menuImages: menuImages.length ? menuImages : cleanUrls(legacyMenuImage ? [legacyMenuImage] : []),
     isPublished: raw.isPublished ?? true,
     distanceKm: distanceKmValue,
     durationMin,
