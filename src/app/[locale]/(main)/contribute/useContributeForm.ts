@@ -60,6 +60,7 @@ export function useContributeForm() {
       await createSubmission(
         {
           name: data.name.trim(),
+          submissionType: "community",
           googleMapsUrl: data.googleMapsUrl.trim(),
           note: data.reason.trim() || undefined,
         },

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type ImageProps } from "next/image";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -63,7 +63,7 @@ function MobileMainImage({
         if (!preloadIndices.has(i)) return null;
         const isActive = i === activeIndex;
         return (
-          <Image
+          <GalleryImage
             key={i}
             src={src}
             alt={`${cafeName} ${i + 1}`}
@@ -73,6 +73,7 @@ function MobileMainImage({
             style={{ objectPosition: objectPosition(i) }}
             priority={i === 0}
             quality={90}
+            unoptimized={shouldSkipOptimization(src)}
             aria-hidden={!isActive}
           />
         );
@@ -91,6 +92,57 @@ interface SmartGalleryProps {
   orientations?: string[];
   coverImageCrop?: { x: number; y: number } | null;
   cafeName: string;
+}
+
+function shouldSkipOptimization(src: string) {
+  return src.startsWith("blob:") || src.startsWith("data:");
+}
+
+function GalleryImage({
+  src,
+  alt,
+  fill,
+  width,
+  height,
+  sizes,
+  quality,
+  priority,
+  unoptimized,
+  style,
+  ...props
+}: ImageProps) {
+  if (typeof src === "string" && shouldSkipOptimization(src)) {
+    const imgStyle = fill
+      ? { ...style, position: "absolute" as const, inset: 0, height: "100%", width: "100%" }
+      : style;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        {...props}
+        src={src}
+        alt={alt}
+        width={typeof width === "number" ? width : undefined}
+        height={typeof height === "number" ? height : undefined}
+        style={imgStyle}
+      />
+    );
+  }
+
+  return (
+    <Image
+      {...props}
+      src={src}
+      alt={alt}
+      fill={fill}
+      width={width}
+      height={height}
+      sizes={sizes}
+      quality={quality}
+      priority={priority}
+      unoptimized={unoptimized}
+      style={style}
+    />
+  );
 }
 
 export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName }: SmartGalleryProps) {
@@ -181,7 +233,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
         aria-label={t("viewImageOf", { index: index + 1, cafeName })}
         className={`group relative overflow-hidden bg-(--background-secondary) ${className}`}
       >
-        <Image
+        <GalleryImage
           src={url}
           alt={`${cafeName} ${index + 1}`}
           fill
@@ -190,6 +242,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
           style={{ objectPosition: objectPosition(index) }}
           priority={priority}
           quality={90}
+          unoptimized={shouldSkipOptimization(url)}
         />
         <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/12" />
         <span className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -236,7 +289,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
               }}
             >
               <span className="block h-full w-full overflow-hidden" style={{ borderRadius: "8px" }}>
-                <Image
+                <GalleryImage
                   src={url}
                   alt={`${cafeName} thumbnail ${i + 1}`}
                   width={60}
@@ -245,6 +298,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                   className="h-full w-full object-cover"
                   style={{ objectPosition: objectPosition(i) }}
                   quality={85}
+                  unoptimized={shouldSkipOptimization(url)}
                 />
               </span>
             </button>
@@ -350,7 +404,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                       if (!renderedIndices.has(index)) return null;
                       const isActive = index === lightboxIndex;
                       return (
-                        <Image
+                        <GalleryImage
                           key={index}
                           src={url}
                           alt={`${cafeName} ${index + 1}`}
@@ -360,6 +414,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                           aria-hidden={!isActive}
                           priority={isActive && index === 0}
                           quality={90}
+                          unoptimized={shouldSkipOptimization(url)}
                         />
                       );
                     })}
@@ -405,7 +460,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                             : "opacity-55 hover:opacity-85"
                         }`}
                       >
-                        <Image
+                        <GalleryImage
                           src={url}
                           alt={`${cafeName} thumbnail ${index + 1}`}
                           fill
@@ -413,6 +468,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                           className="object-cover"
                           style={{ objectPosition: objectPosition(index) }}
                           quality={85}
+                          unoptimized={shouldSkipOptimization(url)}
                         />
                       </button>
                     ))}

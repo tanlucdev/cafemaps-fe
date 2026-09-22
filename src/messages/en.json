@@ -1190,6 +1190,49 @@
   "contribute": {
     "title": "Submit a café",
     "subtitle": "Share a café worth visiting so the community can find it more easily.",
+    "hub": {
+      "title": "Contribute to Cafe Maps",
+      "subtitle": "Choose the right flow: suggest a café quickly or send detailed information if you own the place.",
+      "eyebrow": "Cafe Maps contribution",
+      "heroTitle": "How would you like to contribute?",
+      "flowAria": "Choose contribution flow",
+      "suggest": {
+        "title": "Suggest a café for the community",
+        "body": "Quickly send a café you have visited, with Google Maps, a short note, and photos if available.",
+        "cta": "Suggest a café"
+      },
+      "owner": {
+        "title": "Owner detailed submission",
+        "body": "Add photos, menu, opening hours, amenities, and contact details so admins can review it fully.",
+        "cta": "Send details"
+      }
+    },
+    "ownerSheet": {
+      "button": "View required sections",
+      "title": "Required sections",
+      "description": "Overview of the information groups in this form.",
+      "close": "Close",
+      "items": {
+        "photos": "Café photos",
+        "name": "Café name",
+        "location": "Address or Google Maps",
+        "hours": "Opening / closing hours",
+        "description": "Short intro / description",
+        "vibe": "Vibe / best for / amenities",
+        "parking": "Parking",
+        "featured": "Featured drink / Instagram",
+        "menu": "Menu",
+        "ownerContact": "Owner contact information",
+        "verification": "Verification note / note for admin"
+      }
+    },
+    "ownerPage": {
+      "metadataTitle": "Owner detailed submission",
+      "metadataDescription": "Send photos, menu, opening hours, pricing, and contact details so Cafe Maps can review your café.",
+      "eyebrow": "Owner submission",
+      "title": "Send detailed information for your café",
+      "body": "Add photos, menu, opening hours, pricing, and contact details. You will review everything before submitting."
+    },
     "eyebrow": "Cafe Maps community",
     "heroTitle": "Share a coffee corner you want others to find",
     "heroBody": "A Google Maps link, a few honest notes, and real photos if you have them are enough for us to start reviewing. Small contributions help Cafe Maps stay local, warm, and genuinely useful.",
@@ -1355,6 +1398,7 @@
     "search": "Search",
     "quiz": "Vibe",
     "saved": "Saved",
+    "contribute": "Contribute",
     "map": "Map",
     "profile": "Profile"
   },
