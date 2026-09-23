@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Coffee, Heart, MapPin } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import type { Cafe } from "@/types/cafe";
 import type { ProfileCopy } from "./constants";
 import { EmptyState } from "./ProfileShared";
@@ -29,7 +30,7 @@ export function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCop
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[var(--background-secondary)] sm:aspect-auto sm:h-24">
             {cafe.coverImage ? (
               <Image
-                src={cafe.coverImage}
+                src={cloudinaryImageUrl(cafe.coverImage, "thumb")}
                 alt={cafe.name}
                 fill
                 sizes="(max-width: 640px) 100vw, 116px"

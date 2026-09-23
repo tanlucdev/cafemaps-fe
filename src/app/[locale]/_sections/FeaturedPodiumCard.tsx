@@ -8,6 +8,7 @@ import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
@@ -72,7 +73,7 @@ export default function FeaturedPodiumCard({
         <div className={cn("relative overflow-hidden bg-(--background-secondary)", heightClass)}>
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 256px, 33vw"

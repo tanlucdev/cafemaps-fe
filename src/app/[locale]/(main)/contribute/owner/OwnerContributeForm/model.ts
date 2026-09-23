@@ -101,3 +101,34 @@ export function getRequiredItems(draft: Draft, imageCount: number): RequiredItem
 
 export const REQUIRED_PREVIEW_MESSAGE =
   "Vui lòng thêm tên quán, địa chỉ hoặc Google Maps, ít nhất 1 ảnh, giờ mở và giờ đóng cửa để xem lại.";
+
+export const ONE_LINER_WORD_LIMIT = 20;
+
+export function limitWords(value: string, limit: number) {
+  const words = value.match(/\S+/g) ?? [];
+  return words.length <= limit ? value : words.slice(0, limit).join(" ");
+}
+
+export function moveToFront<T>(items: T[], index: number) {
+  if (index <= 0 || index >= items.length) return items;
+  const next = [...items];
+  const [item] = next.splice(index, 1);
+  return [item, ...next];
+}
+
+export function normalizeDraft(draft: Draft): Draft {
+  const images = draft.images ?? [];
+  const coverImage = images[0];
+  return {
+    ...draft,
+    oneLiner: draft.oneLiner ? limitWords(draft.oneLiner, ONE_LINER_WORD_LIMIT) : undefined,
+    images,
+    imageOrientations: (draft.imageOrientations ?? []).slice(0, images.length),
+    coverImage,
+    coverImageCrop: coverImage
+      ? coverImage === draft.coverImage
+        ? (draft.coverImageCrop ?? { x: 50, y: 50 })
+        : { x: 50, y: 50 }
+      : null,
+  };
+}

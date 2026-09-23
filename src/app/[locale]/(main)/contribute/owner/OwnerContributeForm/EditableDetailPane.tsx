@@ -4,6 +4,7 @@ import { type ChangeEvent, type Dispatch, type SetStateAction, useEffect, useSta
 import { BookOpen, MapPinned } from "lucide-react";
 import SmartGallery from "@/components/SmartGallery";
 import { cn } from "@/lib/utils";
+import { MAX_OWNER_GALLERY_IMAGES, remainingOwnerGalleryImages } from "./image-limits";
 import { getRequiredItems, type Draft, type FocusKey, type SectionId } from "./model";
 import { ChipRow, UploadButton, previewMutedClass } from "./editable-controls";
 import { EditableSheet } from "./EditableSheet";
@@ -14,12 +15,18 @@ type Props = {
   setDraft: Dispatch<SetStateAction<Draft>>;
   images: string[];
   menuImages: string[];
+  imageKeys: string[];
+  menuImageKeys: string[];
+  imageStatuses: Record<string, "uploading" | "failed">;
+  menuImageStatuses: Record<string, "uploading" | "failed">;
+  imagesLocked: boolean;
   canSubmit: boolean;
   error: string | null;
   onFiles: (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => void;
   onRemoveGalleryImage: (index: number) => void;
   onMakeCover: (index: number) => void;
   onRemoveMenuImage: (index: number) => void;
+  onReplaceImage: (index: number, kind: "gallery" | "menu", event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function EditableDetailPane({
@@ -27,17 +34,24 @@ export function EditableDetailPane({
   setDraft,
   images,
   menuImages,
+  imageKeys,
+  menuImageKeys,
+  imageStatuses,
+  menuImageStatuses,
+  imagesLocked,
   canSubmit,
   error,
   onFiles,
   onRemoveGalleryImage,
   onMakeCover,
   onRemoveMenuImage,
+  onReplaceImage,
 }: Props) {
   const [sheet, setSheet] = useState<SectionId | "gallery" | "menu" | null>(null);
   const isDesktopSheet = useMediaQuery("(min-width: 768px)");
   const requiredItems = getRequiredItems(draft, images.length);
   const missingItems = requiredItems.filter((item) => !item.done);
+  const remainingGalleryImages = remainingOwnerGalleryImages(images.length);
   const updateText = (key: keyof Draft, value: string) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
 
@@ -78,6 +92,8 @@ export function EditableDetailPane({
             id="owner-gallery-empty-upload"
             label="Chọn ảnh"
             onFiles={(event) => onFiles(event, "gallery")}
+            multiple={remainingGalleryImages > 1}
+            disabled={imagesLocked || !remainingGalleryImages}
             className="aspect-4/5 h-auto w-full flex-col justify-center gap-3 rounded-2xl border-dashed bg-[var(--contribute-surface-soft)] text-[var(--foreground-muted)] md:aspect-[16/9]"
           />
         )}
@@ -91,6 +107,9 @@ export function EditableDetailPane({
           </button>
         )}
       </div>
+      <p className="text-right text-xs font-semibold text-[var(--foreground-muted)]">
+        {images.length}/{MAX_OWNER_GALLERY_IMAGES} ảnh
+      </p>
 
       <div className="space-y-4 rounded-[20px] border border-[#ffe3b7]/38 bg-[#fffaf2]/76 px-3 py-4 shadow-[0_18px_54px_rgba(44,26,14,0.08)] backdrop-blur-md sm:space-y-5 sm:rounded-[28px] sm:px-6 sm:py-5 dark:border-[#ffe3b7]/14 dark:bg-[#1b0f08]/54">
         <FormGroup title="Bắt buộc để xem lại">
@@ -101,7 +120,7 @@ export function EditableDetailPane({
               onChange={(event) => updateText("name", event.target.value)}
               placeholder="Nhập tên quán"
               data-owner-focus="name"
-              className="w-full min-w-0 appearance-none border-0 bg-transparent font-[var(--font-lora)] text-[clamp(1.6rem,8vw,3.2rem)] leading-[1.12] font-bold !outline-none placeholder:text-[var(--foreground-muted)] focus:!border-transparent focus:!shadow-none focus:!ring-0 focus-visible:!border-transparent focus-visible:!outline-none focus-visible:!shadow-none focus-visible:!ring-0 md:text-[clamp(2rem,4.8vw,3.2rem)]"
+              className="w-full min-w-0 appearance-none border-0 bg-transparent font-[var(--font-lora)] text-[clamp(1.44rem,7.2vw,2.88rem)] leading-[1.12] font-bold !outline-none placeholder:text-[var(--foreground-muted)] focus:!border-transparent focus:!shadow-none focus:!ring-0 focus-visible:!border-transparent focus-visible:!outline-none focus-visible:!shadow-none focus-visible:!ring-0 md:text-[clamp(1.8rem,4.32vw,2.88rem)]"
             />
           </label>
 
@@ -200,11 +219,18 @@ export function EditableDetailPane({
         isDesktopSheet={isDesktopSheet}
         images={images}
         menuImages={menuImages}
+        imageKeys={imageKeys}
+        menuImageKeys={menuImageKeys}
+        imageStatuses={imageStatuses}
+        menuImageStatuses={menuImageStatuses}
+        imagesLocked={imagesLocked}
+        remainingGalleryImages={remainingGalleryImages}
         onClose={closeSheet}
         onFiles={onFiles}
         onRemoveGalleryImage={onRemoveGalleryImage}
         onMakeCover={onMakeCover}
         onRemoveMenuImage={onRemoveMenuImage}
+        onReplaceImage={onReplaceImage}
       />
     </section>
   );

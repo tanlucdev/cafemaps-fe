@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Images, X, ZoomIn } from "lucide-react";
+import { cloudinaryImageUrl, type CloudinaryImagePreset } from "@/lib/cloudinary-image";
 
 interface MobileMainImageProps {
   images: string[];
@@ -74,6 +75,7 @@ function MobileMainImage({
             priority={i === 0}
             quality={90}
             unoptimized={shouldSkipOptimization(src)}
+            cloudinaryPreset="gallery"
             aria-hidden={!isActive}
           />
         );
@@ -109,8 +111,9 @@ function GalleryImage({
   priority,
   unoptimized,
   style,
+  cloudinaryPreset,
   ...props
-}: ImageProps) {
+}: ImageProps & { cloudinaryPreset?: CloudinaryImagePreset }) {
   if (typeof src === "string" && shouldSkipOptimization(src)) {
     const imgStyle = fill
       ? { ...style, position: "absolute" as const, inset: 0, height: "100%", width: "100%" }
@@ -131,7 +134,7 @@ function GalleryImage({
   return (
     <Image
       {...props}
-      src={src}
+      src={typeof src === "string" && cloudinaryPreset ? cloudinaryImageUrl(src, cloudinaryPreset) : src}
       alt={alt}
       fill={fill}
       width={width}
@@ -243,6 +246,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
           priority={priority}
           quality={90}
           unoptimized={shouldSkipOptimization(url)}
+          cloudinaryPreset="gallery"
         />
         <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/12" />
         <span className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -299,6 +303,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                   style={{ objectPosition: objectPosition(i) }}
                   quality={85}
                   unoptimized={shouldSkipOptimization(url)}
+                  cloudinaryPreset="thumb"
                 />
               </span>
             </button>
@@ -415,6 +420,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                           priority={isActive && index === 0}
                           quality={90}
                           unoptimized={shouldSkipOptimization(url)}
+                          cloudinaryPreset="lightbox"
                         />
                       );
                     })}
@@ -469,6 +475,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                           style={{ objectPosition: objectPosition(index) }}
                           quality={85}
                           unoptimized={shouldSkipOptimization(url)}
+                          cloudinaryPreset="thumb"
                         />
                       </button>
                     ))}

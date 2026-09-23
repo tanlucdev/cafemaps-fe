@@ -1,13 +1,11 @@
 "use client";
-
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { CheckCircle2, Eye, Loader2 } from "lucide-react";
 import { ApiError, isUnauthorizedError } from "@/apis/http";
 import {
   createSubmission,
   submitSubmission,
   updateSubmission,
-  uploadSubmissionImage,
   type CafeSubmissionPayload,
 } from "@/apis/submissions";
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
@@ -15,31 +13,50 @@ import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { MAX_IMAGE_BYTES } from "../../contribute-form.constants";
 import { isAllowedImageFile } from "../../contribute-form.helpers";
-import { usePhotoUrls } from "../../usePhotoUrls";
 import { EditableDetailPane } from "./EditableDetailPane";
-import { emptyDraft, getRequiredItems, REQUIRED_PREVIEW_MESSAGE, type Draft } from "./model";
+import { limitOwnerGalleryFiles, ownerGalleryLimitMessage, remainingOwnerGalleryImages } from "./image-limits";
+import { emptyDraft, getRequiredItems, moveToFront, normalizeDraft, REQUIRED_PREVIEW_MESSAGE, type Draft } from "./model";
 import { OwnerFieldOverviewSheet } from "./OwnerFieldOverviewSheet";
 import { PreviewPane } from "./PreviewPane";
+import { type UploadKind, useImageUploads } from "./useImageUploads";
 
 export default function ContributeForm() {
   const router = useRouter();
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
-  const [menuFiles, setMenuFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [reviewing, setReviewing] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const requiredItems = getRequiredItems(draft, (draft.images?.length ?? 0) + galleryFiles.length);
+  const draftIdPromise = useRef<Promise<string> | null>(null);
+  const {
+    galleryUploads,
+    menuUploads,
+    imageStatuses,
+    menuImageStatuses,
+    hasUploadPending,
+    hasUploadFailed,
+    startUploads,
+    removeUploadAt,
+    moveGalleryUploadToFront,
+  } = useImageUploads({
+    tokenOrLogin,
+    ensureSubmissionId,
+    setDraft,
+    normalizeDraft,
+    onError: setError,
+  });
+  const requiredItems = getRequiredItems(draft, (draft.images?.length ?? 0) + galleryUploads.length);
   const missingRequiredCount = requiredItems.filter((item) => !item.done).length;
   const canPreview = missingRequiredCount === 0;
-  const queuedImageUrls = usePhotoUrls(galleryFiles);
-  const queuedMenuUrls = usePhotoUrls(menuFiles);
-  const previewImages = [...(draft.images ?? []), ...queuedImageUrls];
-  const previewMenuImages = [...(draft.menuImages ?? []), ...queuedMenuUrls];
-
+  const galleryShadowUrls = new Set(galleryUploads.map((item) => item.payloadUrl).filter(Boolean));
+  const menuShadowUrls = new Set(menuUploads.map((item) => item.payloadUrl).filter(Boolean));
+  const savedImages = (draft.images ?? []).filter((url) => !galleryShadowUrls.has(url));
+  const savedMenuImages = (draft.menuImages ?? []).filter((url) => !menuShadowUrls.has(url));
+  const previewImages = [...savedImages, ...galleryUploads.map((item) => item.displayUrl)];
+  const previewMenuImages = [...savedMenuImages, ...menuUploads.map((item) => item.displayUrl)];
+  const previewImageKeys = [...savedImages, ...galleryUploads.map((item) => item.id)];
+  const previewMenuImageKeys = [...savedMenuImages, ...menuUploads.map((item) => item.id)];
   async function tokenOrLogin() {
     const token = await getCurrentAccessToken();
     if (token) return token;
@@ -47,7 +64,6 @@ export default function ContributeForm() {
     router.push("/login");
     return null;
   }
-
   async function saveDraft(token: string) {
     const normalizedDraft = normalizeDraft(draft);
     setDraft(normalizedDraft);
@@ -65,27 +81,16 @@ export default function ContributeForm() {
       ? await updateSubmission(submissionId, data, token)
       : await createSubmission(data, token);
     setSubmissionId(submission.id);
-    if (submission.payload) setDraft((prev) => ({ ...prev, ...submission.payload }));
+    if (submission.payload) setDraft((prev) => normalizeDraft({ ...submission.payload, ...prev }));
     return submission.id;
   }
-
-  async function uploadQueued(token: string, id: string) {
-    let payload = normalizeDraft(draft);
-    for (const file of galleryFiles) {
-      const next = await uploadSubmissionImage(id, file, token, "images");
-      payload = normalizeDraft({ ...payload, ...next.payload });
-      setDraft(payload);
-    }
-    for (const file of menuFiles) {
-      const next = await uploadSubmissionImage(id, file, token, "menu");
-      payload = normalizeDraft({ ...payload, ...next.payload });
-      setDraft(payload);
-    }
-    setGalleryFiles([]);
-    setMenuFiles([]);
-    return payload;
+  async function ensureSubmissionId(token: string) {
+    if (submissionId) return submissionId;
+    draftIdPromise.current ??= saveDraft(token).finally(() => {
+      draftIdPromise.current = null;
+    });
+    return draftIdPromise.current;
   }
-
   async function persist(uploadOnly = false) {
     if (loading) return;
     setError(null);
@@ -93,13 +98,16 @@ export default function ContributeForm() {
       setError(REQUIRED_PREVIEW_MESSAGE);
       return;
     }
+    if (hasUploadPending || hasUploadFailed) {
+      setError(hasUploadPending ? "Đợi ảnh tải xong rồi gửi duyệt." : "Xoá hoặc chọn lại ảnh tải lỗi rồi gửi duyệt.");
+      return;
+    }
     setLoading(true);
     try {
       const token = await tokenOrLogin();
       if (!token) return;
       const id = await saveDraft(token);
-      const payload = normalizeDraft(await uploadQueued(token, id));
-      setDraft(payload);
+      const payload = normalizeDraft(draft);
       await updateSubmission(
         id,
         {
@@ -131,59 +139,76 @@ export default function ContributeForm() {
       setLoading(false);
     }
   }
-
   const onFiles = (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => {
     const selected = Array.from(event.target.files ?? []);
-    const files = selected.filter(isAllowedImageFile);
-    const oversized = selected.length - files.length;
-    if (oversized) setError(`Ảnh phải nhỏ hơn ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
-    if (kind === "gallery") setGalleryFiles((prev) => [...prev, ...files].slice(0, 12));
-    else setMenuFiles((prev) => [...prev, ...files]);
+    let files = selected.filter(isAllowedImageFile);
+    if (selected.length - files.length) setError(`Ảnh không hợp lệ hoặc lớn hơn ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
+    if (kind === "gallery") {
+      const remaining = remainingOwnerGalleryImages(previewImages.length);
+      const accepted = limitOwnerGalleryFiles(files, previewImages.length);
+      if (accepted.length < files.length) setError(ownerGalleryLimitMessage(remaining));
+      files = accepted;
+    }
+    startUploads(files, kind);
     event.target.value = "";
   };
-
   const removeGalleryImage = (index: number) => {
-    const savedCount = draft.images?.length ?? 0;
+    const savedCount = savedImages.length;
     if (index < savedCount) {
+      const url = savedImages[index];
+      const draftIndex = draft.images?.indexOf(url) ?? -1;
       setDraft((prev) =>
         normalizeDraft({
           ...prev,
-          images: prev.images?.filter((_, itemIndex) => itemIndex !== index),
-          imageOrientations: prev.imageOrientations?.filter((_, itemIndex) => itemIndex !== index),
+          images: prev.images?.filter((item) => item !== url),
+          imageOrientations: draftIndex < 0 ? prev.imageOrientations : prev.imageOrientations?.filter((_, itemIndex) => itemIndex !== draftIndex),
         }),
       );
       return;
     }
-    setGalleryFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index - savedCount));
+    removeUploadAt("gallery", index - savedCount);
   };
-
   const makeCover = (index: number) => {
-    const savedCount = draft.images?.length ?? 0;
+    const savedCount = savedImages.length;
     if (index < savedCount) {
+      const draftIndex = draft.images?.indexOf(savedImages[index]) ?? -1;
       setDraft((prev) =>
         normalizeDraft({
           ...prev,
-          images: moveToFront(prev.images ?? [], index),
-          imageOrientations: moveToFront(prev.imageOrientations ?? [], index),
+          images: moveToFront(prev.images ?? [], draftIndex),
+          imageOrientations: moveToFront(prev.imageOrientations ?? [], draftIndex),
         }),
       );
       return;
     }
-    setGalleryFiles((prev) => moveToFront(prev, index - savedCount));
+    moveGalleryUploadToFront(index - savedCount);
   };
 
   const removeMenuImage = (index: number) => {
-    const savedCount = draft.menuImages?.length ?? 0;
+    const savedCount = savedMenuImages.length;
     if (index < savedCount) {
+      const url = savedMenuImages[index];
       setDraft((prev) => ({
         ...prev,
-        menuImages: prev.menuImages?.filter((_, itemIndex) => itemIndex !== index),
+        menuImages: prev.menuImages?.filter((item) => item !== url),
       }));
       return;
     }
-    setMenuFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index - savedCount));
+    removeUploadAt("menu", index - savedCount);
   };
 
+  const replaceUploadImage = (index: number, kind: UploadKind, event: ChangeEvent<HTMLInputElement>) => {
+    const [file] = Array.from(event.target.files ?? []).filter(isAllowedImageFile);
+    event.target.value = "";
+    if (!file) {
+      setError(`Ảnh không hợp lệ hoặc lớn hơn ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
+      return;
+    }
+    const savedCount = kind === "gallery" ? savedImages.length : savedMenuImages.length;
+    removeUploadAt(kind, index - savedCount);
+    setError(null);
+    startUploads([file], kind);
+  };
   const openReview = () => {
     setError(null);
     if (!canPreview) {
@@ -197,9 +222,9 @@ export default function ContributeForm() {
     return (
       <div className="rounded-[24px] border border-[var(--border)] bg-[var(--contribute-surface)] p-6 shadow-[var(--contribute-panel-shadow)]">
         <CheckCircle2 className="mb-4 size-10 text-[var(--accent)]" />
-        <h2 className="font-lora text-2xl font-bold">Đã gửi draft cho admin duyệt</h2>
+        <h2 className="font-lora text-2xl font-bold">Cảm ơn bạn đã đóng góp quán</h2>
         <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Sau khi admin duyệt, quán sẽ nằm trong list quán dưới dạng draft chưa publish.
+          Quá trình duyệt và public quán có thể diễn ra trong 1-2 ngày. Sau khi quán public sẽ được thông báo qua email (nếu có).
         </p>
       </div>
     );
@@ -225,10 +250,10 @@ export default function ContributeForm() {
           <button
             type="button"
             className="inline-flex h-11 flex-1 cursor-pointer items-center justify-center rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-white disabled:opacity-55"
-            disabled={loading}
+            disabled={loading || hasUploadPending || hasUploadFailed}
             onClick={() => persist(false)}
           >
-            {loading ? "Đang gửi..." : "Gửi duyệt"}
+            {loading ? "Đang gửi..." : hasUploadPending ? "Đang tải ảnh..." : hasUploadFailed ? "Sửa ảnh lỗi" : "Gửi duyệt"}
           </button>
         </div>
       </div>
@@ -243,50 +268,33 @@ export default function ContributeForm() {
         setDraft={setDraft}
         images={previewImages}
         menuImages={previewMenuImages}
+        imageKeys={previewImageKeys}
+        menuImageKeys={previewMenuImageKeys}
+        imageStatuses={imageStatuses}
+        menuImageStatuses={menuImageStatuses}
+        imagesLocked={hasUploadPending}
         canSubmit={canPreview}
         error={error}
         onFiles={onFiles}
         onRemoveGalleryImage={removeGalleryImage}
         onMakeCover={makeCover}
         onRemoveMenuImage={removeMenuImage}
+        onReplaceImage={replaceUploadImage}
       />
       <div className="fixed right-4 bottom-[calc(var(--mobile-bottom-nav-height)+env(safe-area-inset-bottom,0px)+12px)] left-4 z-40 sm:right-6 sm:left-auto sm:w-[min(420px,calc(100vw-3rem))] lg:right-[max(1.5rem,calc((100vw-80rem)/2))] lg:bottom-6">
         <button
           type="button"
-          disabled={!canPreview || loading}
+          disabled={!canPreview || loading || hasUploadPending || hasUploadFailed}
           onClick={openReview}
           className={cn(
             "inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-white shadow-[0_18px_50px_rgba(44,26,14,0.18)] transition hover:bg-[var(--accent-hover)]",
-            (!canPreview || loading) && "cursor-not-allowed opacity-55",
+            (!canPreview || loading || hasUploadPending || hasUploadFailed) && "cursor-not-allowed opacity-55",
           )}
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : <Eye size={16} />}
-          {loading ? "Đang tải..." : canPreview ? "Xem lại" : `Còn ${missingRequiredCount} mục cần thêm`}
+          {loading || hasUploadPending ? "Đang tải..." : hasUploadFailed ? "Sửa ảnh lỗi" : canPreview ? "Xem lại" : `Còn ${missingRequiredCount} mục cần thêm`}
         </button>
       </div>
     </div>
   );
-}
-
-function moveToFront<T>(items: T[], index: number) {
-  if (index <= 0 || index >= items.length) return items;
-  const next = [...items];
-  const [item] = next.splice(index, 1);
-  return [item, ...next];
-}
-
-function normalizeDraft(draft: Draft): Draft {
-  const images = draft.images ?? [];
-  const coverImage = images[0];
-  return {
-    ...draft,
-    images,
-    imageOrientations: (draft.imageOrientations ?? []).slice(0, images.length),
-    coverImage,
-    coverImageCrop: coverImage
-      ? coverImage === draft.coverImage
-        ? (draft.coverImageCrop ?? { x: 50, y: 50 })
-        : { x: 50, y: 50 }
-      : null,
-  };
 }

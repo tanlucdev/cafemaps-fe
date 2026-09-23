@@ -106,6 +106,24 @@ export async function uploadSubmissionImage(
   return response.json() as Promise<CafeSubmission>;
 }
 
+export async function uploadSubmissionImages(
+  id: string,
+  files: File[],
+  token: string,
+  kind: "images" | "menu",
+) {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("files", file));
+  const response = await fetch(`/api-proxy/submissions/${encodeURIComponent(id)}/${kind}/batch`, {
+    method: "POST",
+    credentials: "include",
+    headers: authHeaders(token),
+    body: formData,
+  });
+  if (!response.ok) throw new ApiError(`Upload failed: ${response.status}`, response.status);
+  return response.json() as Promise<CafeSubmission>;
+}
+
 export async function getMySubmissions(token: string): Promise<CafeSubmission[]> {
   try {
     return await apiFetch<CafeSubmission[]>("/submissions/me", {

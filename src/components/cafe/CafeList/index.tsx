@@ -13,6 +13,7 @@ import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice, cn } from "@/lib/utils";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { ratingFor, VIBE_TAG_CLASSES, type CafeListProps } from "@/components/cafe/shared";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -85,7 +86,7 @@ function CafeListRow({
         >
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 128px, 176px"

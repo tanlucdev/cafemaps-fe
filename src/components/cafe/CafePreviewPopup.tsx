@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Cafe } from "@/types/cafe";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 
 const POPUP_WIDTH = 320;
 const IMG_H = 220;
@@ -60,7 +61,7 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
       <div className="relative w-full overflow-hidden" style={{ height: IMG_H }}>
         {cafe.coverImage ? (
           <Image
-            src={cafe.coverImage}
+            src={cloudinaryImageUrl(cafe.coverImage, "card")}
             alt={cafe.name}
             fill
             sizes="320px"

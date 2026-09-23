@@ -14,6 +14,7 @@ import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { cn, formatPrice } from "@/lib/utils";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { ratingFor, VIBE_TAG_CLASSES, type CafeCardProps } from "@/components/cafe/shared";
 
 export default function CafeCard({
@@ -83,7 +84,7 @@ export default function CafeCard({
         >
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (min-width: 1280px) 400px, 33vw"

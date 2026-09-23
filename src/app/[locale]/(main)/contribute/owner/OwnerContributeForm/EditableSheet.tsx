@@ -18,7 +18,14 @@ import {
   inputClass,
   sheetTitle,
 } from "./editable-controls";
-import { requiredFieldLabels, textFields, type Draft, type SectionId } from "./model";
+import {
+  limitWords,
+  ONE_LINER_WORD_LIMIT,
+  requiredFieldLabels,
+  textFields,
+  type Draft,
+  type SectionId,
+} from "./model";
 
 type Props = {
   draft: Draft;
@@ -27,11 +34,18 @@ type Props = {
   isDesktopSheet: boolean;
   images: string[];
   menuImages: string[];
+  imageKeys: string[];
+  menuImageKeys: string[];
+  imageStatuses: Record<string, "uploading" | "failed">;
+  menuImageStatuses: Record<string, "uploading" | "failed">;
+  imagesLocked: boolean;
+  remainingGalleryImages: number;
   onClose: () => void;
   onFiles: (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => void;
   onRemoveGalleryImage: (index: number) => void;
   onMakeCover: (index: number) => void;
   onRemoveMenuImage: (index: number) => void;
+  onReplaceImage: (index: number, kind: "gallery" | "menu", event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function EditableSheet({
@@ -41,11 +55,18 @@ export function EditableSheet({
   isDesktopSheet,
   images,
   menuImages,
+  imageKeys,
+  menuImageKeys,
+  imageStatuses,
+  menuImageStatuses,
+  imagesLocked,
+  remainingGalleryImages,
   onClose,
   onFiles,
   onRemoveGalleryImage,
   onMakeCover,
   onRemoveMenuImage,
+  onReplaceImage,
 }: Props) {
   const updateText = (key: keyof Draft, value: string) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -84,7 +105,7 @@ export function EditableSheet({
   function renderSheet() {
     switch (sheet) {
       case "gallery":
-        return <GalleryEditor images={images} onFiles={onFiles} onRemove={onRemoveGalleryImage} onMakeCover={onMakeCover} />;
+        return <GalleryEditor images={images} imageKeys={imageKeys} imageStatuses={imageStatuses} locked={imagesLocked} remainingImages={remainingGalleryImages} onFiles={onFiles} onRemove={onRemoveGalleryImage} onMakeCover={onMakeCover} onReplace={onReplaceImage} />;
       case "locationHours":
         return (
           <>
@@ -108,7 +129,7 @@ export function EditableSheet({
           </>
         );
       case "menu":
-        return <MenuEditor images={menuImages} onFiles={onFiles} onRemove={onRemoveMenuImage} />;
+        return <MenuEditor images={menuImages} imageKeys={menuImageKeys} imageStatuses={menuImageStatuses} locked={imagesLocked} onFiles={onFiles} onRemove={onRemoveMenuImage} onReplace={onReplaceImage} />;
       case "basics":
         return <>{input("name")}{input("oneLiner")}{input("description", true)}</>;
       case "ownerDetails":
@@ -122,17 +143,32 @@ export function EditableSheet({
     const field = textFields.find((item) => item.key === key);
     if (!field) return null;
     const Input = multiline ? "textarea" : "input";
+    const value = (draft[field.key] as string | undefined) ?? "";
+    const wordCount = value.match(/\S+/g)?.length ?? 0;
+    const wordLimit = field.key === "oneLiner" ? ONE_LINER_WORD_LIMIT : undefined;
     return (
       <label key={field.key} className="block text-xs font-bold">
         {field.label}{requiredFieldLabels[field.key] ? " *" : ""}
         <Input
-          value={(draft[field.key] as string | undefined) ?? ""}
+          value={value}
           placeholder={field.placeholder}
-          onChange={(event) => updateText(field.key, event.target.value)}
+          onChange={(event) =>
+            updateText(field.key, wordLimit ? limitWords(event.target.value, wordLimit) : event.target.value)
+          }
           className={inputClass}
           data-owner-focus={field.key}
+          aria-describedby={wordLimit ? `${field.key}-word-limit` : undefined}
           {...(multiline ? { rows: 5 } : {})}
         />
+        {wordLimit && (
+          <span
+            id={`${field.key}-word-limit`}
+            className="mt-1 block text-right text-[11px] font-semibold text-[var(--foreground-muted)]"
+            aria-live="polite"
+          >
+            {wordCount}/{wordLimit} từ
+          </span>
+        )}
       </label>
     );
   }

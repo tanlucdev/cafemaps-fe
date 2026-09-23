@@ -30,6 +30,7 @@ import type { Cafe, SavedCafeEntry, SavedCollection } from "@/types/cafe"
 import { AREAS } from "@/types/cafe"
 import { getCurrentAccessToken } from "@/lib/auth-client"
 import { coverObjectPosition } from "@/lib/cover-image"
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image"
 import { getSavedCafeEntries, getSavedCollections } from "@/lib/api"
 import CafeCard from "@/components/cafe/CafeCard"
 import { cn } from "@/lib/utils"
@@ -246,7 +247,7 @@ function MoveToCollectionModal({
           <div className="flex items-center gap-3">
             {cafe.coverImage ? (
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl">
-                <Image src={cafe.coverImage} alt={cafe.name} fill sizes="40px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />
+                <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="40px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />
               </div>
             ) : (
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5ede7]">
@@ -288,7 +289,7 @@ function MoveToCollectionModal({
                 {/* Mini preview */}
                 <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-[#e6dacd] bg-[#ffeadf]">
                   {col.cafes[0]?.coverImage ? (
-                    <Image src={col.cafes[0].coverImage} alt={col.name} fill sizes="36px" className="object-cover" style={{ objectPosition: coverObjectPosition(col.cafes[0]) }} />
+                    <Image src={cloudinaryImageUrl(col.cafes[0].coverImage, "thumb")} alt={col.name} fill sizes="36px" className="object-cover" style={{ objectPosition: coverObjectPosition(col.cafes[0]) }} />
                   ) : (
                     <div className="flex h-full items-center justify-center">
                       <FolderOpen size={16} className="text-[#c8a97a]" />
@@ -543,7 +544,7 @@ function FolderCard({
               {preview.slice(0, 3).map((cafe) => (
                 <div key={cafe.id} className="relative overflow-hidden bg-[#ffeadf]">
                   {cafe.coverImage && (
-                    <Image src={cafe.coverImage} alt={cafe.name} fill sizes="80px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(cafe) }} />
+                    <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="80px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(cafe) }} />
                   )}
                 </div>
               ))}
@@ -555,14 +556,14 @@ function FolderCard({
             <div className="grid h-full grid-cols-2 gap-px bg-[#e6dacd]">
               {preview.map((cafe) => (
                 <div key={cafe.id} className="relative overflow-hidden bg-[#ffeadf]">
-                  {cafe.coverImage && <Image src={cafe.coverImage} alt={cafe.name} fill sizes="80px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />}
+                  {cafe.coverImage && <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="80px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />}
                 </div>
               ))}
             </div>
           ) : (
             <div className="relative h-full w-full bg-[#ffeadf]">
               {preview[0]?.coverImage ? (
-                <Image src={preview[0].coverImage} alt={group.name} fill sizes="160px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(preview[0]) }} />
+                <Image src={cloudinaryImageUrl(preview[0].coverImage, "thumb")} alt={group.name} fill sizes="160px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(preview[0]) }} />
               ) : (
                 <div className="flex h-full items-center justify-center">
                   <Bookmark size={32} className="text-[#c8a97a]" />

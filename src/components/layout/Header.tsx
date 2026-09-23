@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, CalendarDays, PenLine, Compass, LogIn, Sparkles } from "lucide-react";
+import { Bookmark, PenLine, Compass, LogIn, Sparkles } from "lucide-react";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { featureFlags } from "@/lib/feature-flags";
 
 const HEADER_SCROLL_ENTER_Y = 24;
 const HEADER_SCROLL_LEAVE_Y = 8;
@@ -42,9 +41,6 @@ export default function Header() {
 
   const navLinks = [
     { href: "/", label: t("explore"), icon: Compass, primary: true },
-    ...(featureFlags.coffeeMeetupsEnabled
-      ? [{ href: "/coffee-meetups", label: "Kèo cà phê", icon: CalendarDays }]
-      : []),
     { href: "/quiz", label: t("quiz"), icon: Sparkles },
     // { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },
