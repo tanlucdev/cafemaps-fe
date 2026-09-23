@@ -7,6 +7,7 @@ import { getMyReviews } from "@/apis/reviews";
 import Pagination from "@/components/ui/Pagination";
 import { Link } from "@/i18n/navigation";
 import { getCurrentAccessToken } from "@/lib/auth-client";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import type { ProfileCopy } from "./constants";
 import { EmptyState } from "./ProfileShared";
 import type { ProfileReviewItem } from "./types";
@@ -75,7 +76,7 @@ function ReviewCard({ copy, review }: { copy: ProfileCopy; review: ProfileReview
       <div className="relative size-[68px] overflow-hidden rounded-2xl bg-[var(--background-secondary)] sm:size-auto sm:h-20">
         {review.cafe.coverImage ? (
           <Image
-            src={review.cafe.coverImage}
+            src={cloudinaryImageUrl(review.cafe.coverImage, "thumb")}
             alt={review.cafe.name}
             fill
             sizes="(max-width: 640px) 68px, 88px"

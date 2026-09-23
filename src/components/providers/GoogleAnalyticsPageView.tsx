@@ -3,7 +3,10 @@
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-type GtagArgs = ["js", Date] | ["config", string, Record<string, unknown>?];
+type GtagArgs =
+  | ["js", Date]
+  | ["config", string, Record<string, unknown>?]
+  | ["event", string, Record<string, unknown>?];
 type Gtag = (...args: GtagArgs) => void;
 
 declare global {

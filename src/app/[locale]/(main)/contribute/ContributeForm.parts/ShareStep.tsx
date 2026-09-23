@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { AlertCircle, ImagePlus, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FIELD_BASE_CLASS, MAX_REASON_LENGTH } from "../contribute-form.constants";
-import { appendImageFiles } from "../contribute-form.helpers";
+import { appendImageFiles, IMAGE_FILE_ACCEPT } from "../contribute-form.helpers";
 import type { ContributeFormData, ContributeFormErrors } from "../contribute-form.types";
 
 function Field({
@@ -112,7 +112,7 @@ function PhotoUploader({
           ref={fileRef}
           type="file"
           multiple
-          accept="image/*"
+          accept={IMAGE_FILE_ACCEPT}
           className="hidden"
           onChange={(event) => addFiles(event.target.files)}
         />

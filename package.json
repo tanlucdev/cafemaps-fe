@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:agent-readiness": "node --test --experimental-strip-types scripts/agent-content.test.mjs",
+    "test:agent-readiness": "node --test --experimental-strip-types scripts/submission-upload-batch.test.mjs scripts/owner-gallery-limit.test.mjs scripts/owner-intro-word-limit.test.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "heic2any": "^0.0.4",
     "lenis": "^1.3.23",
     "lucide-react": "^1.11.0",
     "mapbox-gl": "^3.26.0",

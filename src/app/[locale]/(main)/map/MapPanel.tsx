@@ -5,6 +5,7 @@ import { Check, Coffee, ExternalLink, MapPinned } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Cafe } from "@/types/cafe";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { cn } from "@/lib/utils";
 
 export function MapPanel({
@@ -77,7 +78,7 @@ export function MapPanel({
               <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f5edd8]">
                 {cafe.coverImage || cafe.images[0] ? (
                   <Image
-                    src={cafe.coverImage ?? cafe.images[0]}
+                    src={cloudinaryImageUrl(cafe.coverImage ?? cafe.images[0], "thumb")}
                     alt=""
                     width={76}
                     height={76}

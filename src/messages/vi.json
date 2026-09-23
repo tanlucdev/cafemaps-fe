@@ -1190,6 +1190,49 @@
   "contribute": {
     "title": "Đóng góp quán mới",
     "subtitle": "Chia sẻ một quán cà phê đáng ghé để cộng đồng dễ tìm thấy hơn.",
+    "hub": {
+      "title": "Đóng góp cho Cafe Maps",
+      "subtitle": "Chọn cách gửi phù hợp: gợi ý nhanh một quán đáng ghé hoặc gửi bộ thông tin chi tiết nếu bạn là chủ quán.",
+      "eyebrow": "Cafe Maps contribution",
+      "heroTitle": "Bạn muốn đóng góp theo cách nào?",
+      "flowAria": "Chọn luồng đóng góp",
+      "suggest": {
+        "title": "Gợi ý quán cho cộng đồng",
+        "body": "Gửi nhanh một quán bạn từng ghé, kèm Google Maps, vài dòng cảm nhận và ảnh nếu có.",
+        "cta": "Gợi ý quán"
+      },
+      "owner": {
+        "title": "Chủ quán gửi thông tin chi tiết",
+        "body": "Bổ sung ảnh, menu, giờ mở cửa, tiện ích và liên hệ để admin kiểm tra đầy đủ hơn.",
+        "cta": "Gửi thông tin"
+      }
+    },
+    "ownerSheet": {
+      "button": "Xem các mục cần điền",
+      "title": "Các mục cần điền",
+      "description": "Tổng quan các nhóm thông tin trong form.",
+      "close": "Đóng",
+      "items": {
+        "photos": "Ảnh quán",
+        "name": "Tên quán",
+        "location": "Địa chỉ hoặc Google Maps",
+        "hours": "Giờ mở / đóng",
+        "description": "Giới thiệu ngắn / mô tả",
+        "vibe": "Vibe / phù hợp / tiện ích",
+        "parking": "Gửi xe",
+        "featured": "Món nổi bật / Instagram",
+        "menu": "Menu",
+        "ownerContact": "Thông tin liên hệ owner",
+        "verification": "Ghi chú xác thực / note cho admin"
+      }
+    },
+    "ownerPage": {
+      "metadataTitle": "Chủ quán gửi thông tin",
+      "metadataDescription": "Gửi ảnh, menu, giờ mở cửa, giá và liên hệ để Cafe Maps kiểm tra quán của bạn.",
+      "eyebrow": "Chủ quán gửi thông tin",
+      "title": "Gửi thông tin chi tiết quán của bạn",
+      "body": "Thêm ảnh, menu, giờ mở cửa, giá và thông tin liên hệ. Bạn sẽ xem lại trước khi gửi duyệt."
+    },
     "eyebrow": "Cafe Maps community",
     "heroTitle": "Chia sẻ một góc cà phê bạn muốn người khác tìm thấy",
     "heroBody": "Một link Google Maps, vài dòng cảm nhận và ảnh thật nếu có là đủ để bọn mình bắt đầu kiểm tra. Những đóng góp nhỏ giúp Cafe Maps giữ được chất địa phương, gần gũi và đáng tin hơn.",
@@ -1355,6 +1398,7 @@
     "search": "Tìm kiếm",
     "quiz": "Gu",
     "saved": "Đã lưu",
+    "contribute": "Đóng góp",
     "map": "Bản đồ",
     "profile": "Cá nhân"
   },

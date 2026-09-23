@@ -4,6 +4,7 @@ import {
   ClipboardList,
   Coffee,
   Compass,
+  CalendarDays,
   Leaf,
   MapPin,
   PlusCircle,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { featureFlags } from "@/lib/feature-flags";
 import { vibeTags, type ProfileCopy } from "./constants";
 
 export function ProfileInfoCard({
@@ -68,6 +70,9 @@ export function PreferencesCard({ copy }: { copy: ProfileCopy }) {
 export function QuickActions({ copy }: { copy: ProfileCopy }) {
   const actions = [
     { href: "/search", label: copy.exploreCafes, icon: Compass, primary: true },
+    ...(featureFlags.coffeeMeetupsEnabled
+      ? [{ href: "/coffee-meetups/mine", label: "Kèo của tôi", icon: CalendarDays }]
+      : []),
     { href: "/quiz", label: copy.takeQuiz, icon: Sparkles },
     { href: "/contribute", label: copy.submitCafe, icon: PlusCircle },
   ];
