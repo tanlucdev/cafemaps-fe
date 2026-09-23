@@ -65,6 +65,18 @@ export interface CafeSubmission {
   } | null;
 }
 
+export type SubmissionAssetField = "images" | "menuImages";
+export type SubmissionAssetSignature = {
+  params: Record<string, string>;
+  signature: string;
+};
+
+type SubmissionAssetSignatures = {
+  cloudName: string;
+  apiKey: string;
+  assets: SubmissionAssetSignature[];
+};
+
 export async function createSubmission(data: CreateSubmissionInput, token: string) {
   return apiFetch<CafeSubmission>("/submissions", {
     method: "POST",
@@ -88,40 +100,75 @@ export async function submitSubmission(id: string, token: string) {
   });
 }
 
-export async function uploadSubmissionImage(
+export function signSubmissionAssets(
   id: string,
-  file: File,
   token: string,
-  kind: "images" | "menu",
+  fields: SubmissionAssetField[],
+  signal?: AbortSignal,
 ) {
-  const formData = new FormData();
-  formData.set("file", file);
-  const response = await fetch(`/api-proxy/submissions/${encodeURIComponent(id)}/${kind}`, {
-    method: "POST",
-    credentials: "include",
-    headers: authHeaders(token),
-    body: formData,
-  });
-  if (!response.ok) throw new ApiError(`Upload failed: ${response.status}`, response.status);
-  return response.json() as Promise<CafeSubmission>;
+  return apiFetch<SubmissionAssetSignatures>(
+    `/submissions/${encodeURIComponent(id)}/assets/signatures`,
+    {
+      method: "POST",
+      headers: authHeaders(token),
+      body: JSON.stringify({ assets: fields.map((field) => ({ field })) }),
+      signal,
+    },
+  );
 }
 
-export async function uploadSubmissionImages(
-  id: string,
-  files: File[],
-  token: string,
-  kind: "images" | "menu",
+export async function uploadSignedSubmissionAsset(
+  file: File,
+  {
+    cloudName,
+    apiKey,
+    params,
+    signature,
+  }: Pick<SubmissionAssetSignatures, "cloudName" | "apiKey"> &
+    Pick<SubmissionAssetSignature, "params" | "signature">,
+  signal: AbortSignal,
 ) {
-  const formData = new FormData();
-  files.forEach((file) => formData.append("files", file));
-  const response = await fetch(`/api-proxy/submissions/${encodeURIComponent(id)}/${kind}/batch`, {
+  const body = new FormData();
+  body.set("file", file);
+  Object.entries(params).forEach(([key, value]) => body.set(key, value));
+  body.set("api_key", apiKey);
+  body.set("signature", signature);
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`,
+    {
+      method: "POST",
+      body,
+      signal,
+    },
+  );
+  if (!response.ok)
+    throw new ApiError(`Cloudinary upload failed: ${response.status}`, response.status);
+  const asset = (await response.json()) as { secure_url?: string; public_id?: string };
+  if (!asset.secure_url || !asset.public_id)
+    throw new ApiError("Cloudinary response missing asset", 502);
+  return { secureUrl: asset.secure_url, publicId: asset.public_id };
+}
+
+export function persistSubmissionAsset(
+  id: string,
+  token: string,
+  asset: { secureUrl: string; publicId: string },
+  signal?: AbortSignal,
+) {
+  return apiFetch<CafeSubmission>(`/submissions/${encodeURIComponent(id)}/assets`, {
     method: "POST",
-    credentials: "include",
     headers: authHeaders(token),
-    body: formData,
+    body: JSON.stringify({ secure_url: asset.secureUrl, public_id: asset.publicId }),
+    signal,
   });
-  if (!response.ok) throw new ApiError(`Upload failed: ${response.status}`, response.status);
-  return response.json() as Promise<CafeSubmission>;
+}
+
+export function deleteSubmissionAsset(id: string, token: string, publicId: string) {
+  return apiFetch<CafeSubmission>(`/submissions/${encodeURIComponent(id)}/assets`, {
+    method: "DELETE",
+    headers: authHeaders(token),
+    body: JSON.stringify({ public_id: publicId }),
+  });
 }
 
 export async function getMySubmissions(token: string): Promise<CafeSubmission[]> {

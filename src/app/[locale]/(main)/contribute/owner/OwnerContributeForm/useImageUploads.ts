@@ -1,7 +1,13 @@
 "use client";
 
 import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
-import { uploadSubmissionImages } from "@/apis/submissions";
+import {
+  deleteSubmissionAsset,
+  persistSubmissionAsset,
+  signSubmissionAssets,
+  uploadSignedSubmissionAsset,
+  type SubmissionAssetField,
+} from "@/apis/submissions";
 import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { createHeicPlaceholderDataUrl, isHeicFile } from "../../contribute-form.helpers";
 import type { Draft } from "./model";
@@ -15,7 +21,7 @@ type UploadItem = {
   payloadUrl?: string;
   status?: UploadStatus;
 };
-
+type AssetRef = { submissionId: string; token: string; publicId: string };
 type Options = {
   tokenOrLogin: () => Promise<string | null>;
   ensureSubmissionId: (token: string) => Promise<string>;
@@ -33,33 +39,34 @@ export function useImageUploads({
 }: Options) {
   const [galleryUploads, setGalleryUploads] = useState<UploadItem[]>([]);
   const [menuUploads, setMenuUploads] = useState<UploadItem[]>([]);
-  const [cancelledPendingCount, setCancelledPendingCount] = useState(0);
   const activeUploadIds = useRef(new Set<string>());
-  const cancelledUploadIds = useRef(new Set<string>());
+  const controllers = useRef(new Map<string, AbortController>());
+  const assets = useRef(new Map<string, AssetRef>());
+  const persistedAssets = useRef(new Map<string, AssetRef>());
   const previewUrls = useRef(new Set<string>());
+  const uploads = [...galleryUploads, ...menuUploads];
 
   useEffect(
     () => () => {
-      activeUploadIds.current.clear();
-      cancelledUploadIds.current.clear();
+      controllers.current.forEach((controller) => controller.abort());
+      assets.current.forEach(
+        (asset) => void deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId),
+      );
       previewUrls.current.forEach((url) => URL.revokeObjectURL(url));
-      previewUrls.current.clear();
     },
     [],
   );
-
-  const uploads = [...galleryUploads, ...menuUploads];
 
   return {
     galleryUploads,
     menuUploads,
     imageStatuses: uploadStatuses(galleryUploads),
     menuImageStatuses: uploadStatuses(menuUploads),
-    hasUploadPending:
-      cancelledPendingCount > 0 || uploads.some((item) => item.status === "uploading"),
+    hasUploadPending: uploads.some((item) => item.status === "uploading"),
     hasUploadFailed: uploads.some((item) => item.status === "failed"),
     startUploads,
     removeUploadAt,
+    removePersistedAsset,
     moveGalleryUploadToFront,
   };
 
@@ -75,74 +82,103 @@ export function useImageUploads({
   async function uploadBatch(items: UploadItem[], kind: UploadKind) {
     try {
       const token = await tokenOrLogin();
-      if (!token) return;
-      const id = await ensureSubmissionId(token);
-      const before = kind === "gallery" ? "images" : "menuImages";
-      const next = await uploadSubmissionImages(
-        id,
-        items.map((item) => item.file),
+      if (!token) throw new Error("Login required");
+      const submissionId = await ensureSubmissionId(token);
+      const field: SubmissionAssetField = kind === "gallery" ? "images" : "menuImages";
+      const signed = await signSubmissionAssets(
+        submissionId,
         token,
-        kind === "gallery" ? "images" : "menu",
+        items.map(() => field),
       );
-      const payload = next.payload ?? {};
-      const urls = (payload[before] ?? []).slice(-items.length);
-      const activeUrls = items
-        .map((item, index) =>
-          cancelledUploadIds.current.has(item.id) || !activeUploadIds.current.has(item.id)
-            ? null
-            : urls[index],
-        )
-        .filter((url): url is string => Boolean(url));
-      if (activeUrls.length)
-        setDraft((prev) => normalizeDraft(mergeUploadedUrls(prev, activeUrls, kind)));
-      items.forEach((item, index) => {
-        if (cancelledUploadIds.current.has(item.id) || !activeUploadIds.current.has(item.id))
-          return;
-        const remoteUrl = urls[index];
-        if (!remoteUrl) {
-          markUpload(kind, item.id, "failed");
-          return;
+      if (signed.assets.length !== items.length) throw new Error("Signature count mismatch");
+
+      await mapLimit(items, 2, async (item, index) => {
+        const signature = signed.assets[index];
+        const asset = {
+          submissionId,
+          token,
+          publicId: `${signature.params.folder}/${signature.params.public_id}`,
+        };
+        assets.current.set(item.id, asset);
+        if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
+
+        const controller = new AbortController();
+        controllers.current.set(item.id, controller);
+        try {
+          const uploaded = await uploadSignedSubmissionAsset(
+            item.file,
+            { ...signed, ...signature },
+            controller.signal,
+          );
+          if (uploaded.publicId !== asset.publicId)
+            throw new Error("Cloudinary public ID mismatch");
+          if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
+          await persistSubmissionAsset(submissionId, token, uploaded, controller.signal);
+          if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
+          assets.current.delete(item.id);
+          persistedAssets.current.set(uploaded.secureUrl, asset);
+          setDraft((prev) => normalizeDraft(mergeUploadedUrl(prev, uploaded.secureUrl, kind)));
+          markUploadUploaded(kind, item.id, uploaded.secureUrl);
+          const displayUrl = cloudinaryImageUrl(
+            uploaded.secureUrl,
+            kind === "gallery" ? "gallery" : "menu",
+          );
+          preload(displayUrl, () => swapDisplayUrl(kind, item.id, displayUrl));
+        } catch (error) {
+          await cleanup(item.id);
+          if (activeUploadIds.current.has(item.id) && !isAbort(error))
+            markUpload(kind, item.id, "failed");
+        } finally {
+          controllers.current.delete(item.id);
+          activeUploadIds.current.delete(item.id);
         }
-        markUploadUploaded(kind, item.id, remoteUrl);
-        const displayUrl = cloudinaryImageUrl(remoteUrl, kind === "gallery" ? "gallery" : "menu");
-        preload(displayUrl, () => swapDisplayUrl(kind, item.id, displayUrl));
       });
     } catch {
       items.forEach((item) => {
-        activeUploadIds.current.delete(item.id);
-        if (cancelledUploadIds.current.delete(item.id)) {
-          setCancelledPendingCount((count) => Math.max(0, count - 1));
-        } else {
-          markUpload(kind, item.id, "failed");
-        }
-      });
-      onError("Không tạo được draft để tải ảnh. Thử lại nhé.");
-    } finally {
-      items.forEach((item) => {
-        if (cancelledUploadIds.current.delete(item.id))
-          setCancelledPendingCount((count) => Math.max(0, count - 1));
+        void cleanup(item.id);
+        if (activeUploadIds.current.has(item.id)) markUpload(kind, item.id, "failed");
         activeUploadIds.current.delete(item.id);
       });
+      onError("Không thể tải ảnh. Thử lại nhé.");
     }
   }
 
   function removeUploadAt(kind: UploadKind, index: number) {
     const item = (kind === "gallery" ? galleryUploads : menuUploads)[index];
     if (!item) return;
-    if (item.status === "uploading") {
-      cancelledUploadIds.current.add(item.id);
-      setCancelledPendingCount((count) => count + 1);
+    activeUploadIds.current.delete(item.id);
+    controllers.current.get(item.id)?.abort();
+    void cleanup(item.id);
+    if (item.payloadUrl) {
+      removeUploadedUrl(kind, item.payloadUrl);
+      void removePersistedAsset(item.payloadUrl);
     }
-    dropUploadItem(kind, item);
-  }
-
-  function dropUploadItem(kind: UploadKind, upload: UploadItem) {
-    activeUploadIds.current.delete(upload.id);
-    if (upload.payloadUrl) removeUploadedUrl(kind, upload.payloadUrl);
-    if (previewUrls.current.delete(upload.displayUrl)) URL.revokeObjectURL(upload.displayUrl);
-    const remove = (items: UploadItem[]) => items.filter((item) => item.id !== upload.id);
+    if (previewUrls.current.delete(item.displayUrl)) URL.revokeObjectURL(item.displayUrl);
+    const remove = (items: UploadItem[]) => items.filter((current) => current.id !== item.id);
     if (kind === "gallery") setGalleryUploads(remove);
     else setMenuUploads(remove);
+  }
+
+  async function cleanup(uploadId: string) {
+    const asset = assets.current.get(uploadId);
+    if (!asset) return;
+    assets.current.delete(uploadId);
+    try {
+      await deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId);
+    } catch {
+      onError("Không thể dọn ảnh đã tải. Thử lại sau nhé.");
+    }
+  }
+
+  async function removePersistedAsset(url: string) {
+    const asset = persistedAssets.current.get(url);
+    if (!asset) return;
+    persistedAssets.current.delete(url);
+    try {
+      await deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId);
+    } catch {
+      onError("Không thể xoá ảnh đã tải. Thử lại nhé.");
+    }
   }
 
   function markUpload(kind: UploadKind, id: string, status: UploadStatus) {
@@ -187,9 +223,8 @@ export function useImageUploads({
   }
 
   function moveGalleryUploadToFront(index: number) {
-    const item = galleryUploads[index];
-    const url = item?.payloadUrl;
-    if (url) {
+    const url = galleryUploads[index]?.payloadUrl;
+    if (url)
       setDraft((prev) => {
         const draftIndex = prev.images?.indexOf(url) ?? -1;
         return normalizeDraft({
@@ -198,66 +233,62 @@ export function useImageUploads({
           imageOrientations: moveToFront(prev.imageOrientations ?? [], draftIndex),
         });
       });
-    }
     setGalleryUploads((prev) => moveToFront(prev, index));
   }
 
   function createUploadItem(file: File): UploadItem {
-    if (isHeicFile(file)) {
-      return {
-        id: `${Date.now()}-${globalThis.crypto?.randomUUID?.() ?? Math.random()}`,
-        file,
-        displayUrl: createHeicPlaceholderDataUrl(file.name),
-        status: "uploading",
-      };
-    }
-    const previewUrl = URL.createObjectURL(file);
-    previewUrls.current.add(previewUrl);
-    return {
-      id: `${Date.now()}-${globalThis.crypto?.randomUUID?.() ?? Math.random()}`,
-      file,
-      displayUrl: previewUrl,
-      status: "uploading",
-    };
+    const id = `${Date.now()}-${globalThis.crypto?.randomUUID?.() ?? Math.random()}`;
+    if (isHeicFile(file))
+      return { id, file, displayUrl: createHeicPlaceholderDataUrl(file.name), status: "uploading" };
+    const displayUrl = URL.createObjectURL(file);
+    previewUrls.current.add(displayUrl);
+    return { id, file, displayUrl, status: "uploading" };
   }
 }
 
+function isAbort(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
 function uploadStatuses(items: UploadItem[]): Record<string, UploadStatus> {
   return Object.fromEntries(
     items.flatMap((item) => (item.status ? [[item.displayUrl, item.status]] : [])),
   );
 }
-
 function moveToFront<T>(items: T[], index: number) {
   if (index <= 0 || index >= items.length) return items;
   const next = [...items];
-  const [item] = next.splice(index, 1);
-  return [item, ...next];
+  return [next.splice(index, 1)[0], ...next];
 }
-
-function mergeUploadedUrls(prev: Draft, urlsToAdd: string[], kind: UploadKind): Draft {
-  if (kind === "menu") {
-    return { ...prev, menuImages: unique([...(prev.menuImages ?? []), ...urlsToAdd]) };
-  }
-  const existing = new Set(prev.images ?? []);
-  const additions = urlsToAdd.filter((url) => url && !existing.has(url));
-  const images = [...(prev.images ?? []), ...additions];
+function mergeUploadedUrl(prev: Draft, url: string, kind: UploadKind): Draft {
+  if (kind === "menu") return { ...prev, menuImages: unique([...(prev.menuImages ?? []), url]) };
+  if (prev.images?.includes(url)) return prev;
+  const images = [...(prev.images ?? []), url];
   return {
     ...prev,
     images,
-    imageOrientations: [...(prev.imageOrientations ?? []), ...additions.map(() => "unknown")].slice(
-      0,
-      images.length,
-    ),
+    imageOrientations: [...(prev.imageOrientations ?? []), "unknown"].slice(0, images.length),
   };
 }
-
 function unique(items: string[]) {
   return [...new Set(items.filter(Boolean))];
 }
-
 function preload(url: string, onLoad: () => void) {
   const image = new Image();
   image.onload = onLoad;
   image.src = url;
+}
+async function mapLimit<T>(
+  items: T[],
+  limit: number,
+  task: (item: T, index: number) => Promise<void>,
+) {
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        const index = next++;
+        await task(items[index], index);
+      }
+    }),
+  );
 }
