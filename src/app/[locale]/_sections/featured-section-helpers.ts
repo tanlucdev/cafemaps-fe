@@ -3,6 +3,7 @@ import { isCafeOpenNow } from "@/lib/opening-hours"
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe"
 
 export const PAGE_SIZE = 9
+export const MOBILE_PAGE_SIZE = 10
 
 export type ViewMode = "grid" | "list"
 

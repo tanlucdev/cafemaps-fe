@@ -1409,7 +1409,16 @@
     "moreDistricts": "+{count} districts",
     "moreVibes": "+{count} vibes",
     "allDistricts": "All districts",
-    "allVibes": "All vibes"
+    "allVibes": "All vibes",
+    "mobile": {
+      "title": "Filters",
+      "description": "Refine results to suit your needs.",
+      "hint": "Filter by district, distance, vibe, price, and needs.",
+      "openNowShort": "Open now",
+      "distance": "Distance",
+      "district": "Area",
+      "viewResults": "View results"
+    }
   },
   "pagination": {
     "prev": "Previous",

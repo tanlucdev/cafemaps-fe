@@ -2,22 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import type { Vibe, Purpose } from "@/types/cafe";
-import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
-import {
-  VIBES,
-  PURPOSES,
-  PRICE_OPTIONS,
-  VIBE_ICONS,
-  PURPOSE_ICONS,
-  FILTER_TAGS,
-  TAG_ICONS,
-  VIBE_TRANSLATION_KEYS,
-  PURPOSE_TRANSLATION_KEYS,
-  TAG_TRANSLATION_KEYS,
-  type FilterTag,
-} from "@/components/cafe/constants/filter-constants";
+import { FilterOptionGroups } from "@/components/cafe/GuidedFilterBar/FilterOptionGroups";
+import type { Vibe, Purpose } from "@/types/cafe";
+import type { FilterTag } from "@/components/cafe/constants/filter-constants";
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
@@ -30,7 +18,6 @@ interface FilterDropdownPanelProps {
   onApply: () => void;
   onClearAll: () => void;
 }
-
 export function FilterDropdownPanel({
   staged,
   dropdownOpen,
@@ -60,76 +47,13 @@ export function FilterDropdownPanel({
     >
       <div className="rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/96 shadow-[0_20px_56px_rgba(44,26,14,0.14)] backdrop-blur-xl dark:bg-[var(--card)]">
         <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("vibe")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {VIBES.map((v) => (
-                <FilterChipButton
-                  key={v}
-                  active={staged.vibes.includes(v)}
-                  onClick={() => onToggleVibeStaged(v)}
-                >
-                  {VIBE_ICONS[v]}
-                  {tf(`vibes.${VIBE_TRANSLATION_KEYS[v]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("purpose")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {PURPOSES.map((p) => (
-                <FilterChipButton
-                  key={p}
-                  active={staged.purposes.includes(p)}
-                  onClick={() => onTogglePurposeStaged(p)}
-                >
-                  {PURPOSE_ICONS[p]}
-                  {tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("tags.label")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {FILTER_TAGS.map((tag) => (
-                <FilterChipButton
-                  key={tag}
-                  active={staged.tags.includes(tag)}
-                  onClick={() => onToggleTagStaged(tag)}
-                >
-                  {TAG_ICONS[tag]}
-                  {tf(`tags.${TAG_TRANSLATION_KEYS[tag]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("price")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {PRICE_OPTIONS.map((opt) => (
-                <FilterChipButton
-                  key={opt.value}
-                  active={staged.price === opt.value}
-                  onClick={() => onSetPriceStaged(opt.value)}
-                >
-                  {tf(`priceRanges.${opt.translationKey}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
+          <FilterOptionGroups
+            staged={staged}
+            onToggleVibe={onToggleVibeStaged}
+            onTogglePurpose={onTogglePurposeStaged}
+            onToggleTag={onToggleTagStaged}
+            onSetPrice={onSetPriceStaged}
+          />
         </div>
 
         <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">
