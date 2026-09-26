@@ -1276,13 +1276,15 @@
       "coverAlt": "Selected café cover photo",
       "googleMaps": "Google Maps",
       "reason": "Reason",
+      "photoUploadNotice": "{count} photos may take longer to send than usual.",
       "note": "Your café will be reviewed by the team within 1-3 business days before appearing on Cafe Maps."
     },
     "actions": {
       "back": "Back",
       "review": "Review",
       "submit": "Submit",
-      "submitting": "Submitting..."
+      "submitting": "Submitting...",
+      "uploadingImages": "Uploading images..."
     },
     "success": {
       "title": "Thanks for sharing!",
@@ -1293,7 +1295,16 @@
     "errors": {
       "nameRequired": "A café name is required so the team can review it.",
       "googleMapsRequired": "A Google Maps link is required so people can find the café.",
+      "photos": {
+        "invalid": "The image is invalid or larger than 20MiB.",
+        "count": "You can select up to 8 photos.",
+        "totalSize": "Total photo size cannot exceed 40MiB."
+      },
+      "photoUploadFailed": "We could not process the photos. Please try again in a moment.",
       "submitFailed": "Could not submit this café yet. Please try again."
+    },
+    "status": {
+      "processingPhotos": "Processing {count} photos, please wait a little longer."
     },
     "stepCount": "Step {step} / {total}",
     "heading": "Tell us about a café you love"

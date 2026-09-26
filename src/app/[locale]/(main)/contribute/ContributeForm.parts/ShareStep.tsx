@@ -60,19 +60,32 @@ function TextInput({
 }
 
 function PhotoUploader({
+  photos,
   setData,
   photoUrls,
 }: {
+  photos: File[];
   setData: Dispatch<SetStateAction<ContributeFormData>>;
   photoUrls: string[];
 }) {
   const t = useTranslations("contribute");
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
-  const addFiles = (files: FileList | null) =>
-    setData((prev) => ({ ...prev, photos: appendImageFiles(prev.photos, files) }));
-  const removePhoto = (index: number) =>
+  const [selectionError, setSelectionError] = useState<string | null>(null);
+  const addFiles = (files: FileList | null) => {
+    const result = appendImageFiles(photos, files);
+    const errors = {
+      invalid: t("errors.photos.invalid"),
+      count: t("errors.photos.count"),
+      totalSize: t("errors.photos.totalSize"),
+    };
+    setSelectionError(result.error ? errors[result.error] : null);
+    setData((prev) => ({ ...prev, photos: result.photos }));
+  };
+  const removePhoto = (index: number) => {
+    setSelectionError(null);
     setData((prev) => ({ ...prev, photos: prev.photos.filter((_, i) => i !== index) }));
+  };
 
   return (
     <>
@@ -114,9 +127,18 @@ function PhotoUploader({
           multiple
           accept={IMAGE_FILE_ACCEPT}
           className="hidden"
-          onChange={(event) => addFiles(event.target.files)}
+          onChange={(event) => {
+            addFiles(event.target.files);
+            event.currentTarget.value = "";
+          }}
         />
       </div>
+      {selectionError && (
+        <p className="mt-2 flex items-center gap-1.5 text-[12px] font-medium text-[var(--danger)]">
+          <AlertCircle className="size-3.5 shrink-0" aria-hidden="true" />
+          {selectionError}
+        </p>
+      )}
       {photoUrls.length > 0 && (
         <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-5">
           {photoUrls.map((url, index) => (
@@ -198,7 +220,7 @@ export function ShareStep({
       <Field label={t("form.reasonLabel")} hint={t("form.reasonHint")}>
         <div className="relative">
           <textarea
-            rows={2}
+            rows={4}
             maxLength={MAX_REASON_LENGTH}
             placeholder={t("form.reasonPlaceholder")}
             value={data.reason}
@@ -215,7 +237,7 @@ export function ShareStep({
       </Field>
 
       <Field label={t("form.photosLabel")} hint={t("form.photosHint")}>
-        <PhotoUploader setData={setData} photoUrls={photoUrls} />
+        <PhotoUploader photos={data.photos} setData={setData} photoUrls={photoUrls} />
       </Field>
     </div>
   );

@@ -1276,13 +1276,15 @@
       "coverAlt": "Ảnh bìa quán đã chọn",
       "googleMaps": "Google Maps",
       "reason": "Lý do",
+      "photoUploadNotice": "{count} ảnh sẽ mất nhiều thời gian gửi hơn bình thường.",
       "note": "Quán của bạn sẽ được đội ngũ kiểm duyệt trong 1-3 ngày làm việc trước khi xuất hiện trên Cafe Maps."
     },
     "actions": {
       "back": "Quay lại",
       "review": "Xem lại",
       "submit": "Gửi đề xuất",
-      "submitting": "Đang gửi..."
+      "submitting": "Đang gửi...",
+      "uploadingImages": "Đang tải ảnh..."
     },
     "success": {
       "title": "Cảm ơn bạn đã chia sẻ!",
@@ -1293,7 +1295,16 @@
     "errors": {
       "nameRequired": "Tên quán là bắt buộc để đội ngũ dễ kiểm tra.",
       "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán.",
+      "photos": {
+        "invalid": "Ảnh không hợp lệ hoặc lớn hơn 20MiB.",
+        "count": "Chỉ có thể chọn tối đa 8 ảnh.",
+        "totalSize": "Tổng dung lượng ảnh không được vượt quá 40MiB."
+      },
+      "photoUploadFailed": "Bọn mình chưa xử lý được ảnh. Thử lại sau ít phút nhé.",
       "submitFailed": "Chưa gửi được đề xuất. Thử lại giúp bọn mình nhé."
+    },
+    "status": {
+      "processingPhotos": "Đang xử lý {count} ảnh, vui lòng chờ thêm một chút."
     },
     "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"

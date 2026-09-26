@@ -1,4 +1,4 @@
-import { MAX_IMAGE_BYTES, MAX_PHOTOS } from "./contribute-form.constants";
+import { MAX_IMAGE_BYTES, MAX_PHOTOS, MAX_TOTAL_IMAGE_BYTES } from "./contribute-form.constants";
 
 const ACCEPTED_IMAGE_EXTENSIONS = /\.(jpe?g|png|webp|avif|heic|heif)$/i;
 const ACCEPTED_IMAGE_TYPES = new Set([
@@ -45,6 +45,12 @@ export function isAllowedImageFile(file: File) {
 }
 
 export function appendImageFiles(photos: File[], files: FileList | null) {
-  if (!files) return photos;
-  return [...photos, ...Array.from(files).filter(isAllowedImageFile)].slice(0, MAX_PHOTOS);
+  if (!files) return { photos, error: null };
+  const additions = Array.from(files);
+  if (additions.some((file) => !isAllowedImageFile(file))) return { photos, error: "invalid" as const };
+  const nextPhotos = [...photos, ...additions];
+  if (nextPhotos.length > MAX_PHOTOS) return { photos, error: "count" as const };
+  if (nextPhotos.reduce((total, file) => total + file.size, 0) > MAX_TOTAL_IMAGE_BYTES)
+    return { photos, error: "totalSize" as const };
+  return { photos: nextPhotos, error: null };
 }
