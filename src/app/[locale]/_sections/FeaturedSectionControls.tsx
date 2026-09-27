@@ -32,14 +32,14 @@ export default function FeaturedSectionControls({
   return (
     <section className="relative z-30 border-b border-[var(--border)] bg-[#fffaf2]/82 pt-[104px] pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-[108px] sm:pb-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div {...headerMotion} className="max-w-3xl pb-5">
-          <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
+        <motion.div {...headerMotion} className="max-w-3xl pb-4 md:pb-5">
+          <p className="mb-2 hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md md:inline-flex">
             <Coffee size={13} aria-hidden /> {ts("eyebrow")}
           </p>
-          <h1 className="max-w-[13ch] font-lora text-[30px] leading-tight font-bold text-[var(--foreground)] sm:max-w-none sm:text-[44px]">
+          <h1 className="whitespace-nowrap font-lora text-[24px] leading-tight font-bold text-[var(--foreground)] md:text-[44px]">
             {ts("heading")}
           </h1>
-          <p className="mt-2 max-w-[32ch] text-sm leading-6 font-medium text-[var(--foreground-muted)] sm:max-w-2xl sm:text-base">
+          <p className="mt-2 hidden max-w-2xl text-base leading-6 font-medium text-[var(--foreground-muted)] md:block">
             {ts("subtitle")}
           </p>
         </motion.div>
@@ -67,7 +67,7 @@ export default function FeaturedSectionControls({
           </div>
         </motion.div>
 
-        <div className="sticky top-[76px] z-50 -mx-2 mt-6 rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/90 px-2 shadow-[0_16px_42px_rgba(44,26,14,0.10)] backdrop-blur-xl sm:top-[82px] sm:mx-0 sm:mt-7 sm:px-4">
+        <div className="-mx-2 mt-6 md:sticky md:top-[82px] md:z-50 md:mx-0 md:mt-7 md:rounded-[24px] md:border md:border-[var(--border)] md:bg-[#fffaf2]/90 md:px-4 md:shadow-[0_16px_42px_rgba(44,26,14,0.10)] md:backdrop-blur-xl">
           <GuidedFilterBar filter={filter} onChange={onFilterChange} districts={activeDistricts} />
         </div>
       </div>

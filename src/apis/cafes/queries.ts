@@ -15,7 +15,6 @@ async function loadDevFallback(options?: NextRequestInit) {
   }
   return import("@/apis/cafes/dev-fallback")
 }
-
 function emptyCafesPage(filter?: CafeFilter) {
   return {
     cafes: [],
@@ -98,19 +97,14 @@ export async function getNearbyCafes(
   _locale?: string | null
 ): Promise<Cafe[]> {
   void _locale
-  try {
-    const params = new URLSearchParams({
-      lat: String(lat),
-      lng: String(lng),
-      radius: String(radiusKm),
-      distanceMode: "route",
-    })
-    const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, { cache: "no-store" })
-    return raw.map((cafe) => mapApiCafe(cafe, _locale))
-  } catch (err) {
-    console.error("getNearbyCafes failed:", err)
-    return []
-  }
+  const params = new URLSearchParams({
+    lat: String(lat),
+    lng: String(lng),
+    radius: String(radiusKm),
+    distanceMode: "route",
+  })
+  const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, { cache: "no-store" })
+  return raw.map((cafe) => mapApiCafe(cafe, _locale))
 }
 
 export async function getCafeDistricts(locale?: string | null, options?: NextRequestInit): Promise<string[]> {

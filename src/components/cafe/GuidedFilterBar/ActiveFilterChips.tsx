@@ -75,7 +75,7 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
   if (activeChips.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pb-3">
+    <div className="mt-2.5 flex flex-wrap items-center gap-2 px-2 pb-3 md:mt-0 md:px-0">
       <span className="text-xs font-semibold text-[var(--foreground-muted)]">{tf("activeLabel")}:</span>
       {activeChips.map((chip) => (
         <button

@@ -41,19 +41,23 @@ export function useResolvedCafeDistance(cafe: Cafe, locale: string): ResolvedDis
     });
 
     async function resolveRouteDistance() {
-      const nearbyCafes = await getNearbyCafes(originLat, originLng, searchRadiusKm, locale);
-      if (cancelled) return;
+      try {
+        const nearbyCafes = await getNearbyCafes(originLat, originLng, searchRadiusKm, locale);
+        if (cancelled) return;
 
-      const routeCafe = nearbyCafes.find(
-        (nearbyCafe) => nearbyCafe.id === cafe.id || nearbyCafe.slug === cafe.slug,
-      );
-      if (routeCafe?.distanceKm == null) return;
+        const routeCafe = nearbyCafes.find(
+          (nearbyCafe) => nearbyCafe.id === cafe.id || nearbyCafe.slug === cafe.slug,
+        );
+        if (routeCafe?.distanceKm == null) return;
 
-      setResolvedDistance({
-        distanceKm: routeCafe.distanceKm,
-        distanceMode: routeCafe.distanceMode,
-        durationMin: routeCafe.durationMin,
-      });
+        setResolvedDistance({
+          distanceKm: routeCafe.distanceKm,
+          distanceMode: routeCafe.distanceMode,
+          durationMin: routeCafe.durationMin,
+        });
+      } catch {
+        // Keep the straight-line fallback when route lookup fails.
+      }
     }
 
     void resolveRouteDistance();

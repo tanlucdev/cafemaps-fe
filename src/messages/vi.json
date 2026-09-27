@@ -1409,7 +1409,16 @@
     "moreDistricts": "+{count} quận",
     "moreVibes": "+{count} phong cách",
     "allDistricts": "Tất cả quận",
-    "allVibes": "Tất cả phong cách"
+    "allVibes": "Tất cả phong cách",
+    "mobile": {
+      "title": "Bộ lọc",
+      "description": "Tinh chỉnh kết quả theo nhu cầu của bạn.",
+      "hint": "Lọc theo quận, khoảng cách, phong cách, giá và nhu cầu.",
+      "openNowShort": "Đang mở",
+      "distance": "Khoảng cách",
+      "district": "Khu vực",
+      "viewResults": "Xem kết quả"
+    }
   },
   "pagination": {
     "prev": "Trang trước",

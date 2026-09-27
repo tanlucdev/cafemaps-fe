@@ -15,6 +15,7 @@ interface FeaturedSectionResultsProps {
   dataLoading: boolean
   locale: string
   page: number
+  pageSize: number
   paginated: Cafe[]
   reduceMotion: boolean | null
   canAnimate: boolean
@@ -31,6 +32,7 @@ export default function FeaturedSectionResults({
   dataLoading,
   locale,
   page,
+  pageSize,
   paginated,
   reduceMotion,
   canAnimate,
@@ -109,12 +111,13 @@ export default function FeaturedSectionResults({
             animationType={animationType}
             desktopColumns="three"
             eagerFirstImage
+            mobileCompact
           />
         ) : (
           <CafeList cafes={paginated} locale={locale} animationType={animationType} eagerFirstImage />
         )}
 
-        <Pagination page={page} total={total} limit={9} onPageChange={onPageChange} />
+        <Pagination page={page} total={total} limit={pageSize} onPageChange={onPageChange} />
       </motion.div>
     </AnimatePresence>
   )
@@ -138,9 +141,9 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
         </div>
       </div>
       {viewMode === "grid" ? (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-6 lg:gap-8 xl:grid-cols-3">
           {Array.from({ length: 9 }).map((_, index) => (
-            <CafeCardSkeleton key={index} />
+            <CafeCardSkeleton key={index} mobileCompact />
           ))}
         </div>
       ) : (
