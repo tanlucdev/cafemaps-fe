@@ -8,6 +8,9 @@ const DEFAULT_BACKEND_URL = "https://cafe-finder-be.onrender.com/api";
 const API_URL = process.env.API_URL ?? DEFAULT_BACKEND_URL;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    proxyClientMaxBodySize: "42mb",
+  },
   async redirects() {
     return [
       {

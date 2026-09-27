@@ -1,5 +1,7 @@
 import { ApiError, apiFetch, authHeaders } from "@/apis/http";
 
+const COMMUNITY_UPLOAD_TIMEOUT_MS = 180_000;
+
 export interface CreateSubmissionInput {
   name: string;
   submissionType?: "community" | "owner";
@@ -7,6 +9,13 @@ export interface CreateSubmissionInput {
   googleMapsUrl?: string;
   note?: string;
   payload?: CafeSubmissionPayload;
+}
+
+export interface CreateCommunitySubmissionInput {
+  name: string;
+  googleMapsUrl: string;
+  note?: string;
+  photos: File[];
 }
 
 export interface CafeSubmissionPayload {
@@ -82,6 +91,24 @@ export async function createSubmission(data: CreateSubmissionInput, token: strin
     method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(data),
+  });
+}
+
+export function createCommunitySubmission({
+  name,
+  googleMapsUrl,
+  note,
+  photos,
+}: CreateCommunitySubmissionInput) {
+  const body = new FormData();
+  body.set("name", name);
+  body.set("googleMapsUrl", googleMapsUrl);
+  if (note) body.set("note", note);
+  photos.forEach((photo) => body.append("photos", photo));
+  return apiFetch<CafeSubmission>("/submissions/community", {
+    method: "POST",
+    body,
+    timeoutMs: COMMUNITY_UPLOAD_TIMEOUT_MS,
   });
 }
 

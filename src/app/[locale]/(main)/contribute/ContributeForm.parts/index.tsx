@@ -60,12 +60,14 @@ export function StepProgress({ current }: { current: number }) {
 export function FormActions({
   step,
   loading,
+  hasPhotos,
   onBack,
   onNext,
   onSubmit,
 }: {
   step: number;
   loading: boolean;
+  hasPhotos: boolean;
   onBack: () => void;
   onNext: () => void;
   onSubmit: () => void;
@@ -94,7 +96,7 @@ export function FormActions({
           {loading ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-              {t("actions.submitting")}
+              {hasPhotos ? t("actions.uploadingImages") : t("actions.submitting")}
             </>
           ) : step === 2 ? (
             <>
