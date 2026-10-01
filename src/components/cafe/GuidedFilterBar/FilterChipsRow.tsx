@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChevronDown, MapPin, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, MapPin, SlidersHorizontal } from "lucide-react";
 import NearMeButton from "@/components/cafe/NearMeButton";
 import { cn } from "@/lib/utils";
 import { AREAS } from "@/types/cafe";
@@ -29,7 +29,6 @@ interface FilterChipsRowProps {
   toggleOpenNow: () => void;
   setDistrict: (val: string) => void;
   setDistance: (km: number) => void;
-  clearAll: () => void;
   districts?: string[];
 }
 
@@ -47,7 +46,6 @@ export function FilterChipsRow({
   toggleOpenNow,
   setDistrict,
   setDistance,
-  clearAll,
   districts,
 }: FilterChipsRowProps) {
   const tf = useTranslations("filters");
@@ -181,15 +179,6 @@ export function FilterChipsRow({
         </FilterChipButton>
       )}
 
-      {activeCount > 0 && (
-        <button
-          onClick={clearAll}
-          className="flex flex-none cursor-pointer items-center gap-1 text-xs font-bold whitespace-nowrap text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-        >
-          <X size={12} />
-          {tf("clear")}
-        </button>
-      )}
     </div>
   );
 }

@@ -52,7 +52,6 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
           toggleOpenNow={toggleOpenNow}
           setDistrict={setDistrict}
           setDistance={setDistance}
-          clearAll={clearAll}
           districts={districts}
         />
 
