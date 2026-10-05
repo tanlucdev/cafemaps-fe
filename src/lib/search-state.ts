@@ -280,12 +280,20 @@ export function getLastSearchState(): LastSearchState | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<LastSearchState>
     if (!parsed.params) return null
-    return {
-      query: parsed.query,
-      filter: parsed.filter ?? {},
-      sort: parsed.sort ?? "popular",
-      params: parsed.params,
+    const legacyHours = (parsed.filter as { hours?: string } | undefined)?.hours
+    const filter: CafeFilter = {
+      ...(parsed.filter ?? {}),
+      hours: normalizeCafeHoursFilter(legacyHours),
     }
+    const sort = parsed.sort ?? "popular"
+    const state = {
+      query: parsed.query,
+      filter,
+      sort,
+      params: buildSearchParams(filter, sort, filter.page ?? 1).toString(),
+    }
+    if (state.params !== parsed.params || state.filter.hours !== legacyHours) setLastSearchState(state)
+    return state
   } catch {
     return null
   }
