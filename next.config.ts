@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   experimental: {
     proxyClientMaxBodySize: "42mb",
   },
+  experimental: {
+    proxyClientMaxBodySize: "42mb",
+  },
   async redirects() {
     return [
       {
@@ -118,7 +121,8 @@ const nextConfig: NextConfig = {
     "192.168.2.225",
     "192.168.2.94",
     "192.168.1.18",
-    "192.168.2.94",
+    "10.0.10.182",
+    "172.19.144.135",
   ],
 };
 
