@@ -13,7 +13,6 @@ import {
   sortFromSearchParams,
   type SearchSort,
 } from "@/lib/search-state";
-import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours";
 import FeaturedSectionControls from "./FeaturedSectionControls";
 import FeaturedSectionResults from "./FeaturedSectionResults";
 import FeaturedSectionToolbar from "./FeaturedSectionToolbar";
@@ -21,8 +20,7 @@ import {
   cafeCreatedTime,
   cafePopularity,
   cafeRating,
-  haversineKm,
-  MOBILE_PAGE_SIZE,
+  filterFeaturedCafes,
   PAGE_SIZE,
   type ServerMeta,
   type ViewMode,
@@ -51,7 +49,6 @@ export default function FeaturedSection({
   const reduceMotion = usePrefersReducedMotion();
   const [urlSearchParams, setUrlSearchParams] = useState(() => new URLSearchParams());
   const [canAnimate, setCanAnimate] = useState(false);
-  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(urlSearchParams));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -63,8 +60,8 @@ export default function FeaturedSection({
 
   const page = Number(urlSearchParams.get("page") ?? "1");
   const queryFilter = useMemo(
-    () => ({ ...filter, page, limit: pageSize, sort: sortMode }),
-    [filter, page, pageSize, sortMode],
+    () => ({ ...filter, page, limit: PAGE_SIZE, sort: sortMode }),
+    [filter, page, sortMode],
   );
   const { activeCafes, activeDistricts, activeMeta, cafesQuery, dataError, shouldFetchCafes } =
     useFeaturedSectionData({
@@ -99,9 +96,6 @@ export default function FeaturedSection({
 
   useEffect(() => {
     setCanAnimate(true);
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const syncPageSize = () => setPageSize(mediaQuery.matches ? MOBILE_PAGE_SIZE : PAGE_SIZE);
-    syncPageSize();
 
     function syncSearchParams() {
       const nextParams = new URLSearchParams(window.location.search);
@@ -124,11 +118,7 @@ export default function FeaturedSection({
 
     syncSearchParams();
     window.addEventListener("popstate", syncSearchParams);
-    mediaQuery.addEventListener("change", syncPageSize);
-    return () => {
-      window.removeEventListener("popstate", syncSearchParams);
-      mediaQuery.removeEventListener("change", syncPageSize);
-    };
+    return () => window.removeEventListener("popstate", syncSearchParams);
   }, []);
 
   function handleFilterChange(newFilter: Filter) {
@@ -172,65 +162,10 @@ export default function FeaturedSection({
     setViewMode(nextMode);
   }
 
-  const filtered = useMemo(() => {
-    if (activeMeta) {
-      let result = activeCafes;
-      if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
-        const hasCoords = result.some((c) => c.lat != null && c.lng != null);
-        if (hasCoords) {
-          const radius = filter.radiusKm ?? 2;
-          result = result.filter((c) => {
-            if (c.lat == null || c.lng == null) return false;
-            return haversineKm(filter.lat!, filter.lng!, c.lat, c.lng) <= radius;
-          });
-        }
-      }
-      return result;
-    }
-
-    let result = activeCafes;
-    const { search, district, vibes, purposes, priceRange, openNow, hours } = filter;
-
-    if (search?.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          (c.address ?? "").toLowerCase().includes(q) ||
-          (c.district ?? "").toLowerCase().includes(q),
-      );
-    }
-    if (district) result = result.filter((c) => c.district === district);
-    if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)));
-    if (purposes?.length)
-      result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)));
-    if (priceRange) {
-      result = result.filter((c) => {
-        const min = c.priceMin ?? 0;
-        const max = c.priceMax ?? min;
-        if (priceRange === "under_50k") return min < 50000;
-        if (priceRange === "price_50k_100k" || priceRange === "50k_100k")
-          return min <= 100000 && max >= 50000;
-        if (priceRange === "price_100k_150k" || priceRange === "100k_150k")
-          return min <= 150000 && max >= 100000;
-        if (priceRange === "above_150k") return max > 150000;
-        return true;
-      });
-    }
-    if (openNow) result = result.filter(isCafeOpenNow);
-    if (hours) result = result.filter((cafe) => matchesCafeHours(cafe, hours));
-    if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
-      const hasCoords = result.some((c) => c.lat != null && c.lng != null);
-      if (hasCoords) {
-        const radius = filter.radiusKm ?? 2;
-        result = result.filter((c) => {
-          if (c.lat == null || c.lng == null) return false;
-          return haversineKm(filter.lat!, filter.lng!, c.lat, c.lng) <= radius;
-        });
-      }
-    }
-    return result;
-  }, [activeCafes, filter, activeMeta]);
+  const filtered = useMemo(
+    () => filterFeaturedCafes(activeCafes, filter, Boolean(activeMeta)),
+    [activeCafes, filter, activeMeta],
+  );
 
   const sorted = useMemo(() => {
     if (sortMode === "rating") {
@@ -246,7 +181,7 @@ export default function FeaturedSection({
   }, [filtered, sortMode]);
 
   const total = activeMeta ? activeMeta.total : sorted.length;
-  const paginated = activeMeta ? sorted : sorted.slice((page - 1) * pageSize, page * pageSize);
+  const paginated = activeMeta ? sorted : sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const sortLabel =
     sortMode === "rating"
       ? ts("sortRating")
@@ -260,7 +195,10 @@ export default function FeaturedSection({
           initial: false,
           animate: { opacity: 1 },
           whileHover: { y: -1 },
-          transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+          transition: {
+            duration: 0.18,
+            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+          },
         }
       : { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } };
 
@@ -303,7 +241,6 @@ export default function FeaturedSection({
           dataLoading={dataLoading}
           locale={locale}
           page={page}
-          pageSize={pageSize}
           paginated={paginated}
           reduceMotion={reduceMotion}
           canAnimate={canAnimate}
