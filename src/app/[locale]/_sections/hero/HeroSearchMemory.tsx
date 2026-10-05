@@ -30,6 +30,8 @@ export function HeroSearchMemory({ lastSearch, onResume, onClear }: HeroSearchMe
       <span className="max-w-[160px] truncate font-semibold text-[#fff7e8] sm:max-w-[280px]">
         {getLastSearchLabel(lastSearch, {
           openNow: t("lastSearch.openNow"),
+          openFromSeven: t("lastSearch.openFromSeven"),
+          open24Hours: t("lastSearch.open24Hours"),
           nearMe: t("lastSearch.nearMe"),
           fallback: t("lastSearch.fallback"),
         })}

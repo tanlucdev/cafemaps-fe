@@ -1,6 +1,6 @@
 import type { Cafe, CafeFilter } from "@/types/cafe"
 import { MOCK_CAFES } from "@/lib/mock-data"
-import { isCafeOpenNow } from "@/lib/opening-hours"
+import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours"
 import { normalizeLabelKey, withInferredTags, type RawCafe } from "./mapper"
 
 export function fallbackCafes(filter?: CafeFilter): Cafe[] {
@@ -39,6 +39,7 @@ export function fallbackCafes(filter?: CafeFilter): Cafe[] {
     })
   }
   if (filter?.openNow) result = result.filter(isCafeOpenNow)
+  if (filter?.hours) result = result.filter((cafe) => matchesCafeHours(cafe, filter.hours))
 
   if (sort === "newest") return [...result].reverse()
   return result

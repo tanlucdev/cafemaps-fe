@@ -24,6 +24,8 @@ type SmartSuggestionCopy = {
 
 type LastSearchCopy = {
   openNow: string;
+  openFromSeven: string;
+  open24Hours: string;
   nearMe: string;
   fallback: string;
 };
@@ -80,6 +82,8 @@ export function getLastSearchLabel(lastSearch: LastSearchState, copy: LastSearch
   if (lastSearch.filter.vibes?.length) return lastSearch.filter.vibes.join(", ");
   if (lastSearch.filter.purposes?.length) return lastSearch.filter.purposes.join(", ");
   if (lastSearch.filter.openNow) return copy.openNow;
+  if (lastSearch.filter.hours === "open_at_7") return copy.openFromSeven;
+  if (lastSearch.filter.hours === "open_24h") return copy.open24Hours;
   if (lastSearch.filter.nearMe) return copy.nearMe;
   return copy.fallback;
 }

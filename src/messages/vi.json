@@ -97,6 +97,8 @@
       "nearMe": "Gần tôi",
       "outdoor": "Ngoài trời",
       "openNow": "Mở cửa ngay",
+      "openFromSeven": "Mở lúc 07:00",
+      "open24Hours": "Mở 24 giờ",
       "quiet": "Yên tĩnh",
       "vintage": "Vintage",
       "workFriendly": "Work-friendly"
@@ -110,6 +112,8 @@
     },
     "lastSearch": {
       "openNow": "quán đang mở",
+      "openFromSeven": "quán mở lúc 07:00",
+      "open24Hours": "quán mở 24 giờ",
       "nearMe": "quán gần tôi",
       "fallback": "tìm kiếm trước"
     },
@@ -147,6 +151,7 @@
     "district": "Khu vực",
     "vibe": "Bộ lọc",
     "price": "Giá",
+    "openingHours": "Giờ mở cửa",
     "purpose": "Mục đích",
     "clear": "Xoá bộ lọc",
     "clearAll": "Xoá tất cả",
@@ -1415,6 +1420,8 @@
   },
   "guidedFilter": {
     "openNow": "Đang mở cửa",
+    "openFromSeven": "Mở lúc 07:00",
+    "open24Hours": "Mở 24 giờ",
     "moreFilters": "Bộ lọc thêm",
     "activeCount": "{count} bộ lọc",
     "moreDistricts": "+{count} quận",

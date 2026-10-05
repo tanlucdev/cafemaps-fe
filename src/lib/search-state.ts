@@ -1,4 +1,5 @@
 import { AREAS, type CafeFilter, type Vibe } from "@/types/cafe"
+import { normalizeCafeHoursFilter } from "./opening-hours"
 
 export const LAST_SEARCH_STORAGE_KEY = "cafemaps_last_search"
 
@@ -221,6 +222,7 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
     priceRange: searchParams.get("priceRange") ?? undefined,
     openNow:
       searchParams.get("open") === "true" || searchParams.get("openNow") === "true" || undefined,
+    hours: normalizeCafeHoursFilter(searchParams.get("hours")),
     nearMe: searchParams.get("nearMe") === "true" || undefined,
     lat: searchParams.get("lat") ? Number(searchParams.get("lat")) : undefined,
     lng: searchParams.get("lng") ? Number(searchParams.get("lng")) : undefined,
@@ -246,6 +248,8 @@ export function buildSearchParams(filter: CafeFilter, sort: SearchSort, page = 1
   if (filter.district) params.set("district", filter.district)
   if (filter.priceRange) params.set("priceRange", filter.priceRange)
   if (filter.openNow) params.set("open", "true")
+  const hours = normalizeCafeHoursFilter(filter.hours)
+  if (hours) params.set("hours", hours)
   if (filter.nearMe) params.set("nearMe", "true")
   if (filter.lat !== undefined) params.set("lat", String(filter.lat))
   if (filter.lng !== undefined) params.set("lng", String(filter.lng))
@@ -265,6 +269,7 @@ export function hasActiveSearchFilters(filter: CafeFilter): boolean {
       filter.district ||
       filter.priceRange ||
       filter.openNow ||
+      filter.hours ||
       filter.nearMe,
   )
 }
