@@ -97,6 +97,8 @@
       "nearMe": "Near me",
       "outdoor": "Outdoor",
       "openNow": "Open now",
+      "openFromSeven": "Opens at 7 AM",
+      "open24Hours": "Open 24 hours",
       "quiet": "Quiet",
       "vintage": "Vintage",
       "workFriendly": "Work-friendly"
@@ -110,6 +112,8 @@
     },
     "lastSearch": {
       "openNow": "open cafes",
+      "openFromSeven": "cafes opening at 7 AM",
+      "open24Hours": "24-hour cafes",
       "nearMe": "cafes near me",
       "fallback": "last search"
     },
@@ -147,6 +151,7 @@
     "district": "Area",
     "vibe": "Filters",
     "price": "Price",
+    "openingHours": "Opening hours",
     "purpose": "Purpose",
     "clear": "Clear filters",
     "clearAll": "Clear all",
@@ -1415,6 +1420,8 @@
   },
   "guidedFilter": {
     "openNow": "Open Now",
+    "openFromSeven": "Opens at 7 AM",
+    "open24Hours": "Open 24 hours",
     "moreFilters": "More filters",
     "activeCount": "{count} filters",
     "moreDistricts": "+{count} districts",

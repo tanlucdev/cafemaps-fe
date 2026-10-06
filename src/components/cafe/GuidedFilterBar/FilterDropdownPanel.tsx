@@ -6,6 +6,7 @@ import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import { FilterOptionGroups } from "@/components/cafe/GuidedFilterBar/FilterOptionGroups";
 import type { Vibe, Purpose } from "@/types/cafe";
 import type { FilterTag } from "@/components/cafe/constants/filter-constants";
+import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
@@ -15,6 +16,7 @@ interface FilterDropdownPanelProps {
   onTogglePurposeStaged: (p: Purpose) => void;
   onToggleTagStaged: (tag: FilterTag) => void;
   onSetPriceStaged: (val: string) => void;
+  onSetHoursStaged: (hours: StagedFilter["hours"]) => void;
   onApply: () => void;
   onClearAll: () => void;
 }
@@ -26,6 +28,7 @@ export function FilterDropdownPanel({
   onTogglePurposeStaged,
   onToggleTagStaged,
   onSetPriceStaged,
+  onSetHoursStaged,
   onApply,
   onClearAll,
 }: FilterDropdownPanelProps) {
@@ -35,7 +38,9 @@ export function FilterDropdownPanel({
     staged.vibes.length +
     staged.purposes.length +
     staged.tags.length +
-    (staged.price != null ? 1 : 0);
+    (staged.price != null ? 1 : 0) +
+    (staged.hours ? 1 : 0);
+  const tg = useTranslations("guidedFilter");
 
   return (
     <div
@@ -54,6 +59,25 @@ export function FilterDropdownPanel({
             onToggleTag={onToggleTagStaged}
             onSetPrice={onSetPriceStaged}
           />
+          <div>
+            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
+              {tf("openingHours")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <FilterChipButton
+                active={staged.hours === "open_at_7"}
+                onClick={() => onSetHoursStaged("open_at_7")}
+              >
+                {tg("openFromSeven")}
+              </FilterChipButton>
+              <FilterChipButton
+                active={staged.hours === "open_24h"}
+                onClick={() => onSetHoursStaged("open_24h")}
+              >
+                {tg("open24Hours")}
+              </FilterChipButton>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">

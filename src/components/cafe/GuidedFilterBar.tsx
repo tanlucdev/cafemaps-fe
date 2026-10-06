@@ -28,6 +28,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     togglePurposeStaged,
     toggleTagStaged,
     setPriceStaged,
+    setHoursStaged,
     setDistanceStaged,
     clearStaged,
     applyDropdown,
@@ -74,6 +75,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
             onTogglePurposeStaged={togglePurposeStaged}
             onToggleTagStaged={toggleTagStaged}
             onSetPriceStaged={setPriceStaged}
+            onSetHoursStaged={setHoursStaged}
             onApply={applyDropdown}
             onClearAll={clearAll}
           />
@@ -99,6 +101,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
         onTogglePurpose={togglePurposeStaged}
         onToggleTag={toggleTagStaged}
         onSetPrice={setPriceStaged}
+        onSetHours={setHoursStaged}
         onSetDistance={setDistanceStaged}
       />
 

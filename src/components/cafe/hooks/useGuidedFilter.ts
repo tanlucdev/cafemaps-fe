@@ -10,6 +10,7 @@ export interface StagedFilter {
   tags: FilterTag[];
   price: string | undefined;
   radiusKm?: number;
+  hours: Filter["hours"];
 }
 function toggleInArray<T>(items: T[], item: T) {
   return items.includes(item) ? items.filter((x) => x !== item) : [...items, item];
@@ -35,6 +36,7 @@ interface UseGuidedFilterReturn {
   togglePurposeStaged: (p: Purpose) => void;
   toggleTagStaged: (tag: FilterTag) => void;
   setPriceStaged: (val: string) => void;
+  setHoursStaged: (hours: Filter["hours"]) => void;
   setDistanceStaged: (km: number) => void;
   clearStaged: () => void;
   applyDropdown: () => void;
@@ -71,6 +73,7 @@ export function useGuidedFilter(
     tags: [],
     price: undefined,
     radiusKm: undefined,
+    hours: undefined,
   });
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -85,6 +88,7 @@ export function useGuidedFilter(
       tags: (filter.tags ?? []) as FilterTag[],
       price: filter.priceRange,
       radiusKm: filter.radiusKm,
+      hours: filter.hours,
     });
   }, [filter]);
 
@@ -172,12 +176,16 @@ export function useGuidedFilter(
     }));
   }, []);
 
+  const setHoursStaged = useCallback((hours: Filter["hours"]) => {
+    setStaged((prev) => ({ ...prev, hours: prev.hours === hours ? undefined : hours }));
+  }, []);
+
   const setDistanceStaged = useCallback((km: number) => {
     setStaged((prev) => ({ ...prev, radiusKm: km }));
   }, []);
 
   const clearStaged = useCallback(() => {
-    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined });
+    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined, hours: undefined });
   }, []);
 
   const applyDropdown = useCallback(() => {
@@ -187,6 +195,7 @@ export function useGuidedFilter(
       purposes: staged.purposes.length > 0 ? staged.purposes : undefined,
       tags: staged.tags.length > 0 ? staged.tags : undefined,
       priceRange: staged.price,
+      hours: staged.hours,
     });
     closeDropdown();
   }, [filter, staged, onChange, closeDropdown]);
@@ -199,6 +208,7 @@ export function useGuidedFilter(
       tags: staged.tags.length > 0 ? staged.tags : undefined,
       priceRange: staged.price,
       radiusKm: staged.radiusKm,
+      hours: staged.hours,
     });
     setMobileSheetOpen(false);
   }, [filter, staged, onChange]);
@@ -232,7 +242,7 @@ export function useGuidedFilter(
 
   const clearAll = useCallback(() => {
     onChange({});
-    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined });
+    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined, hours: undefined });
     setMobileSheetOpen(false);
   }, [onChange]);
 
@@ -241,13 +251,15 @@ export function useGuidedFilter(
     (filter.purposes?.length ?? 0) +
     (filter.tags?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
-    (filter.openNow ? 1 : 0);
+    (filter.openNow ? 1 : 0) +
+    (filter.hours ? 1 : 0);
 
   const mobileAdvancedCount =
     (filter.vibes?.length ?? 0) +
     (filter.purposes?.length ?? 0) +
     (filter.tags?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
+    (filter.hours ? 1 : 0) +
     (filter.nearMe && filter.radiusKm != null && filter.radiusKm !== 2 ? 1 : 0);
 
   return {
@@ -265,6 +277,7 @@ export function useGuidedFilter(
     togglePurposeStaged,
     toggleTagStaged,
     setPriceStaged,
+    setHoursStaged,
     setDistanceStaged,
     clearStaged,
     applyDropdown,

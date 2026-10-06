@@ -1,4 +1,5 @@
 import { AREAS, type CafeFilter, type Vibe } from "@/types/cafe"
+import { normalizeCafeHoursFilter } from "./opening-hours"
 
 export const LAST_SEARCH_STORAGE_KEY = "cafemaps_last_search"
 
@@ -221,6 +222,7 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
     priceRange: searchParams.get("priceRange") ?? undefined,
     openNow:
       searchParams.get("open") === "true" || searchParams.get("openNow") === "true" || undefined,
+    hours: normalizeCafeHoursFilter(searchParams.get("hours")),
     nearMe: searchParams.get("nearMe") === "true" || undefined,
     lat: searchParams.get("lat") ? Number(searchParams.get("lat")) : undefined,
     lng: searchParams.get("lng") ? Number(searchParams.get("lng")) : undefined,
@@ -246,6 +248,8 @@ export function buildSearchParams(filter: CafeFilter, sort: SearchSort, page = 1
   if (filter.district) params.set("district", filter.district)
   if (filter.priceRange) params.set("priceRange", filter.priceRange)
   if (filter.openNow) params.set("open", "true")
+  const hours = normalizeCafeHoursFilter(filter.hours)
+  if (hours) params.set("hours", hours)
   if (filter.nearMe) params.set("nearMe", "true")
   if (filter.lat !== undefined) params.set("lat", String(filter.lat))
   if (filter.lng !== undefined) params.set("lng", String(filter.lng))
@@ -265,6 +269,7 @@ export function hasActiveSearchFilters(filter: CafeFilter): boolean {
       filter.district ||
       filter.priceRange ||
       filter.openNow ||
+      filter.hours ||
       filter.nearMe,
   )
 }
@@ -275,12 +280,20 @@ export function getLastSearchState(): LastSearchState | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<LastSearchState>
     if (!parsed.params) return null
-    return {
-      query: parsed.query,
-      filter: parsed.filter ?? {},
-      sort: parsed.sort ?? "popular",
-      params: parsed.params,
+    const legacyHours = (parsed.filter as { hours?: string } | undefined)?.hours
+    const filter: CafeFilter = {
+      ...(parsed.filter ?? {}),
+      hours: normalizeCafeHoursFilter(legacyHours),
     }
+    const sort = parsed.sort ?? "popular"
+    const state = {
+      query: parsed.query,
+      filter,
+      sort,
+      params: buildSearchParams(filter, sort, filter.page ?? 1).toString(),
+    }
+    if (state.params !== parsed.params || state.filter.hours !== legacyHours) setLastSearchState(state)
+    return state
   } catch {
     return null
   }

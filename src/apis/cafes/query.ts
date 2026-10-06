@@ -1,4 +1,5 @@
 import type { CafeFilter } from "@/types/cafe"
+import { normalizeCafeHoursFilter } from "@/lib/opening-hours"
 import { normalizeCafeLocale } from "./mapper"
 import {
   EN_PURPOSE_VALUES,
@@ -15,6 +16,8 @@ export function buildQuery(filter?: CafeFilter, locale?: string | null): string 
   if (filter?.district) params.set("district", filter.district)
   if (filter?.priceRange) params.set("priceRange", filter.priceRange)
   if (filter?.openNow) params.set("openNow", "true")
+  const hours = normalizeCafeHoursFilter(filter?.hours)
+  if (hours) params.set("hours", hours)
   const vibes = localizeFilterValues(filter?.vibes ?? filter?.vibe, EN_VIBE_VALUES, apiLocale)
   const purposes = localizeFilterValues(filter?.purposes ?? filter?.purpose, EN_PURPOSE_VALUES, apiLocale)
   const tags = localizeFilterValues(filter?.tags, EN_TAG_VALUES, apiLocale)
@@ -36,6 +39,7 @@ export function cafeListQueryKey(filter: CafeFilter, locale: string) {
     filter.district ?? "",
     filter.priceRange ?? "",
     filter.openNow ?? false,
+    normalizeCafeHoursFilter(filter.hours) ?? "",
     filter.sort ?? "popular",
     filter.page ?? 1,
     filter.limit ?? 9,

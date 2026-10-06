@@ -13,7 +13,7 @@ import {
   sortFromSearchParams,
   type SearchSort,
 } from "@/lib/search-state";
-import { isCafeOpenNow } from "@/lib/opening-hours";
+import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours";
 import FeaturedSectionControls from "./FeaturedSectionControls";
 import FeaturedSectionResults from "./FeaturedSectionResults";
 import FeaturedSectionToolbar from "./FeaturedSectionToolbar";
@@ -105,6 +105,15 @@ export default function FeaturedSection({
 
     function syncSearchParams() {
       const nextParams = new URLSearchParams(window.location.search);
+      if (nextParams.get("hours") === "from_7") {
+        nextParams.set("hours", "open_at_7");
+        const query = nextParams.toString();
+        window.history.replaceState(
+          null,
+          "",
+          query ? `${window.location.pathname}?${query}` : window.location.pathname,
+        );
+      }
       const nextFilter = filterFromSearchParams(nextParams);
       const nextSort = sortFromSearchParams(nextParams);
       setUrlSearchParams(nextParams);
@@ -180,7 +189,7 @@ export default function FeaturedSection({
     }
 
     let result = activeCafes;
-    const { search, district, vibes, purposes, priceRange, openNow } = filter;
+    const { search, district, vibes, purposes, priceRange, openNow, hours } = filter;
 
     if (search?.trim()) {
       const q = search.toLowerCase();
@@ -209,6 +218,7 @@ export default function FeaturedSection({
       });
     }
     if (openNow) result = result.filter(isCafeOpenNow);
+    if (hours) result = result.filter((cafe) => matchesCafeHours(cafe, hours));
     if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
       const hasCoords = result.some((c) => c.lat != null && c.lng != null);
       if (hasCoords) {
