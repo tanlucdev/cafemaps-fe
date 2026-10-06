@@ -101,6 +101,7 @@ export interface CafeFilter {
   priceRange?: string
   search?: string
   openNow?: boolean
+  hours?: "open_at_7" | "open_24h"
   nearMe?: boolean
   lat?: number
   lng?: number

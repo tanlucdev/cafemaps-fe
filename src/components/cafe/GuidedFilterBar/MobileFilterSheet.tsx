@@ -29,6 +29,7 @@ interface MobileFilterSheetProps {
   onTogglePurpose: (purpose: Purpose) => void;
   onToggleTag: (tag: FilterTag) => void;
   onSetPrice: (price: string) => void;
+  onSetHours: (hours: StagedFilter["hours"]) => void;
   onSetDistance: (km: number) => void;
 }
 export function MobileFilterSheet({
@@ -43,6 +44,7 @@ export function MobileFilterSheet({
   onTogglePurpose,
   onToggleTag,
   onSetPrice,
+  onSetHours,
   onSetDistance,
 }: MobileFilterSheetProps) {
   const tf = useTranslations("filters");
@@ -88,6 +90,25 @@ export function MobileFilterSheet({
               onToggleTag={onToggleTag}
               onSetPrice={onSetPrice}
             />
+            <section>
+              <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
+                {tf("openingHours")}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <FilterChipButton
+                  active={staged.hours === "open_at_7"}
+                  onClick={() => onSetHours("open_at_7")}
+                >
+                  {tg("openFromSeven")}
+                </FilterChipButton>
+                <FilterChipButton
+                  active={staged.hours === "open_24h"}
+                  onClick={() => onSetHours("open_24h")}
+                >
+                  {tg("open24Hours")}
+                </FilterChipButton>
+              </div>
+            </section>
           </div>
         </div>
         <SheetFooter className="sticky bottom-0 z-10 shrink-0 flex-row items-center justify-between border-t border-[var(--border)] bg-[#fffaf2] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] dark:bg-[var(--card)]">

@@ -70,6 +70,14 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
           },
         ]
       : []),
+    ...(filter.hours
+      ? [
+          {
+            label: tg(filter.hours === "open_at_7" ? "openFromSeven" : "open24Hours"),
+            remove: () => onChange({ ...filter, hours: undefined }),
+          },
+        ]
+      : []),
   ];
 
   if (activeChips.length === 0) return null;
