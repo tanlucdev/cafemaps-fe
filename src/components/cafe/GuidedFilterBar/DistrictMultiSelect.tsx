@@ -33,7 +33,7 @@ export function DistrictMultiSelect({ districts, filter, onChange, className }: 
           "group inline-flex h-9 min-w-[156px] flex-none cursor-pointer items-center gap-2 rounded-full border p-1 pr-2 text-[13px] font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
           selected.length
             ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
-            : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] dark:bg-[var(--card)]",
+            : "border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)]",
           className,
         )}
       >
@@ -41,8 +41,8 @@ export function DistrictMultiSelect({ districts, filter, onChange, className }: 
           className={cn(
             "flex size-7 items-center justify-center rounded-full transition-colors",
             selected.length
-              ? "bg-white/80 text-[var(--accent)]"
-              : "bg-[var(--accent-light)] text-[var(--accent)] group-hover:bg-white",
+              ? "bg-[var(--surface)] text-[var(--accent)]"
+              : "bg-[var(--accent-light)] text-[var(--accent)] group-hover:bg-[var(--surface)]",
           )}
         >
           <MapPin size={14} strokeWidth={2.5} />
@@ -54,7 +54,7 @@ export function DistrictMultiSelect({ districts, filter, onChange, className }: 
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner align="start" side="bottom" sideOffset={6} className="z-50">
-          <Popover.Popup className="w-60 rounded-2xl border border-[var(--border)] bg-[#fffaf3] p-2 shadow-[0_18px_44px_rgba(69,42,15,0.16)] outline-none dark:bg-[var(--card)]">
+          <Popover.Popup className="w-60 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-2 shadow-[var(--shadow-warm)] outline-none">
             <div className="flex items-center justify-between px-2.5 pt-1.5 pb-2">
               <span className="text-xs font-extrabold tracking-wide text-[var(--foreground-muted)] uppercase">
                 {tf("district")}
@@ -99,7 +99,7 @@ export function DistrictMultiSelect({ districts, filter, onChange, className }: 
                           checked ? selected.filter((item) => item !== district) : [...selected, district],
                         )
                       }
-                      className="grid size-5 shrink-0 place-items-center rounded-md border border-[#b9a993] bg-white text-white shadow-[inset_0_1px_1px_rgba(69,42,15,0.08)] transition-all hover:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 data-checked:border-[var(--accent)] data-checked:bg-[var(--accent)]"
+                      className="grid size-5 shrink-0 place-items-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--accent-foreground)] shadow-[inset_0_1px_1px_rgba(69,42,15,0.08)] transition-all hover:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 data-checked:border-[var(--accent)] data-checked:bg-[var(--accent)]"
                     >
                       <Checkbox.Indicator>
                         <Check size={13} strokeWidth={3} />

@@ -84,7 +84,7 @@ export function FilterChipsRow({
           "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
           filter.openNow
             ? "border-[#8fd6a8] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] shadow-[0_10px_24px_rgba(30,160,85,0.12)]"
-            : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[#8fd6a8] hover:bg-[var(--status-open-background)] hover:text-[var(--status-open-foreground)] dark:bg-[var(--card)]",
+            : "border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)] hover:border-[#8fd6a8] hover:bg-[var(--status-open-background)] hover:text-[var(--status-open-foreground)]",
         )}
       >
         <span className="relative flex h-2 w-2">
@@ -145,7 +145,7 @@ export function FilterChipsRow({
           active={dropdownMounted && dropdownOpen}
           onClick={dropdownMounted && dropdownOpen ? onToggleDropdown : onOpenDropdown}
           className="flex-none border-dashed px-3.5 text-[13px] whitespace-nowrap"
-          inactiveClassName="border-[var(--border)] bg-white/52 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)] dark:bg-[var(--card)]"
+          inactiveClassName="border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           {dropdownMounted && dropdownOpen
             ? tg("allVibes")

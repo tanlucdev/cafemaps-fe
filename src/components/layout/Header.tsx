@@ -9,6 +9,7 @@ import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { ThemeToggle } from "@/components/providers/ThemeProvider";
 
 export default function Header() {
   const t = useTranslations("nav");
@@ -113,6 +114,7 @@ export default function Header() {
               "border-[var(--header-actions-surface-border)] bg-[var(--header-actions-surface-bg)] shadow-[var(--header-actions-surface-shadow)]",
             )}
           >
+            <ThemeToggle />
             <LocaleSwitcher
               className={cn(
                 "[&>button]:h-8 [&>button]:min-w-8 [&>button]:gap-1 [&>button]:px-1.5 min-[390px]:[&>button]:min-w-10 min-[390px]:[&>button]:gap-1.5 min-[390px]:[&>button]:px-2 [&>button>span]:hidden min-[390px]:[&>button>span]:inline",

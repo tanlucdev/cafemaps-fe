@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,11 +15,36 @@ interface PaginationProps {
 export default function Pagination({ page, total, limit, onPageChange }: PaginationProps) {
   const t = useTranslations("pagination");
   const totalPages = Math.ceil(total / limit);
+  const [pageInput, setPageInput] = useState(String(page));
+
+  useEffect(() => {
+    setPageInput(String(page));
+  }, [page]);
 
   if (totalPages <= 1) return null;
 
   const from = (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
+
+  function changePage(nextPage: number) {
+    if (nextPage !== page && nextPage >= 1 && nextPage <= totalPages) onPageChange(nextPage);
+  }
+
+  function submitPage() {
+    if (!/^[1-9]\d*$/.test(pageInput)) {
+      setPageInput(String(page));
+      return;
+    }
+
+    const nextPage = Number(pageInput);
+    if (!Number.isSafeInteger(nextPage) || nextPage > totalPages) {
+      setPageInput(String(page));
+      return;
+    }
+
+    setPageInput(String(nextPage));
+    changePage(nextPage);
+  }
 
   // Build page numbers to show: always first, last, current ±1, with ellipsis
   function getPages(): (number | "…")[] {
@@ -39,16 +65,16 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
         {t("showing", { from, to, total })}
       </p>
 
-      <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-[var(--border)] bg-[#fffaf2]/78 p-1.5 shadow-[var(--shadow-sm)] backdrop-blur-md">
+      <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-[var(--border)] bg-[var(--surface)]/78 p-1.5 shadow-[var(--shadow-sm)] backdrop-blur-md">
         <button
-          onClick={() => onPageChange(page - 1)}
+          onClick={() => changePage(page - 1)}
           disabled={page === 1}
           aria-label={t("prev")}
           className={cn(
             "flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] sm:w-auto sm:px-4",
             page === 1
-              ? "cursor-not-allowed border-[var(--border)] bg-white/36 text-[var(--foreground-muted)]/40"
-              : "border-[var(--border)] bg-white/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
+              ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-raised)]/36 text-[var(--foreground-muted)]/40"
+              : "cursor-pointer border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
           )}
         >
           <ChevronLeft size={16} />
@@ -66,13 +92,13 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
           ) : (
             <button
               key={p}
-              onClick={() => onPageChange(p)}
+              onClick={() => changePage(p)}
               aria-current={p === page ? "page" : undefined}
               className={cn(
-                "size-10 shrink-0 rounded-full border text-sm font-black shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
+                "size-10 shrink-0 cursor-pointer rounded-full border text-sm font-black shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
                 p === page
                   ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.20)]"
-                  : "border-[var(--border)] bg-white/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
+                  : "border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
               )}
             >
               {p}
@@ -81,20 +107,42 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
         )}
 
         <button
-          onClick={() => onPageChange(page + 1)}
+          onClick={() => changePage(page + 1)}
           disabled={page === totalPages}
           aria-label={t("next")}
           className={cn(
             "flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] sm:w-auto sm:px-4",
             page === totalPages
-              ? "cursor-not-allowed border-[var(--border)] bg-white/36 text-[var(--foreground-muted)]/40"
-              : "border-[var(--border)] bg-white/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
+              ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-raised)]/36 text-[var(--foreground-muted)]/40"
+              : "cursor-pointer border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
           )}
         >
           <span className="hidden sm:inline">{t("next")}</span>
           <ChevronRight size={16} />
         </button>
       </div>
+
+      {totalPages > 7 ? (
+        <form
+          className="flex h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-raised)]/70 py-1 pr-2 pl-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)]"
+          onSubmit={(event) => {
+            event.preventDefault();
+            submitPage();
+          }}
+        >
+          <label htmlFor="pagination-page">{t("goToPage")}</label>
+          <input
+            id="pagination-page"
+            aria-label={t("goToPage")}
+            inputMode="numeric"
+            value={pageInput}
+            onChange={(event) => setPageInput(event.target.value)}
+            onBlur={submitPage}
+            className="h-9 w-11 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 text-center text-[16px] font-black text-[var(--foreground)] outline-none transition-colors focus:!rounded-full focus:!border-[#8f5a16] focus:!shadow-none focus:!ring-0 focus-visible:!rounded-full focus-visible:!border-[#8f5a16] focus-visible:!outline-none lg:text-sm"
+          />
+          <span aria-hidden="true">/ {totalPages}</span>
+        </form>
+      ) : null}
     </nav>
   );
 }

@@ -55,7 +55,7 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
         zIndex: 300,
         pointerEvents: "none",
       }}
-      className="overflow-hidden rounded-[22px] border border-[#ECE4D6] bg-white shadow-[0_16px_48px_rgba(40,22,4,0.16)]"
+      className="overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface-raised)] shadow-[var(--shadow-warm)]"
     >
       {/* Cover image */}
       <div className="relative w-full overflow-hidden" style={{ height: IMG_H }}>
@@ -83,11 +83,11 @@ function PopupContent({ cafe, anchorRect }: Omit<CafePreviewPopupProps, "visible
 
       {/* Info */}
       <div className="px-4 py-3.5">
-        <p className="mb-1.5 line-clamp-1 text-[13.5px] leading-snug font-bold text-[#1C1209]">
+        <p className="mb-1.5 line-clamp-1 text-[13.5px] leading-snug font-bold text-[var(--foreground)]">
           {cafe.name}
         </p>
         {cafe.oneLiner && (
-          <p className="line-clamp-2 text-[12px] leading-[1.65] text-[#5C4A2F] italic">
+          <p className="line-clamp-2 text-[12px] leading-[1.65] text-[var(--foreground-muted)] italic">
             &ldquo;{cafe.oneLiner}&rdquo;
           </p>
         )}
