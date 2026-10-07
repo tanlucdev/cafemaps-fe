@@ -1,19 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronRight, MapPin, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import NearMeButton from "@/components/cafe/NearMeButton";
 import { cn } from "@/lib/utils";
-import { AREAS } from "@/types/cafe";
 import type { CafeFilter } from "@/types/cafe";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DistrictMultiSelect } from "./DistrictMultiSelect";
 
 interface MobileFilterBarProps {
   filter: CafeFilter;
@@ -32,8 +25,6 @@ export function MobileFilterBar({
 }: MobileFilterBarProps) {
   const tg = useTranslations("guidedFilter");
   const [showHint, setShowHint] = useState(true);
-  const districtOptions = districts?.length ? districts : [...AREAS];
-
   useEffect(() => {
     const timer = window.setTimeout(() => setShowHint(false), 3000);
     return () => window.clearTimeout(timer);
@@ -91,34 +82,7 @@ export function MobileFilterBar({
           className={cn(menuCardClass, "justify-center")}
         />
 
-        <Select
-          value={filter.district ?? ""}
-          onValueChange={(value) => onChange({ ...filter, district: value || undefined })}
-        >
-          <SelectTrigger
-            aria-label={tg("mobile.district")}
-            className={cn(
-              menuCardClass,
-              "px-2 data-[size=default]:h-10",
-              filter.district
-                ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] hover:brightness-95"
-                : creamCardClass,
-            )}
-          >
-            <MapPin size={15} />
-            <SelectValue className="min-w-0 truncate" placeholder={tg("allDistricts")} />
-          </SelectTrigger>
-          <SelectContent align="start" sideOffset={6}>
-            <SelectItem className="cursor-pointer" value="">
-              {tg("allDistricts")}
-            </SelectItem>
-            {districtOptions.map((district) => (
-              <SelectItem className="cursor-pointer" key={district} value={district}>
-                {district}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <DistrictMultiSelect className="min-w-0 w-full" districts={districts} filter={filter} onChange={onChange} />
       </div>
       {showHint && (
         <button

@@ -45,7 +45,6 @@ interface UseGuidedFilterReturn {
   // Instant handlers (quick chips — write directly to committed filter)
   toggleVibeInstant: (v: Vibe) => void;
   toggleOpenNow: () => void;
-  setDistrict: (val: string) => void;
   setDistance: (km: number) => void;
   clearAll: () => void;
 
@@ -226,13 +225,6 @@ export function useGuidedFilter(
     onChange({ ...filter, openNow: !filter.openNow });
   }, [filter, onChange]);
 
-  const setDistrict = useCallback(
-    (val: string) => {
-      onChange({ ...filter, district: val === "" ? undefined : val });
-    },
-    [filter, onChange],
-  );
-
   const setDistance = useCallback(
     (km: number) => {
       onChange({ ...filter, radiusKm: km });
@@ -284,7 +276,6 @@ export function useGuidedFilter(
     applyMobileSheet,
     toggleVibeInstant,
     toggleOpenNow,
-    setDistrict,
     setDistance,
     clearAll,
     activeCount,

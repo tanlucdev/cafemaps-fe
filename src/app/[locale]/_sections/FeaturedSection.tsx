@@ -14,6 +14,7 @@ import {
   type SearchSort,
 } from "@/lib/search-state";
 import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours";
+import { includesDistrict } from "@/lib/district-filter";
 import FeaturedSectionControls from "./FeaturedSectionControls";
 import FeaturedSectionResults from "./FeaturedSectionResults";
 import FeaturedSectionToolbar from "./FeaturedSectionToolbar";
@@ -146,7 +147,7 @@ export default function FeaturedSection({
     const newFilter = {
       ...filter,
       search: parsed.matched ? parsed.search : searchInput.trim() || undefined,
-      district: parsed.matched ? parsed.district : filter.district,
+      districts: parsed.matched ? [parsed.district!] : filter.districts,
     };
     handleFilterChange(newFilter);
   }
@@ -189,7 +190,7 @@ export default function FeaturedSection({
     }
 
     let result = activeCafes;
-    const { search, district, vibes, purposes, priceRange, openNow, hours } = filter;
+    const { search, districts, vibes, purposes, priceRange, openNow, hours } = filter;
 
     if (search?.trim()) {
       const q = search.toLowerCase();
@@ -200,7 +201,7 @@ export default function FeaturedSection({
           (c.district ?? "").toLowerCase().includes(q),
       );
     }
-    if (district) result = result.filter((c) => c.district === district);
+    if (districts?.length) result = result.filter((c) => includesDistrict(districts, c.district));
     if (vibes?.length) result = result.filter((c) => vibes.some((v) => c.vibes.includes(v)));
     if (purposes?.length)
       result = result.filter((c) => purposes.some((p) => c.purposes.includes(p)));

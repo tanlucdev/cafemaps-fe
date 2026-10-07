@@ -54,14 +54,13 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
           },
         ]
       : []),
-    ...(filter.district
-      ? [
-          {
-            label: filter.district,
-            remove: () => onChange({ ...filter, district: undefined }),
-          },
-        ]
-      : []),
+    ...(filter.districts ?? []).map((district) => ({
+      label: district,
+      remove: () => {
+        const districts = filter.districts?.filter((item) => item !== district);
+        onChange({ ...filter, districts: districts?.length ? districts : undefined });
+      },
+    })),
     ...(filter.openNow
       ? [
           {

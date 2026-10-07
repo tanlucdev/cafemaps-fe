@@ -35,7 +35,6 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     applyMobileSheet,
     toggleVibeInstant,
     toggleOpenNow,
-    setDistrict,
     setDistance,
     clearAll,
     activeCount,
@@ -60,9 +59,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
           extraVibeBtnRef={extraVibeBtnRef}
           toggleVibeInstant={toggleVibeInstant}
           toggleOpenNow={toggleOpenNow}
-          setDistrict={setDistrict}
           setDistance={setDistance}
-          clearAll={clearAll}
           districts={districts}
         />
 

@@ -81,8 +81,8 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
   }
 
   function handleAreaChange(val: string | null) {
-    const district = val === "" || val == null ? undefined : val;
-    setStaged((s) => ({ ...s, district }));
+    const districts = val === "" || val == null ? undefined : [val];
+    setStaged((s) => ({ ...s, districts }));
   }
 
   function handleApply() {
@@ -226,7 +226,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
           KHU VỰC
         </h3>
-        <Select value={staged.district ?? ""} onValueChange={handleAreaChange}>
+        <Select value={staged.districts?.[0] ?? ""} onValueChange={handleAreaChange}>
           <SelectTrigger className="h-10 w-full rounded-xl text-sm">
             <SelectValue placeholder="Tất cả khu vực" />
           </SelectTrigger>

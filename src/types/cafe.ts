@@ -91,7 +91,7 @@ export interface Cafe {
 }
 
 export interface CafeFilter {
-  district?: string
+  districts?: string[]
   city?: string
   vibes?: string[]
   vibe?: string[]
