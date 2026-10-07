@@ -9,7 +9,9 @@
     "login": "Đăng nhập",
     "register": "Đăng ký",
     "menu": "Menu",
-    "profile": "Cá nhân"
+    "profile": "Cá nhân",
+    "themeToDark": "Chuyển sang giao diện tối",
+    "themeToLight": "Chuyển sang giao diện sáng"
   },
   "donate": {
     "aria": "Ủng hộ Cafe Maps",
@@ -1442,6 +1444,7 @@
   "pagination": {
     "prev": "Trang trước",
     "next": "Trang sau",
+    "goToPage": "Đến trang",
     "showing": "Hiển thị {from}–{to} trong {total} quán",
     "page": "Trang {current} / {total}"
   },

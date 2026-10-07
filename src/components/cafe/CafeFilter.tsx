@@ -185,7 +185,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
                   active
-                    ? "bg-accent border-accent text-white"
+                    ? "bg-accent border-accent text-[var(--accent-foreground)]"
                     : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
                 )}
               >
@@ -210,7 +210,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
                   active
-                    ? "bg-accent border-accent text-white"
+                    ? "bg-accent border-accent text-[var(--accent-foreground)]"
                     : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
                 )}
               >
@@ -244,7 +244,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
       {/* Apply button */}
       <button
         onClick={handleApply}
-        className="bg-accent hover:bg-(--accent-hover) mt-2 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold text-white transition-all active:scale-95"
+        className="bg-accent hover:bg-(--accent-hover) mt-2 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold text-[var(--accent-foreground)] transition-all active:scale-95"
       >
         {t("apply")}
       </button>

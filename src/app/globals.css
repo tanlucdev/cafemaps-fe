@@ -57,8 +57,11 @@ body {
   /* Surface */
   --card: #fdf6ec;
   --card-foreground: #2c1a0e;
+  --surface: #fffaf2;
+  --surface-raised: #fffdf8;
   --border: #e8d8c0;
   --input: #e8d8c0;
+  --focus: #8f5a16;
 
   /* Shadcn semantic aliases */
   --primary: #c8842a;
@@ -98,44 +101,48 @@ body {
 }
 
 .dark {
-  --background: #1e1c1a;
-  --background-secondary: #242220;
-  --foreground: #f0ebe3;
-  --foreground-muted: #b8afa6;
+  /* Late-evening cafe: warm, layered, never OLED black. */
+  --background: #24211d;
+  --background-secondary: #2d2924;
+  --foreground: #f4eee5;
+  --foreground-muted: #c5b9ad;
 
-  --accent: #d4923a;
-  --accent-hover: #e8a84a;
-  --accent-light: #2a2825;
-  --accent-foreground: #ffffff;
+  --accent: #e0a14c;
+  --accent-hover: #edb765;
+  --accent-light: #3a332a;
+  --accent-foreground: #24211d;
 
   --sage: #7a9e7e;
   --sage-light: #1e2b1f;
 
-  --status-open: #7dc89e;
-  --status-open-foreground: #7dc89e;
-  --status-open-background: #17351f;
-  --status-closed: #a8907a;
-  --status-closed-foreground: #e5a092;
-  --status-closed-background: #3a211e;
+  --status-open: #9bcaa4;
+  --status-open-foreground: #c5e2c5;
+  --status-open-background: #293b2c;
+  --status-closed: #c7aaa0;
+  --status-closed-foreground: #f0c6bd;
+  --status-closed-background: #44302c;
 
-  --card: #2a2825;
-  --card-foreground: #f0ebe3;
-  --border: #3d3a36;
-  --input: #333028;
+  --card: #2d2924;
+  --card-foreground: #f4eee5;
+  --surface: #2d2924;
+  --surface-raised: #36312a;
+  --border: #50483f;
+  --input: #36312a;
+  --focus: #8f5a16;
 
-  --primary: #d4923a;
-  --primary-foreground: #ffffff;
-  --secondary: #2a2825;
-  --secondary-foreground: #f0ebe3;
-  --muted: #2a2825;
-  --muted-foreground: #b8afa6;
-  --popover: #2a2825;
-  --popover-foreground: #f0ebe3;
-  --ring: #d4923a;
+  --primary: #e0a14c;
+  --primary-foreground: #24211d;
+  --secondary: #36312a;
+  --secondary-foreground: #f4eee5;
+  --muted: #2d2924;
+  --muted-foreground: #c5b9ad;
+  --popover: #36312a;
+  --popover-foreground: #f4eee5;
+  --ring: #e0a14c;
 
-  --shadow-warm: 0 8px 32px rgba(212, 146, 58, 0.18);
-  --shadow-warm-hover: 0 16px 48px rgba(212, 146, 58, 0.28);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.36);
+  --shadow-warm: 0 8px 28px rgba(20, 16, 12, 0.2);
+  --shadow-warm-hover: 0 14px 38px rgba(20, 16, 12, 0.28);
+  --shadow-sm: 0 2px 8px rgba(20, 16, 12, 0.18);
 
   /* Social platform colors — dark mode overrides */
   --social-threads-bg: #f5f5f5;
@@ -248,7 +255,7 @@ button:disabled {
   left: 0;
   z-index: 80;
   display: block;
-  background: #fdf6ec;
+  background: var(--surface);
   border-top: 1px solid rgba(216, 188, 148, 0.72);
   box-shadow:
     0 -18px 44px rgba(44, 26, 14, 0.1),
@@ -264,7 +271,7 @@ button:disabled {
   right: 0;
   left: 0;
   height: max(var(--ios-bottom-guard-height), env(safe-area-inset-bottom, 0px));
-  background: #fdf6ec;
+  background: var(--surface);
   pointer-events: none;
 }
 
@@ -384,15 +391,15 @@ button:disabled {
 }
 
 .dark .mobile-bottom-nav {
-  background: #1c1209;
-  border-top-color: rgba(255, 227, 183, 0.16);
+  background: var(--surface-raised);
+  border-top-color: var(--border);
   box-shadow:
-    0 -18px 44px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 240, 210, 0.08);
+    0 -14px 36px rgba(20, 16, 12, 0.2),
+    inset 0 1px 0 rgba(244, 238, 229, 0.05);
 }
 
 .dark .mobile-bottom-nav::after {
-  background: #1c1209;
+  background: var(--surface-raised);
 }
 
 .dark .mobile-bottom-nav-inner::before {
@@ -579,7 +586,7 @@ h3[class*="font-display"] {
 
 .auth-input:focus,
 .auth-input:focus-visible {
-  border-color: #c9870c !important;
+  border-color: #8f5a16 !important;
   border-radius: 1rem !important;
   outline: none !important;
   box-shadow: none !important;
@@ -721,6 +728,31 @@ body::after {
 .cafe-map-popup .mapboxgl-popup-tip {
   border-top-color: transparent;
   border-bottom-color: transparent;
+}
+
+.dark .mapboxgl-ctrl-group,
+.dark .mapboxgl-popup-content {
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .mapboxgl-ctrl-group button + button {
+  border-top-color: var(--border);
+}
+
+.dark .mapboxgl-ctrl-icon {
+  filter: invert(0.9) sepia(0.1);
+}
+
+.dark .cafe-map-popup .mapboxgl-popup-content {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dark .bg-accent.text-white {
+  color: var(--accent-foreground);
 }
 
 @theme inline {

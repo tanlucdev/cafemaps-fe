@@ -1,9 +1,9 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
 import QueryProvider from "@/components/providers/QueryProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -32,10 +32,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           __html: `document.documentElement.lang=${JSON.stringify(locale)};`,
         }}
       />
-      <QueryProvider>
-        {children}
-        <Toaster richColors position="top-right" />
-      </QueryProvider>
+      <ThemeProvider>
+        <QueryProvider>{children}</QueryProvider>
+      </ThemeProvider>
     </NextIntlClientProvider>
   );
 }

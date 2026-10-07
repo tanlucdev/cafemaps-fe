@@ -61,7 +61,7 @@ export default function FeaturedSectionResults({
 
   if (dataError) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
         <p className="text-base font-medium text-[var(--foreground-muted)]">
           {locale === "vi" ? "Không tải được danh sách quán." : "Could not load cafes."}
@@ -69,7 +69,7 @@ export default function FeaturedSectionResults({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)]"
+          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
         >
           {locale === "vi" ? "Thử lại" : "Retry"}
         </button>
@@ -81,7 +81,7 @@ export default function FeaturedSectionResults({
 
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
         <p className="text-base font-medium text-[var(--foreground-muted)]">
           {ts("noResultsMessage")}
@@ -151,7 +151,7 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="flex min-h-[140px] overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210]"
+              className="flex min-h-[140px] overflow-hidden rounded-2xl bg-[var(--surface)] shadow-[var(--shadow-sm)]"
             >
               <Skeleton className="w-32 shrink-0 rounded-none sm:w-44" />
               <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
