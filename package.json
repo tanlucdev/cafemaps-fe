@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "test": "node --test --experimental-strip-types scripts/*.test.mjs",
     "test:agent-readiness": "node --test --experimental-strip-types scripts/submission-upload-batch.test.mjs scripts/owner-gallery-limit.test.mjs scripts/owner-intro-word-limit.test.mjs",
     "format": "prettier --write ."
   },

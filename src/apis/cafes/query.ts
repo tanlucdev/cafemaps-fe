@@ -1,4 +1,6 @@
 import type { CafeFilter } from "@/types/cafe"
+import { AREAS } from "@/types/cafe"
+import { districtKey, serializeDistricts } from "@/lib/district-filter"
 import { normalizeCafeLocale } from "./mapper"
 import {
   EN_PURPOSE_VALUES,
@@ -12,7 +14,8 @@ export function buildQuery(filter?: CafeFilter, locale?: string | null): string 
   const apiLocale = normalizeCafeLocale(locale)
   params.set("locale", apiLocale)
   if (filter?.search) params.set("search", filter.search)
-  if (filter?.district) params.set("district", filter.district)
+  const districts = serializeDistricts(filter?.districts, AREAS)
+  if (districts) params.set("districts", districts)
   if (filter?.priceRange) params.set("priceRange", filter.priceRange)
   if (filter?.openNow) params.set("openNow", "true")
   const vibes = localizeFilterValues(filter?.vibes ?? filter?.vibe, EN_VIBE_VALUES, apiLocale)
@@ -33,7 +36,7 @@ export function cafeListQueryKey(filter: CafeFilter, locale: string) {
     "cafes",
     locale,
     filter.search ?? "",
-    filter.district ?? "",
+    districtKey(filter.districts, AREAS),
     filter.priceRange ?? "",
     filter.openNow ?? false,
     filter.sort ?? "popular",

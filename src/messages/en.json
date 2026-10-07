@@ -1407,6 +1407,7 @@
     "moreFilters": "More filters",
     "activeCount": "{count} filters",
     "moreDistricts": "+{count} districts",
+    "districtCount": "{count} districts",
     "moreVibes": "+{count} vibes",
     "allDistricts": "All districts",
     "allVibes": "All vibes"

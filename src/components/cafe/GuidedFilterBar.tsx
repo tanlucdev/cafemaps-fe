@@ -26,7 +26,6 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     applyStaged,
     toggleVibeInstant,
     toggleOpenNow,
-    setDistrict,
     setDistance,
     clearAll,
     activeCount,
@@ -50,7 +49,6 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
           extraVibeBtnRef={extraVibeBtnRef}
           toggleVibeInstant={toggleVibeInstant}
           toggleOpenNow={toggleOpenNow}
-          setDistrict={setDistrict}
           setDistance={setDistance}
           districts={districts}
         />

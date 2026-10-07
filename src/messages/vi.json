@@ -1407,6 +1407,7 @@
     "moreFilters": "Bộ lọc thêm",
     "activeCount": "{count} bộ lọc",
     "moreDistricts": "+{count} quận",
+    "districtCount": "{count} quận",
     "moreVibes": "+{count} phong cách",
     "allDistricts": "Tất cả quận",
     "allVibes": "Tất cả phong cách"

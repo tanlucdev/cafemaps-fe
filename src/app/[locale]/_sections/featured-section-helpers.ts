@@ -1,6 +1,7 @@
 import { getCafeRatingValue } from "@/lib/cafe-rating"
 import { isCafeOpenNow } from "@/lib/opening-hours"
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe"
+import { includesDistrict } from "@/lib/district-filter"
 
 export const PAGE_SIZE = 9
 
@@ -60,7 +61,7 @@ export function filterNearbyCafes(cafes: Cafe[], filter: Filter): Cafe[] {
       return false
     }
     if (filter.tags?.length && !filter.tags.some((tag) => cafe.tags.includes(tag))) return false
-    if (filter.district && cafe.district !== filter.district) return false
+    if (!includesDistrict(filter.districts, cafe.district)) return false
     return true
   })
 }

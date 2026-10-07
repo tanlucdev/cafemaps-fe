@@ -1,4 +1,5 @@
 import { AREAS, type CafeFilter, type Vibe } from "@/types/cafe"
+import { normalizeDistricts, parseDistrictParams, serializeDistricts } from "./district-filter"
 
 export const LAST_SEARCH_STORAGE_KEY = "cafemaps_last_search"
 
@@ -208,16 +209,21 @@ export function filterFromSearchParams(searchParams: SearchParamsReader): CafeFi
   const rawPage = searchParams.get("page")
   const page = rawPage ? Number(rawPage) : undefined
 
-  const explicitDistrict = searchParams.get("district") ?? undefined
+  const explicitDistricts = searchParams.get("districts")
+  const explicitDistrict = searchParams.get("district")
   const legacySearch = searchParams.get("search") ?? undefined
-  const legacyDistrict = explicitDistrict ? undefined : parseDistrictSearch(legacySearch ?? "", "vi")
+  const legacyDistrict = parseDistrictSearch(legacySearch ?? "", "vi")
+  const hasExplicitDistrict = Boolean(
+    normalizeDistricts(splitParam(explicitDistricts), AREAS) ??
+      normalizeDistricts(explicitDistrict ? [explicitDistrict] : undefined, AREAS),
+  )
 
   return {
-    search: legacyDistrict?.matched ? legacyDistrict.search : legacySearch,
+    search: !hasExplicitDistrict && legacyDistrict.matched ? legacyDistrict.search : legacySearch,
     vibes: allVibes.length ? allVibes : undefined,
     purposes: purposes?.length ? purposes : undefined,
     tags: tags.length ? tags : undefined,
-    district: explicitDistrict ?? legacyDistrict?.district,
+    districts: parseDistrictParams(explicitDistricts, explicitDistrict, legacyDistrict?.district, AREAS),
     priceRange: searchParams.get("priceRange") ?? undefined,
     openNow:
       searchParams.get("open") === "true" || searchParams.get("openNow") === "true" || undefined,
@@ -243,7 +249,8 @@ export function buildSearchParams(filter: CafeFilter, sort: SearchSort, page = 1
   if (filter.vibes?.length) params.set("vibes", filter.vibes.join(","))
   if (filter.purposes?.length) params.set("purposes", filter.purposes.join(","))
   if (filter.tags?.length) params.set("tags", filter.tags.join(","))
-  if (filter.district) params.set("district", filter.district)
+  const districts = serializeDistricts(filter.districts, AREAS)
+  if (districts) params.set("districts", districts)
   if (filter.priceRange) params.set("priceRange", filter.priceRange)
   if (filter.openNow) params.set("open", "true")
   if (filter.nearMe) params.set("nearMe", "true")
@@ -262,7 +269,7 @@ export function hasActiveSearchFilters(filter: CafeFilter): boolean {
       filter.vibes?.length ||
       filter.purposes?.length ||
       filter.tags?.length ||
-      filter.district ||
+      filter.districts?.length ||
       filter.priceRange ||
       filter.openNow ||
       filter.nearMe,
