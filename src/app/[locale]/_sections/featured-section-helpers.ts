@@ -4,6 +4,7 @@ import type { Cafe, CafeFilter as Filter } from "@/types/cafe"
 import { includesDistrict } from "@/lib/district-filter"
 
 export const PAGE_SIZE = 9
+export const MOBILE_PAGE_SIZE = 10
 
 export type ViewMode = "grid" | "list"
 

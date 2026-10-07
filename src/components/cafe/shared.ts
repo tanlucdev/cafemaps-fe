@@ -8,6 +8,7 @@ export interface CafeCardProps {
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
   imageEager?: boolean;
+  mobileCompact?: boolean;
   initialSaved?: boolean;
   onSavedChange?: (saved: boolean) => void;
 }

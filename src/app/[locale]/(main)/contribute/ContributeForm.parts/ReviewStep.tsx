@@ -62,23 +62,28 @@ export function ReviewStep({ data, photoUrls }: { data: ContributeFormData; phot
       </div>
 
       {data.photos.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
-          {photoUrls.slice(1).map((url, index) => (
-            <div
-              key={index}
-              className="relative aspect-square overflow-hidden rounded-[14px] bg-[var(--background-secondary)]"
-            >
-              <Image
-                src={url}
-                alt={t("form.photoAlt", { index: index + 2 })}
-                fill
-                className="object-cover"
-                sizes="100px"
-                unoptimized
-              />
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-4 gap-2">
+            {photoUrls.slice(1).map((url, index) => (
+              <div
+                key={index}
+                className="relative aspect-square overflow-hidden rounded-[14px] bg-[var(--background-secondary)]"
+              >
+                <Image
+                  src={url}
+                  alt={t("form.photoAlt", { index: index + 2 })}
+                  fill
+                  className="object-cover"
+                  sizes="100px"
+                  unoptimized
+                />
+              </div>
+            ))}
+          </div>
+          <p className="rounded-xl bg-[var(--accent-light)] px-3 py-2 text-[12px] font-medium text-[var(--accent)]">
+            {t("review.photoUploadNotice", { count: data.photos.length })}
+          </p>
+        </>
       )}
 
       <div className="flex items-start gap-3 rounded-[16px] border border-[var(--status-open)]/20 bg-[var(--status-open-background)] px-3.5 py-3">

@@ -24,6 +24,7 @@ export class ApiError extends Error {
 }
 
 export type NextRequestInit = RequestInit & {
+  timeoutMs?: number
   next?: {
     revalidate?: number
     tags?: string[]
@@ -47,11 +48,16 @@ function storedAuthHeaders(): HeadersInit | undefined {
 
 function timeoutSignal(signal: AbortSignal | null | undefined, timeoutMs: number) {
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), timeoutMs)
+  let timedOut = false
+  const timeout = setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, timeoutMs)
   const signals = signal ? [signal, controller.signal] : [controller.signal]
   return {
     signal: AbortSignal.any(signals),
     clear: () => clearTimeout(timeout),
+    timedOut: () => timedOut,
   }
 }
 
@@ -59,37 +65,46 @@ export async function apiFetch<T>(
   path: string,
   options?: NextRequestInit
 ): Promise<T> {
-  const { fallback: _fallback, ...fetchOptions } = options ?? {}
+  const { fallback: _fallback, timeoutMs = API_TIMEOUT_MS, ...fetchOptions } = options ?? {}
   void _fallback
   const method = fetchOptions.method?.toUpperCase() ?? "GET"
   const isServer = typeof window === "undefined"
+  const isFormData = typeof FormData !== "undefined" && fetchOptions.body instanceof FormData
   const isPublicRead =
     method === "GET" && !(fetchOptions.headers && "Authorization" in fetchOptions.headers)
   const useReadCache = isServer && isPublicRead && !isLocalApiUrl && fetchOptions.cache !== "no-store"
-  const requestTimeout = timeoutSignal(fetchOptions.signal, API_TIMEOUT_MS)
+  const requestTimeout = timeoutSignal(fetchOptions.signal, timeoutMs)
+  const headers = new Headers(storedAuthHeaders())
+  new Headers(fetchOptions.headers).forEach((value, key) => headers.set(key, value))
+  if (isFormData) headers.delete("Content-Type")
+  else if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json")
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...(useReadCache
-      ? {
-          cache: "force-cache",
-          next: {
-            revalidate: READ_REVALIDATE_SECONDS,
-            tags: ["cafes"],
-            ...fetchOptions.next,
-          },
-        }
-      : !isServer && isPublicRead
-        ? { cache: "no-store" as const }
-        : {}),
-    ...fetchOptions,
-    credentials: fetchOptions.credentials ?? "include",
-    signal: requestTimeout.signal,
-    headers: {
-      "Content-Type": "application/json",
-      ...storedAuthHeaders(),
-      ...fetchOptions.headers,
-    },
-  }).finally(requestTimeout.clear)
+  let res: Response
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      ...(useReadCache
+        ? {
+            cache: "force-cache",
+            next: {
+              revalidate: READ_REVALIDATE_SECONDS,
+              tags: ["cafes"],
+              ...fetchOptions.next,
+            },
+          }
+        : !isServer && isPublicRead
+          ? { cache: "no-store" as const }
+          : {}),
+      ...fetchOptions,
+      credentials: fetchOptions.credentials ?? "include",
+      signal: requestTimeout.signal,
+      headers,
+    })
+  } catch (error) {
+    if (requestTimeout.timedOut()) throw new ApiError("API request timed out", 408)
+    throw error
+  } finally {
+    requestTimeout.clear()
+  }
 
   if (!res.ok) {
     throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status)

@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { AREAS } from "../src/types/cafe.ts";
 import {
   districtKey,
   includesDistrict,
@@ -8,6 +7,8 @@ import {
   parseDistrictParams,
   serializeDistricts,
 } from "../src/lib/district-filter.ts";
+
+const AREAS = ["Quận 1", "Quận 3", "Quận 4", "Quận 5"];
 
 test("district params parse canonical, legacy, detected district", () => {
   assert.equal(parseDistrictParams(null, null, undefined, AREAS), undefined);

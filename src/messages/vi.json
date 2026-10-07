@@ -97,6 +97,8 @@
       "nearMe": "Gần tôi",
       "outdoor": "Ngoài trời",
       "openNow": "Mở cửa ngay",
+      "openFromSeven": "Mở lúc 07:00",
+      "open24Hours": "Mở 24 giờ",
       "quiet": "Yên tĩnh",
       "vintage": "Vintage",
       "workFriendly": "Work-friendly"
@@ -110,6 +112,8 @@
     },
     "lastSearch": {
       "openNow": "quán đang mở",
+      "openFromSeven": "quán mở lúc 07:00",
+      "open24Hours": "quán mở 24 giờ",
       "nearMe": "quán gần tôi",
       "fallback": "tìm kiếm trước"
     },
@@ -147,6 +151,7 @@
     "district": "Khu vực",
     "vibe": "Bộ lọc",
     "price": "Giá",
+    "openingHours": "Giờ mở cửa",
     "purpose": "Mục đích",
     "clear": "Xoá bộ lọc",
     "clearAll": "Xoá tất cả",
@@ -1276,13 +1281,15 @@
       "coverAlt": "Ảnh bìa quán đã chọn",
       "googleMaps": "Google Maps",
       "reason": "Lý do",
+      "photoUploadNotice": "{count} ảnh sẽ mất nhiều thời gian gửi hơn bình thường.",
       "note": "Quán của bạn sẽ được đội ngũ kiểm duyệt trong 1-3 ngày làm việc trước khi xuất hiện trên Cafe Maps."
     },
     "actions": {
       "back": "Quay lại",
       "review": "Xem lại",
       "submit": "Gửi đề xuất",
-      "submitting": "Đang gửi..."
+      "submitting": "Đang gửi...",
+      "uploadingImages": "Đang tải ảnh..."
     },
     "success": {
       "title": "Cảm ơn bạn đã chia sẻ!",
@@ -1293,7 +1300,16 @@
     "errors": {
       "nameRequired": "Tên quán là bắt buộc để đội ngũ dễ kiểm tra.",
       "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán.",
+      "photos": {
+        "invalid": "Ảnh không hợp lệ hoặc lớn hơn 20MiB.",
+        "count": "Chỉ có thể chọn tối đa 8 ảnh.",
+        "totalSize": "Tổng dung lượng ảnh không được vượt quá 40MiB."
+      },
+      "photoUploadFailed": "Bọn mình chưa xử lý được ảnh. Thử lại sau ít phút nhé.",
       "submitFailed": "Chưa gửi được đề xuất. Thử lại giúp bọn mình nhé."
+    },
+    "status": {
+      "processingPhotos": "Đang xử lý {count} ảnh, vui lòng chờ thêm một chút."
     },
     "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
@@ -1404,13 +1420,24 @@
   },
   "guidedFilter": {
     "openNow": "Đang mở cửa",
+    "openFromSeven": "Mở lúc 07:00",
+    "open24Hours": "Mở 24 giờ",
     "moreFilters": "Bộ lọc thêm",
     "activeCount": "{count} bộ lọc",
     "moreDistricts": "+{count} quận",
     "districtCount": "{count} quận",
     "moreVibes": "+{count} phong cách",
     "allDistricts": "Tất cả quận",
-    "allVibes": "Tất cả phong cách"
+    "allVibes": "Tất cả phong cách",
+    "mobile": {
+      "title": "Bộ lọc",
+      "description": "Tinh chỉnh kết quả theo nhu cầu của bạn.",
+      "hint": "Lọc theo quận, khoảng cách, phong cách, giá và nhu cầu.",
+      "openNowShort": "Đang mở",
+      "distance": "Khoảng cách",
+      "district": "Khu vực",
+      "viewResults": "Xem kết quả"
+    }
   },
   "pagination": {
     "prev": "Trang trước",

@@ -12,9 +12,10 @@ interface DistrictMultiSelectProps {
   districts?: string[];
   filter: Filter;
   onChange: (filter: Filter) => void;
+  className?: string;
 }
 
-export function DistrictMultiSelect({ districts, filter, onChange }: DistrictMultiSelectProps) {
+export function DistrictMultiSelect({ districts, filter, onChange, className }: DistrictMultiSelectProps) {
   const t = useTranslations("guidedFilter");
   const tf = useTranslations("filters");
   const options = normalizeDistricts(districts, AREAS) ?? [...AREAS];
@@ -33,6 +34,7 @@ export function DistrictMultiSelect({ districts, filter, onChange }: DistrictMul
           selected.length
             ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]"
             : "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] dark:bg-[var(--card)]",
+          className,
         )}
       >
         <span

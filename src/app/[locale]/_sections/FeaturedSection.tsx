@@ -13,7 +13,7 @@ import {
   sortFromSearchParams,
   type SearchSort,
 } from "@/lib/search-state";
-import { isCafeOpenNow } from "@/lib/opening-hours";
+import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours";
 import { includesDistrict } from "@/lib/district-filter";
 import FeaturedSectionControls from "./FeaturedSectionControls";
 import FeaturedSectionResults from "./FeaturedSectionResults";
@@ -23,6 +23,7 @@ import {
   cafePopularity,
   cafeRating,
   haversineKm,
+  MOBILE_PAGE_SIZE,
   PAGE_SIZE,
   type ServerMeta,
   type ViewMode,
@@ -51,6 +52,7 @@ export default function FeaturedSection({
   const reduceMotion = usePrefersReducedMotion();
   const [urlSearchParams, setUrlSearchParams] = useState(() => new URLSearchParams());
   const [canAnimate, setCanAnimate] = useState(false);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const [filter, setFilter] = useState<Filter>(() => filterFromSearchParams(urlSearchParams));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -62,8 +64,8 @@ export default function FeaturedSection({
 
   const page = Number(urlSearchParams.get("page") ?? "1");
   const queryFilter = useMemo(
-    () => ({ ...filter, page, limit: PAGE_SIZE, sort: sortMode }),
-    [filter, page, sortMode],
+    () => ({ ...filter, page, limit: pageSize, sort: sortMode }),
+    [filter, page, pageSize, sortMode],
   );
   const { activeCafes, activeDistricts, activeMeta, cafesQuery, dataError, shouldFetchCafes } =
     useFeaturedSectionData({
@@ -98,9 +100,21 @@ export default function FeaturedSection({
 
   useEffect(() => {
     setCanAnimate(true);
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const syncPageSize = () => setPageSize(mediaQuery.matches ? MOBILE_PAGE_SIZE : PAGE_SIZE);
+    syncPageSize();
 
     function syncSearchParams() {
       const nextParams = new URLSearchParams(window.location.search);
+      if (nextParams.get("hours") === "from_7") {
+        nextParams.set("hours", "open_at_7");
+        const query = nextParams.toString();
+        window.history.replaceState(
+          null,
+          "",
+          query ? `${window.location.pathname}?${query}` : window.location.pathname,
+        );
+      }
       const nextFilter = filterFromSearchParams(nextParams);
       const nextSort = sortFromSearchParams(nextParams);
       setUrlSearchParams(nextParams);
@@ -111,7 +125,11 @@ export default function FeaturedSection({
 
     syncSearchParams();
     window.addEventListener("popstate", syncSearchParams);
-    return () => window.removeEventListener("popstate", syncSearchParams);
+    mediaQuery.addEventListener("change", syncPageSize);
+    return () => {
+      window.removeEventListener("popstate", syncSearchParams);
+      mediaQuery.removeEventListener("change", syncPageSize);
+    };
   }, []);
 
   function handleFilterChange(newFilter: Filter) {
@@ -172,7 +190,7 @@ export default function FeaturedSection({
     }
 
     let result = activeCafes;
-    const { search, districts, vibes, purposes, priceRange, openNow } = filter;
+    const { search, districts, vibes, purposes, priceRange, openNow, hours } = filter;
 
     if (search?.trim()) {
       const q = search.toLowerCase();
@@ -201,6 +219,7 @@ export default function FeaturedSection({
       });
     }
     if (openNow) result = result.filter(isCafeOpenNow);
+    if (hours) result = result.filter((cafe) => matchesCafeHours(cafe, hours));
     if (filter.nearMe && filter.lat !== undefined && filter.lng !== undefined) {
       const hasCoords = result.some((c) => c.lat != null && c.lng != null);
       if (hasCoords) {
@@ -228,7 +247,7 @@ export default function FeaturedSection({
   }, [filtered, sortMode]);
 
   const total = activeMeta ? activeMeta.total : sorted.length;
-  const paginated = activeMeta ? sorted : sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginated = activeMeta ? sorted : sorted.slice((page - 1) * pageSize, page * pageSize);
   const sortLabel =
     sortMode === "rating"
       ? ts("sortRating")
@@ -285,6 +304,7 @@ export default function FeaturedSection({
           dataLoading={dataLoading}
           locale={locale}
           page={page}
+          pageSize={pageSize}
           paginated={paginated}
           reduceMotion={reduceMotion}
           canAnimate={canAnimate}

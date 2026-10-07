@@ -196,6 +196,31 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         </div>
       </section>
 
+      <section>
+        <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
+          {t("openingHours")}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {(["open_at_7", "open_24h"] as const).map((hours) => {
+            const active = staged.hours === hours;
+            return (
+              <button
+                key={hours}
+                onClick={() => setStaged((s) => ({ ...s, hours: active ? undefined : hours }))}
+                className={cn(
+                  "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
+                  active
+                    ? "bg-accent border-accent text-white"
+                    : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
+                )}
+              >
+                {t(hours === "open_at_7" ? "openFromSeven" : "open24Hours")}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Khu vực */}
       <section>
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
