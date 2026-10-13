@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getCafeDistricts, getCafesWithMeta } from "@/apis/cafes";
 import { createLocalizedMetadata } from "@/lib/metadata";
@@ -7,6 +8,7 @@ import { createHomeJsonLd, stringifyJsonLd } from "@/lib/structured-data";
 import { routing } from "@/i18n/routing";
 import FeaturedSection from "../_sections/FeaturedSection";
 import { PAGE_SIZE } from "../_sections/featured-section-helpers";
+import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys";
 // import HomeSeoContent from "../_sections/HomeSeoContent";
 
 export const revalidate = 300;
@@ -55,6 +57,8 @@ function toUrlSearchParams(params: Record<string, string | string[] | undefined>
 
 export default async function HomePage({ params, searchParams }: HomePageProps) {
   const { locale } = await params;
+  // Request-time auth must be read before the cached API boundary.
+  const accessToken = (await cookies()).get(AUTH_COOKIE_KEYS.accessToken)?.value;
   const normalizedLocale = locale === "en" ? "en" : routing.defaultLocale;
   const urlSearchParams = toUrlSearchParams(await searchParams);
   const parsedFilter = filterFromSearchParams(urlSearchParams);
@@ -74,7 +78,10 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       const [data, districts] = await withHomeSsrTimeout(
         () =>
           Promise.all([
-            getCafesWithMeta(initialFilter, locale, { fallback: false }),
+            getCafesWithMeta(initialFilter, locale, {
+              fallback: false,
+              headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+            }),
             getCafeDistricts(locale, { fallback: false }),
           ]),
         5000,

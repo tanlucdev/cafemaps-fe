@@ -1,13 +1,16 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const DEFAULT_BACKEND_URL = "https://cafe-finder-be.onrender.com/api";
 const API_URL = process.env.API_URL ?? DEFAULT_BACKEND_URL;
+const PROJECT_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: PROJECT_ROOT,
   experimental: {
     proxyClientMaxBodySize: "42mb",
   },

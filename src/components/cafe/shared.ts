@@ -19,6 +19,7 @@ export interface CafeListProps {
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
   eagerFirstImage?: boolean;
+  teaserSlots?: number;
 }
 
 export const VIBE_TAG_CLASSES: Record<string, string> = {
