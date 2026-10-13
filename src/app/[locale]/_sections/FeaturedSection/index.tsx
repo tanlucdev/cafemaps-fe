@@ -131,6 +131,9 @@ export default function FeaturedSection({
 
   const total = activeMeta ? displayDiscoveryTotal(activeMeta) : sorted.length;
   const paginationTotal = total;
+  const previewTotal = activeMeta?.discovery?.previewTotal;
+  const maxAccessiblePage =
+    typeof previewTotal === "number" ? Math.ceil(previewTotal / pageSize) : undefined;
   const paginated = activeMeta ? sorted : sorted.slice((page - 1) * pageSize, page * pageSize);
 
   useEffect(() => {
@@ -197,6 +200,7 @@ export default function FeaturedSection({
           pageSize={pageSize}
           paginated={paginated}
           paginationTotal={paginationTotal}
+          maxAccessiblePage={maxAccessiblePage}
           teaserSlots={activeMeta?.discovery?.teaserSlots ?? 0}
           reduceMotion={reduceMotion}
           canAnimate={canAnimate}

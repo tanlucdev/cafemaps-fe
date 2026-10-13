@@ -129,6 +129,7 @@ export interface DiscoveryMeta {
   displayTotal: number;
   totalPages: number;
   teaserSlots: number;
+  previewTotal?: number;
 }
 
 export interface SavedCafeEntry {

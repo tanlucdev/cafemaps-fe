@@ -18,6 +18,7 @@ interface FeaturedSectionResultsProps {
   pageSize: number;
   paginated: Cafe[];
   paginationTotal: number;
+  maxAccessiblePage?: number;
   teaserSlots: number;
   reduceMotion: boolean | null;
   canAnimate: boolean;
@@ -38,6 +39,7 @@ export default function FeaturedSectionResults({
   pageSize,
   paginated,
   paginationTotal,
+  maxAccessiblePage,
   teaserSlots,
   reduceMotion,
   canAnimate,
@@ -132,6 +134,7 @@ export default function FeaturedSectionResults({
           page={page}
           total={paginationTotal}
           limit={pageSize}
+          maxAccessiblePage={maxAccessiblePage}
           onPageChange={onPageChange}
         />
       </motion.div>
