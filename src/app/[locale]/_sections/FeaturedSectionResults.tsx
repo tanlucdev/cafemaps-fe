@@ -1,29 +1,32 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion } from "framer-motion"
-import { Coffee, LoaderCircle } from "lucide-react"
-import CafeList from "@/components/cafe/CafeList"
-import CafeGrid from "@/components/cafe/CafeGrid"
-import Pagination from "@/components/ui/Pagination"
-import { CafeCardSkeleton, Skeleton } from "@/components/ui/Skeleton"
-import type { Cafe } from "@/types/cafe"
-import type { ViewMode } from "./featured-section-helpers"
+import { AnimatePresence, motion } from "framer-motion";
+import { Coffee, LoaderCircle } from "lucide-react";
+import CafeList from "@/components/cafe/CafeList";
+import CafeGrid from "@/components/cafe/CafeGrid";
+import Pagination from "@/components/ui/Pagination";
+import { CafeCardSkeleton, Skeleton } from "@/components/ui/Skeleton";
+import type { Cafe } from "@/types/cafe";
+import type { ViewMode } from "./featured-section-helpers";
 
 interface FeaturedSectionResultsProps {
-  animationType: "slide" | "fade"
-  dataError: boolean
-  dataLoading: boolean
-  locale: string
-  page: number
-  pageSize: number
-  paginated: Cafe[]
-  reduceMotion: boolean | null
-  canAnimate: boolean
-  total: number
-  ts: (key: string) => string
-  viewMode: ViewMode
-  onPageChange: (page: number) => void
-  onRetry: () => void
+  animationType: "slide" | "fade";
+  dataError: boolean;
+  dataLoading: boolean;
+  locale: string;
+  page: number;
+  pageSize: number;
+  paginated: Cafe[];
+  paginationTotal: number;
+  teaserSlots: number;
+  reduceMotion: boolean | null;
+  canAnimate: boolean;
+  serverBacked: boolean;
+  total: number;
+  ts: (key: string) => string;
+  viewMode: ViewMode;
+  onPageChange: (page: number) => void;
+  onRetry: () => void;
 }
 
 export default function FeaturedSectionResults({
@@ -34,15 +37,18 @@ export default function FeaturedSectionResults({
   page,
   pageSize,
   paginated,
+  paginationTotal,
+  teaserSlots,
   reduceMotion,
   canAnimate,
+  serverBacked,
   total,
   ts,
   viewMode,
   onPageChange,
   onRetry,
 }: FeaturedSectionResultsProps) {
-  const direction = viewMode === "grid" ? -1 : 1
+  const direction = viewMode === "grid" ? -1 : 1;
   const panelVariants = {
     enter: (dir: number) => ({
       opacity: animationType === "fade" ? 0.86 : 0.55,
@@ -57,9 +63,9 @@ export default function FeaturedSectionResults({
       y: animationType === "fade" ? -4 : -6,
       scale: animationType === "fade" ? 1 : 0.994,
     }),
-  }
+  };
 
-  if (dataError) {
+  if (dataError || (serverBacked && total > 0 && paginated.length === 0 && teaserSlots === 0)) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
@@ -74,12 +80,12 @@ export default function FeaturedSectionResults({
           {locale === "vi" ? "Thử lại" : "Retry"}
         </button>
       </div>
-    )
+    );
   }
 
-  if (dataLoading) return <CafeFilteringLoader viewMode={viewMode} />
+  if (dataLoading) return <CafeFilteringLoader viewMode={viewMode} />;
 
-  if (total === 0) {
+  if (total === 0 && (!serverBacked || teaserSlots === 0)) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
@@ -87,7 +93,7 @@ export default function FeaturedSectionResults({
           {ts("noResultsMessage")}
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -100,9 +106,7 @@ export default function FeaturedSectionResults({
         animate="center"
         exit={reduceMotion ? { opacity: 0 } : "exit"}
         className="will-change-transform"
-        transition={
-          reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] }
-        }
+        transition={reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
       >
         {viewMode === "grid" ? (
           <CafeGrid
@@ -112,27 +116,38 @@ export default function FeaturedSectionResults({
             desktopColumns="three"
             eagerFirstImage
             mobileCompact
+            teaserSlots={teaserSlots}
           />
         ) : (
-          <CafeList cafes={paginated} locale={locale} animationType={animationType} eagerFirstImage />
+          <CafeList
+            cafes={paginated}
+            locale={locale}
+            animationType={animationType}
+            eagerFirstImage
+            teaserSlots={teaserSlots}
+          />
         )}
 
-        <Pagination page={page} total={total} limit={pageSize} onPageChange={onPageChange} />
+        <Pagination
+          page={page}
+          total={paginationTotal}
+          limit={pageSize}
+          onPageChange={onPageChange}
+        />
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
 
 function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="flex w-full flex-col gap-5"
-    >
+    <div role="status" aria-live="polite" className="flex w-full flex-col gap-5">
       <div className="flex items-center gap-3">
         <div className="relative flex size-14 items-center justify-center">
-          <LoaderCircle className="absolute size-14 animate-spin text-[var(--accent)]" aria-hidden="true" />
+          <LoaderCircle
+            className="absolute size-14 animate-spin text-[var(--accent)]"
+            aria-hidden="true"
+          />
           <Coffee className="size-6 text-[var(--accent)]" aria-hidden="true" />
         </div>
         <div className="space-y-2">
@@ -167,5 +182,5 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
         </div>
       )}
     </div>
-  )
+  );
 }

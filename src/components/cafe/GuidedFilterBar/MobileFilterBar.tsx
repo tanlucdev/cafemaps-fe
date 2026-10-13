@@ -11,6 +11,8 @@ import { DistrictMultiSelect } from "./DistrictMultiSelect";
 interface MobileFilterBarProps {
   filter: CafeFilter;
   onChange: (filter: CafeFilter) => void;
+  nearMeLoading: boolean;
+  onNearMe: () => void;
   activeCount: number;
   onOpen: () => void;
   districts?: string[];
@@ -19,6 +21,8 @@ interface MobileFilterBarProps {
 export function MobileFilterBar({
   filter,
   onChange,
+  nearMeLoading,
+  onNearMe,
   activeCount,
   onOpen,
   districts,
@@ -77,8 +81,9 @@ export function MobileFilterBar({
           <span className="truncate">{tg("mobile.openNowShort")}</span>
         </button>
         <NearMeButton
-          filter={filter}
-          onChange={onChange}
+          nearMe={Boolean(filter.nearMe)}
+          loading={nearMeLoading}
+          onClick={onNearMe}
           className={cn(menuCardClass, "justify-center")}
         />
 

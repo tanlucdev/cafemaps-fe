@@ -17,6 +17,8 @@ import {
 interface FilterChipsRowProps {
   filter: Filter;
   onChange: (filter: Filter) => void;
+  nearMeLoading: boolean;
+  onNearMe: () => void;
   activeCount: number;
   dropdownOpen: boolean;
   dropdownMounted: boolean;
@@ -33,6 +35,8 @@ interface FilterChipsRowProps {
 export function FilterChipsRow({
   filter,
   onChange,
+  nearMeLoading,
+  onNearMe,
   activeCount,
   dropdownOpen,
   dropdownMounted,
@@ -105,7 +109,7 @@ export function FilterChipsRow({
       </button>
 
       {/* Gần tôi */}
-      <NearMeButton filter={filter} onChange={onChange} />
+      <NearMeButton nearMe={Boolean(filter.nearMe)} loading={nearMeLoading} onClick={onNearMe} />
 
       {filter.nearMe &&
         DISTANCE_OPTIONS.map(({ km }) => (

@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import type { CafeFilter as Filter } from "@/types/cafe";
 import { useGuidedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import { FilterChipsRow } from "@/components/cafe/GuidedFilterBar/FilterChipsRow";
@@ -7,6 +10,11 @@ import { FilterDropdownPanel } from "@/components/cafe/GuidedFilterBar/FilterDro
 import { ActiveFilterChips } from "@/components/cafe/GuidedFilterBar/ActiveFilterChips";
 import { MobileFilterBar } from "@/components/cafe/GuidedFilterBar/MobileFilterBar";
 import { MobileFilterSheet } from "@/components/cafe/GuidedFilterBar/MobileFilterSheet";
+import {
+  disableNearMe,
+  invalidateNearMeRequest,
+  startNearMeRequest,
+} from "@/components/cafe/GuidedFilterBar/near-me-request";
 
 interface GuidedFilterBarProps {
   filter: Filter;
@@ -14,6 +22,38 @@ interface GuidedFilterBarProps {
   districts?: string[];
 }
 export default function GuidedFilterBar({ filter, onChange, districts }: GuidedFilterBarProps) {
+  const tNearby = useTranslations("nearby");
+  const [nearMeLoading, setNearMeLoading] = useState(false);
+  const filterRef = useRef(filter);
+  const onChangeRef = useRef(onChange);
+  const inFlightRef = useRef(false);
+  const requestIdRef = useRef(0);
+
+  useEffect(() => {
+    filterRef.current = filter;
+    onChangeRef.current = onChange;
+  }, [filter, onChange]);
+
+  const onNearMe = useCallback(() => {
+    const options = {
+      geolocation: typeof navigator === "undefined" ? undefined : navigator.geolocation,
+      getFilter: () => filterRef.current,
+      onChange: (nextFilter: Filter) => onChangeRef.current(nextFilter),
+      setLoading: setNearMeLoading,
+      onNoSupport: () => toast.error(tNearby("noSupport")),
+      onLocationError: () => toast.error(tNearby("locationError")),
+      inFlightRef,
+      requestIdRef,
+    };
+    if (filterRef.current.nearMe || inFlightRef.current) {
+      disableNearMe(options);
+      return;
+    }
+    startNearMeRequest(options);
+  }, [tNearby]);
+
+  useEffect(() => () => invalidateNearMeRequest({ inFlightRef, requestIdRef }), []);
+
   const {
     dropdownOpen,
     dropdownMounted,
@@ -50,6 +90,8 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
         <FilterChipsRow
           filter={filter}
           onChange={onChange}
+          nearMeLoading={nearMeLoading}
+          onNearMe={onNearMe}
           activeCount={activeCount}
           dropdownOpen={dropdownOpen}
           dropdownMounted={dropdownMounted}
@@ -82,6 +124,8 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
       <MobileFilterBar
         filter={filter}
         onChange={onChange}
+        nearMeLoading={nearMeLoading}
+        onNearMe={onNearMe}
         activeCount={mobileAdvancedCount}
         onOpen={openMobileSheet}
         districts={districts}

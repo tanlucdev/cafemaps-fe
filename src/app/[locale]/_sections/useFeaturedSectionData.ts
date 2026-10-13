@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getCafeDistricts, getCafesWithMeta, getNearbyCafes } from "@/lib/api";
+import { getCafeDistricts, getCafesWithMeta, getNearbyDiscoveryCafes } from "@/apis/cafes";
 import { cafeListQueryKey } from "@/apis/cafes/query";
+import { useAuthState } from "@/components/layout/useAuthState";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
-import { filterNearbyCafes, type ServerMeta } from "./featured-section-helpers";
+import type { ServerMeta } from "./featured-section-helpers";
 
 export function useFeaturedSectionData({
   cafes,
@@ -22,10 +23,12 @@ export function useFeaturedSectionData({
   serverFilter?: Filter;
   serverMeta?: ServerMeta;
 }) {
-  const queryKey = cafeListQueryKey(filter, locale);
+  const { user, isLoggedIn } = useAuthState();
+  const authScope = user?.id ? `user:${user.id}` : isLoggedIn ? "member" : "guest";
+  const queryKey = cafeListQueryKey(filter, locale, authScope);
   const serializedQueryKey = JSON.stringify(queryKey);
   const [initialQueryKey] = useState(() =>
-    JSON.stringify(cafeListQueryKey(serverFilter ?? filter, locale)),
+    JSON.stringify(cafeListQueryKey(serverFilter ?? filter, locale, "guest")),
   );
   const shouldFetchCafes =
     deferData || (!deferData && Boolean(serverMeta) && serializedQueryKey !== initialQueryKey);
@@ -39,17 +42,7 @@ export function useFeaturedSectionData({
     queryKey,
     queryFn: async ({ signal }) => {
       if (filter.nearMe && filter.lat != null && filter.lng != null) {
-        const nearbyCafes = await getNearbyCafes(
-          filter.lat,
-          filter.lng,
-          filter.radiusKm ?? 2,
-          locale,
-        );
-        const nextCafes = filterNearbyCafes(nearbyCafes, filter);
-        return {
-          cafes: nextCafes,
-          meta: { total: nextCafes.length, page: 1, limit: nextCafes.length, totalPages: 1 },
-        };
+        return getNearbyDiscoveryCafes(filter, locale, { signal });
       }
 
       return getCafesWithMeta(filter, locale, { signal });
