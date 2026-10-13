@@ -9,12 +9,20 @@ interface PaginationProps {
   page: number;
   total: number;
   limit: number;
+  maxAccessiblePage?: number;
   onPageChange: (page: number) => void;
 }
 
-export default function Pagination({ page, total, limit, onPageChange }: PaginationProps) {
+export default function Pagination({
+  page,
+  total,
+  limit,
+  maxAccessiblePage,
+  onPageChange,
+}: PaginationProps) {
   const t = useTranslations("pagination");
   const totalPages = Math.ceil(total / limit);
+  const accessiblePages = Math.min(totalPages, maxAccessiblePage ?? totalPages);
   const [pageInput, setPageInput] = useState(String(page));
 
   useEffect(() => {
@@ -27,7 +35,7 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
   const to = Math.min(page * limit, total);
 
   function changePage(nextPage: number) {
-    if (nextPage !== page && nextPage >= 1 && nextPage <= totalPages) onPageChange(nextPage);
+    if (nextPage !== page && nextPage >= 1 && nextPage <= accessiblePages) onPageChange(nextPage);
   }
 
   function submitPage() {
@@ -37,7 +45,7 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
     }
 
     const nextPage = Number(pageInput);
-    if (!Number.isSafeInteger(nextPage) || nextPage > totalPages) {
+    if (!Number.isSafeInteger(nextPage) || nextPage > accessiblePages) {
       setPageInput(String(page));
       return;
     }
@@ -93,12 +101,15 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
             <button
               key={p}
               onClick={() => changePage(p)}
+              disabled={p > accessiblePages}
               aria-current={p === page ? "page" : undefined}
               className={cn(
                 "size-10 shrink-0 cursor-pointer rounded-full border text-sm font-black shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
                 p === page
                   ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.20)]"
-                  : "border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
+                  : p > accessiblePages
+                    ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-raised)]/36 text-[var(--foreground-muted)]/40"
+                    : "border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
               )}
             >
               {p}
@@ -108,11 +119,11 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
 
         <button
           onClick={() => changePage(page + 1)}
-          disabled={page === totalPages}
+          disabled={page >= accessiblePages}
           aria-label={t("next")}
           className={cn(
             "flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] sm:w-auto sm:px-4",
-            page === totalPages
+            page >= accessiblePages
               ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-raised)]/36 text-[var(--foreground-muted)]/40"
               : "cursor-pointer border-[var(--border)] bg-[var(--surface-raised)]/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
           )}
