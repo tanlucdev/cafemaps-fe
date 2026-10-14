@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { ArrowRight, Coffee, Globe, Heart, MapPin, Share2 } from "lucide-react";
+import donateQr from "../../../public/image/donate-qr.jpg";
 
 const exploreLinks = [
   { href: "/", labelKey: "exploreCafes" },
@@ -25,7 +26,7 @@ export default function Footer() {
           <div className="pointer-events-none absolute inset-0 bg-[image:var(--footer-ambient)] dark:opacity-40" />
           <div className="pointer-events-none absolute inset-0 [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.72%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.30%22/%3E%3C/svg%3E')] opacity-[0.045] mix-blend-multiply dark:mix-blend-screen" />
           <div className="pointer-events-none absolute -top-7 right-8 hidden h-24 w-24 rounded-full border border-[var(--footer-decor)] sm:block" />
-          <div className="pointer-events-none absolute right-5 bottom-16 hidden rotate-[-8deg] rounded-full border border-[var(--footer-decor)] px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[var(--footer-decor)] uppercase lg:block">
+          <div className="pointer-events-none absolute right-[calc(104px+3rem)] bottom-18 hidden rotate-[-8deg] rounded-full border border-[var(--footer-decor)] px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[var(--footer-decor)] uppercase lg:block">
             {t("stamp")}
           </div>
           <div className="pointer-events-none absolute top-24 left-5 hidden h-20 w-28 rounded-[50%] border-t border-dashed border-[var(--footer-decor)] md:block" />
@@ -83,7 +84,12 @@ export default function Footer() {
               </div>
             </div>
 
-            <nav className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-[18px] border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] p-3 shadow-[var(--footer-card-shadow)] backdrop-blur-md">
+              <FooterDonateCopy />
+              <FooterDonateQr />
+            </div>
+
+            <nav className="mt-4 grid grid-cols-2 gap-x-2 gap-y-1">
               <FooterChip href="/">{t("exploreCafes")}</FooterChip>
               <FooterChip href="/map">{t("map")}</FooterChip>
               <FooterChip href="/quiz">{t("quiz")}</FooterChip>
@@ -147,31 +153,9 @@ export default function Footer() {
               ))}
             </FooterNav>
 
-            <div>
-              <h3 className="text-sm font-extrabold text-[var(--foreground)]">
-                {t("connectTitle")}
-              </h3>
-              <p className="mt-2 max-w-sm text-sm leading-5 text-[var(--foreground-muted)]">
-                {t("connectText")}
-              </p>
-              <div className="mt-3 flex gap-3">
-                <Link
-                  href="/"
-                  aria-label={t("websiteAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
-                >
-                  <Globe size={18} aria-hidden="true" />
-                </Link>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={t("shareAria")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
-                >
-                  <Share2 size={18} aria-hidden="true" />
-                </a>
-              </div>
+            <div className="flex items-start justify-end gap-4">
+              <FooterDonateCopy />
+              <FooterDonateQr />
             </div>
           </div>
 
@@ -194,11 +178,44 @@ export default function Footer() {
   );
 }
 
+function FooterDonateCopy() {
+  const donate = useTranslations("donate");
+  const footer = useTranslations("footer");
+
+  return (
+    <div className="min-w-0">
+      <div className="flex items-center gap-2 text-sm font-extrabold text-[var(--foreground)]">
+        <Coffee size={16} aria-hidden="true" className="shrink-0 text-[var(--accent)]" />
+        <h2>{donate("title")}</h2>
+      </div>
+      <p className="mt-1 text-xs leading-4 text-[var(--foreground-muted)]">
+        {footer("donateHint")}
+      </p>
+    </div>
+  );
+}
+
+function FooterDonateQr() {
+  const t = useTranslations("donate");
+
+  return (
+    <div className="shrink-0 rounded-[14px] border border-[var(--footer-control-border)] bg-white p-1 shadow-[var(--footer-icon-shadow)]">
+      <Image
+        src={donateQr}
+        alt={t("title")}
+        width={104}
+        height={104}
+        className="h-[84px] w-[84px] rounded-[10px] object-contain sm:h-[104px] sm:w-[104px]"
+      />
+    </div>
+  );
+}
+
 function FooterChip({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className="inline-flex min-h-9 items-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 text-xs font-bold text-[var(--footer-warm-text)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+      className="inline-flex min-h-10 items-center rounded-lg px-2 text-sm font-bold text-[var(--footer-warm-text)] transition hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
     >
       {children}
     </Link>
