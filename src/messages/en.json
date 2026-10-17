@@ -1332,6 +1332,10 @@
     "loginHeroBody": "Your favorite coffee corners are still here. Log in to revisit familiar spots and discover more cafés that match your mood.",
     "registerHeroTitle": "Your coffee corner starts here",
     "registerHeroBody": "Save cafés worth visiting, find spots that match your mood, and create your own coffee journey.",
+    "forgotHeroTitle": "Get back to your coffee finds.",
+    "forgotHeroBody": "Enter your email and we will send a password reset link if an account is eligible.",
+    "resetHeroTitle": "Choose a new password.",
+    "resetHeroBody": "Use a new password to secure your Cafe Maps account.",
     "emailPlaceholder": "you@email.com",
     "benefits": {
       "saved": "Save favorite cafés",
@@ -1360,6 +1364,13 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset password",
+    "forgotCta": "Send reset link",
+    "resetCta": "Save new password",
+    "forgotSuccess": "If an eligible account exists, a reset link has been sent.",
+    "forgotError": "Could not request a reset link right now.",
+    "resetSuccess": "Password updated. Redirecting to log in...",
+    "resetError": "This reset link is invalid or has expired.",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "loginSuccess": "Logged in successfully",
@@ -1377,7 +1388,9 @@
       "invalidEmail": "Invalid email address",
       "passwordMin": "Password must be at least 8 characters",
       "confirmPasswordMin": "Confirmation password must be at least 8 characters",
-      "passwordMismatch": "Passwords do not match"
+      "passwordMismatch": "Passwords do not match",
+      "passwordMax": "Password must be at most 72 characters",
+      "tokenRequired": "This reset link is missing or invalid"
     }
   },
   "footer": {
