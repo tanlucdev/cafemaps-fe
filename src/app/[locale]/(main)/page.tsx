@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getCafeDistricts, getCafesWithMeta } from "@/apis/cafes";
+import { getRecentlyViewed, type RecentlyViewedCafe } from "@/apis/recently-viewed";
 import { createLocalizedMetadata } from "@/lib/metadata";
 import { filterFromSearchParams, sortFromSearchParams } from "@/lib/search-state";
 import { createHomeJsonLd, stringifyJsonLd } from "@/lib/structured-data";
@@ -71,6 +72,11 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
   const jsonLd = createHomeJsonLd(normalizedLocale);
   let initialData: (Awaited<ReturnType<typeof getCafesWithMeta>> & { districts: string[] }) | null =
     null;
+  const recentlyViewedPromise: Promise<RecentlyViewedCafe[]> = accessToken
+    ? withHomeSsrTimeout(() => getRecentlyViewed(accessToken, normalizedLocale, 3), 1500).catch(
+        () => [],
+      )
+    : Promise.resolve([]);
 
   if (!initialFilter.nearMe) {
     try {
@@ -92,6 +98,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       initialData = null;
     }
   }
+  const recentlyViewed = await recentlyViewedPromise;
 
   return (
     <>
@@ -107,9 +114,10 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
           serverMeta={initialData.meta}
           serverFilter={initialFilter}
           deferData={false}
+          recentlyViewed={recentlyViewed}
         />
       ) : (
-        <FeaturedSection cafes={[]} locale={locale} deferData />
+        <FeaturedSection cafes={[]} locale={locale} deferData recentlyViewed={recentlyViewed} />
       )}
       {/* <HomeSeoContent locale={locale} /> */}
     </>

@@ -1,19 +1,34 @@
 import Image from "next/image";
-import { Coffee, Heart, MapPin } from "lucide-react";
+import { Clock3, Coffee, Heart, MapPin } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { coverObjectPosition } from "@/lib/cover-image";
 import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
+import { formatViewedAt } from "@/lib/format-viewed-at";
 import type { Cafe } from "@/types/cafe";
 import type { ProfileCopy } from "./constants";
 import { EmptyState } from "./ProfileShared";
 
-export function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCopy }) {
+export function SavedCafeList({
+  cafes,
+  copy,
+  locale,
+  viewedAtByCafeId,
+  emptyTitle = copy.noSavedTitle,
+  emptyBody = copy.noSavedBody,
+}: {
+  cafes: Cafe[];
+  copy: ProfileCopy;
+  locale?: string;
+  viewedAtByCafeId?: Map<string, string | undefined>;
+  emptyTitle?: string;
+  emptyBody?: string;
+}) {
   if (cafes.length === 0) {
     return (
       <EmptyState
         icon={Heart}
-        title={copy.noSavedTitle}
-        body={copy.noSavedBody}
+        title={emptyTitle}
+        body={emptyBody}
         actionHref="/search"
         actionLabel={copy.exploreCafes}
       />
@@ -48,8 +63,16 @@ export function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCop
             <h2 className="truncate text-base font-black text-[var(--foreground)]">{cafe.name}</h2>
             <p className="mt-1 flex min-w-0 items-center gap-1.5 text-sm font-medium text-[var(--foreground-muted)]">
               <MapPin size={14} className="shrink-0" />
-              <span className="truncate">{cafe.district || cafe.address || "Ho Chi Minh City"}</span>
+              <span className="truncate">
+                {cafe.district || cafe.address || "Ho Chi Minh City"}
+              </span>
             </p>
+            {locale && viewedAtByCafeId?.get(cafe.id) ? (
+              <p className="mt-1 flex items-center gap-1 text-xs font-bold text-[var(--accent)]">
+                <Clock3 size={13} aria-hidden="true" />
+                {formatViewedAt(viewedAtByCafeId.get(cafe.id)!, locale)}
+              </p>
+            ) : null}
             <div className="mt-2 flex flex-wrap gap-1.5">
               {cafe.vibes.slice(0, 3).map((vibe) => (
                 <span
