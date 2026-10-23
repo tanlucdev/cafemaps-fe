@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { Cafe, CafeFilter as Filter } from "@/types/cafe";
+import type { RecentlyViewedCafe } from "@/apis/recently-viewed";
 import { isCafeOpenNow, matchesCafeHours } from "@/lib/opening-hours";
 import { includesDistrict } from "@/lib/district-filter";
 import FeaturedSectionControls from "../FeaturedSectionControls";
@@ -21,6 +22,7 @@ import {
 import { useFeaturedSectionData } from "../useFeaturedSectionData";
 import { useMinimumLoading } from "../useMinimumLoading";
 import { useFeaturedSectionState } from "./useFeaturedSectionState";
+import RecentlyViewedRail from "../RecentlyViewedRail";
 
 interface FeaturedSectionProps {
   cafes: Cafe[];
@@ -29,6 +31,7 @@ interface FeaturedSectionProps {
   serverMeta?: ServerMeta;
   serverFilter?: Filter;
   deferData?: boolean;
+  recentlyViewed?: RecentlyViewedCafe[];
 }
 
 export default function FeaturedSection({
@@ -38,6 +41,7 @@ export default function FeaturedSection({
   serverMeta,
   serverFilter,
   deferData = false,
+  recentlyViewed = [],
 }: FeaturedSectionProps) {
   const ts = useTranslations("search");
   const reduceMotion = usePrefersReducedMotion();
@@ -122,8 +126,7 @@ export default function FeaturedSection({
   const sorted = useMemo(() => {
     if (activeMeta) return activeCafes;
     if (sortMode === "rating") return [...filtered].sort((a, b) => cafeRating(b) - cafeRating(a));
-    if (sortMode === "popular")
-      return [...filtered].sort(compareCafePopularity);
+    if (sortMode === "popular") return [...filtered].sort(compareCafePopularity);
     if (sortMode === "newest")
       return [...filtered].sort((a, b) => cafeCreatedTime(b) - cafeCreatedTime(a));
     return filtered;
@@ -211,6 +214,7 @@ export default function FeaturedSection({
           onPageChange={handlePageChange}
           onRetry={() => void cafesQuery.refetch()}
         />
+        <RecentlyViewedRail items={recentlyViewed} locale={locale} />
       </main>
     </div>
   );

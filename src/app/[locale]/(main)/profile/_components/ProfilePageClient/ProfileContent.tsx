@@ -1,8 +1,9 @@
-import { Bookmark, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
+import { Bookmark, Clock3, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
 import type { ProfileCopy } from "./constants";
+import type { RecentlyViewedCafe } from "@/apis/recently-viewed";
 import { QuizResultList } from "./QuizResultList";
 import { ProfileReviewList } from "./ProfileReviewList";
 import { SavedCafeList } from "./SavedCafeList";
@@ -12,6 +13,8 @@ import type { ProfileQuizResult, ProfileReviewItem, ProfileSubmission, ProfileTa
 export function ProfileContent({
   activeTab,
   cafes,
+  isLoggedIn,
+  recentlyViewed,
   copy,
   locale,
   quizCompletedCount,
@@ -23,6 +26,8 @@ export function ProfileContent({
 }: {
   activeTab: ProfileTab;
   cafes: Cafe[];
+  isLoggedIn: boolean;
+  recentlyViewed: RecentlyViewedCafe[];
   copy: ProfileCopy;
   locale: string;
   quizCompletedCount: number;
@@ -34,9 +39,21 @@ export function ProfileContent({
 }) {
   return (
     <section className="min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-[var(--shadow-sm)] sm:p-4">
-      <ProfileTabs activeTab={activeTab} copy={copy} onChange={onChange} />
+      <ProfileTabs activeTab={activeTab} copy={copy} isLoggedIn={isLoggedIn} onChange={onChange} />
       <div className="mt-4">
         {activeTab === "saved" && <SavedCafeList cafes={cafes} copy={copy} />}
+        {activeTab === "recently-viewed" && (
+          <SavedCafeList
+            cafes={recentlyViewed.slice(0, 20).map((entry) => entry.cafe)}
+            copy={copy}
+            locale={locale}
+            viewedAtByCafeId={
+              new Map(recentlyViewed.slice(0, 20).map(({ cafe, viewedAt }) => [cafe.id, viewedAt]))
+            }
+            emptyTitle={copy.noRecentlyViewedTitle}
+            emptyBody={copy.noRecentlyViewedBody}
+          />
+        )}
         {activeTab === "quiz" && (
           <QuizResultList
             copy={copy}
@@ -57,14 +74,19 @@ export function ProfileContent({
 function ProfileTabs({
   activeTab,
   copy,
+  isLoggedIn,
   onChange,
 }: {
   activeTab: ProfileTab;
   copy: ProfileCopy;
+  isLoggedIn: boolean;
   onChange: (tab: ProfileTab) => void;
 }) {
   const tabs: Array<{ id: ProfileTab; label: string; icon: LucideIcon }> = [
     { id: "saved", label: copy.savedTab, icon: Bookmark },
+    ...(isLoggedIn
+      ? [{ id: "recently-viewed" as const, label: copy.recentlyViewedTab, icon: Clock3 }]
+      : []),
     { id: "quiz", label: copy.quizTab, icon: Sparkles },
     { id: "submitted", label: copy.submittedTab, icon: PlusCircle },
     { id: "reviews", label: copy.reviewsTab, icon: MessageCircle },
@@ -84,7 +106,13 @@ function ProfileTabs({
             type="button"
             role="tab"
             aria-selected={isActive}
-            onClick={() => onChange(id)}
+            onClick={() => {
+              onChange(id);
+              const url = new URL(window.location.href);
+              if (id === "recently-viewed") url.searchParams.set("tab", id);
+              else url.searchParams.delete("tab");
+              window.history.replaceState(null, "", url);
+            }}
             className={cn(
               "inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl px-3 text-sm font-bold transition focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:px-4",
               isActive

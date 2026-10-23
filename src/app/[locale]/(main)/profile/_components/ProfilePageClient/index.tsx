@@ -5,6 +5,7 @@ import { Bookmark, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import { getAuthUser, type AuthUser } from "@/lib/auth-client";
 import type { SavedCafeEntry } from "@/types/cafe";
 import type { ProfileReview } from "@/types/review";
+import type { RecentlyViewedCafe } from "@/apis/recently-viewed";
 import { copyByLocale } from "./constants";
 import { ProfileContent } from "./ProfileContent";
 import { ProfileHeader, ProfileStats } from "./ProfileHeader";
@@ -16,6 +17,8 @@ interface ProfilePageClientProps {
   locale: string;
   initialIsLoggedIn: boolean;
   initialSavedEntries: SavedCafeEntry[];
+  initialRecentlyViewed: RecentlyViewedCafe[];
+  initialTab: ProfileTab;
   initialQuizCompletedCount: number;
   initialQuizResults: ProfileQuizResult[];
   initialSubmissions: ProfileSubmission[];
@@ -27,13 +30,15 @@ export default function ProfilePageClient({
   locale,
   initialIsLoggedIn,
   initialSavedEntries,
+  initialRecentlyViewed,
+  initialTab,
   initialQuizCompletedCount,
   initialQuizResults,
   initialSubmissions,
   initialReviews,
   initialReviewCount,
 }: ProfilePageClientProps) {
-  const [activeTab, setActiveTab] = useState<ProfileTab>("saved");
+  const [activeTab, setActiveTab] = useState<ProfileTab>(initialTab);
   const [user, setUser] = useState<AuthUser | null>(null);
   const copy = locale === "vi" ? copyByLocale.vi : copyByLocale.en;
   const isLoggedIn = Boolean(user || initialIsLoggedIn);
@@ -54,6 +59,10 @@ export default function ProfilePageClient({
   useEffect(() => {
     setUser(getAuthUser());
   }, []);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   return (
     <main className="min-h-[100svh] bg-[var(--background)] px-3 pt-[88px] pb-28 sm:px-6 sm:pt-24 lg:px-8">
@@ -79,6 +88,8 @@ export default function ProfilePageClient({
           <ProfileContent
             activeTab={activeTab}
             cafes={savedCafes}
+            isLoggedIn={isLoggedIn}
+            recentlyViewed={initialRecentlyViewed}
             copy={copy}
             locale={locale}
             quizCompletedCount={initialQuizCompletedCount}
