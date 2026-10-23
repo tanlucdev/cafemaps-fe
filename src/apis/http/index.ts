@@ -24,6 +24,7 @@ export class ApiError extends Error {
 }
 
 export type NextRequestInit = RequestInit & {
+  allowEmptyResponse?: boolean
   timeoutMs?: number
   next?: {
     revalidate?: number
@@ -65,7 +66,12 @@ export async function apiFetch<T>(
   path: string,
   options?: NextRequestInit
 ): Promise<T> {
-  const { fallback: _fallback, timeoutMs = API_TIMEOUT_MS, ...fetchOptions } = options ?? {}
+  const {
+    fallback: _fallback,
+    timeoutMs = API_TIMEOUT_MS,
+    allowEmptyResponse = false,
+    ...fetchOptions
+  } = options ?? {}
   void _fallback
   const method = fetchOptions.method?.toUpperCase() ?? "GET"
   const isServer = typeof window === "undefined"
@@ -108,6 +114,11 @@ export async function apiFetch<T>(
 
   if (!res.ok) {
     throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status)
+  }
+
+  if (allowEmptyResponse) {
+    const body = await res.text()
+    return (body === "" ? null : JSON.parse(body)) as T
   }
 
   return res.json() as Promise<T>
