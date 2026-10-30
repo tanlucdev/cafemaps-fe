@@ -91,16 +91,14 @@ export async function apiFetch<T>(
       ...(useReadCache
         ? {
             cache: "force-cache",
-            next: {
-              revalidate: READ_REVALIDATE_SECONDS,
-              tags: ["cafes"],
-              ...fetchOptions.next,
-            },
           }
         : !isServer && isPublicRead
           ? { cache: "no-store" as const }
           : {}),
       ...fetchOptions,
+      next: useReadCache
+        ? { revalidate: READ_REVALIDATE_SECONDS, tags: ["cafes"], ...fetchOptions.next }
+        : fetchOptions.next,
       credentials: fetchOptions.credentials ?? "include",
       signal: requestTimeout.signal,
       headers,
