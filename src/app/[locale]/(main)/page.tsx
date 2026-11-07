@@ -10,6 +10,7 @@ import { routing } from "@/i18n/routing";
 import FeaturedSection from "../_sections/FeaturedSection";
 import { PAGE_SIZE } from "../_sections/featured-section-helpers";
 import { AUTH_COOKIE_KEYS } from "@/constants/auth-keys";
+import ChainsSection from "@/components/chains/ChainsSection";
 // import HomeSeoContent from "../_sections/HomeSeoContent";
 
 export const revalidate = 300;
@@ -119,6 +120,7 @@ export default async function HomePage({ params, searchParams }: HomePageProps) 
       ) : (
         <FeaturedSection cafes={[]} locale={locale} deferData recentlyViewed={recentlyViewed} />
       )}
+      {!urlSearchParams.toString() && <ChainsSection locale={locale} />}
       {/* <HomeSeoContent locale={locale} /> */}
     </>
   );

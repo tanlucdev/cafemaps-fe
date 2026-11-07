@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 import { AlarmClock, MapPinned, Navigation } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
@@ -157,6 +158,11 @@ export default function CafeDetailInfo({
         >
           {cafe.name}
         </motion.h1>
+        {cafe.chain && (
+          <Link href={`/chains/${cafe.chain.slug}`} className="inline-flex text-sm font-bold text-[var(--accent)] hover:underline">
+            {locale === "vi" ? `Thuộc ${cafe.chain.name} · Xem các chi nhánh` : `Part of ${cafe.chain.name} · View branches`}
+          </Link>
+        )}
 
         <motion.div
           variants={itemVariants}
