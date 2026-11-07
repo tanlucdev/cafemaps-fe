@@ -34,20 +34,23 @@
 }
 
 .similar-marquee-group {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(76vw, 280px);
+  align-items: stretch;
   flex: none;
-  flex-wrap: nowrap;
   gap: 0.75rem;
   padding-right: 0.75rem;
 }
 
 .similar-marquee-card {
   display: flex;
+  min-width: 0;
   flex-direction: column;
 }
 
 .similar-marquee-card > article {
-  height: 100%;
+  flex: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

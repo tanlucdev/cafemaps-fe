@@ -119,12 +119,12 @@ export default async function CafeDetailPage({ params }: PageProps) {
                   {[false, true].map((duplicate) => (
                     <div
                       key={duplicate ? "similar-copy" : "similar-original"}
-                      className="similar-marquee-group flex flex-nowrap"
+                      className="similar-marquee-group"
                       aria-hidden={duplicate || undefined}
                       inert={duplicate || undefined}
                     >
                       {similar.map((item, index) => (
-                        <div key={`${duplicate ? "copy-" : ""}${item.cafe.id}`} className="similar-marquee-card w-[min(76vw,280px)] min-w-[min(76vw,280px)] shrink-0">
+                        <div key={`${duplicate ? "copy-" : ""}${item.cafe.id}`} className="similar-marquee-card">
                           <CafeCard cafe={item.cafe} locale={locale} index={index} mobileCompact />
                           <p className="mt-2 text-xs font-bold text-[var(--foreground-muted)]">
                             {locale === "vi" ? `Cùng vibe ${item.matchedVibe}` : `Same vibe: ${item.matchedVibe}`}
