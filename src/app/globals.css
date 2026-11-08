@@ -5,6 +5,59 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes cafe-similar-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.similar-marquee {
+  overflow: hidden;
+  outline: none;
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.similar-marquee:focus-visible {
+  border-radius: 1rem;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.similar-marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: cafe-similar-marquee 30s linear infinite;
+}
+
+.similar-marquee:hover .similar-marquee-track,
+.similar-marquee:focus-within .similar-marquee-track {
+  animation-play-state: paused;
+}
+
+.similar-marquee-group {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(76vw, 280px);
+  align-items: stretch;
+  flex: none;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.similar-marquee-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.similar-marquee-card > article {
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .similar-marquee { overflow-x: auto; mask-image: none; }
+  .similar-marquee-track { animation: none; }
+}
+
 /* Reset browser default focus/border on inputs */
 input:focus,
 input:focus-visible {

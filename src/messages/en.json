@@ -673,26 +673,14 @@
           "description": "You fit cafés with nearby greenery, gentle light, and a slower pace. Sitting down should make the day soften without asking much from you.",
           "shareTitle": "I am Cozy Plant Corner",
           "shareDescription": "My café persona: plants, breathing room, and a gentle reset.",
-          "reasons": [
-            "plants",
-            "cozy",
-            "soft reset"
-          ],
+          "reasons": ["plants", "cozy", "soft reset"],
           "personalityTraits": [
             "recharges near green things",
             "private-corner loyal",
             "slow but steady"
           ],
-          "bestFor": [
-            "slow weekends",
-            "a few pages of reading",
-            "solo decompression"
-          ],
-          "avoidWhen": [
-            "the patio is too hot",
-            "the room is stuffy",
-            "tables are cramped"
-          ]
+          "bestFor": ["slow weekends", "a few pages of reading", "solo decompression"],
+          "avoidWhen": ["the patio is too hot", "the room is stuffy", "tables are cramped"]
         },
         "quiet-city-window": {
           "title": "Quiet City Window",
@@ -700,26 +688,10 @@
           "description": "You need a good window, soft street noise, and a tidy table. Not away from the city, just quietly above its rush.",
           "shareTitle": "I am Quiet City Window",
           "shareDescription": "My café persona: window light, soft city, clear head.",
-          "reasons": [
-            "window seat",
-            "soft quiet",
-            "city watching"
-          ],
-          "personalityTraits": [
-            "observant",
-            "likes private space",
-            "gentle focus"
-          ],
-          "bestFor": [
-            "light study",
-            "writing notes",
-            "waiting between plans"
-          ],
-          "avoidWhen": [
-            "traffic noise dominates",
-            "sun is harsh",
-            "tables are tiny"
-          ]
+          "reasons": ["window seat", "soft quiet", "city watching"],
+          "personalityTraits": ["observant", "likes private space", "gentle focus"],
+          "bestFor": ["light study", "writing notes", "waiting between plans"],
+          "avoidWhen": ["traffic noise dominates", "sun is harsh", "tables are tiny"]
         },
         "lively-friends-table": {
           "title": "Lively Friends Table",
@@ -727,26 +699,10 @@
           "description": "Coffee is best with a wide table, easy laughter, and a playlist that gives the group momentum. The right café lets conversation run on its own.",
           "shareTitle": "I am Lively Friends Table",
           "shareDescription": "My café persona: friends at the table, mood instantly up.",
-          "reasons": [
-            "friends",
-            "group table",
-            "fun playlist"
-          ],
-          "personalityTraits": [
-            "group-powered",
-            "easy sharer",
-            "idea-sparker"
-          ],
-          "bestFor": [
-            "small gatherings",
-            "light brainstorms",
-            "weekend afternoons"
-          ],
-          "avoidWhen": [
-            "the room is too silent",
-            "tables cannot combine",
-            "service drags"
-          ]
+          "reasons": ["friends", "group table", "fun playlist"],
+          "personalityTraits": ["group-powered", "easy sharer", "idea-sparker"],
+          "bestFor": ["small gatherings", "light brainstorms", "weekend afternoons"],
+          "avoidWhen": ["the room is too silent", "tables cannot combine", "service drags"]
         },
         "late-night-work": {
           "title": "Late Night Deadline Owl",
@@ -754,26 +710,10 @@
           "description": "You fit cafés that stay tidy, quiet, powered, and focused enough for late work. No drama, just a room that helps the task start.",
           "shareTitle": "I am Late Night Deadline Owl",
           "shareDescription": "My café persona: laptop open, night falling, work still moving.",
-          "reasons": [
-            "stable wifi",
-            "outlets",
-            "night focus"
-          ],
-          "personalityTraits": [
-            "deadline-resistant",
-            "clarity-seeking",
-            "low-fuss"
-          ],
-          "bestFor": [
-            "deadlines",
-            "deep work",
-            "quick meetings"
-          ],
-          "avoidWhen": [
-            "music is heavy",
-            "tables are low",
-            "lighting is too dim"
-          ]
+          "reasons": ["stable wifi", "outlets", "night focus"],
+          "personalityTraits": ["deadline-resistant", "clarity-seeking", "low-fuss"],
+          "bestFor": ["deadlines", "deep work", "quick meetings"],
+          "avoidWhen": ["music is heavy", "tables are low", "lighting is too dim"]
         },
         "vintage-tea-nostalgia": {
           "title": "Vintage Tea Nostalgia",
@@ -781,26 +721,10 @@
           "description": "You are drawn to old wood, warm tea, and familiar texture. The right café makes every little detail feel like it has memory.",
           "shareTitle": "I am Vintage Tea Nostalgia",
           "shareDescription": "My café persona: vintage corners, warm tea, slower time.",
-          "reasons": [
-            "vintage",
-            "warm tea",
-            "old wood"
-          ],
-          "personalityTraits": [
-            "quietly nostalgic",
-            "detail-noticer",
-            "good listener"
-          ],
-          "bestFor": [
-            "reading",
-            "journaling",
-            "long conversations"
-          ],
-          "avoidWhen": [
-            "fake-vintage styling",
-            "lighting is too dark",
-            "the room gets loud"
-          ]
+          "reasons": ["vintage", "warm tea", "old wood"],
+          "personalityTraits": ["quietly nostalgic", "detail-noticer", "good listener"],
+          "bestFor": ["reading", "journaling", "long conversations"],
+          "avoidWhen": ["fake-vintage styling", "lighting is too dark", "the room gets loud"]
         },
         "sunny-iced-coffee": {
           "title": "Sunny Iced Coffee",
@@ -808,26 +732,10 @@
           "description": "You fit cafés with pretty sun, cool drinks, and a day-brightening mood. Fresh, simple, and easy to enjoy.",
           "shareTitle": "I am Sunny Iced Coffee",
           "shareDescription": "My café persona: good sun, iced coffee, brighter mood.",
-          "reasons": [
-            "sunny light",
-            "cool drinks",
-            "fresh mood"
-          ],
-          "personalityTraits": [
-            "quickly refreshed",
-            "light-seeking",
-            "easy to invite out"
-          ],
-          "bestFor": [
-            "weekend mornings",
-            "easy friend catchups",
-            "quick mood shifts"
-          ],
-          "avoidWhen": [
-            "dark rooms",
-            "freezing aircon",
-            "overly filling menus"
-          ]
+          "reasons": ["sunny light", "cool drinks", "fresh mood"],
+          "personalityTraits": ["quickly refreshed", "light-seeking", "easy to invite out"],
+          "bestFor": ["weekend mornings", "easy friend catchups", "quick mood shifts"],
+          "avoidWhen": ["dark rooms", "freezing aircon", "overly filling menus"]
         },
         "lazy-afternoon-nap": {
           "title": "Lazy Afternoon Nap",
@@ -835,26 +743,10 @@
           "description": "You need soft seating, gentle light, and no pressure to leave. Sometimes the perfect café is permission to be lazily restored.",
           "shareTitle": "I am Lazy Afternoon Nap",
           "shareDescription": "My café persona: soft chair, slow afternoon, easy mood.",
-          "reasons": [
-            "soft chairs",
-            "long chill",
-            "cozy"
-          ],
-          "personalityTraits": [
-            "knows how to rest",
-            "slow-rhythm lover",
-            "soft-hearted"
-          ],
-          "bestFor": [
-            "long sits",
-            "slow reading",
-            "escaping afternoon heat"
-          ],
-          "avoidWhen": [
-            "hard chairs",
-            "crowded rooms",
-            "pushy music"
-          ]
+          "reasons": ["soft chairs", "long chill", "cozy"],
+          "personalityTraits": ["knows how to rest", "slow-rhythm lover", "soft-hearted"],
+          "bestFor": ["long sits", "slow reading", "escaping afternoon heat"],
+          "avoidWhen": ["hard chairs", "crowded rooms", "pushy music"]
         },
         "deadline-chaos": {
           "title": "Deadline Chaos",
@@ -862,26 +754,10 @@
           "description": "You can handle fast energy when the café is useful: wide table, stable wifi, quick orders, and enough buzz to drag the deadline across the line.",
           "shareTitle": "I am Deadline Chaos",
           "shareDescription": "My café persona: slightly messy, very caffeinated, get it done.",
-          "reasons": [
-            "deadline",
-            "wide table",
-            "strong caffeine"
-          ],
-          "personalityTraits": [
-            "fast adapter",
-            "pressure-tolerant",
-            "utility-first"
-          ],
-          "bestFor": [
-            "project sprints",
-            "group work",
-            "last-minute tasks"
-          ],
-          "avoidWhen": [
-            "weak wifi",
-            "outlets are far",
-            "orders take forever"
-          ]
+          "reasons": ["deadline", "wide table", "strong caffeine"],
+          "personalityTraits": ["fast adapter", "pressure-tolerant", "utility-first"],
+          "bestFor": ["project sprints", "group work", "last-minute tasks"],
+          "avoidWhen": ["weak wifi", "outlets are far", "orders take forever"]
         },
         "aesthetic-latte-shot": {
           "title": "Aesthetic Latte Shot",
@@ -889,26 +765,10 @@
           "description": "You fit cafés with good light, camera-friendly drinks, and details that feel intentional. Coffee is also a way to save the mood of the day.",
           "shareTitle": "I am Aesthetic Latte Shot",
           "shareDescription": "My café persona: pretty latte, lovely light, real vibe.",
-          "reasons": [
-            "photo corner",
-            "pretty latte",
-            "intentional visuals"
-          ],
-          "personalityTraits": [
-            "visual-first",
-            "detail-sensitive",
-            "mood-maker"
-          ],
-          "bestFor": [
-            "photos",
-            "best-friend dates",
-            "weekend wandering"
-          ],
-          "avoidWhen": [
-            "flat light",
-            "messy plating",
-            "too crowded to shoot"
-          ]
+          "reasons": ["photo corner", "pretty latte", "intentional visuals"],
+          "personalityTraits": ["visual-first", "detail-sensitive", "mood-maker"],
+          "bestFor": ["photos", "best-friend dates", "weekend wandering"],
+          "avoidWhen": ["flat light", "messy plating", "too crowded to shoot"]
         },
         "neon-wall-selfie": {
           "title": "Neon Wall Selfie",
@@ -916,26 +776,10 @@
           "description": "You fit cafés with a bold wall, a good mirror, and playful light. Coffee should give you a corner where the photo feels bright, natural, and a little cheeky.",
           "shareTitle": "I am Neon Wall Selfie",
           "shareDescription": "My café persona: mirror selfie, neon wall, photo with mood.",
-          "reasons": [
-            "mirror selfie",
-            "neon wall",
-            "bold light"
-          ],
-          "personalityTraits": [
-            "angle-aware",
-            "likes a little spotlight",
-            "quick mood-lifter"
-          ],
-          "bestFor": [
-            "quick check-ins",
-            "new profile photos",
-            "weekend wandering"
-          ],
-          "avoidWhen": [
-            "the mirror is dim",
-            "neon is too harsh",
-            "the photo corner is blocked"
-          ]
+          "reasons": ["mirror selfie", "neon wall", "bold light"],
+          "personalityTraits": ["angle-aware", "likes a little spotlight", "quick mood-lifter"],
+          "bestFor": ["quick check-ins", "new profile photos", "weekend wandering"],
+          "avoidWhen": ["the mirror is dim", "neon is too harsh", "the photo corner is blocked"]
         },
         "friends-photo-corner": {
           "title": "Friends Photo Corner",
@@ -943,26 +787,10 @@
           "description": "You fit cafés with a roomy photo spot, kind light, and enough fun energy for the group to relax. The right café leaves everyone with a photo worth keeping.",
           "shareTitle": "I am Friends Photo Corner",
           "shareDescription": "My café persona: friends together, easy photo corner, saved memory.",
-          "reasons": [
-            "group photos",
-            "roomy corner",
-            "fun mood"
-          ],
-          "personalityTraits": [
-            "group-powered",
-            "memory-keeper",
-            "easy inviter"
-          ],
-          "bestFor": [
-            "best-friend catchups",
-            "small birthdays",
-            "weekends with a group photo"
-          ],
-          "avoidWhen": [
-            "there is no standing room",
-            "the café is too packed",
-            "lighting is messy"
-          ]
+          "reasons": ["group photos", "roomy corner", "fun mood"],
+          "personalityTraits": ["group-powered", "memory-keeper", "easy inviter"],
+          "bestFor": ["best-friend catchups", "small birthdays", "weekends with a group photo"],
+          "avoidWhen": ["there is no standing room", "the café is too packed", "lighting is messy"]
         },
         "slow-tea-time": {
           "title": "Slow Tea Time",
@@ -970,26 +798,10 @@
           "description": "You fit cafés with warm light, fragrant tea, and a pace slow enough for long conversation. Soft, close, and never too showy.",
           "shareTitle": "I am Slow Tea Time",
           "shareDescription": "My café persona: slow tea, warm light, long talks.",
-          "reasons": [
-            "fragrant tea",
-            "warm light",
-            "soft date"
-          ],
-          "personalityTraits": [
-            "subtle taste",
-            "tuned into mood",
-            "soft-space lover"
-          ],
-          "bestFor": [
-            "first dates",
-            "small anniversaries",
-            "very long talks"
-          ],
-          "avoidWhen": [
-            "tables are too close",
-            "light is harsh",
-            "it is too loud to hear"
-          ]
+          "reasons": ["fragrant tea", "warm light", "soft date"],
+          "personalityTraits": ["subtle taste", "tuned into mood", "soft-space lover"],
+          "bestFor": ["first dates", "small anniversaries", "very long talks"],
+          "avoidWhen": ["tables are too close", "light is harsh", "it is too loud to hear"]
         },
         "cafe-hopping": {
           "title": "Cafe Hopping",
@@ -997,26 +809,10 @@
           "description": "You like cafés with a distinct point of view, convenient next stops, and something new to notice. Coffee is a tiny route, not just a seat.",
           "shareTitle": "I am Cafe Hopping",
           "shareDescription": "My café persona: try somewhere new, move on, save another address.",
-          "reasons": [
-            "exploring",
-            "specialty",
-            "multi-stop plans"
-          ],
-          "personalityTraits": [
-            "curious",
-            "quick decider",
-            "novelty-seeking"
-          ],
-          "bestFor": [
-            "free weekends",
-            "new-café tours",
-            "active friend plans"
-          ],
-          "avoidWhen": [
-            "hard-to-reach spots",
-            "samey menus",
-            "nothing memorable"
-          ]
+          "reasons": ["exploring", "specialty", "multi-stop plans"],
+          "personalityTraits": ["curious", "quick decider", "novelty-seeking"],
+          "bestFor": ["free weekends", "new-café tours", "active friend plans"],
+          "avoidWhen": ["hard-to-reach spots", "samey menus", "nothing memorable"]
         },
         "quiet-reading-nook": {
           "title": "Quiet Reading Nook",
@@ -1024,26 +820,10 @@
           "description": "You fit very quiet cafés with readable light and seating comfortable enough to stay. The right room lets every page slow down.",
           "shareTitle": "I am Quiet Reading Nook",
           "shareDescription": "My café persona: open book, quiet corner, warm coffee.",
-          "reasons": [
-            "reading",
-            "quiet",
-            "private corner"
-          ],
-          "personalityTraits": [
-            "deep focus",
-            "solo-comfortable",
-            "noise-sensitive"
-          ],
-          "bestFor": [
-            "long reading",
-            "light study",
-            "journaling"
-          ],
-          "avoidWhen": [
-            "loud music",
-            "poor lighting",
-            "too much foot traffic"
-          ]
+          "reasons": ["reading", "quiet", "private corner"],
+          "personalityTraits": ["deep focus", "solo-comfortable", "noise-sensitive"],
+          "bestFor": ["long reading", "light study", "journaling"],
+          "avoidWhen": ["loud music", "poor lighting", "too much foot traffic"]
         }
       },
       "matchReasons": {
@@ -1492,6 +1272,16 @@
     "previous": "Previous photo",
     "next": "Next photo",
     "goTo": "Go to photo {index}"
+  },
+  "chains": {
+    "title": "Explore coffee chains",
+    "description": "Find coffee brands with multiple branches on Cafe Maps.",
+    "back": "Back home",
+    "allChains": "All chains",
+    "empty": "No coffee chains found.",
+    "previous": "Previous",
+    "next": "Next",
+    "branchCount": "{count} Cafe Maps branches"
   },
   "nearby": {
     "button": "Nearby",

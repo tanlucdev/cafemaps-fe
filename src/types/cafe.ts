@@ -88,6 +88,22 @@ export interface Cafe {
   viewCount?: number | null;
   createdAt?: string;
   updatedAt?: string;
+  chain?: Chain | null;
+}
+
+export interface Chain {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  descriptionEn?: string | null;
+  coverImage?: string | null;
+  branchCount: number;
+}
+
+export interface SimilarCafe {
+  cafe: Cafe;
+  matchedVibe: string;
 }
 
 export interface CafeFilter {
@@ -109,6 +125,7 @@ export interface CafeFilter {
   page?: number;
   limit?: number;
   sort?: "popular" | "rating" | "newest";
+  chainId?: string;
 }
 
 export interface CafesResponse {

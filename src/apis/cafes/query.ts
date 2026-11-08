@@ -15,6 +15,7 @@ export function buildQuery(filter?: CafeFilter, locale?: string | null): string 
   const apiLocale = normalizeCafeLocale(locale);
   params.set("locale", apiLocale);
   if (filter?.search) params.set("search", filter.search);
+  if (filter?.chainId) params.set("chainId", filter.chainId);
   const districts = serializeDistricts(filter?.districts, AREAS);
   if (districts) params.set("districts", districts);
   if (filter?.priceRange) params.set("priceRange", filter.priceRange);
@@ -44,6 +45,7 @@ export function cafeListQueryKey(filter: CafeFilter, locale: string, authScope =
     locale,
     authScope,
     filter.search ?? "",
+    filter.chainId ?? "",
     districtKey(filter.districts, AREAS),
     filter.priceRange ?? "",
     filter.openNow ?? false,
