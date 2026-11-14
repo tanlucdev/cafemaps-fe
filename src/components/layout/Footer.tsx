@@ -1,7 +1,12 @@
+"use client";
+
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getDonationSettings } from "@/apis/donation-settings";
+import donateQr from "../../../public/image/donate-qr.jpg";
 import { ArrowRight, Coffee, Globe, Heart, MapPin, Share2 } from "lucide-react";
 
 const exploreLinks = [
@@ -15,6 +20,22 @@ const exploreLinks = [
 export default function Footer() {
   const t = useTranslations("footer");
   const locale = useLocale();
+  const donate = useTranslations("donate");
+  const { data: settings, isError } = useQuery({
+    queryKey: ["donation-settings"],
+    queryFn: ({ signal }) => getDonationSettings(signal),
+    networkMode: "always",
+    staleTime: 0,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: "always",
+    refetchOnReconnect: "always",
+    retry: false,
+  });
+  const showDonation = !!settings?.enabled && !isError;
+  const donationTitle =
+    (locale === "en" ? settings?.titleEn : settings?.titleVi) || donate("title");
+  const donationDescription =
+    (locale === "en" ? settings?.descriptionEn : settings?.descriptionVi) || donate("description");
   const year = new Date().getFullYear();
   const shareUrl = `https://cafemaps.net/${locale}`;
 
@@ -63,60 +84,10 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="relative sm:hidden">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/image/logo-icon-transparent.png"
-                alt="Cafe Maps"
-                width={34}
-                height={34}
-                className="h-10 w-10 shrink-0 object-contain"
-                loading="lazy"
-              />
-              <div className="min-w-0">
-                <p className="font-display text-base font-extrabold text-[var(--foreground)]">
-                  Cafe Maps
-                </p>
-                <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-[var(--foreground-muted)]">
-                  {t("tagline")}
-                </p>
-              </div>
-            </div>
-
-            <nav className="mt-4 flex flex-wrap gap-2">
-              <FooterChip href="/">{t("exploreCafes")}</FooterChip>
-              <FooterChip href="/map">{t("map")}</FooterChip>
-              <FooterChip href="/quiz">{t("quiz")}</FooterChip>
-              <FooterChip href="/contribute">{t("contribute")}</FooterChip>
-            </nav>
-
-            <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--footer-divider)] pt-3">
-              <p className="text-[11px] leading-4 text-[var(--foreground-muted)]">
-                {t("bottomNote")}
-              </p>
-              <div className="flex shrink-0 gap-2">
-                <Link
-                  href="/"
-                  aria-label={t("websiteAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
-                >
-                  <Globe size={17} aria-hidden="true" />
-                </Link>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={t("shareAria")}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] text-[var(--footer-warm-text)] shadow-[var(--footer-icon-shadow)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
-                >
-                  <Share2 size={17} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative mx-auto hidden max-w-none gap-7 px-1 pt-6 pb-5 sm:grid lg:grid-cols-[1.2fr_0.8fr_1fr] lg:gap-8 lg:pt-7 xl:gap-10">
-            <div>
+          <div
+            className={`relative grid min-w-0 gap-6 px-1 pt-5 pb-5 sm:grid-cols-2 sm:gap-8 sm:pt-6 lg:pt-7 xl:gap-10 ${showDonation ? "xl:grid-cols-[1.1fr_0.9fr_0.9fr_1.2fr]" : "lg:grid-cols-[1.2fr_1fr_1fr]"}`}
+          >
+            <div className={`min-w-0 ${showDonation ? "" : "sm:col-span-2 lg:col-span-1"}`}>
               <Link href="/" className="group flex w-fit items-center gap-3" aria-label="Cafe Maps">
                 <Image
                   src="/image/logo-icon-transparent.png"
@@ -130,7 +101,7 @@ export default function Footer() {
                   Cafe Maps
                 </span>
               </Link>
-              <p className="mt-3 max-w-xs text-sm leading-5 text-[var(--foreground-muted)]">
+              <p className="mt-3 max-w-md text-sm leading-5 text-[var(--foreground-muted)]">
                 {t("tagline")}
               </p>
               <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-xs font-black text-[var(--footer-warm-text)] shadow-[var(--footer-brand-note-shadow)] backdrop-blur-md">
@@ -173,10 +144,36 @@ export default function Footer() {
                 </a>
               </div>
             </div>
+            {showDonation && (
+              <section aria-label={donationTitle} className="flex min-w-0 items-start gap-4">
+                <div className="min-w-0 flex-1">
+                  <h2 className="flex items-start gap-2 text-sm font-extrabold text-[var(--foreground)]">
+                    <Coffee
+                      size={16}
+                      aria-hidden="true"
+                      className="mt-0.5 shrink-0 text-[var(--accent)]"
+                    />
+                    <span className="break-words">{donationTitle}</span>
+                  </h2>
+                  <p className="mt-2 text-xs leading-5 break-words whitespace-pre-line text-[var(--foreground-muted)]">
+                    {donationDescription}
+                  </p>
+                </div>
+                <div className="shrink-0 rounded-[14px] border border-[var(--footer-control-border)] bg-white p-1 shadow-[var(--footer-icon-shadow)]">
+                  <Image
+                    src={settings?.qrImageUrl || donateQr}
+                    alt={donationTitle}
+                    width={104}
+                    height={104}
+                    className="h-[104px] w-[104px] rounded-[10px] object-contain"
+                  />
+                </div>
+              </section>
+            )}
           </div>
 
-          <div className="relative mx-auto hidden max-w-none border-t border-[var(--footer-divider)] px-1 pt-4 sm:block">
-            <div className="flex flex-col gap-2 text-xs text-[var(--foreground-muted)] sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative border-t border-[var(--footer-divider)] px-1 pt-4 md:pr-20">
+            <div className="flex flex-col gap-2 text-xs text-[var(--foreground-muted)] md:flex-row md:flex-wrap md:items-center md:justify-between">
               <p>{t("copyright", { year })}</p>
               <p className="inline-flex items-center gap-1.5 font-semibold text-[var(--footer-warm-text)]">
                 <Heart
@@ -194,22 +191,13 @@ export default function Footer() {
   );
 }
 
-function FooterChip({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex min-h-9 items-center rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 text-xs font-bold text-[var(--footer-warm-text)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
-    >
-      {children}
-    </Link>
-  );
-}
-
 function FooterNav({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
       <h3 className="text-sm font-extrabold text-[var(--foreground)]">{title}</h3>
-      <nav className="mt-2.5 grid grid-cols-2 gap-x-6 gap-y-2">{children}</nav>
+      <nav aria-label={title} className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
+        {children}
+      </nav>
     </div>
   );
 }
@@ -218,7 +206,7 @@ function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className="w-fit text-sm font-medium text-[var(--foreground-muted)] underline-offset-4 transition hover:translate-x-0.5 hover:text-[var(--accent-hover)] hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none"
+      className="inline-flex min-h-10 w-fit items-center text-sm font-medium text-[var(--foreground-muted)] underline-offset-4 transition hover:translate-x-0.5 hover:text-[var(--accent-hover)] hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-focus-offset)] focus-visible:outline-none sm:min-h-0"
     >
       {children}
     </Link>
