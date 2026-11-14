@@ -5,6 +5,7 @@ import { Check, Coffee, ExternalLink, MapPinned } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Cafe } from "@/types/cafe";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { cn } from "@/lib/utils";
 
 export function MapPanel({
@@ -30,25 +31,25 @@ export function MapPanel({
     <div>
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-black tracking-[0.12em] text-[#a86d1e] uppercase">
+          <p className="text-xs font-black tracking-[0.12em] text-[var(--accent)] uppercase">
             {t("eyebrow")}
           </p>
-          <h1 className="text-xl font-black text-[#2c1a0e]">
+          <h1 className="text-xl font-black text-[var(--foreground)]">
             {t("visitedTitle", { count: visitedIds.size })}
           </h1>
         </div>
-        <div className="rounded-full bg-[#fff0d2] px-3 py-1 text-xs font-black text-[#875200]">
+        <div className="rounded-full bg-[var(--accent-light)] px-3 py-1 text-xs font-black text-[var(--accent)]">
           {cafes.length}
         </div>
       </div>
       {cafes.length === 0 && (
-        <div className="grid min-h-[220px] place-items-center rounded-2xl border border-dashed border-[#d9bf99] bg-white/60 px-5 py-8 text-center">
+        <div className="grid min-h-[220px] place-items-center rounded-2xl border border-dashed border-[var(--border)] bg-[var(--card)] px-5 py-8 text-center">
           <div>
-            <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-[#fff0d2] text-[#875200]">
+            <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-[var(--accent-light)] text-[var(--accent)]">
               <MapPinned size={22} />
             </div>
-            <p className="font-black text-[#2c1a0e]">{t("emptyTitle")}</p>
-            <p className="mt-1 text-sm leading-6 text-[#8c6d4f]">{t("emptySubtitle")}</p>
+            <p className="font-black text-[var(--foreground)]">{t("emptyTitle")}</p>
+            <p className="mt-1 text-sm leading-6 text-[var(--foreground-muted)]">{t("emptySubtitle")}</p>
           </div>
         </div>
       )}
@@ -70,14 +71,14 @@ export function MapPanel({
                 if (e.key === "Enter" || e.key === " ") onSelect(cafe.id);
               }}
               className={cn(
-                "flex min-h-[92px] w-full cursor-pointer gap-3 rounded-2xl border bg-white p-2 text-left shadow-sm transition",
-                selectedId === cafe.id ? "border-[#c8842a]" : "border-[#ead8bf]",
+                "flex min-h-[92px] w-full cursor-pointer gap-3 rounded-2xl border bg-[var(--card)] p-2 text-left shadow-[var(--shadow-sm)] transition",
+                selectedId === cafe.id ? "border-[var(--accent)]" : "border-[var(--border)]",
               )}
             >
-              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f5edd8]">
+              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--background-secondary)]">
                 {cafe.coverImage || cafe.images[0] ? (
                   <Image
-                    src={cafe.coverImage ?? cafe.images[0]}
+                    src={cloudinaryImageUrl(cafe.coverImage ?? cafe.images[0], "thumb")}
                     alt=""
                     width={76}
                     height={76}
@@ -87,19 +88,21 @@ export function MapPanel({
                     style={{ objectPosition: coverObjectPosition(cafe) }}
                   />
                 ) : (
-                  <Coffee size={22} className="text-[#875200]" />
+                  <Coffee size={22} className="text-[var(--accent)]" />
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-[#2c1a0e]">{cafe.name}</p>
-                <p className="mt-1 truncate text-xs font-semibold text-[#8c6d4f]">
+                <p className="truncate text-sm font-black text-[var(--foreground)]">{cafe.name}</p>
+                <p className="mt-1 truncate text-xs font-semibold text-[var(--foreground-muted)]">
                   {cafe.district ?? t("unknownDistrict")}
                 </p>
                 <div className="mt-2 flex items-center gap-2">
                   <span
                     className={cn(
                       "inline-flex h-7 items-center gap-1 rounded-full px-2 text-xs font-black",
-                      visited ? "bg-[#fff0d2] text-[#875200]" : "bg-[#eee6dc] text-[#746556]",
+                      visited
+                        ? "bg-[var(--accent-light)] text-[var(--accent)]"
+                        : "bg-[var(--background-secondary)] text-[var(--foreground-muted)]",
                     )}
                   >
                     {visited ? <Check size={13} /> : <MapPinned size={13} />}
@@ -111,14 +114,14 @@ export function MapPanel({
                       e.stopPropagation();
                       onToggle(cafe);
                     }}
-                    className="inline-flex h-7 cursor-pointer items-center rounded-full bg-[#875200] px-2 text-xs font-black text-white"
+                    className="inline-flex h-7 cursor-pointer items-center rounded-full bg-[var(--accent)] px-2 text-xs font-black text-[var(--accent-foreground)]"
                   >
                     {busyId === cafe.id ? "..." : visited ? t("unmark") : t("mark")}
                   </button>
                   <a
                     onClick={(e) => e.stopPropagation()}
                     href={`./cafe/${cafe.slug}`}
-                    className="ml-auto inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#ead8bf] text-[#875200]"
+                    className="ml-auto inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)]"
                   >
                     <ExternalLink size={13} />
                   </a>

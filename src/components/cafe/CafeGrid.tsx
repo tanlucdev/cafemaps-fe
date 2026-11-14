@@ -1,6 +1,7 @@
 "use client";
 
 import CafeCard from "./CafeCard";
+import LockedCafeCard from "./LockedCafeCard";
 import { CafeCardSkeleton } from "@/components/ui/Skeleton";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -13,6 +14,8 @@ interface CafeGridProps {
   desktopColumns?: "two" | "three";
   variant?: "default" | "cinematic";
   eagerFirstImage?: boolean;
+  mobileCompact?: boolean;
+  teaserSlots?: number;
 }
 
 export default function CafeGrid({
@@ -23,20 +26,28 @@ export default function CafeGrid({
   desktopColumns = "three",
   variant = "default",
   eagerFirstImage = false,
+  mobileCompact = false,
+  teaserSlots = 0,
 }: CafeGridProps) {
   const t = useTranslations("search");
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div
+        className={
+          mobileCompact
+            ? "grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-6 xl:grid-cols-3"
+            : "grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+        }
+      >
         {Array.from({ length: 8 }).map((_, i) => (
-          <CafeCardSkeleton key={i} />
+          <CafeCardSkeleton key={i} mobileCompact={mobileCompact} />
         ))}
       </div>
     );
   }
 
-  if (cafes.length === 0) {
+  if (cafes.length === 0 && teaserSlots === 0) {
     return (
       <div className="py-20 text-center">
         <p className="mb-3 text-4xl">☕</p>
@@ -48,7 +59,9 @@ export default function CafeGrid({
   return (
     <div
       className={[
-        "grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8",
+        mobileCompact
+          ? "grid w-full items-stretch grid-cols-2 gap-2 md:grid-cols-2 md:gap-6 lg:gap-8"
+          : "grid w-full items-stretch grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8",
         desktopColumns === "two" ? "xl:grid-cols-2" : "xl:grid-cols-3",
       ].join(" ")}
     >
@@ -61,6 +74,15 @@ export default function CafeGrid({
           animationType={animationType}
           variant={variant}
           imageEager={eagerFirstImage && i === 0}
+          mobileCompact={mobileCompact}
+        />
+      ))}
+      {Array.from({ length: teaserSlots }, (_, i) => (
+        <LockedCafeCard
+          key={`locked-${i}`}
+          locale={locale}
+          index={cafes.length + i}
+          mobileCompact={mobileCompact}
         />
       ))}
     </div>

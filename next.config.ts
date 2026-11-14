@@ -1,13 +1,19 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const DEFAULT_BACKEND_URL = "https://cafe-finder-be.onrender.com/api";
 const API_URL = process.env.API_URL ?? DEFAULT_BACKEND_URL;
+const PROJECT_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: PROJECT_ROOT,
+  experimental: {
+    proxyClientMaxBodySize: "42mb",
+  },
   async redirects() {
     return [
       {
@@ -96,6 +102,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "img.cafemaps.net",
+      },
+      {
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
     ],
@@ -115,6 +125,8 @@ const nextConfig: NextConfig = {
     "192.168.2.225",
     "192.168.2.94",
     "192.168.1.18",
+    "10.0.10.182",
+    "172.19.144.135",
   ],
 };
 

@@ -30,9 +30,9 @@ export default function FeaturedSectionToolbar({
   onViewModeChange,
 }: FeaturedSectionToolbarProps) {
   return (
-    <div className="mb-5 flex flex-nowrap items-center justify-between gap-2 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:gap-4 sm:rounded-[22px] sm:px-4 sm:py-3">
+    <div className="mb-5 flex flex-nowrap items-center justify-between gap-2 rounded-[20px] border border-[var(--border)] bg-[var(--surface)]/88 px-3 py-2.5 shadow-[var(--shadow-sm)] backdrop-blur-md sm:gap-4 sm:rounded-[22px] sm:px-4 sm:py-3">
       <p
-        className="min-w-[8rem] flex-1 truncate text-xs leading-tight font-medium text-[var(--foreground-muted)] sm:min-w-[12rem] sm:text-sm"
+        className="min-w-0 flex-1 truncate text-[11px] leading-tight font-medium text-[var(--foreground-muted)] min-[390px]:text-xs sm:min-w-[12rem] sm:text-sm"
         aria-live="polite"
       >
         <strong className="text-[var(--foreground)]">{loading ? ts("resultsLoading") : ts("results", { count: total })}</strong>
@@ -40,7 +40,7 @@ export default function FeaturedSectionToolbar({
       <div className="ml-auto flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3">
         <Select value={sortMode} onValueChange={(v) => v && onSortChange(v as SearchSort)}>
           <SelectTrigger
-            className="h-9 w-[132px] rounded-full border border-[#e8cfa9] bg-white/86 px-2.5 text-[13px] font-bold text-[var(--foreground-muted)] shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/18 focus:ring-offset-0 focus:outline-none sm:h-10 sm:w-[168px] sm:px-3 dark:bg-[var(--card)]"
+            className="h-9 w-[116px] rounded-full border border-[var(--border)] bg-[var(--surface-raised)]/90 px-2.5 text-[12px] font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md focus:border-[#8f5a16] focus:shadow-none focus:ring-0 focus:outline-none min-[390px]:w-[132px] min-[390px]:text-[13px] sm:h-10 sm:w-[168px] sm:px-3"
             aria-label={ts("sortLabel")}
           >
             <span className="min-w-0 truncate">{sortLabel}</span>
@@ -49,13 +49,13 @@ export default function FeaturedSectionToolbar({
             sideOffset={6}
             align="end"
             alignItemWithTrigger={false}
-            className="min-w-[224px] rounded-[18px] border border-[#e8cfa9] bg-[#fffaf2]/96 p-1 text-[#2f2116] shadow-[0_18px_48px_rgba(44,26,14,0.14)] ring-0 backdrop-blur-xl"
+            className="min-w-[224px] rounded-[18px] border border-[var(--border)] bg-[var(--surface-raised)]/96 p-1 text-[var(--foreground)] shadow-[var(--shadow-warm)] ring-0 backdrop-blur-xl"
           >
             {(["popular", "rating", "newest"] as const).map((value) => (
               <SelectItem
                 key={value}
                 value={value}
-                className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-white data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-white"
+                className="min-h-10 rounded-[13px] px-3.5 py-2 text-sm font-semibold focus:bg-[var(--accent)] focus:text-[var(--accent-foreground)] data-[highlighted]:bg-[var(--accent)] data-[highlighted]:text-[var(--accent-foreground)]"
               >
                 {ts(value === "popular" ? "sortPopular" : value === "rating" ? "sortRating" : "sortNewest")}
               </SelectItem>
@@ -64,7 +64,7 @@ export default function FeaturedSectionToolbar({
         </Select>
         <motion.div
           layout
-          className="relative isolate flex items-center gap-1 rounded-full border border-[#e8cfa9] bg-white/82 p-1 shadow-[0_10px_22px_rgba(44,26,14,0.07)] backdrop-blur-md dark:bg-[var(--card)]"
+          className="relative isolate flex items-center gap-0.5 rounded-full border border-[var(--border)] bg-[var(--surface-raised)]/90 p-0.5 shadow-[var(--shadow-sm)] backdrop-blur-md min-[390px]:gap-1 min-[390px]:p-1"
         >
           {(["grid", "list"] as const).map((mode) => {
             const active = viewMode === mode
@@ -76,7 +76,7 @@ export default function FeaturedSectionToolbar({
                 onClick={() => onViewModeChange(mode)}
                 whileHover={reduceMotion ? undefined : { y: -1, scale: 1.04 }}
                 whileTap={reduceMotion ? undefined : { scale: 0.92 }}
-                className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:h-9 sm:w-9 ${active ? `${reduceMotion ? "bg-[var(--accent)] shadow-[0_8px_18px_rgba(200,132,42,0.22)]" : ""} text-white` : "text-[#8b735d] hover:bg-[#f6ead8] hover:text-[var(--foreground)]"}`}
+                className={`relative z-10 flex size-8 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] sm:size-9 ${active ? `${reduceMotion ? "bg-[var(--accent)] shadow-[var(--shadow-sm)]" : ""} text-[var(--accent-foreground)]` : "text-[var(--foreground-muted)] hover:bg-[var(--accent-light)] hover:text-[var(--foreground)]"}`}
                 aria-label={`${mode === "grid" ? "Grid" : "List"} view`}
                 aria-pressed={active}
                 title={`${mode === "grid" ? "Grid" : "List"} view`}

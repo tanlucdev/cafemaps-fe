@@ -9,8 +9,9 @@ export interface StagedFilter {
   purposes: Purpose[];
   tags: FilterTag[];
   price: string | undefined;
+  radiusKm?: number;
+  hours: Filter["hours"];
 }
-
 function toggleInArray<T>(items: T[], item: T) {
   return items.includes(item) ? items.filter((x) => x !== item) : [...items, item];
 }
@@ -23,23 +24,33 @@ interface UseGuidedFilterReturn {
   closeDropdown: () => void;
   toggleDropdown: () => void;
 
-  // Staged state (for dropdown panel only)
+  // Mobile sheet state
+  mobileSheetOpen: boolean;
+  isMobile: boolean;
+  openMobileSheet: () => void;
+  closeMobileSheet: () => void;
+
+  // Staged state shared by desktop dropdown and mobile sheet
   staged: StagedFilter;
   toggleVibeStaged: (v: Vibe) => void;
   togglePurposeStaged: (p: Purpose) => void;
   toggleTagStaged: (tag: FilterTag) => void;
   setPriceStaged: (val: string) => void;
-  applyStaged: () => void;
+  setHoursStaged: (hours: Filter["hours"]) => void;
+  setDistanceStaged: (km: number) => void;
+  clearStaged: () => void;
+  applyDropdown: () => void;
+  applyMobileSheet: () => void;
 
   // Instant handlers (quick chips — write directly to committed filter)
   toggleVibeInstant: (v: Vibe) => void;
   toggleOpenNow: () => void;
-  setDistrict: (val: string) => void;
   setDistance: (km: number) => void;
   clearAll: () => void;
 
   // Derived
   activeCount: number;
+  mobileAdvancedCount: number;
 
   // Refs for click-outside detection
   dropdownRef: React.RefObject<HTMLDivElement | null>;
@@ -53,11 +64,15 @@ export function useGuidedFilter(
 ): UseGuidedFilterReturn {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownMounted, setDropdownMounted] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [staged, setStaged] = useState<StagedFilter>({
     vibes: [],
     purposes: [],
     tags: [],
     price: undefined,
+    radiusKm: undefined,
+    hours: undefined,
   });
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,18 +80,31 @@ export function useGuidedFilter(
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
   const extraVibeBtnRef = useRef<HTMLButtonElement>(null);
 
-  const openDropdown = useCallback(() => {
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    // Snapshot current committed filter into staged state
+  const snapshotStaged = useCallback(() => {
     setStaged({
       vibes: (filter.vibes ?? []) as Vibe[],
       purposes: (filter.purposes ?? []) as Purpose[],
       tags: (filter.tags ?? []) as FilterTag[],
       price: filter.priceRange,
+      radiusKm: filter.radiusKm,
+      hours: filter.hours,
     });
+  }, [filter]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  const openDropdown = useCallback(() => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    snapshotStaged();
     setDropdownMounted(true);
     requestAnimationFrame(() => setDropdownOpen(true));
-  }, [filter]);
+  }, [snapshotStaged]);
 
   const closeDropdown = useCallback(() => {
     setDropdownOpen(false);
@@ -87,6 +115,21 @@ export function useGuidedFilter(
     if (dropdownMounted && dropdownOpen) closeDropdown();
     else openDropdown();
   }, [dropdownMounted, dropdownOpen, closeDropdown, openDropdown]);
+
+  const openMobileSheet = useCallback(() => {
+    if (!isMobile) return;
+    snapshotStaged();
+    setMobileSheetOpen(true);
+  }, [isMobile, snapshotStaged]);
+
+  const closeMobileSheet = useCallback(() => {
+    setMobileSheetOpen(false);
+    snapshotStaged();
+  }, [snapshotStaged]);
+
+  useEffect(() => {
+    if (!isMobile && mobileSheetOpen) closeMobileSheet();
+  }, [isMobile, mobileSheetOpen, closeMobileSheet]);
 
   useEffect(() => {
     if (!dropdownMounted) return;
@@ -132,16 +175,42 @@ export function useGuidedFilter(
     }));
   }, []);
 
-  const applyStaged = useCallback(() => {
+  const setHoursStaged = useCallback((hours: Filter["hours"]) => {
+    setStaged((prev) => ({ ...prev, hours: prev.hours === hours ? undefined : hours }));
+  }, []);
+
+  const setDistanceStaged = useCallback((km: number) => {
+    setStaged((prev) => ({ ...prev, radiusKm: km }));
+  }, []);
+
+  const clearStaged = useCallback(() => {
+    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined, hours: undefined });
+  }, []);
+
+  const applyDropdown = useCallback(() => {
     onChange({
       ...filter,
       vibes: staged.vibes.length > 0 ? staged.vibes : undefined,
       purposes: staged.purposes.length > 0 ? staged.purposes : undefined,
       tags: staged.tags.length > 0 ? staged.tags : undefined,
       priceRange: staged.price,
+      hours: staged.hours,
     });
     closeDropdown();
   }, [filter, staged, onChange, closeDropdown]);
+
+  const applyMobileSheet = useCallback(() => {
+    onChange({
+      ...filter,
+      vibes: staged.vibes.length > 0 ? staged.vibes : undefined,
+      purposes: staged.purposes.length > 0 ? staged.purposes : undefined,
+      tags: staged.tags.length > 0 ? staged.tags : undefined,
+      priceRange: staged.price,
+      radiusKm: staged.radiusKm,
+      hours: staged.hours,
+    });
+    setMobileSheetOpen(false);
+  }, [filter, staged, onChange]);
 
   const toggleVibeInstant = useCallback(
     (v: Vibe) => {
@@ -156,13 +225,6 @@ export function useGuidedFilter(
     onChange({ ...filter, openNow: !filter.openNow });
   }, [filter, onChange]);
 
-  const setDistrict = useCallback(
-    (val: string) => {
-      onChange({ ...filter, district: val === "" ? undefined : val });
-    },
-    [filter, onChange],
-  );
-
   const setDistance = useCallback(
     (km: number) => {
       onChange({ ...filter, radiusKm: km });
@@ -172,6 +234,8 @@ export function useGuidedFilter(
 
   const clearAll = useCallback(() => {
     onChange({});
+    setStaged({ vibes: [], purposes: [], tags: [], price: undefined, radiusKm: undefined, hours: undefined });
+    setMobileSheetOpen(false);
   }, [onChange]);
 
   const activeCount =
@@ -179,7 +243,16 @@ export function useGuidedFilter(
     (filter.purposes?.length ?? 0) +
     (filter.tags?.length ?? 0) +
     (filter.priceRange != null ? 1 : 0) +
-    (filter.openNow ? 1 : 0);
+    (filter.openNow ? 1 : 0) +
+    (filter.hours ? 1 : 0);
+
+  const mobileAdvancedCount =
+    (filter.vibes?.length ?? 0) +
+    (filter.purposes?.length ?? 0) +
+    (filter.tags?.length ?? 0) +
+    (filter.priceRange != null ? 1 : 0) +
+    (filter.hours ? 1 : 0) +
+    (filter.nearMe && filter.radiusKm != null && filter.radiusKm !== 2 ? 1 : 0);
 
   return {
     dropdownOpen,
@@ -187,18 +260,26 @@ export function useGuidedFilter(
     openDropdown,
     closeDropdown,
     toggleDropdown,
+    mobileSheetOpen,
+    isMobile,
+    openMobileSheet,
+    closeMobileSheet,
     staged,
     toggleVibeStaged,
     togglePurposeStaged,
     toggleTagStaged,
     setPriceStaged,
-    applyStaged,
+    setHoursStaged,
+    setDistanceStaged,
+    clearStaged,
+    applyDropdown,
+    applyMobileSheet,
     toggleVibeInstant,
     toggleOpenNow,
-    setDistrict,
     setDistance,
     clearAll,
     activeCount,
+    mobileAdvancedCount,
     dropdownRef,
     toggleBtnRef,
     extraVibeBtnRef,

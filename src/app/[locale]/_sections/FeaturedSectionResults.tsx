@@ -1,28 +1,33 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion } from "framer-motion"
-import { Coffee, LoaderCircle } from "lucide-react"
-import CafeList from "@/components/cafe/CafeList"
-import CafeGrid from "@/components/cafe/CafeGrid"
-import Pagination from "@/components/ui/Pagination"
-import { CafeCardSkeleton, Skeleton } from "@/components/ui/Skeleton"
-import type { Cafe } from "@/types/cafe"
-import type { ViewMode } from "./featured-section-helpers"
+import { AnimatePresence, motion } from "framer-motion";
+import { Coffee, LoaderCircle } from "lucide-react";
+import CafeList from "@/components/cafe/CafeList";
+import CafeGrid from "@/components/cafe/CafeGrid";
+import Pagination from "@/components/ui/Pagination";
+import { CafeCardSkeleton, Skeleton } from "@/components/ui/Skeleton";
+import type { Cafe } from "@/types/cafe";
+import type { ViewMode } from "./featured-section-helpers";
 
 interface FeaturedSectionResultsProps {
-  animationType: "slide" | "fade"
-  dataError: boolean
-  dataLoading: boolean
-  locale: string
-  page: number
-  paginated: Cafe[]
-  reduceMotion: boolean | null
-  canAnimate: boolean
-  total: number
-  ts: (key: string) => string
-  viewMode: ViewMode
-  onPageChange: (page: number) => void
-  onRetry: () => void
+  animationType: "slide" | "fade";
+  dataError: boolean;
+  dataLoading: boolean;
+  locale: string;
+  page: number;
+  pageSize: number;
+  paginated: Cafe[];
+  paginationTotal: number;
+  maxAccessiblePage?: number;
+  teaserSlots: number;
+  reduceMotion: boolean | null;
+  canAnimate: boolean;
+  serverBacked: boolean;
+  total: number;
+  ts: (key: string) => string;
+  viewMode: ViewMode;
+  onPageChange: (page: number) => void;
+  onRetry: () => void;
 }
 
 export default function FeaturedSectionResults({
@@ -31,16 +36,21 @@ export default function FeaturedSectionResults({
   dataLoading,
   locale,
   page,
+  pageSize,
   paginated,
+  paginationTotal,
+  maxAccessiblePage,
+  teaserSlots,
   reduceMotion,
   canAnimate,
+  serverBacked,
   total,
   ts,
   viewMode,
   onPageChange,
   onRetry,
 }: FeaturedSectionResultsProps) {
-  const direction = viewMode === "grid" ? -1 : 1
+  const direction = viewMode === "grid" ? -1 : 1;
   const panelVariants = {
     enter: (dir: number) => ({
       opacity: animationType === "fade" ? 0.86 : 0.55,
@@ -55,11 +65,11 @@ export default function FeaturedSectionResults({
       y: animationType === "fade" ? -4 : -6,
       scale: animationType === "fade" ? 1 : 0.994,
     }),
-  }
+  };
 
-  if (dataError) {
+  if (dataError || (serverBacked && total > 0 && paginated.length === 0 && teaserSlots === 0)) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
         <p className="text-base font-medium text-[var(--foreground-muted)]">
           {locale === "vi" ? "Không tải được danh sách quán." : "Could not load cafes."}
@@ -67,25 +77,25 @@ export default function FeaturedSectionResults({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)]"
+          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
         >
           {locale === "vi" ? "Thử lại" : "Retry"}
         </button>
       </div>
-    )
+    );
   }
 
-  if (dataLoading) return <CafeFilteringLoader viewMode={viewMode} />
+  if (dataLoading) return <CafeFilteringLoader viewMode={viewMode} />;
 
-  if (total === 0) {
+  if (total === 0 && (!serverBacked || teaserSlots === 0)) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[#fffaf2]/78 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
         <Coffee size={40} className="text-[var(--accent)]/60" />
         <p className="text-base font-medium text-[var(--foreground-muted)]">
           {ts("noResultsMessage")}
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -98,9 +108,7 @@ export default function FeaturedSectionResults({
         animate="center"
         exit={reduceMotion ? { opacity: 0 } : "exit"}
         className="will-change-transform"
-        transition={
-          reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] }
-        }
+        transition={reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
       >
         {viewMode === "grid" ? (
           <CafeGrid
@@ -109,27 +117,40 @@ export default function FeaturedSectionResults({
             animationType={animationType}
             desktopColumns="three"
             eagerFirstImage
+            mobileCompact
+            teaserSlots={teaserSlots}
           />
         ) : (
-          <CafeList cafes={paginated} locale={locale} animationType={animationType} eagerFirstImage />
+          <CafeList
+            cafes={paginated}
+            locale={locale}
+            animationType={animationType}
+            eagerFirstImage
+            teaserSlots={teaserSlots}
+          />
         )}
 
-        <Pagination page={page} total={total} limit={9} onPageChange={onPageChange} />
+        <Pagination
+          page={page}
+          total={paginationTotal}
+          limit={pageSize}
+          maxAccessiblePage={maxAccessiblePage}
+          onPageChange={onPageChange}
+        />
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
 
 function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="flex w-full flex-col gap-5"
-    >
+    <div role="status" aria-live="polite" className="flex w-full flex-col gap-5">
       <div className="flex items-center gap-3">
         <div className="relative flex size-14 items-center justify-center">
-          <LoaderCircle className="absolute size-14 animate-spin text-[var(--accent)]" aria-hidden="true" />
+          <LoaderCircle
+            className="absolute size-14 animate-spin text-[var(--accent)]"
+            aria-hidden="true"
+          />
           <Coffee className="size-6 text-[var(--accent)]" aria-hidden="true" />
         </div>
         <div className="space-y-2">
@@ -138,9 +159,9 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
         </div>
       </div>
       {viewMode === "grid" ? (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-6 lg:gap-8 xl:grid-cols-3">
           {Array.from({ length: 9 }).map((_, index) => (
-            <CafeCardSkeleton key={index} />
+            <CafeCardSkeleton key={index} mobileCompact />
           ))}
         </div>
       ) : (
@@ -148,7 +169,7 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="flex min-h-[140px] overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210]"
+              className="flex min-h-[140px] overflow-hidden rounded-2xl bg-[var(--surface)] shadow-[var(--shadow-sm)]"
             >
               <Skeleton className="w-32 shrink-0 rounded-none sm:w-44" />
               <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
@@ -164,5 +185,5 @@ function CafeFilteringLoader({ viewMode }: { viewMode: ViewMode }) {
         </div>
       )}
     </div>
-  )
+  );
 }

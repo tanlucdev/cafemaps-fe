@@ -3,7 +3,7 @@ import type { QuizHistoryResult } from "@/apis/quiz";
 import type { CafeSubmission } from "@/apis/submissions";
 import type { ProfileReview } from "@/types/review";
 
-export type ProfileTab = "saved" | "quiz" | "submitted" | "reviews";
+export type ProfileTab = "saved" | "recently-viewed" | "quiz" | "submitted" | "reviews";
 
 export interface ProfileStat {
   label: string;

@@ -8,11 +8,13 @@ import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import SaveButton from "@/components/cafe/SaveButton";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
+import LockedCafeCard from "@/components/cafe/LockedCafeCard";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { formatPrice, cn } from "@/lib/utils";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { ratingFor, VIBE_TAG_CLASSES, type CafeListProps } from "@/components/cafe/shared";
 import type { Cafe } from "@/types/cafe";
 import { useTranslations } from "next-intl";
@@ -63,7 +65,9 @@ function CafeListRow({
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={revealTransition}
-      whileHover={!reduceMotion ? { y: isCinematic ? -3 : -2, scale: isCinematic ? 1.005 : 1 } : undefined}
+      whileHover={
+        !reduceMotion ? { y: isCinematic ? -3 : -2, scale: isCinematic ? 1.005 : 1 } : undefined
+      }
       className={cn(
         "group relative flex min-h-[140px] overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
@@ -85,7 +89,7 @@ function CafeListRow({
         >
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 128px, 176px"
@@ -129,7 +133,6 @@ function CafeListRow({
               {price}
             </span>
           )}
-
         </div>
 
         {/* Content */}
@@ -245,7 +248,6 @@ function CafeListRow({
             : "border-[#E0D3C0] bg-white text-[#875200] hover:bg-[#FBF0DC] dark:border-[#3A2A20] dark:bg-[#1C1210] dark:text-[#E0A14B]",
         )}
       />
-
     </motion.article>
   );
 }
@@ -256,10 +258,11 @@ export default function CafeList({
   animationType = "slide",
   variant = "default",
   eagerFirstImage = false,
+  teaserSlots = 0,
 }: CafeListProps) {
   const t = useTranslations("search");
 
-  if (cafes.length === 0) {
+  if (cafes.length === 0 && teaserSlots === 0) {
     return (
       <div className="py-16 text-center text-sm text-[#847465] dark:text-[#A08070]">
         {t("noResults")}
@@ -278,6 +281,14 @@ export default function CafeList({
           animationType={animationType}
           variant={variant}
           imageEager={eagerFirstImage && index === 0}
+        />
+      ))}
+      {Array.from({ length: teaserSlots }, (_, index) => (
+        <LockedCafeCard
+          key={`locked-${index}`}
+          locale={locale}
+          variant="list"
+          index={cafes.length + index}
         />
       ))}
     </div>

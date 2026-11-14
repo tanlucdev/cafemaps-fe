@@ -9,6 +9,7 @@ import { getQuizMatchCafes } from "@/apis/cafes";
 import { Link } from "@/i18n/navigation";
 import { formatCafeArea } from "@/lib/cafe-labels";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { rankCafesForQuiz } from "@/lib/quiz/scoring";
 import { formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
@@ -104,7 +105,7 @@ function CafeRecommendationCard({
       <div className="relative aspect-[4/3] bg-[var(--background-secondary)]">
         {cafe.coverImage || cafe.images[0] ? (
           <Image
-            src={cafe.coverImage ?? cafe.images[0]}
+            src={cloudinaryImageUrl(cafe.coverImage ?? cafe.images[0], "card")}
             alt={cafe.name}
             fill
             sizes="(min-width: 1024px) 360px, 50vw"

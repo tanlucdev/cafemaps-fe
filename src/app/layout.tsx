@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import {
@@ -13,6 +14,7 @@ import {
 } from "@/lib/metadata";
 import GoogleAnalyticsProvider from "@/components/providers/GoogleAnalyticsProvider";
 import SpeedInsightsProvider from "@/components/providers/SpeedInsightsProvider";
+import { themeBootstrap } from "@/components/providers/theme";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -99,6 +101,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={cn("h-full", plusJakarta.variable, lora.variable)}
     >
       <body className="flex min-h-full flex-col antialiased" suppressHydrationWarning>
+        <Script id="theme-bootstrap" strategy="beforeInteractive">
+          {themeBootstrap}
+        </Script>
         {children}
         <GoogleAnalyticsProvider />
         <Analytics />

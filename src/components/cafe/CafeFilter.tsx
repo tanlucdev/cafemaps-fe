@@ -81,8 +81,8 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
   }
 
   function handleAreaChange(val: string | null) {
-    const district = val === "" || val == null ? undefined : val;
-    setStaged((s) => ({ ...s, district }));
+    const districts = val === "" || val == null ? undefined : [val];
+    setStaged((s) => ({ ...s, districts }));
   }
 
   function handleApply() {
@@ -185,11 +185,36 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
                   active
-                    ? "bg-accent border-accent text-white"
+                    ? "bg-accent border-accent text-[var(--accent-foreground)]"
                     : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
                 )}
               >
                 {t(`priceRanges.${opt.translationKey}`)}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
+          {t("openingHours")}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {(["open_at_7", "open_24h"] as const).map((hours) => {
+            const active = staged.hours === hours;
+            return (
+              <button
+                key={hours}
+                onClick={() => setStaged((s) => ({ ...s, hours: active ? undefined : hours }))}
+                className={cn(
+                  "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150",
+                  active
+                    ? "bg-accent border-accent text-[var(--accent-foreground)]"
+                    : "border-border hover:border-accent hover:text-accent text-(--foreground-muted)",
+                )}
+              >
+                {t(hours === "open_at_7" ? "openFromSeven" : "open24Hours")}
               </button>
             );
           })}
@@ -201,7 +226,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-(--foreground-muted) uppercase">
           KHU VỰC
         </h3>
-        <Select value={staged.district ?? ""} onValueChange={handleAreaChange}>
+        <Select value={staged.districts?.[0] ?? ""} onValueChange={handleAreaChange}>
           <SelectTrigger className="h-10 w-full rounded-xl text-sm">
             <SelectValue placeholder="Tất cả khu vực" />
           </SelectTrigger>
@@ -219,7 +244,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
       {/* Apply button */}
       <button
         onClick={handleApply}
-        className="bg-accent hover:bg-(--accent-hover) mt-2 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold text-white transition-all active:scale-95"
+        className="bg-accent hover:bg-(--accent-hover) mt-2 w-full cursor-pointer rounded-xl py-2.5 text-sm font-semibold text-[var(--accent-foreground)] transition-all active:scale-95"
       >
         {t("apply")}
       </button>

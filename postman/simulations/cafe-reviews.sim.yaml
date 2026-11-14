@@ -1,0 +1,5 @@
+simulation: cafe-reviews
+routing: path
+mocks:
+  - routeKey: reviews
+    path: ../mocks/cafe-reviews/default.js

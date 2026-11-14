@@ -2,22 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import type { Vibe, Purpose } from "@/types/cafe";
-import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
-import {
-  VIBES,
-  PURPOSES,
-  PRICE_OPTIONS,
-  VIBE_ICONS,
-  PURPOSE_ICONS,
-  FILTER_TAGS,
-  TAG_ICONS,
-  VIBE_TRANSLATION_KEYS,
-  PURPOSE_TRANSLATION_KEYS,
-  TAG_TRANSLATION_KEYS,
-  type FilterTag,
-} from "@/components/cafe/constants/filter-constants";
+import { FilterOptionGroups } from "@/components/cafe/GuidedFilterBar/FilterOptionGroups";
+import type { Vibe, Purpose } from "@/types/cafe";
+import type { FilterTag } from "@/components/cafe/constants/filter-constants";
+import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
@@ -27,10 +16,10 @@ interface FilterDropdownPanelProps {
   onTogglePurposeStaged: (p: Purpose) => void;
   onToggleTagStaged: (tag: FilterTag) => void;
   onSetPriceStaged: (val: string) => void;
+  onSetHoursStaged: (hours: StagedFilter["hours"]) => void;
   onApply: () => void;
   onClearAll: () => void;
 }
-
 export function FilterDropdownPanel({
   staged,
   dropdownOpen,
@@ -39,6 +28,7 @@ export function FilterDropdownPanel({
   onTogglePurposeStaged,
   onToggleTagStaged,
   onSetPriceStaged,
+  onSetHoursStaged,
   onApply,
   onClearAll,
 }: FilterDropdownPanelProps) {
@@ -48,7 +38,9 @@ export function FilterDropdownPanel({
     staged.vibes.length +
     staged.purposes.length +
     staged.tags.length +
-    (staged.price != null ? 1 : 0);
+    (staged.price != null ? 1 : 0) +
+    (staged.hours ? 1 : 0);
+  const tg = useTranslations("guidedFilter");
 
   return (
     <div
@@ -58,76 +50,32 @@ export function FilterDropdownPanel({
         dropdownOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
-      <div className="rounded-[24px] border border-[var(--border)] bg-[#fffaf2]/96 shadow-[0_20px_56px_rgba(44,26,14,0.14)] backdrop-blur-xl dark:bg-[var(--card)]">
+      <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-raised)]/96 shadow-[var(--shadow-warm)] backdrop-blur-xl">
         <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
+          <FilterOptionGroups
+            staged={staged}
+            onToggleVibe={onToggleVibeStaged}
+            onTogglePurpose={onTogglePurposeStaged}
+            onToggleTag={onToggleTagStaged}
+            onSetPrice={onSetPriceStaged}
+          />
           <div>
             <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("vibe")}
+              {tf("openingHours")}
             </p>
             <div className="flex flex-wrap gap-2">
-              {VIBES.map((v) => (
-                <FilterChipButton
-                  key={v}
-                  active={staged.vibes.includes(v)}
-                  onClick={() => onToggleVibeStaged(v)}
-                >
-                  {VIBE_ICONS[v]}
-                  {tf(`vibes.${VIBE_TRANSLATION_KEYS[v]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("purpose")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {PURPOSES.map((p) => (
-                <FilterChipButton
-                  key={p}
-                  active={staged.purposes.includes(p)}
-                  onClick={() => onTogglePurposeStaged(p)}
-                >
-                  {PURPOSE_ICONS[p]}
-                  {tf(`purposes.${PURPOSE_TRANSLATION_KEYS[p]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("tags.label")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {FILTER_TAGS.map((tag) => (
-                <FilterChipButton
-                  key={tag}
-                  active={staged.tags.includes(tag)}
-                  onClick={() => onToggleTagStaged(tag)}
-                >
-                  {TAG_ICONS[tag]}
-                  {tf(`tags.${TAG_TRANSLATION_KEYS[tag]}`)}
-                </FilterChipButton>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("price")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {PRICE_OPTIONS.map((opt) => (
-                <FilterChipButton
-                  key={opt.value}
-                  active={staged.price === opt.value}
-                  onClick={() => onSetPriceStaged(opt.value)}
-                >
-                  {tf(`priceRanges.${opt.translationKey}`)}
-                </FilterChipButton>
-              ))}
+              <FilterChipButton
+                active={staged.hours === "open_at_7"}
+                onClick={() => onSetHoursStaged("open_at_7")}
+              >
+                {tg("openFromSeven")}
+              </FilterChipButton>
+              <FilterChipButton
+                active={staged.hours === "open_24h"}
+                onClick={() => onSetHoursStaged("open_24h")}
+              >
+                {tg("open24Hours")}
+              </FilterChipButton>
             </div>
           </div>
         </div>
@@ -141,7 +89,7 @@ export function FilterDropdownPanel({
           </button>
           <button
             onClick={onApply}
-            className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
+            className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-[var(--accent-foreground)] shadow-[var(--shadow-sm)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
           >
             {stagedActiveCount > 0 ? `${tf("apply")} (${stagedActiveCount})` : tf("apply")}
           </button>
