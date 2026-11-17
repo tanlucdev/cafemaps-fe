@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import GalleryImage from "./GalleryImage";
 import { createPortal } from "react-dom";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -63,7 +63,7 @@ export function MobileMainImage({
         if (!preloadIndices.has(i)) return null;
         const isActive = i === activeIndex;
         return (
-          <Image
+          <GalleryImage
             key={i}
             src={src}
             alt={`${cafeName} ${i + 1}`}
@@ -73,6 +73,7 @@ export function MobileMainImage({
             style={{ objectPosition: objectPosition(i) }}
             priority={i === 0}
             quality={90}
+          cloudinaryPreset="gallery"
             aria-hidden={!isActive}
           />
         );
@@ -147,7 +148,7 @@ export function GalleryLightbox({ images, lightboxIndex, cafeName, closeLightbox
                       if (!renderedIndices.has(index)) return null;
                       const isActive = index === lightboxIndex;
                       return (
-                        <Image
+                        <GalleryImage
                           key={index}
                           src={url}
                           alt={`${cafeName} ${index + 1}`}
@@ -157,6 +158,7 @@ export function GalleryLightbox({ images, lightboxIndex, cafeName, closeLightbox
                           aria-hidden={!isActive}
                           priority={isActive && index === 0}
                           quality={90}
+                          cloudinaryPreset="lightbox"
                         />
                       );
                     })}
@@ -202,7 +204,7 @@ export function GalleryLightbox({ images, lightboxIndex, cafeName, closeLightbox
                             : "opacity-55 hover:opacity-85"
                         }`}
                       >
-                        <Image
+                        <GalleryImage
                           src={url}
                           alt={`${cafeName} thumbnail ${index + 1}`}
                           fill
@@ -210,6 +212,7 @@ export function GalleryLightbox({ images, lightboxIndex, cafeName, closeLightbox
                           className="object-cover"
                           style={{ objectPosition: objectPosition(index) }}
                           quality={85}
+                  cloudinaryPreset="thumb"
                         />
                       </button>
                     ))}

@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Image from "next/image";
 import { X, ZoomIn } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 
 interface ImageGalleryProps {
   images: string[];
@@ -45,7 +46,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
             className="absolute inset-0"
           >
             <Image
-              src={images[active]}
+              src={cloudinaryImageUrl(images[active], "gallery")}
               alt={`${altPrefix} ${active + 1}`}
               fill
               sizes="(max-width: 768px) 100vw, 900px"
@@ -82,7 +83,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
               ].join(" ")}
             >
               <Image
-                src={src}
+                src={cloudinaryImageUrl(src, "thumb")}
                 alt={`${altPrefix} thumbnail ${i + 1}`}
                 fill
                 sizes="72px"
@@ -99,7 +100,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
               className="border-border relative flex aspect-square w-18 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-(--background-secondary) transition-colors hover:bg-(--accent-light) lg:aspect-[90/68] lg:w-[90px]"
             >
               <Image
-                src={images[THUMB_VISIBLE]}
+                src={cloudinaryImageUrl(images[THUMB_VISIBLE], "thumb")}
                 alt={`${altPrefix} thumbnail ${THUMB_VISIBLE + 1}`}
                 fill
                 sizes="72px"
@@ -135,7 +136,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
 
             <div className="relative mx-4 mb-4 flex-1" onClick={(e) => e.stopPropagation()}>
               <Image
-                src={images[active]}
+                src={cloudinaryImageUrl(images[active], "lightbox")}
                 alt={`${altPrefix} ${active + 1}`}
                 fill
                 sizes="100vw"
@@ -158,7 +159,7 @@ export default function ImageGallery({ images, altPrefix = "Ảnh quán" }: Imag
                     ].join(" ")}
                   >
                     <Image
-                      src={src}
+                      src={cloudinaryImageUrl(src, "thumb")}
                       alt={`${altPrefix} thumbnail ${i + 1}`}
                       fill
                       sizes="56px"

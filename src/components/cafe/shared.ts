@@ -8,6 +8,7 @@ export interface CafeCardProps {
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
   imageEager?: boolean;
+  mobileCompact?: boolean;
   initialSaved?: boolean;
   onSavedChange?: (saved: boolean) => void;
 }
@@ -18,6 +19,7 @@ export interface CafeListProps {
   animationType?: "slide" | "fade";
   variant?: "default" | "cinematic";
   eagerFirstImage?: boolean;
+  teaserSlots?: number;
 }
 
 export const VIBE_TAG_CLASSES: Record<string, string> = {

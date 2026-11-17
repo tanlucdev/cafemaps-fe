@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { getCafeViewCountOverride } from "@/apis/cafes/view-count-overrides";
 import { trackCafeViewOnce } from "@/apis/cafes/views";
 
 function patchCafeViewCount(data: unknown, cafeId: string, viewCount: number): unknown {
@@ -22,7 +21,7 @@ export function useTrackCafeView(cafeId: string, initialViewCount?: number | nul
   const [viewCount, setViewCount] = useState(initialViewCount ?? 0);
 
   useEffect(() => {
-    setViewCount(getCafeViewCountOverride(cafeId) ?? initialViewCount ?? 0);
+    setViewCount(initialViewCount ?? 0);
   }, [cafeId, initialViewCount]);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export function useTrackCafeView(cafeId: string, initialViewCount?: number | nul
       .then((result) => {
         if (!result) return;
         if (!Number.isFinite(result.viewCount)) return;
-        if (!result.counted && getCafeViewCountOverride(cafeId) !== result.viewCount) return;
         queryClient.setQueriesData(
           { predicate: (query) => query.queryKey[0] === "cafes" },
           (data) => patchCafeViewCount(data, cafeId, result.viewCount),

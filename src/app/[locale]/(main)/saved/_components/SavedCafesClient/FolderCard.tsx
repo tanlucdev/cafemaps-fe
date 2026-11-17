@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
+
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
@@ -106,7 +108,7 @@ export function FolderCard({
               {preview.slice(0, 3).map((cafe) => (
                 <div key={cafe.id} className="relative overflow-hidden bg-[var(--season-soft)]">
                   {cafe.coverImage && (
-                    <Image src={cafe.coverImage} alt={cafe.name} fill sizes="80px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(cafe) }} />
+                    <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="80px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(cafe) }} />
                   )}
                 </div>
               ))}
@@ -118,14 +120,14 @@ export function FolderCard({
             <div className="grid h-full grid-cols-2 gap-px bg-[#e6dacd]">
               {preview.map((cafe) => (
                 <div key={cafe.id} className="relative overflow-hidden bg-[var(--season-soft)]">
-                  {cafe.coverImage && <Image src={cafe.coverImage} alt={cafe.name} fill sizes="80px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />}
+                  {cafe.coverImage && <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="80px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />}
                 </div>
               ))}
             </div>
           ) : (
             <div className="relative h-full w-full bg-[var(--season-soft)]">
               {preview[0]?.coverImage ? (
-                <Image src={preview[0].coverImage} alt={group.name} fill sizes="160px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(preview[0]) }} />
+                <Image src={cloudinaryImageUrl(preview[0].coverImage, "thumb")} alt={group.name} fill sizes="160px" className="object-cover transition-transform duration-300 group-hover:scale-105" style={{ objectPosition: coverObjectPosition(preview[0]) }} />
               ) : (
                 <div className="flex h-full items-center justify-center">
                   <Bookmark size={32} className="text-[#c8a97a]" />

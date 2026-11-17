@@ -6,6 +6,7 @@ import { MapPin, ArrowRight, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { cn } from "@/lib/utils";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import type { Cafe } from "@/types/cafe";
@@ -41,7 +42,7 @@ function HeroCard({ cafe }: HeroCardProps) {
         <div className="relative h-85 overflow-hidden sm:h-105 lg:h-120">
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 100vw, 66vw"
@@ -126,7 +127,7 @@ function SmallCard({ cafe, delay, rank }: SmallCardProps) {
         <div className="relative h-40 overflow-hidden bg-(--background-secondary) sm:h-48">
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
               sizes="(max-width: 640px) 100vw, 33vw"

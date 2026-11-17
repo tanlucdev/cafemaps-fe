@@ -6,6 +6,7 @@ import { Check, Coffee, ExternalLink, MapPinned } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Cafe } from "@/types/cafe";
 import { coverObjectPosition } from "@/lib/cover-image";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { cn } from "@/lib/utils";
 
 export function MapPanel({
@@ -71,14 +72,14 @@ export function MapPanel({
                 if (e.key === "Enter" || e.key === " ") onSelect(cafe.id);
               }}
               className={cn(
-                "flex min-h-[92px] w-full cursor-pointer gap-3 rounded-2xl border bg-white p-2 text-left shadow-sm transition",
-                selectedId === cafe.id ? "border-[var(--accent)]" : "border-[#ead8bf]",
+                "flex min-h-[92px] w-full cursor-pointer gap-3 rounded-2xl border bg-[var(--card)] p-2 text-left shadow-[var(--shadow-sm)] transition",
+                selectedId === cafe.id ? "border-[var(--accent)]" : "border-[var(--border)]",
               )}
             >
-              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f5edd8]">
+              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--background-secondary)]">
                 {cafe.coverImage || cafe.images[0] ? (
                   <Image
-                    src={cafe.coverImage ?? cafe.images[0]}
+                    src={cloudinaryImageUrl(cafe.coverImage ?? cafe.images[0], "thumb")}
                     alt=""
                     width={76}
                     height={76}
@@ -100,7 +101,9 @@ export function MapPanel({
                   <span
                     className={cn(
                       "inline-flex h-7 items-center gap-1 rounded-full px-2 text-xs font-black",
-                      visited ? "bg-[var(--accent-light)] text-[var(--accent)]" : "bg-[#eee6dc] text-[#746556]",
+                      visited
+                        ? "bg-[var(--accent-light)] text-[var(--accent)]"
+                        : "bg-[var(--background-secondary)] text-[var(--foreground-muted)]",
                     )}
                   >
                     {visited ? <Check size={13} /> : <MapPinned size={13} />}
@@ -119,7 +122,7 @@ export function MapPanel({
                   <a
                     onClick={(e) => e.stopPropagation()}
                     href={`./cafe/${cafe.slug}`}
-                    className="ml-auto inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#ead8bf] text-[var(--accent)]"
+                    className="ml-auto inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)]"
                   >
                     <ExternalLink size={13} />
                   </a>

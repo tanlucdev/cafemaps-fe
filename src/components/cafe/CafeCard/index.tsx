@@ -2,20 +2,21 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { MapPin, Star } from "lucide-react";
+import { MapPin, Navigation, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
-import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
+import CardContent from "./CardContent";
 import SaveButton from "@/components/cafe/SaveButton";
 import { CafeChristmasFrame } from "@/components/seasonal/CafeChristmasDecorations";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
-import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
-import { formatCafeDistanceParts } from "@/lib/distance";
+import { formatCafeArea } from "@/lib/cafe-labels";
+import { formatCafeDistanceParts, formatDistanceKm } from "@/lib/distance";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
 import { cn, formatPrice } from "@/lib/utils";
 import { coverObjectPosition } from "@/lib/cover-image";
-import { ratingFor, VIBE_TAG_CLASSES, type CafeCardProps } from "@/components/cafe/shared";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
+import { ratingFor, type CafeCardProps } from "@/components/cafe/shared";
 
 export default function CafeCard({
   cafe,
@@ -24,6 +25,7 @@ export default function CafeCard({
   animationType = "fade",
   variant = "default",
   imageEager = false,
+  mobileCompact = false,
   initialSaved = false,
   onSavedChange,
 }: CafeCardProps) {
@@ -43,9 +45,12 @@ export default function CafeCard({
   const price = formatPrice(cafe.priceMin, cafe.priceMax, locale);
   const openStatus = getCafeOpenStatus(cafe.openingTime, cafe.closingTime);
   const district = formatCafeArea(cafe.district, locale);
-  const locationText = [district, ...formatCafeDistanceParts(cafe, locale)]
-    .filter(Boolean)
-    .join(" • ");
+  const distanceText = formatCafeDistanceParts(cafe, locale).join(" • ");
+  const mobileDistanceText = formatDistanceKm(cafe.distanceKm, {
+    approximate: cafe.distanceMode !== "route",
+  });
+  const mobileImageMeta = mobileDistanceText || district;
+  const locationText = [district, distanceText].filter(Boolean).join(" • ");
   const tags = cafe.vibes.length > 0 ? cafe.vibes.slice(0, 3) : cafe.purposes.slice(0, 3);
   const rating = ratingFor(cafe, index);
   const revealInitial = isSlide
@@ -56,6 +61,19 @@ export default function CafeCard({
     delay: reduceMotion ? 0 : Math.min(index % 8, 7) * 0.06,
     ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
   };
+  const ratingBadge = (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold",
+        isCinematic
+          ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#ffd58a]"
+          : "bg-[var(--accent-light)] text-[var(--accent)]",
+      )}
+    >
+      <Star size={11} className="fill-[#F0A830] text-[var(--accent)]" />
+      {rating}
+    </span>
+  );
 
   return (
     <CafeChristmasFrame cafeId={cafe.id} index={index}>
@@ -63,7 +81,9 @@ export default function CafeCard({
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={revealTransition}
-      whileHover={!reduceMotion ? { y: isCinematic ? -4 : -3, scale: isCinematic ? 1.01 : 1 } : undefined}
+      whileHover={
+        !reduceMotion ? { y: isCinematic ? -4 : -3, scale: isCinematic ? 1.01 : 1 } : undefined
+      }
       className={cn(
         "christmas-cafe-card group relative flex flex-col overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
@@ -79,16 +99,21 @@ export default function CafeCard({
         {/* Image area — image-forward, 65% of card height */}
         <div
           className={cn(
-            "relative h-52 overflow-hidden md:h-56",
+            "relative overflow-hidden md:h-56",
+            mobileCompact ? "aspect-[4/3] sm:aspect-[8/5] md:aspect-auto" : "h-52",
             isCinematic ? "bg-[#2C1A0E]" : "bg-[#E5D9CB] dark:bg-[#2C1A0E]",
           )}
         >
           {cafe.coverImage ? (
             <Image
-              src={cafe.coverImage}
+              src={cloudinaryImageUrl(cafe.coverImage, "card")}
               alt={cafe.name}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (min-width: 1280px) 400px, 33vw"
+              sizes={
+                mobileCompact
+                  ? "(max-width: 767px) 50vw, (max-width: 1024px) 50vw, (min-width: 1280px) 400px, 33vw"
+                  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (min-width: 1280px) 400px, 33vw"
+              }
               className={cn(
                 "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
                 isCinematic && "group-hover:scale-[1.04]",
@@ -120,7 +145,10 @@ export default function CafeCard({
 
           {cafe.oneLiner && (
             <div
-              className="pointer-events-none absolute inset-0 flex items-end p-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              className={cn(
+                "pointer-events-none absolute inset-0 flex items-end p-3.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                mobileCompact && "hidden md:flex",
+              )}
               style={{
                 background:
                   "linear-gradient(to top, rgba(10,5,1,0.80) 0%, rgba(10,5,1,0.12) 52%, transparent 72%)",
@@ -139,6 +167,16 @@ export default function CafeCard({
             </span>
           )}
 
+          {mobileCompact && mobileImageMeta && (
+            <span className="absolute bottom-2.5 left-2.5 z-10 inline-flex max-w-[calc(100%-1.25rem)] items-center gap-1 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md md:hidden">
+              {mobileDistanceText ? (
+                <Navigation size={11} className="shrink-0 text-[#F0A830]" />
+              ) : (
+                <MapPin size={11} className="shrink-0 text-[#F0A830]" />
+              )}
+              <span className="truncate">{mobileImageMeta}</span>
+            </span>
+          )}
         </div>
       </IntentPrefetchLink>
 
@@ -156,115 +194,7 @@ export default function CafeCard({
         )}
       />
 
-      {/* Text content */}
-      <IntentPrefetchLink
-        href={href}
-        className="block flex-1 outline-none focus-visible:ring-2 focus-visible:ring-[#ffe3b7]"
-        onClick={saveReturnUrl}
-      >
-        <div className="flex flex-col gap-2 p-4">
-          {/* Name + rating */}
-          <div className="flex items-start justify-between gap-2">
-            <h3
-              className={cn(
-                "line-clamp-1 text-[14px] leading-snug font-bold",
-                isCinematic ? "text-[#fff7e8]" : "text-[var(--foreground)]",
-              )}
-            >
-              {cafe.name}
-            </h3>
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold",
-                isCinematic
-                  ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#ffd58a]"
-                  : "bg-[var(--accent-light)] text-[var(--accent)]",
-              )}
-            >
-              <Star size={11} className="fill-[#F0A830] text-[var(--accent)]" />
-              {rating}
-            </span>
-          </div>
-
-          {/* Open status + location */}
-          <div className="flex min-w-0 items-center gap-1.5 text-xs">
-            {openStatus !== null && (
-              <span
-                className={cn(
-                  "inline-flex shrink-0 items-center gap-1 font-semibold",
-                  openStatus ? "text-[var(--status-open)]" : "text-[var(--status-closed)]",
-                )}
-              >
-                <span className="relative flex h-1.5 w-1.5">
-                  {openStatus && (
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--status-open)] opacity-75" />
-                  )}
-                  <span
-                    className={cn(
-                      "relative inline-flex h-1.5 w-1.5 rounded-full",
-                      openStatus ? "bg-[var(--status-open)]" : "bg-[var(--status-closed)]",
-                    )}
-                  />
-                </span>
-                {openStatus ? tCafe("openNow") : tCafe("closedNow")}
-              </span>
-            )}
-            {locationText && (
-              <>
-                {openStatus !== null && (
-                  <span className={isCinematic ? "text-[#fff0d4]/26" : "text-[#C9C0B3]"}>·</span>
-                )}
-                <span
-                  className={cn(
-                    "flex min-w-0 items-center gap-0.5",
-                    isCinematic ? "text-[#fff0d4]/62" : "text-[var(--foreground-muted)]",
-                  )}
-                >
-                  <MapPin size={11} className="shrink-0 text-[var(--accent)]" />
-                  <span className="truncate">{locationText}</span>
-                </span>
-              </>
-            )}
-          </div>
-
-          {(tags.length > 0 || cafe.viewCount !== undefined) && (
-            <div className="flex flex-wrap items-center gap-1.5">
-              {tags.map((tag) => {
-                const translation = getCafeTagTranslation(tag);
-                const classKey = VIBE_TRANSLATION_KEYS[tag] ?? tag;
-                const label = translation
-                  ? tFilters(
-                      `${translation.group}.${translation.key}` as Parameters<typeof tFilters>[0],
-                    )
-                  : tag;
-                return (
-                  <span
-                    key={tag}
-                    className={cn(
-                      "rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                      isCinematic
-                        ? "border border-[#ffe3b7]/12 bg-[#fff1d6]/9 text-[#fff0d4]/78"
-                        : (VIBE_TAG_CLASSES[classKey] ??
-                            "bg-[#EDE5DB] text-[#6B5B3E] dark:bg-[#2A211B] dark:text-[#D9C4B2]"),
-                    )}
-                  >
-                    {label}
-                  </span>
-                );
-              })}
-              <span className="ml-auto">
-                <CafeStatsBadge
-                  cafeId={cafe.id}
-                  viewCount={cafe.viewCount}
-                  locale={locale}
-                  variant={isCinematic ? "cinematic" : "default"}
-                />
-              </span>
-            </div>
-          )}
-        </div>
-      </IntentPrefetchLink>
-
+      <CardContent cafe={cafe} locale={locale} href={href} saveReturnUrl={saveReturnUrl} mobileCompact={mobileCompact} isCinematic={isCinematic} ratingBadge={ratingBadge} openStatus={openStatus} locationText={locationText} tags={tags} tCafe={tCafe} tFilters={tFilters} />
       {/* Hover preview popup disabled per request.
       {isDesktop && anchorRect && (
         <CafePreviewPopup

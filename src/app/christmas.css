@@ -28,6 +28,8 @@ html[data-season="christmas"] {
   --primary: var(--accent);
   --primary-foreground: var(--accent-foreground);
   --card: #fffaf2;
+  --surface: var(--card);
+  --surface-raised: var(--card);
   --card-foreground: var(--foreground);
   --secondary: var(--season-soft);
   --secondary-foreground: var(--foreground);

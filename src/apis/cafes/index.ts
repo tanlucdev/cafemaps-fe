@@ -51,3 +51,5 @@ export async function searchNearbyCafes(search: string, locale: string, filter: 
     .sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity))
     .slice(0, 10);
 }
+
+export { getSimilarCafes } from "@/apis/chains";

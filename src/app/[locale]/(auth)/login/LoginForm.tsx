@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, Eye, EyeOff, LoaderCircle, LogIn } from "lucide-react";
 import { toast } from "sonner";
@@ -101,9 +102,12 @@ export default function LoginForm() {
           <label htmlFor="login-password" className="text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]">
             {t("passwordQuestion")}
           </label>
-          <span className="text-xs font-black text-[var(--accent-hover)] dark:text-[var(--accent)]">
+          <Link
+            href="/forgot-password"
+            className="text-xs font-black text-[var(--accent-hover)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--accent)] dark:text-[var(--accent)]"
+          >
             {t("forgotShort")}
-          </span>
+          </Link>
         </div>
         <Input
           id="login-password"

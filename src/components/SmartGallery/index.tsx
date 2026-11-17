@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import GalleryImage from "./GalleryImage";
 import { CafeChristmasGarland } from "@/components/seasonal/CafeChristmasDecorations";
 import { MobileMainImage, GalleryLightbox } from "./parts";
 import { useCallback, useEffect, useState } from "react";
@@ -101,7 +101,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
         aria-label={t("viewImageOf", { index: index + 1, cafeName })}
         className={`group relative overflow-hidden bg-(--background-secondary) ${className}`}
       >
-        <Image
+        <GalleryImage
           src={url}
           alt={`${cafeName} ${index + 1}`}
           fill
@@ -110,6 +110,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
           style={{ objectPosition: objectPosition(index) }}
           priority={priority}
           quality={90}
+          cloudinaryPreset="gallery"
         />
         <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/12" />
         <span className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -156,7 +157,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
               }}
             >
               <span className="block h-full w-full overflow-hidden" style={{ borderRadius: "8px" }}>
-                <Image
+                <GalleryImage
                   src={url}
                   alt={`${cafeName} thumbnail ${i + 1}`}
                   width={60}
@@ -165,6 +166,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
                   className="h-full w-full object-cover"
                   style={{ objectPosition: objectPosition(i) }}
                   quality={85}
+                  cloudinaryPreset="thumb"
                 />
               </span>
             </button>

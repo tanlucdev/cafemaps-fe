@@ -1,25 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
-import { createSubmission } from "@/apis/submissions";
-import { ApiError, isUnauthorizedError } from "@/apis/http";
-import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
+import { createCommunitySubmission } from "@/apis/submissions";
+import { ApiError } from "@/apis/http";
 import { INITIAL_FORM_DATA } from "./contribute-form.constants";
 import type { ContributeFormErrors } from "./contribute-form.types";
 import { usePhotoUrls } from "./usePhotoUrls";
 
 export function useContributeForm() {
   const t = useTranslations("contribute");
-  const router = useRouter();
   const [step, setStep] = useState(1);
   const [data, setData] = useState(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<ContributeFormErrors>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [slowUpload, setSlowUpload] = useState(false);
   const [done, setDone] = useState(false);
+  const slowUploadTimer = useRef<number | null>(null);
   const photoUrls = usePhotoUrls(data.photos);
+
+  const clearSlowUploadTimer = () => {
+    if (slowUploadTimer.current) clearTimeout(slowUploadTimer.current);
+    slowUploadTimer.current = null;
+    setSlowUpload(false);
+  };
+
+  useEffect(() => () => {
+    if (slowUploadTimer.current) clearTimeout(slowUploadTimer.current);
+  }, []);
 
   const validate = () => {
     const nextErrors: ContributeFormErrors = {};
@@ -49,42 +58,39 @@ export function useContributeForm() {
 
     setServerError(null);
     setLoading(true);
+    clearSlowUploadTimer();
+    if (data.photos.length) {
+      slowUploadTimer.current = window.setTimeout(() => {
+        setSlowUpload(true);
+        slowUploadTimer.current = null;
+      }, 5000);
+    }
     try {
-      const token = await getCurrentAccessToken();
-      if (!token) {
-        saveAuthReturnUrl();
-        router.push("/login");
-        return;
-      }
-
-      await createSubmission(
-        {
-          name: data.name.trim(),
-          googleMapsUrl: data.googleMapsUrl.trim(),
-          note: data.reason.trim() || undefined,
-        },
-        token,
-      );
+      await createCommunitySubmission({
+        name: data.name.trim(),
+        googleMapsUrl: data.googleMapsUrl.trim(),
+        note: data.reason.trim() || undefined,
+        photos: data.photos,
+      });
       setDone(true);
     } catch (error) {
-      if (isUnauthorizedError(error)) {
-        saveAuthReturnUrl();
-        router.push("/login");
-        return;
-      }
       setServerError(
         error instanceof ApiError
-          ? t("errors.submitFailed")
+          ? data.photos.length && error.status >= 500
+            ? t("errors.photoUploadFailed")
+            : t("errors.submitFailed")
           : error instanceof Error
             ? error.message
             : t("errors.submitFailed"),
       );
     } finally {
+      clearSlowUploadTimer();
       setLoading(false);
     }
   };
 
   const reset = () => {
+    clearSlowUploadTimer();
     setData(INITIAL_FORM_DATA);
     setStep(1);
     setErrors({});
@@ -102,6 +108,7 @@ export function useContributeForm() {
     photoUrls,
     reset,
     serverError,
+    slowUpload,
     setData,
     step,
     submit,

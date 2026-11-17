@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Modal from "@/components/ui/Modal";
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 
 type CafeMenuModalProps = {
   open: boolean;
@@ -35,7 +36,7 @@ export default function CafeMenuModal({ open, onClose, cafeName, menuImages }: C
       <div className="flex min-h-0 flex-col items-center justify-center gap-3 px-3 py-3 sm:px-5 sm:py-5">
         <div className="flex min-h-0 items-center justify-center overflow-hidden rounded-2xl border border-(--border-light,#ECE4D6) bg-[#FAF6F1] dark:bg-[#241B15]">
           <Image
-            src={menuImage}
+            src={cloudinaryImageUrl(menuImage, "menu")}
             alt={`Menu ${cafeName} page ${page + 1}`}
             width={900}
             height={1200}

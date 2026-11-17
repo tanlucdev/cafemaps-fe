@@ -20,8 +20,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             "w-full h-11 rounded-xl border border-[var(--border)] bg-[var(--card)]",
             "text-[var(--foreground)] placeholder:text-[var(--foreground-muted)]",
-            "text-[16px] lg:text-sm transition-all duration-200",
-            "focus:!outline-none focus:!ring-0 focus:!shadow-none focus:!border-[#8f5a16]",
+            "text-[16px] transition-colors duration-200 lg:text-sm",
+            "focus:!outline-none focus:!ring-0 focus:!shadow-none focus:!border-[#8f5a16] focus-visible:!border-[#8f5a16] focus-visible:!outline-none",
             leftIcon ? "pl-10" : "pl-4",
             rightIcon ? "pr-10" : "pr-4",
             className

@@ -1,7 +1,9 @@
 import type { ContributeFormData } from "./contribute-form.types";
 
 export const MAX_PHOTOS = 8;
-export const MAX_REASON_LENGTH = 300;
+export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+export const MAX_TOTAL_IMAGE_BYTES = 40 * 1024 * 1024;
+export const MAX_REASON_LENGTH = 1000;
 export const INITIAL_FORM_DATA: ContributeFormData = {
   name: "",
   googleMapsUrl: "",

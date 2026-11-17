@@ -12,10 +12,13 @@ interface AuthShellProps {
   children: React.ReactNode;
 }
 
-type AuthMode = "login" | "register";
+type AuthMode = "login" | "register" | "forgot-password" | "reset-password";
 
 function getAuthMode(pathname: string): AuthMode {
-  return pathname === "/register" ? "register" : "login";
+  if (pathname === "/register") return "register";
+  if (pathname === "/forgot-password") return "forgot-password";
+  if (pathname === "/reset-password") return "reset-password";
+  return "login";
 }
 
 export default function AuthShell({ children }: AuthShellProps) {
@@ -24,8 +27,23 @@ export default function AuthShell({ children }: AuthShellProps) {
   const currentMode = getAuthMode(pathname);
   const [authMode, setAuthMode] = useState<AuthMode>(currentMode);
   const isLogin = authMode === "login";
-  const title = isLogin ? t("loginHeroTitle") : t("registerHeroTitle");
-  const subtitle = isLogin ? t("loginHeroBody") : t("registerHeroBody");
+  const isStandardAuth = authMode === "login" || authMode === "register";
+  const title =
+    authMode === "forgot-password"
+      ? t("forgotHeroTitle")
+      : authMode === "reset-password"
+        ? t("resetHeroTitle")
+        : isLogin
+          ? t("loginHeroTitle")
+          : t("registerHeroTitle");
+  const subtitle =
+    authMode === "forgot-password"
+      ? t("forgotHeroBody")
+      : authMode === "reset-password"
+        ? t("resetHeroBody")
+        : isLogin
+          ? t("loginHeroBody")
+          : t("registerHeroBody");
 
   useEffect(() => {
     setAuthMode(currentMode);
@@ -125,53 +143,57 @@ export default function AuthShell({ children }: AuthShellProps) {
             </p>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 rounded-full border border-[#ead8bf]/72 bg-[var(--season-soft)]/78 p-1 dark:border-[#ffe3b7]/12 dark:bg-white/7">
-            <Link
-              href="/login"
-              prefetch={true}
-              scroll={false}
-              onNavigate={() => setAuthMode("login")}
-              aria-current={isLogin ? "page" : undefined}
-              className={cn(
-                "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
-                isLogin
-                  ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[var(--accent-light)] dark:text-[var(--accent)]"
-                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
-              )}
-            >
-              {t("loginTab")}
-            </Link>
-            <Link
-              href="/register"
-              prefetch={true}
-              scroll={false}
-              onNavigate={() => setAuthMode("register")}
-              aria-current={!isLogin ? "page" : undefined}
-              className={cn(
-                "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
-                !isLogin
-                  ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[var(--accent-light)] dark:text-[var(--accent)]"
-                  : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
-              )}
-            >
-              {t("registerTab")}
-            </Link>
-          </div>
+          {isStandardAuth && (
+            <div className="mb-4 grid grid-cols-2 rounded-full border border-[#ead8bf]/72 bg-[var(--season-soft)]/78 p-1 dark:border-[#ffe3b7]/12 dark:bg-white/7">
+              <Link
+                href="/login"
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode("login")}
+                aria-current={isLogin ? "page" : undefined}
+                className={cn(
+                  "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
+                  isLogin
+                    ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[var(--accent-light)] dark:text-[var(--accent)]"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
+                )}
+              >
+                {t("loginTab")}
+              </Link>
+              <Link
+                href="/register"
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode("register")}
+                aria-current={!isLogin ? "page" : undefined}
+                className={cn(
+                  "min-h-10 rounded-full px-3 py-2 text-center text-[13px] font-black transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5edd8] dark:focus-visible:ring-offset-[#2b2119]",
+                  !isLogin
+                    ? "bg-[#fffaf2] text-[var(--accent-hover)] shadow-[0_8px_20px_rgba(44,26,14,0.10)] dark:bg-[var(--accent-light)] dark:text-[var(--accent)]"
+                    : "text-[var(--foreground-muted)] hover:text-[var(--foreground)] dark:text-[#fff0d2]/68 dark:hover:text-[#fff7e8]",
+                )}
+              >
+                {t("registerTab")}
+              </Link>
+            </div>
+          )}
 
           {children}
 
-          <p className="mt-4 text-center text-[13px] text-[var(--foreground-muted)] dark:text-[#fff0d2]/68">
-            {isLogin ? t("noAccount") : t("hasAccount")}{" "}
-            <Link
-              href={isLogin ? "/register" : "/login"}
-              prefetch={true}
-              scroll={false}
-              onNavigate={() => setAuthMode(isLogin ? "register" : "login")}
-              className="font-black text-[var(--accent-hover)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--accent)] dark:text-[var(--accent)]"
-            >
-              {isLogin ? t("switchToRegister") : t("switchToLogin")}
-            </Link>
-          </p>
+          {isStandardAuth && (
+            <p className="mt-4 text-center text-[13px] text-[var(--foreground-muted)] dark:text-[#fff0d2]/68">
+              {isLogin ? t("noAccount") : t("hasAccount")}{" "}
+              <Link
+                href={isLogin ? "/register" : "/login"}
+                prefetch={true}
+                scroll={false}
+                onNavigate={() => setAuthMode(isLogin ? "register" : "login")}
+                className="font-black text-[var(--accent-hover)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--accent)] dark:text-[var(--accent)]"
+              >
+                {isLogin ? t("switchToRegister") : t("switchToLogin")}
+              </Link>
+            </p>
+          )}
         </section>
       </div>
     </main>

@@ -9,7 +9,9 @@
     "login": "Đăng nhập",
     "register": "Đăng ký",
     "menu": "Menu",
-    "profile": "Cá nhân"
+    "profile": "Cá nhân",
+    "themeToDark": "Chuyển sang giao diện tối",
+    "themeToLight": "Chuyển sang giao diện sáng"
   },
   "donate": {
     "aria": "Ủng hộ Cafe Maps",
@@ -97,6 +99,8 @@
       "nearMe": "Gần tôi",
       "outdoor": "Ngoài trời",
       "openNow": "Mở cửa ngay",
+      "openFromSeven": "Mở lúc 07:00",
+      "open24Hours": "Mở 24 giờ",
       "quiet": "Yên tĩnh",
       "vintage": "Vintage",
       "workFriendly": "Work-friendly"
@@ -110,6 +114,8 @@
     },
     "lastSearch": {
       "openNow": "quán đang mở",
+      "openFromSeven": "quán mở lúc 07:00",
+      "open24Hours": "quán mở 24 giờ",
       "nearMe": "quán gần tôi",
       "fallback": "tìm kiếm trước"
     },
@@ -147,6 +153,7 @@
     "district": "Khu vực",
     "vibe": "Bộ lọc",
     "price": "Giá",
+    "openingHours": "Giờ mở cửa",
     "purpose": "Mục đích",
     "clear": "Xoá bộ lọc",
     "clearAll": "Xoá tất cả",
@@ -666,11 +673,7 @@
           "description": "Bạn thuộc team \"phải có cây mới sống nổi\". Ánh sáng dịu qua lá, nhịp chậm, không ai giục là chuẩn bài. Cứ tưởng đi cafe để làm gì đó, nhưng thật ra chỉ cần ngồi xuống cạnh chậu cây là đủ sạc pin.",
           "shareTitle": "Mình là Ôm Cây Cho Hong Cháy Não",
           "shareDescription": "Gu cafe: thấy cây là tự động chill, khỏi hỏi lý do.",
-          "reasons": [
-            "cây là số 1",
-            "ánh sáng dịu mắt",
-            "nhịp tự động chậm lại"
-          ],
+          "reasons": ["cây là số 1", "ánh sáng dịu mắt", "nhịp tự động chậm lại"],
           "personalityTraits": [
             "hệ thần kinh nhạy với màu xanh",
             "sống chậm mà không lười",
@@ -681,11 +684,7 @@
             "đọc vài trang cho có khí chất",
             "trốn não khỏi group chat"
           ],
-          "avoidWhen": [
-            "nóng như lò nướng",
-            "bí gió muốn xỉu",
-            "bàn chen sát muốn tự kỷ"
-          ]
+          "avoidWhen": ["nóng như lò nướng", "bí gió muốn xỉu", "bàn chen sát muốn tự kỷ"]
         },
         "quiet-city-window": {
           "title": "Rình Đời Từ Xa, Slay",
@@ -693,11 +692,7 @@
           "description": "Bạn không cần hòa vào đám đông mới thấy sống. Một ô cửa, một ly nước, nhìn phố chạy qua là đủ nội dung cho cả buổi. Vừa yên vừa không lạc nhịp, đúng kiểu \"quan sát viên\" chuyên nghiệp.",
           "shareTitle": "Mình là Rình Đời Từ Xa, Slay",
           "shareDescription": "Gu cafe: một ô cửa, cả thành phố thành nội dung xem free.",
-          "reasons": [
-            "có cửa sổ để rình",
-            "yên mà không cô lập",
-            "đầu óc tự gọn lại"
-          ],
+          "reasons": ["có cửa sổ để rình", "yên mà không cô lập", "đầu óc tự gọn lại"],
           "personalityTraits": [
             "radar quan sát cực nhạy",
             "hưởng thụ một mình cực đỉnh",
@@ -708,11 +703,7 @@
             "note ý tưởng lung tung",
             "giết thời gian chờ hẹn mà vẫn oách"
           ],
-          "avoidWhen": [
-            "view ồn như chợ",
-            "nắng chiếu thẳng mặt",
-            "bàn chật hết muốn quan sát"
-          ]
+          "avoidWhen": ["view ồn như chợ", "nắng chiếu thẳng mặt", "bàn chật hết muốn quan sát"]
         },
         "lively-friends-table": {
           "title": "Chưa Ngồi Đã Auto Ồn",
@@ -720,26 +711,14 @@
           "description": "Đi cafe với bạn không bao giờ có phút giây im lặng. Bàn phải rộng, ghế phải đủ, nhạc phải có nhịp, vậy mới đúng vibe. Ngồi xuống 5 phút là chuyện nổ như bắp rang.",
           "shareTitle": "Mình là Chưa Ngồi Đã Auto Ồn",
           "shareDescription": "Gu cafe: có hội là auto vui, một mình hơi phí.",
-          "reasons": [
-            "hội bạn full slot",
-            "bàn nhóm rộng rãi",
-            "playlist auto kéo mood"
-          ],
+          "reasons": ["hội bạn full slot", "bàn nhóm rộng rãi", "playlist auto kéo mood"],
           "personalityTraits": [
             "năng lượng cắm sạc nhóm",
             "chuyện gì cũng góp vui được",
             "ý tưởng bung nóc khi có người nghe"
           ],
-          "bestFor": [
-            "tụ tập chill",
-            "brainstorm cho vui",
-            "chiều cuối tuần không muốn ở nhà"
-          ],
-          "avoidWhen": [
-            "quán im như thư viện",
-            "khó ghép bàn cho cả hội",
-            "order chờ dài cổ"
-          ]
+          "bestFor": ["tụ tập chill", "brainstorm cho vui", "chiều cuối tuần không muốn ở nhà"],
+          "avoidWhen": ["quán im như thư viện", "khó ghép bàn cho cả hội", "order chờ dài cổ"]
         },
         "late-night-work": {
           "title": "Não Chỉ Slay Sau 11 Giờ",
@@ -747,26 +726,14 @@
           "description": "Ban ngày não hơi lag, nhưng tới đêm là auto tỉnh táo. Bạn chỉ cần một góc gọn, wifi ổn, ổ điện gần tay là có thể ngồi tới sáng không kêu ca. Deadline thân quen hơn cả giờ ngủ.",
           "shareTitle": "Mình là Não Chỉ Slay Sau 11 Giờ",
           "shareDescription": "Gu cafe: laptop mở, đồng hồ điểm 11 giờ, việc mới chịu chạy.",
-          "reasons": [
-            "wifi không được rớt",
-            "ổ điện là sinh mạng",
-            "đêm càng khuya càng tỉnh"
-          ],
+          "reasons": ["wifi không được rớt", "ổ điện là sinh mạng", "đêm càng khuya càng tỉnh"],
           "personalityTraits": [
             "cú đêm chính hiệu",
             "deadline chill thay vì sợ",
             "không cần náo nhiệt mới làm được việc"
           ],
-          "bestFor": [
-            "chạy nước rút",
-            "code/viết xuyên đêm",
-            "họp gấp lúc thiên hạ ngủ"
-          ],
-          "avoidWhen": [
-            "nhạc quá gắt cắt mạch nghĩ",
-            "bàn thấp mỏi lưng",
-            "đèn tối mờ mắt"
-          ]
+          "bestFor": ["chạy nước rút", "code/viết xuyên đêm", "họp gấp lúc thiên hạ ngủ"],
+          "avoidWhen": ["nhạc quá gắt cắt mạch nghĩ", "bàn thấp mỏi lưng", "đèn tối mờ mắt"]
         },
         "vintage-tea-nostalgia": {
           "title": "Thu Thập Dữ Liệu Xã Hội Chuyên Nghiệp",
@@ -774,11 +741,7 @@
           "description": "Bạn có khiếu \"nghe lỏm\" đỉnh cao, kiểu gì cũng biết chuyện của quán chỉ sau một tách trà. Đồ gỗ cũ, ánh đèn ấm, nhịp chậm là combo hoàn hảo để vừa nhâm nhi vừa thu thập tin tức không công.",
           "shareTitle": "Mình là Thu Thập Dữ Liệu Xã Hội Chuyên Nghiệp",
           "shareDescription": "Gu cafe: trà ấm, ghế cũ, tai hóng chuyện cực đỉnh.",
-          "reasons": [
-            "vintage đúng gu",
-            "trà ấm tay",
-            "nhịp chậm để hóng đủ"
-          ],
+          "reasons": ["vintage đúng gu", "trà ấm tay", "nhịp chậm để hóng đủ"],
           "personalityTraits": [
             "thính tai cực đỉnh",
             "nhớ chi tiết như máy quay",
@@ -801,26 +764,14 @@
           "description": "Buổi sáng của bạn phải có nắng, có ly đá mát và cảm giác cả ngày đang quay phim. Không cần lý do gì to tát, chỉ cần bước ra khỏi nhà là năng lượng đã lên full.",
           "shareTitle": "Mình là Sáng Nào Cũng Tuyệt Đối Điện Ảnh",
           "shareDescription": "Gu cafe: nắng đẹp, đá tan, sáng nào cũng như phim.",
-          "reasons": [
-            "nắng phải chuẩn góc",
-            "đồ uống mát rượi",
-            "cảm giác tươi mới cả ngày"
-          ],
+          "reasons": ["nắng phải chuẩn góc", "đồ uống mát rượi", "cảm giác tươi mới cả ngày"],
           "personalityTraits": [
             "dễ hồi máu buổi sáng",
             "yêu ánh sáng hơn yêu ngủ nướng",
             "rủ là đi liền không cần nghĩ"
           ],
-          "bestFor": [
-            "sáng cuối tuần chill nhẹ",
-            "hẹn bạn cà phê mát trời",
-            "đổi mood nhanh gọn"
-          ],
-          "avoidWhen": [
-            "quán tối im ỉm",
-            "máy lạnh phả thẳng mặt",
-            "món nặng bụng làm mất mood"
-          ]
+          "bestFor": ["sáng cuối tuần chill nhẹ", "hẹn bạn cà phê mát trời", "đổi mood nhanh gọn"],
+          "avoidWhen": ["quán tối im ỉm", "máy lạnh phả thẳng mặt", "món nặng bụng làm mất mood"]
         },
         "lazy-afternoon-nap": {
           "title": "Trưa Này Xin Hong Làm Gì",
@@ -828,11 +779,7 @@
           "description": "Không phải lười, chỉ là biết cách nghỉ đúng lúc. Ghế êm, ánh sáng mềm, không ai hối là auto rơi vào trạng thái \"để mai tính\". Một buổi trưa không làm gì cũng là thành tựu.",
           "shareTitle": "Mình là Trưa Này Xin Hong Làm Gì",
           "shareDescription": "Gu cafe: ghế êm, chiều trôi chậm, plan gì tính sau.",
-          "reasons": [
-            "ghế êm auto dính lưng",
-            "chill xuyên trưa",
-            "ấm cúng dễ ở lại"
-          ],
+          "reasons": ["ghế êm auto dính lưng", "chill xuyên trưa", "ấm cúng dễ ở lại"],
           "personalityTraits": [
             "nghỉ ngơi cũng là một skill",
             "nhịp chill chuyên nghiệp",
@@ -855,26 +802,14 @@
           "description": "Bạn không sợ gấp, chỉ cần bàn đủ rộng để bung laptop và một ly cà phê đúng lúc. Deadline dí sát nút vẫn có cách xoay, miễn quán đủ tiện là chạy nước rút không thành vấn đề.",
           "shareTitle": "Mình là Deadline Không Ngủ",
           "shareDescription": "Gu cafe: hơi rối, cực tỉnh, xong việc mới thở.",
-          "reasons": [
-            "deadline sát nút",
-            "bàn rộng bung đồ",
-            "cà phê phải mạnh"
-          ],
+          "reasons": ["deadline sát nút", "bàn rộng bung đồ", "cà phê phải mạnh"],
           "personalityTraits": [
             "xoay deadline như chơi",
             "chịu áp lực cực tốt",
             "tiện là ưu tiên số 1"
           ],
-          "bestFor": [
-            "nước rút cuối dự án",
-            "họp chớp nhoáng",
-            "làm việc sát giờ chót"
-          ],
-          "avoidWhen": [
-            "wifi rớt giữa chừng",
-            "ổ điện ở xa muôn trùng",
-            "gọi món chờ dài cổ"
-          ]
+          "bestFor": ["nước rút cuối dự án", "họp chớp nhoáng", "làm việc sát giờ chót"],
+          "avoidWhen": ["wifi rớt giữa chừng", "ổ điện ở xa muôn trùng", "gọi món chờ dài cổ"]
         },
         "aesthetic-latte-shot": {
           "title": "Góc Sống Ảo Xịn",
@@ -946,11 +881,7 @@
             "mê lưu giữ khoảnh khắc chung",
             "rủ đi là hội theo liền"
           ],
-          "bestFor": [
-            "tụ tập hội thân",
-            "sinh nhật xịn xò",
-            "cuối tuần chốt kèo có ảnh mang về"
-          ],
+          "bestFor": ["tụ tập hội thân", "sinh nhật xịn xò", "cuối tuần chốt kèo có ảnh mang về"],
           "avoidWhen": [
             "không đủ chỗ đứng cho cả hội",
             "quán đông nghẹt không chen nổi",
@@ -963,11 +894,7 @@
           "description": "Bạn hợp một buổi chiều không vội, đèn ấm dịu và ly trà thơm để câu chuyện có chỗ mà nở ra. Không cần ồn ào, chỉ cần một góc đủ riêng để nói chuyện tới khi nào chán thì thôi.",
           "shareTitle": "Mình là Chiều Nay Xin Đại Đại Nghỉ",
           "shareDescription": "Gu cafe: trà chậm, đèn ấm, chuyện kể hoài không hết.",
-          "reasons": [
-            "trà thơm không thể thiếu",
-            "đèn ấm đúng vibe",
-            "hẹn nhẹ mà sâu"
-          ],
+          "reasons": ["trà thơm không thể thiếu", "đèn ấm đúng vibe", "hẹn nhẹ mà sâu"],
           "personalityTraits": [
             "tinh tế trong từng câu chuyện",
             "quan tâm cảm giác đối phương",
@@ -1000,11 +927,7 @@
             "quyết nhanh không do dự",
             "mê cái mới hơn cái quen"
           ],
-          "bestFor": [
-            "tour quán cuối tuần",
-            "gặp hội bạn năng động",
-            "khám phá quán mới liên tục"
-          ],
+          "bestFor": ["tour quán cuối tuần", "gặp hội bạn năng động", "khám phá quán mới liên tục"],
           "avoidWhen": [
             "quán khó tìm đường vào",
             "menu na ná quán trước",
@@ -1017,11 +940,7 @@
           "description": "Bạn không cần đông vui mới thấy vui. Một góc yên, ánh sáng vừa đọc, ghế thoải mái là đủ để ở lại cả buổi. Một mình với quyển sách đôi khi lại là kiểu chill đỉnh nhất.",
           "shareTitle": "Mình là Một Mình Cũng Chill Xỉu",
           "shareDescription": "Gu cafe: sách mở, góc yên, một mình vẫn chill banh nóc.",
-          "reasons": [
-            "đọc sách là ưu tiên",
-            "yên tĩnh mới tập trung nổi",
-            "góc riêng là chân ái"
-          ],
+          "reasons": ["đọc sách là ưu tiên", "yên tĩnh mới tập trung nổi", "góc riêng là chân ái"],
           "personalityTraits": [
             "tập trung sâu không cần cố",
             "một mình vẫn tự đủ vui",
@@ -1032,11 +951,7 @@
             "học nhẹ đầu óc thảnh thơi",
             "viết nhật ký cho riêng mình"
           ],
-          "avoidWhen": [
-            "nhạc lớn phá mạch đọc",
-            "thiếu sáng nhìn chữ mờ",
-            "người qua lại tấp nập"
-          ]
+          "avoidWhen": ["nhạc lớn phá mạch đọc", "thiếu sáng nhìn chữ mờ", "người qua lại tấp nập"]
         }
       },
       "matchReasons": {
@@ -1190,6 +1105,49 @@
   "contribute": {
     "title": "Đóng góp quán mới",
     "subtitle": "Chia sẻ một quán cà phê đáng ghé để cộng đồng dễ tìm thấy hơn.",
+    "hub": {
+      "title": "Đóng góp cho Cafe Maps",
+      "subtitle": "Chọn cách gửi phù hợp: gợi ý nhanh một quán đáng ghé hoặc gửi bộ thông tin chi tiết nếu bạn là chủ quán.",
+      "eyebrow": "Cafe Maps contribution",
+      "heroTitle": "Bạn muốn đóng góp theo cách nào?",
+      "flowAria": "Chọn luồng đóng góp",
+      "suggest": {
+        "title": "Gợi ý quán cho cộng đồng",
+        "body": "Gửi nhanh một quán bạn từng ghé, kèm Google Maps, vài dòng cảm nhận và ảnh nếu có.",
+        "cta": "Gợi ý quán"
+      },
+      "owner": {
+        "title": "Chủ quán gửi thông tin chi tiết",
+        "body": "Bổ sung ảnh, menu, giờ mở cửa, tiện ích và liên hệ để admin kiểm tra đầy đủ hơn.",
+        "cta": "Gửi thông tin"
+      }
+    },
+    "ownerSheet": {
+      "button": "Xem các mục cần điền",
+      "title": "Các mục cần điền",
+      "description": "Tổng quan các nhóm thông tin trong form.",
+      "close": "Đóng",
+      "items": {
+        "photos": "Ảnh quán",
+        "name": "Tên quán",
+        "location": "Địa chỉ hoặc Google Maps",
+        "hours": "Giờ mở / đóng",
+        "description": "Giới thiệu ngắn / mô tả",
+        "vibe": "Vibe / phù hợp / tiện ích",
+        "parking": "Gửi xe",
+        "featured": "Món nổi bật / Instagram",
+        "menu": "Menu",
+        "ownerContact": "Thông tin liên hệ owner",
+        "verification": "Ghi chú xác thực / note cho admin"
+      }
+    },
+    "ownerPage": {
+      "metadataTitle": "Chủ quán gửi thông tin",
+      "metadataDescription": "Gửi ảnh, menu, giờ mở cửa, giá và liên hệ để Cafe Maps kiểm tra quán của bạn.",
+      "eyebrow": "Chủ quán gửi thông tin",
+      "title": "Gửi thông tin chi tiết quán của bạn",
+      "body": "Thêm ảnh, menu, giờ mở cửa, giá và thông tin liên hệ. Bạn sẽ xem lại trước khi gửi duyệt."
+    },
     "eyebrow": "Cafe Maps community",
     "heroTitle": "Chia sẻ một góc cà phê bạn muốn người khác tìm thấy",
     "heroBody": "Một link Google Maps, vài dòng cảm nhận và ảnh thật nếu có là đủ để bọn mình bắt đầu kiểm tra. Những đóng góp nhỏ giúp Cafe Maps giữ được chất địa phương, gần gũi và đáng tin hơn.",
@@ -1233,13 +1191,15 @@
       "coverAlt": "Ảnh bìa quán đã chọn",
       "googleMaps": "Google Maps",
       "reason": "Lý do",
+      "photoUploadNotice": "{count} ảnh sẽ mất nhiều thời gian gửi hơn bình thường.",
       "note": "Quán của bạn sẽ được đội ngũ kiểm duyệt trong 1-3 ngày làm việc trước khi xuất hiện trên Cafe Maps."
     },
     "actions": {
       "back": "Quay lại",
       "review": "Xem lại",
       "submit": "Gửi đề xuất",
-      "submitting": "Đang gửi..."
+      "submitting": "Đang gửi...",
+      "uploadingImages": "Đang tải ảnh..."
     },
     "success": {
       "title": "Cảm ơn bạn đã chia sẻ!",
@@ -1250,7 +1210,16 @@
     "errors": {
       "nameRequired": "Tên quán là bắt buộc để đội ngũ dễ kiểm tra.",
       "googleMapsRequired": "Link Google Maps là bắt buộc để mọi người tìm được quán.",
+      "photos": {
+        "invalid": "Ảnh không hợp lệ hoặc lớn hơn 20MiB.",
+        "count": "Chỉ có thể chọn tối đa 8 ảnh.",
+        "totalSize": "Tổng dung lượng ảnh không được vượt quá 40MiB."
+      },
+      "photoUploadFailed": "Bọn mình chưa xử lý được ảnh. Thử lại sau ít phút nhé.",
       "submitFailed": "Chưa gửi được đề xuất. Thử lại giúp bọn mình nhé."
+    },
+    "status": {
+      "processingPhotos": "Đang xử lý {count} ảnh, vui lòng chờ thêm một chút."
     },
     "stepCount": "Bước {step} / {total}",
     "heading": "Kể cho bọn mình nghe về một quán bạn hay đến nhé"
@@ -1265,12 +1234,16 @@
     "eyebrow": "Sổ tay cà phê Sài Gòn",
     "visualAlt": "Không gian quán cà phê ấm áp ở Sài Gòn",
     "visualKicker": "Cafe Maps account",
-    "visualTitle": "Giữ lại những quán làm ngày của bạn dễ chịu hơn.",
+    "visualTitle": "Hôm nay bạn thế nào? Mình đi cà phê nhé!",
     "visualBody": "Đăng nhập để lưu quán, quay lại các góc yêu thích và tiếp tục hành trình khám phá cà phê quanh TP.HCM.",
-    "loginHeroTitle": "Chào lại, mình đi cà phê tiếp nhé.",
-    "loginHeroBody": "Vào tài khoản để xem lại các quán đã lưu và những gợi ý hợp mood hôm nay.",
-    "registerHeroTitle": "Tạo một góc riêng cho hành trình cà phê của bạn.",
-    "registerHeroBody": "Lưu quán đáng ghé, giữ danh sách yêu thích và tìm thêm những không gian hợp gu.",
+    "loginHeroTitle": "Gặp lại nhau rồi! Mình đi cà phê tiếp nhé.",
+    "loginHeroBody": "Những góc cà phê bạn thích vẫn ở đây. Đăng nhập để tìm lại quán quen và khám phá thêm những quán cà phê hợp mood nhé.",
+    "registerHeroTitle": "Góc cà phê của bạn, bắt đầu từ đây",
+    "registerHeroBody": "Lưu quán đáng ghé, tìm góc hợp gu và tạo nên hành trình cà phê của riêng mình.",
+    "forgotHeroTitle": "Quay lại hành trình cà phê của bạn.",
+    "forgotHeroBody": "Nhập email, bọn mình sẽ gửi link đặt lại mật khẩu nếu tài khoản phù hợp.",
+    "resetHeroTitle": "Đặt mật khẩu mới.",
+    "resetHeroBody": "Dùng mật khẩu mới để bảo vệ tài khoản Cafe Maps của bạn.",
     "emailPlaceholder": "ban@email.com",
     "benefits": {
       "saved": "Lưu quán yêu thích",
@@ -1281,24 +1254,31 @@
     "loginGreetingSub": "Đăng nhập để tiếp tục khám phá nhé.",
     "registerGreetingTitle": "Chào người mới!",
     "registerGreetingSub": "Tạo tài khoản miễn phí, chỉ mất một phút.",
-    "loginTab": "Chào lại",
-    "registerTab": "Mình mới ghé",
-    "switchToRegister": "Mình mới ghé",
-    "switchToLogin": "Đăng nhập",
-    "emailQuestion": "Email của bạn?",
-    "passwordQuestion": "Mật khẩu?",
-    "setPasswordQuestion": "Đặt mật khẩu?",
-    "confirmPasswordQuestion": "Nhập lại mật khẩu?",
-    "forgotShort": "Quên rồi?",
+    "loginTab": "Mừng bạn quay lại",
+    "registerTab": "Mình ghé lần đầu",
+    "switchToRegister": "Mình ghé lần đầu",
+    "switchToLogin": "Mừng bạn quay lại",
+    "emailQuestion": "Email của bạn",
+    "passwordQuestion": "Mật khẩu",
+    "setPasswordQuestion": "Tạo mật khẩu",
+    "confirmPasswordQuestion": "Nhập lại mật khẩu",
+    "forgotShort": "Mình quên rồi...",
     "passwordPlaceholder": "Mật khẩu của bạn",
     "showPassword": "Hiện mật khẩu",
     "hidePassword": "Ẩn mật khẩu",
     "loginCta": "Vào thôi",
-    "registerCta": "Vào cùng bọn mình",
+    "registerCta": "Tuyệt vời! Nhập hội nào",
     "email": "Email",
     "password": "Mật khẩu",
     "confirmPassword": "Xác nhận mật khẩu",
     "forgotPassword": "Quên mật khẩu?",
+    "resetPassword": "Đặt lại mật khẩu",
+    "forgotCta": "Gửi link đặt lại",
+    "resetCta": "Lưu mật khẩu mới",
+    "forgotSuccess": "Nếu có tài khoản phù hợp, link đặt lại mật khẩu đã được gửi.",
+    "forgotError": "Chưa thể gửi link đặt lại lúc này.",
+    "resetSuccess": "Đã cập nhật mật khẩu. Đang chuyển đến trang đăng nhập...",
+    "resetError": "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.",
     "noAccount": "Chưa có tài khoản?",
     "hasAccount": "Đã có tài khoản?",
     "loginSuccess": "Đăng nhập thành công",
@@ -1316,7 +1296,9 @@
       "invalidEmail": "Email không hợp lệ",
       "passwordMin": "Mật khẩu tối thiểu 8 ký tự",
       "confirmPasswordMin": "Xác nhận mật khẩu tối thiểu 8 ký tự",
-      "passwordMismatch": "Mật khẩu xác nhận không khớp"
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
+      "passwordMax": "Mật khẩu tối đa 72 ký tự",
+      "tokenRequired": "Link đặt lại mật khẩu bị thiếu hoặc không hợp lệ"
     }
   },
   "footer": {
@@ -1336,6 +1318,7 @@
     "websiteAria": "Về trang chủ Cafe Maps",
     "shareAria": "Chia sẻ Cafe Maps",
     "bottomNote": "Ủ bằng yêu thương tại TP.HCM.",
+    "donateHint": "Cùng tụi mình lưu thêm nhiều quán hay.",
     "stamp": "Good coffee, good day",
     "cta": {
       "eyebrow": "Khám phá cà phê địa phương",
@@ -1355,21 +1338,35 @@
     "search": "Tìm kiếm",
     "quiz": "Gu",
     "saved": "Đã lưu",
+    "contribute": "Đóng góp",
     "map": "Bản đồ",
     "profile": "Cá nhân"
   },
   "guidedFilter": {
     "openNow": "Đang mở cửa",
+    "openFromSeven": "Mở lúc 07:00",
+    "open24Hours": "Mở 24 giờ",
     "moreFilters": "Bộ lọc thêm",
     "activeCount": "{count} bộ lọc",
     "moreDistricts": "+{count} quận",
+    "districtCount": "{count} quận",
     "moreVibes": "+{count} phong cách",
     "allDistricts": "Tất cả quận",
-    "allVibes": "Tất cả phong cách"
+    "allVibes": "Tất cả phong cách",
+    "mobile": {
+      "title": "Bộ lọc",
+      "description": "Tinh chỉnh kết quả theo nhu cầu của bạn.",
+      "hint": "Lọc theo quận, khoảng cách, phong cách, giá và nhu cầu.",
+      "openNowShort": "Đang mở",
+      "distance": "Khoảng cách",
+      "district": "Khu vực",
+      "viewResults": "Xem kết quả"
+    }
   },
   "pagination": {
     "prev": "Trang trước",
     "next": "Trang sau",
+    "goToPage": "Đến trang",
     "showing": "Hiển thị {from}–{to} trong {total} quán",
     "page": "Trang {current} / {total}"
   },
@@ -1403,6 +1400,16 @@
     "previous": "Ảnh trước",
     "next": "Ảnh sau",
     "goTo": "Chuyển tới ảnh {index}"
+  },
+  "chains": {
+    "title": "Khám phá chuỗi cà phê",
+    "description": "Tìm các thương hiệu cà phê có nhiều chi nhánh trên Cafe Maps.",
+    "back": "Về trang chủ",
+    "allChains": "Tất cả chuỗi",
+    "empty": "Chưa có chuỗi cà phê phù hợp.",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "branchCount": "{count} chi nhánh trên Cafe Maps"
   },
   "nearby": {
     "button": "Gần đây",

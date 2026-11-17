@@ -1,5 +1,7 @@
 "use client";
 
+import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
+
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Bookmark, Check, FolderOpen, FolderPlus, X } from "lucide-react";
@@ -44,7 +46,7 @@ export function MoveToCollectionModal({
           <div className="flex items-center gap-3">
             {cafe.coverImage ? (
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl">
-                <Image src={cafe.coverImage} alt={cafe.name} fill sizes="40px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />
+                <Image src={cloudinaryImageUrl(cafe.coverImage, "thumb")} alt={cafe.name} fill sizes="40px" className="object-cover" style={{ objectPosition: coverObjectPosition(cafe) }} />
               </div>
             ) : (
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--season-soft)]">
@@ -86,7 +88,7 @@ export function MoveToCollectionModal({
                 {/* Mini preview */}
                 <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--season-soft)]">
                   {col.cafes[0]?.coverImage ? (
-                    <Image src={col.cafes[0].coverImage} alt={col.name} fill sizes="36px" className="object-cover" style={{ objectPosition: coverObjectPosition(col.cafes[0]) }} />
+                    <Image src={cloudinaryImageUrl(col.cafes[0].coverImage, "thumb")} alt={col.name} fill sizes="36px" className="object-cover" style={{ objectPosition: coverObjectPosition(col.cafes[0]) }} />
                   ) : (
                     <div className="flex h-full items-center justify-center">
                       <FolderOpen size={16} className="text-[#c8a97a]" />

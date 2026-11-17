@@ -9,6 +9,7 @@ import { EN_VIBE_VALUES } from "@/apis/cafes/filter-normalization";
 import { VIBES } from "@/types/cafe";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
+import { useNearMe } from "@/components/cafe/hooks/useNearMe";
 import NearMeButton from "@/components/cafe/NearMeButton";
 import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
 import { DISTANCE_OPTIONS } from "@/components/cafe/constants/filter-constants";
@@ -50,6 +51,7 @@ export default function CafePicker({
   onSelect,
   labels,
 }: Props) {
+  const { nearMeLoading, onNearMe } = useNearMe(nearby, onNearby);
   const t = useTranslations("coffeeMeetups.form");
   const tFilters = useTranslations("filters");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -97,7 +99,7 @@ export default function CafePicker({
         </Select>
       </div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <NearMeButton filter={nearby} onChange={onNearby} />
+        <NearMeButton nearMe={Boolean(nearby.nearMe)} loading={nearMeLoading} onClick={onNearMe} />
         {nearby.nearMe && DISTANCE_OPTIONS.map(({ km }) => (
           <FilterChipButton key={km} type="button" active={nearby.radiusKm === km}
             onClick={() => onNearby({ ...nearby, radiusKm: km })}>

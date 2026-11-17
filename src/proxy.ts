@@ -5,7 +5,7 @@ import { routing } from "./i18n/routing";
 import { acceptsMarkdown } from "./lib/agent-content";
 
 const intlMiddleware = createMiddleware(routing);
-const GUARDED_PATHS: string[] = [];
+const GUARDED_PATHS = ["/contribute/owner"];
 const GUEST_ONLY_PATHS = ["/login", "/register"];
 const locales = routing.locales as readonly string[];
 const PUBLIC_FILE = /\.(?:avif|css|gif|ico|jpg|jpeg|js|json|map|mp4|png|svg|txt|webp|woff2?|xml)$/i;
@@ -31,12 +31,14 @@ const LOCALIZED_ROUTE_PREFIXES = [
   "/client",
   "/coffee-meetups",
   "/contribute",
+  "/forgot-password",
   "/home2",
   "/login",
   "/map",
   "/profile",
   "/quiz",
   "/register",
+  "/reset-password",
   "/saved",
   "/search",
 ];

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BookOpen, CalendarPlus, ChevronLeft, Share2 } from "lucide-react";
@@ -31,9 +31,10 @@ import { featureFlags } from "@/lib/feature-flags";
 interface CafeDetailContentProps {
   cafe: Cafe;
   locale: string;
+  aboveReviews?: ReactNode;
 }
 
-export default function CafeDetailContent({ cafe, locale }: CafeDetailContentProps) {
+export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDetailContentProps) {
   useFeedbackCafeId(cafe.id);
   const t = useTranslations("cafe");
   const tc = useTranslations("common");
@@ -275,6 +276,7 @@ export default function CafeDetailContent({ cafe, locale }: CafeDetailContentPro
             onVisited={handleVisited}
             onVote={handleVote}
           />
+        {aboveReviews}
         <CafeReviews cafeId={cafe.id} locale={locale} />
       </div>
 

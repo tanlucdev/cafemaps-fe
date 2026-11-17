@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import {
   FormActions,
   ReviewStep,
@@ -12,11 +13,12 @@ import { useContributeForm } from "./useContributeForm";
 
 export default function ContributeForm() {
   const form = useContributeForm();
+  const t = useTranslations("contribute");
 
   return (
     <div
       className={cn(
-        "flex-1 overflow-y-auto rounded-[24px] border border-[var(--border)] bg-[var(--contribute-surface)] px-4 py-3.5 shadow-[var(--contribute-panel-shadow)] backdrop-blur-xl sm:rounded-[28px] sm:px-7 sm:py-6",
+        "min-w-0 flex-1 overflow-y-auto rounded-[24px] border border-[var(--border)] bg-[var(--contribute-surface)] px-4 py-3.5 shadow-[var(--contribute-panel-shadow)] backdrop-blur-xl sm:rounded-[28px] sm:px-7 sm:py-6",
         !form.done && "animate-[fadeUp_0.35s_ease_both]",
       )}
     >
@@ -45,10 +47,19 @@ export default function ContributeForm() {
           <FormActions
             step={form.step}
             loading={form.loading}
+            hasPhotos={form.data.photos.length > 0}
             onBack={form.back}
             onNext={form.next}
             onSubmit={form.submit}
           />
+          {form.slowUpload && (
+            <p
+              aria-live="polite"
+              className="mt-3 text-center text-[12px] font-medium text-[var(--foreground-muted)]"
+            >
+              {t("status.processingPhotos", { count: form.data.photos.length })}
+            </p>
+          )}
         </>
       )}
     </div>

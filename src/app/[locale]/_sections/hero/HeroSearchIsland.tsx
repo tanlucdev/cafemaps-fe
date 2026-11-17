@@ -76,7 +76,7 @@ export function HeroSearchIsland() {
       search: undefined as string | undefined,
       vibes: [] as string[],
       purposes: [] as string[],
-      district: districtSearch.matched ? districtSearch.district : undefined,
+      districts: districtSearch.matched ? [districtSearch.district!] : undefined,
       nearMe: undefined as boolean | undefined,
     };
 
@@ -98,7 +98,7 @@ export function HeroSearchIsland() {
         search: filter.search,
         vibes: filter.vibes.length ? filter.vibes : undefined,
         purposes: filter.purposes.length ? filter.purposes : undefined,
-        district: filter.district,
+        districts: filter.districts,
         nearMe: filter.nearMe,
       },
       "popular",
@@ -111,7 +111,7 @@ export function HeroSearchIsland() {
           search: filter.search,
           vibes: filter.vibes.length ? filter.vibes : undefined,
           purposes: filter.purposes.length ? filter.purposes : undefined,
-          district: filter.district,
+          districts: filter.districts,
           nearMe: filter.nearMe,
         },
         sort: "popular",
@@ -176,7 +176,7 @@ export function HeroSearchIsland() {
     const filter = {
       vibes: [] as string[],
       purposes: [] as string[],
-      district: districtSearch.matched ? districtSearch.district : undefined,
+      districts: districtSearch.matched ? [districtSearch.district!] : undefined,
     };
 
     for (const mapping of KEYWORD_TO_FILTER) {
@@ -190,7 +190,7 @@ export function HeroSearchIsland() {
       {
         vibes: filter.vibes.length ? filter.vibes : undefined,
         purposes: filter.purposes.length ? filter.purposes : undefined,
-        district: filter.district,
+        districts: filter.districts,
       },
       "popular",
     ).toString();
@@ -201,7 +201,7 @@ export function HeroSearchIsland() {
         filter: {
           vibes: filter.vibes.length ? filter.vibes : undefined,
           purposes: filter.purposes.length ? filter.purposes : undefined,
-          district: filter.district,
+          districts: filter.districts,
         },
         sort: "popular",
         params: query,

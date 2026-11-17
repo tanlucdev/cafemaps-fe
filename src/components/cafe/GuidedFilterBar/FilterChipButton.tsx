@@ -9,7 +9,7 @@ const CHIP_BASE =
 const CHIP_ACTIVE = "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)]";
 
 const CHIP_INACTIVE =
-  "border-[var(--border)] bg-white/62 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)] dark:bg-[var(--card)]";
+  "border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]";
 
 interface FilterChipButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   active: boolean;

@@ -15,6 +15,7 @@ export function getCafeReviews(cafeId: string, page = 1, limit = 10) {
 
 export function getMyCafeReview(cafeId: string, token: string) {
   return apiFetch<CafeReview | null>(`/cafes/${encodeURIComponent(cafeId)}/reviews/me`, {
+    allowEmptyResponse: true,
     cache: "no-store",
     headers: authHeaders(token),
   });
