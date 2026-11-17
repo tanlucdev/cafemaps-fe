@@ -1,0 +1,52 @@
+.frame { position: relative; min-width: 0; }
+.frame > article { height: 100%; }
+:global([data-season="christmas"]) .frame :global(.christmas-cafe-save) { top: 44px; }
+.trim, .garland { display: none; pointer-events: none; }
+:global([data-season="christmas"]) .trim {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  right: -10px;
+  top: -20px;
+  width: 52px;
+  height: 52px;
+}
+.ornament { width: 52px; height: 52px; transform: rotate(8deg); transform-origin: 70% 85%; }
+.star { position: absolute; width: 14px; height: 14px; right: 1px; bottom: 0; }
+:global([data-season="christmas"]) .compact { top: -16px; width: 44px; height: 44px; }
+.compact .ornament { width: 44px; height: 44px; }
+.compact .star { width: 12px; height: 12px; }
+@media (prefers-reduced-motion: no-preference) {
+  .trim[data-moving="true"] .ornament { animation: ornament-float 7s ease-in-out infinite; animation-delay: var(--ornament-delay); }
+  .trim[data-moving="true"] .star { animation: ornament-twinkle 6s ease-in-out infinite; animation-delay: var(--ornament-delay); }
+}
+@keyframes ornament-float {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes ornament-twinkle {
+  0%, 100% { opacity: .45; transform: scale(.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+:global([data-season="christmas"]) .garland {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  overflow: hidden;
+}
+.sprig { width: 52px; height: 52px; transform: rotate(12deg); }
+.bow { width: 36px; height: 36px; }
+.lights { position: absolute; left: 52px; top: 5px; width: calc(100% - 94px); height: 16px; }
+@media (min-width: 768px) {
+  :global([data-season="christmas"]) .frame :global(.christmas-cafe-save) { top: 52px; }
+  :global([data-season="christmas"]) .trim { top: -24px; width: 64px; height: 64px; }
+  .ornament { width: 64px; height: 64px; }
+  :global([data-season="christmas"]) .compact { top: -20px; width: 52px; height: 52px; }
+  .compact .ornament { width: 52px; height: 52px; }
+  :global([data-season="christmas"]) .garland { height: 44px; }
+  .sprig { width: 68px; height: 68px; }
+  .bow { width: 44px; height: 44px; }
+  .lights { left: 68px; width: calc(100% - 120px); }
+}

@@ -7,6 +7,7 @@ async function loadDevFallback(options?: NextRequestInit) {
   const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ""
   const localApi = apiUrl.includes("localhost") || apiUrl.includes("127.0.0.1")
   if (
+    process.env.NEXT_PUBLIC_MOCK_CAFES !== "1" ||
     (process.env.NODE_ENV === "production" && !localApi) ||
     options?.fallback === false ||
     options?.cache === "no-store"
@@ -39,6 +40,17 @@ export async function getCafes(filter?: CafeFilter, locale?: string | null): Pro
     console.error("getCafes failed:", err)
     return []
   }
+}
+
+export async function searchCafes(
+  search: string,
+  locale?: string | null,
+  filter?: Pick<CafeFilter, "purposes" | "vibes">,
+) {
+  const { cafes } = await getCafesWithMeta(
+    { ...filter, search: search.trim(), limit: 10 }, locale, { fallback: false },
+  )
+  return cafes
 }
 
 export async function getCafesWithMeta(
@@ -95,7 +107,8 @@ export async function getNearbyCafes(
   lat: number,
   lng: number,
   radiusKm = 2,
-  _locale?: string | null
+  _locale?: string | null,
+  options?: NextRequestInit
 ): Promise<Cafe[]> {
   void _locale
   try {
@@ -105,9 +118,10 @@ export async function getNearbyCafes(
       radius: String(radiusKm),
       distanceMode: "route",
     })
-    const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, { cache: "no-store" })
+    const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, { ...options, cache: "no-store" })
     return raw.map((cafe) => mapApiCafe(cafe, _locale))
   } catch (err) {
+    if (options?.fallback === false) throw err
     console.error("getNearbyCafes failed:", err)
     return []
   }

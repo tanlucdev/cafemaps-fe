@@ -96,7 +96,7 @@ export default function SaveButton({
         aria-label={saved ? t("unsave") : t("save")}
         className={cn(
           "flex items-center justify-center rounded-full transition-all duration-200",
-          saved ? "bg-accent text-white" : "bg-white/88 text-[#875200] dark:bg-[#1C1210]/85 dark:text-[#FFB865]",
+          saved ? "bg-accent text-[var(--accent-foreground)]" : "bg-white/88 text-[var(--accent)] dark:bg-[#1C1210]/85 dark:text-[var(--accent)]",
           className,
         )}
       >

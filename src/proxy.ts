@@ -29,6 +29,7 @@ const LOCALIZED_ROUTE_PREFIXES = [
   "/blog",
   "/cafe",
   "/client",
+  "/coffee-meetups",
   "/contribute",
   "/home2",
   "/login",

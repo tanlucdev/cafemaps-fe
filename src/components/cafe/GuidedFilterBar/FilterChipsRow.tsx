@@ -68,7 +68,7 @@ export function FilterChipsRow({
         <SlidersHorizontal size={14} />
         {tf("vibe")}
         {activeCount > 0 ? (
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#fff0d2] px-0.5 text-[10px] font-extrabold text-[#201006]">
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent-light)] px-0.5 text-[10px] font-extrabold text-[var(--accent)]">
             {activeCount}
           </span>
         ) : (

@@ -31,11 +31,11 @@ export function ProfileHeader({
 
       <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="flex size-18 shrink-0 items-center justify-center rounded-[24px] bg-[var(--accent)] text-xl font-black text-white shadow-[0_14px_30px_rgba(200,132,42,0.22)] sm:size-20 sm:rounded-[26px] sm:text-2xl">
+          <div className="flex size-18 shrink-0 items-center justify-center rounded-[24px] bg-[var(--accent)] text-xl font-black text-[var(--accent-foreground)] shadow-[0_14px_30px_rgba(200,132,42,0.22)] sm:size-20 sm:rounded-[26px] sm:text-2xl">
             {initials}
           </div>
           <div className="min-w-0">
-            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[#ead8bd] bg-white/70 px-3 py-1 text-xs font-bold text-[#875200] dark:border-white/10 dark:bg-white/5 dark:text-[#f0b869]">
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[#ead8bd] bg-white/70 px-3 py-1 text-xs font-bold text-[var(--accent)] dark:border-white/10 dark:bg-white/5 dark:text-[var(--accent)]">
               <Coffee size={13} />
               {copy.eyebrow}
             </div>
@@ -47,7 +47,7 @@ export function ProfileHeader({
             </p>
             <p className="mt-2 max-w-xl text-sm text-[var(--foreground-muted)]">{copy.subtitle}</p>
             {hasPreviewProfileData && (
-              <p className="mt-2 text-xs font-semibold text-[#9a6a26]">{copy.mockLabel}</p>
+              <p className="mt-2 text-xs font-semibold text-[var(--accent)]">{copy.mockLabel}</p>
             )}
           </div>
         </div>
@@ -55,7 +55,7 @@ export function ProfileHeader({
         {isLoggedIn ? (
           <button
             type="button"
-            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
+            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-[var(--accent-foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
           >
             <Edit3 size={16} />
             {copy.editProfile}
@@ -63,7 +63,7 @@ export function ProfileHeader({
         ) : (
           <Link
             href="/login"
-            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
+            className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-[var(--accent-foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none sm:w-auto"
           >
             <UserRound size={16} />
             {copy.signIn}

@@ -65,13 +65,13 @@ export default function FeaturedCafesSection({ cafes, copy }: FeaturedCafesSecti
     <section className="relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_16%_20%,rgba(200,132,42,0.14),transparent_30%),radial-gradient(circle_at_84%_8%,rgba(255,216,145,0.20),transparent_26%),linear-gradient(180deg,#fffaf2_0%,#f7ecd8_58%,#fdf6ec_100%)]" />
       <div className="pointer-events-none absolute inset-0 -z-10 [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.72%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.32%22/%3E%3C/svg%3E')] opacity-[0.045] mix-blend-multiply" />
-      <div className="pointer-events-none absolute top-10 right-[8%] -z-10 hidden h-28 w-44 rotate-[-10deg] rounded-[50%] border-t border-dashed border-[#c8842a]/18 lg:block" />
+      <div className="pointer-events-none absolute top-10 right-[8%] -z-10 hidden h-28 w-44 rotate-[-10deg] rounded-[50%] border-t border-dashed border-[var(--accent)]/18 lg:block" />
       <div className="mx-auto max-w-7xl">
         {/* Section header */}
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-7">
           <div>
             <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#e3c79b]/70 bg-white/46 px-3 py-1.5 text-xs font-black tracking-[0.13em] text-[#9b6424] uppercase shadow-[0_8px_22px_rgba(120,72,25,0.07)] backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c8842a] shadow-[0_0_14px_rgba(200,132,42,0.55)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] shadow-[0_0_14px_rgba(200,132,42,0.55)]" />
               {copy.weeklyFavourite}
             </p>
             <h2 className="font-lora text-2xl leading-tight font-bold tracking-tight text-[#2c1a0e] sm:text-4xl dark:text-[var(--foreground)]">
@@ -80,7 +80,7 @@ export default function FeaturedCafesSection({ cafes, copy }: FeaturedCafesSecti
           </div>
           <Link
             href="/search"
-            className="hidden min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[#8a551d] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[#c8842a]/70 hover:text-[#a86d1e] focus-visible:ring-2 focus-visible:ring-[#c8842a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none sm:flex"
+            className="hidden min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[var(--accent)] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[var(--accent)]/70 hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none sm:flex"
           >
             {copy.viewAll}
             <ArrowRight size={15} />
@@ -164,7 +164,7 @@ export default function FeaturedCafesSection({ cafes, copy }: FeaturedCafesSecti
         <div className="mt-5 text-center sm:hidden">
           <Link
             href="/search"
-            className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[#8a551d] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:border-[#c8842a]/70 hover:text-[#a86d1e] focus-visible:ring-2 focus-visible:ring-[#c8842a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#e0c49b]/78 bg-white/56 px-4 text-sm font-black text-[var(--accent)] shadow-[0_10px_24px_rgba(91,58,29,0.08)] backdrop-blur-md transition hover:border-[var(--accent)]/70 hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] focus-visible:outline-none"
           >
             {copy.viewAllMobile}
             <ArrowRight size={15} />

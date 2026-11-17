@@ -146,7 +146,7 @@ function ShareNudge({ labels, className = "" }: { labels: ResultLabels; classNam
 function Status({ text, className = "" }: { text: string; className?: string }) {
   return (
     <p
-      className={`min-h-5 text-center text-xs font-semibold text-[#8b6437] ${className}`}
+      className={`min-h-5 text-center text-xs font-semibold text-[var(--foreground-muted)] ${className}`}
       aria-live="polite"
     >
       {text}

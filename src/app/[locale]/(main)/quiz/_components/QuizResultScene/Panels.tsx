@@ -64,8 +64,8 @@ function RelationColumn({
 }) {
   return (
     <div className="min-h-0 rounded-[8px] border border-[#e5cfad] bg-white/70 p-3 shadow-[0_12px_30px_rgba(88,55,24,0.08)] lg:p-2.5 dark:bg-[var(--card)]">
-      <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-[#8b521b]">
-        <Icon className="size-4 text-[#c8842a]" />
+      <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-[var(--accent)]">
+        <Icon className="size-4 text-[var(--accent)]" />
         {title}
       </div>
       <div className="grid gap-1.5">

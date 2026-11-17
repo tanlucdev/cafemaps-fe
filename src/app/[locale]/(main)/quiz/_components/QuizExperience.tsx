@@ -219,8 +219,8 @@ export default function QuizExperience({
 
   if (previewProfileId && !cafesReady) {
     return (
-      <section className="grid min-h-[100svh] place-items-center bg-[#fbf4e8] px-4 text-center dark:bg-[#1e1c1a]">
-        <p className="text-sm font-black text-[#8b6437]">{t("brewingResult")}</p>
+      <section className="grid min-h-[100svh] place-items-center bg-[var(--background)] px-4 text-center dark:bg-[var(--background)]">
+        <p className="text-sm font-black text-[var(--foreground-muted)]">{t("brewingResult")}</p>
       </section>
     );
   }

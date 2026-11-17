@@ -19,7 +19,7 @@ export function showSavedToast({
   toast.custom(
     (id) => (
       <div className="flex w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-[18px] border border-[#ffe3b7]/80 bg-[#fffaf2]/96 p-3.5 text-[#29170c] shadow-[0_18px_48px_rgba(44,26,14,0.18)] backdrop-blur-md dark:border-white/10 dark:bg-[#1c1209]/96 dark:text-[#f5e8d8]">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#ffe3b7]/70 bg-[#fff1da] text-[#875200] dark:border-white/10 dark:bg-[#2c1a0e] dark:text-[#ffb865]">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#ffe3b7]/70 bg-[#fff1da] text-[var(--accent)] dark:border-white/10 dark:bg-[#2c1a0e] dark:text-[var(--accent)]">
           {kind === "rename" ? <Pencil size={16} /> : <Trash2 size={16} />}
         </div>
         <div className="min-w-0 flex-1">

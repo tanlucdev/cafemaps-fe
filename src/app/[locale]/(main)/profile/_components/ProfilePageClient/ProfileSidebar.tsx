@@ -36,7 +36,7 @@ export function ProfileInfoCard({
       <div className="space-y-3">
         {rows.map(({ icon: Icon, label, value }) => (
           <div key={label} className="flex items-start gap-3">
-            <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--background-secondary)] text-[#875200] dark:text-[#f0b869]">
+            <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--background-secondary)] text-[var(--accent)] dark:text-[var(--accent)]">
               <Icon size={15} />
             </div>
             <div className="min-w-0">
@@ -87,7 +87,7 @@ export function QuickActions({ copy }: { copy: ProfileCopy }) {
             className={cn(
               "inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 text-sm font-bold transition focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none",
               primary
-                ? "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
+                ? "bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent-hover)]"
                 : "border border-[var(--border)] bg-transparent text-[var(--foreground)] hover:bg-[var(--background-secondary)]",
             )}
           >

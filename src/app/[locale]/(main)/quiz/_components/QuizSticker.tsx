@@ -103,7 +103,7 @@ export default function QuizSticker({
       transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
     >
       <StickerScene Icon={sticker.Icon} Accent={sticker.Accent} glow={sticker.glow} />
-      <span className="absolute -top-1 -right-1 z-20 size-3 rounded-full border border-white/80 bg-[#c8842a]" />
+      <span className="absolute -top-1 -right-1 z-20 size-3 rounded-full border border-white/80 bg-[var(--accent)]" />
     </motion.div>
   );
 }

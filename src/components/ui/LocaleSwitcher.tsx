@@ -84,7 +84,7 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
                 className={cn(
                   "flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
                   l.code === locale
-                    ? "bg-[rgba(201,135,12,0.12)] font-semibold text-[#C9870C] dark:bg-[rgba(240,168,48,0.12)] dark:text-[#F0A830]"
+                    ? "bg-[var(--accent-light)] font-semibold text-[var(--accent)] dark:bg-[var(--accent-light)] dark:text-[var(--accent)]"
                     : "hover:text-foreground text-(--foreground-muted) hover:bg-(--background-secondary)",
                 )}
               >
@@ -96,7 +96,7 @@ export default function LocaleSwitcher({ className, align = "right" }: LocaleSwi
                 />
                 <span>{l.label}</span>
                 {l.code === locale && (
-                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#C9870C] dark:bg-[#F0A830]" />
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[var(--accent)] dark:bg-[var(--accent)]" />
                 )}
               </button>
             ))}

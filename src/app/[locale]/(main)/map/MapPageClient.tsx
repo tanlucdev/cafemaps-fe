@@ -223,8 +223,8 @@ export default function MapPageClient({
     const point = cafePoint(selectedCafe, visitedIds.has(selectedCafe.id));
     if (!point) return;
     const el = document.createElement("div");
-    el.className = "w-[230px] overflow-hidden rounded-2xl bg-[#fffaf2] text-[#2c1a0e] shadow-xl";
-    el.innerHTML = `<img src="${selectedCafe.coverImage ?? selectedCafe.images[0] ?? "/image/logo.png"}" alt="" class="h-24 w-full object-cover" style="object-position:${coverObjectPosition(selectedCafe)}"><div class="p-3"><p class="font-black">${selectedCafe.name}</p><p class="mt-1 text-xs text-[#8c6d4f]">${selectedCafe.district ?? ""} · ${statusLabel(selectedCafe, t)}</p><div class="mt-3 flex gap-2"><button data-visit class="min-h-9 flex-1 rounded-full bg-[#875200] px-3 text-xs font-black text-white">${visitedIds.has(selectedCafe.id) ? t("unmark") : t("mark")}</button><a class="inline-flex min-h-9 items-center rounded-full border border-[#e6dacd] px-3 text-xs font-black" href="${cafeHref(locale, selectedCafe)}">${t("detail")}</a></div></div>`;
+    el.className = "christmas-panel w-[230px] overflow-hidden rounded-2xl bg-[var(--card)] text-[var(--foreground)] shadow-xl";
+    el.innerHTML = `<img src="${selectedCafe.coverImage ?? selectedCafe.images[0] ?? "/image/logo.png"}" alt="" class="h-24 w-full object-cover" style="object-position:${coverObjectPosition(selectedCafe)}"><div class="p-3"><p class="font-black">${selectedCafe.name}</p><p class="mt-1 text-xs text-[var(--foreground-muted)]">${selectedCafe.district ?? ""} · ${statusLabel(selectedCafe, t)}</p><div class="mt-3 flex gap-2"><button data-visit class="min-h-9 flex-1 rounded-full bg-[var(--accent)] px-3 text-xs font-black text-[var(--accent-foreground)]">${visitedIds.has(selectedCafe.id) ? t("unmark") : t("mark")}</button><a class="inline-flex min-h-9 items-center rounded-full border border-[#e6dacd] px-3 text-xs font-black" href="${cafeHref(locale, selectedCafe)}">${t("detail")}</a></div></div>`;
     el.querySelector("[data-visit]")?.addEventListener(
       "click",
       () => void toggleVisited(selectedCafe),
@@ -247,16 +247,16 @@ export default function MapPageClient({
 
   if (!token) {
     return (
-      <main className="grid min-h-[100svh] place-items-center px-4 pt-20 text-center text-[#2c1a0e]">
+      <main className="grid min-h-[100svh] place-items-center px-4 pt-20 text-center text-[var(--foreground)]">
         {t("missingToken")}
       </main>
     );
   }
 
   return (
-    <main className="relative min-h-[100svh] overflow-hidden bg-[#fdf6ec] pt-[70px] md:pt-[76px]">
+    <main className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] pt-[70px] md:pt-[76px]">
       <div className="grid h-[calc(100svh-70px)] md:h-[calc(100svh-76px)] md:grid-cols-[360px_1fr]">
-        <aside className="z-10 hidden overflow-y-auto border-r border-[#e8d8c0] bg-[#fff7e8]/96 p-4 shadow-[14px_0_40px_rgba(82,52,25,0.08)] md:block">
+        <aside className="z-10 hidden overflow-y-auto border-r border-[var(--border)] bg-[var(--card)]/96 p-4 shadow-[14px_0_40px_rgba(82,52,25,0.08)] md:block">
           <MapPanel
             cafes={visibleCafes}
             visitedIds={visitedIds}
@@ -269,7 +269,7 @@ export default function MapPageClient({
         </aside>
         <div ref={boxRef} className="min-h-0 w-full" />
       </div>
-      <section className="fixed right-3 bottom-[92px] left-3 z-20 max-h-[38svh] overflow-y-auto rounded-2xl border border-[#e8d8c0] bg-[#fffaf2]/96 p-3 shadow-2xl backdrop-blur md:hidden">
+      <section className="fixed right-3 bottom-[92px] left-3 z-20 max-h-[38svh] overflow-y-auto rounded-2xl border border-[var(--border)] bg-[var(--card)]/96 p-3 shadow-2xl backdrop-blur md:hidden">
         <MapPanel
           cafes={visibleCafes}
           visitedIds={visitedIds}

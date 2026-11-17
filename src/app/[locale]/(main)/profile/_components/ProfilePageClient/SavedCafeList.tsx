@@ -53,7 +53,7 @@ export function SavedCafeList({ cafes, copy }: { cafes: Cafe[]; copy: ProfileCop
               {cafe.vibes.slice(0, 3).map((vibe) => (
                 <span
                   key={vibe}
-                  className="rounded-full bg-[var(--accent-light)] px-2.5 py-1 text-xs font-bold text-[#875200] dark:text-[#f0b869]"
+                  className="rounded-full bg-[var(--accent-light)] px-2.5 py-1 text-xs font-bold text-[var(--accent)] dark:text-[var(--accent)]"
                 >
                   {vibe}
                 </span>

@@ -6,6 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Cafe Maps Rules
 
+- All dropdown selects must use the shared components from `@/components/ui/select`; do not use native HTML `<select>` in application UI. Preserve accessible labels, keyboard navigation, and the Cafe input focus styling.
 - Files max 300 lines; large component becomes `ComponentName/index.tsx`.
 - Fetch code lives in `src/apis/[feature]/index.ts`; no feature API in `src/lib`.
 - Split feature code into `hooks`, `helpers`, `constants` only when file would exceed 300 lines or logic is reused.

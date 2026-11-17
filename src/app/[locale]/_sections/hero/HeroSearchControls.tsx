@@ -75,7 +75,7 @@ export function HeroSearchControls({
               />
               <button
                 type="submit"
-                className="hidden h-full min-w-[72px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[#fff0d2] px-4 text-sm font-black text-[#201006] shadow-[0_8px_18px_rgba(245,190,104,0.22)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:inline-flex sm:min-w-[126px] sm:px-5 lg:hidden"
+                className="hidden h-full min-w-[72px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[0_8px_18px_rgba(245,190,104,0.22)] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] sm:inline-flex sm:min-w-[126px] sm:px-5 lg:hidden"
               >
                 <Search size={16} />
                 <span className="sm:hidden">{mobileSearchCta}</span>
@@ -101,7 +101,7 @@ export function HeroSearchControls({
             disabled={nearbyLoading}
             className="order-1 inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/30 bg-[#4a2a16]/42 px-4 text-sm font-bold text-[#fff0d4] shadow-[0_10px_24px_rgba(0,0,0,0.13),0_8px_24px_rgba(245,166,58,0.08)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-[#ffe3b7]/50 hover:bg-[#4a2a16]/58 disabled:cursor-not-allowed disabled:opacity-60 sm:h-[58px] sm:min-w-0 sm:px-5 sm:text-base lg:px-6"
           >
-            <span className="inline-flex size-8 items-center justify-center rounded-full bg-[#fff0d2] text-[#301706]">
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)]">
               {nearbyLoading ? (
                 <Loader2 size={17} className="animate-spin" />
               ) : (
@@ -113,7 +113,7 @@ export function HeroSearchControls({
           <button
             type="button"
             onClick={onSubmit}
-            className="order-2 inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#fff0d2]/24 bg-[#fff0d2] px-4 text-sm font-black text-[#201006] shadow-[0_8px_22px_rgba(245,190,104,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#fff7e8] sm:hidden sm:h-[58px] sm:px-8 sm:text-base lg:inline-flex lg:px-8"
+            className="order-2 inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#fff0d2]/24 bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[0_8px_22px_rgba(245,190,104,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] sm:hidden sm:h-[58px] sm:px-8 sm:text-base lg:inline-flex lg:px-8"
           >
             <Search size={17} />
             <span className="sm:hidden">{mobileSearchCta}</span>

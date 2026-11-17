@@ -8,6 +8,7 @@ const DEFAULT_BACKEND_URL = "https://cafe-finder-be.onrender.com/api";
 const API_URL = process.env.API_URL ?? DEFAULT_BACKEND_URL;
 
 const nextConfig: NextConfig = {
+  turbopack: { root: process.cwd() },
   async redirects() {
     return [
       {

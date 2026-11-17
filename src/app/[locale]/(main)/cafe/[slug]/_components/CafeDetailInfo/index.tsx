@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { AlarmClock, MapPinned, Navigation } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
 import { formatCafeDistanceParts } from "@/lib/distance";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { getCafeOpenStatus } from "@/lib/opening-hours";
@@ -153,9 +154,10 @@ export default function CafeDetailInfo({
           variants={itemVariants}
           initial={false}
           animate="show"
-          className="text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]"
+          className="relative pr-12 text-[32px] leading-[1.12] font-[var(--font-lora)] font-bold text-[var(--foreground)] sm:text-[40px]"
         >
           {cafe.name}
+          <ChristmasArt kind="tree" className="absolute top-0 right-0 h-11 w-11" />
         </motion.h1>
 
         <motion.div
@@ -198,7 +200,7 @@ export default function CafeDetailInfo({
         >
           {cafe.address && (
             <span className="flex items-start gap-1.5">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#fff0dc] text-[#b86f20] dark:bg-[#3a2414] dark:text-[#f0b869]">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#fff0dc] text-[#b86f20] dark:bg-[#3a2414] dark:text-[var(--accent)]">
                 <MapPinned size={12} />
               </span>
               {cafe.address}
@@ -213,7 +215,7 @@ export default function CafeDetailInfo({
             </span>
           )}
           {distanceText && (
-            <span className="flex items-center gap-1.5 font-bold text-[var(--accent-hover)] dark:text-[#f0b869]">
+            <span className="flex items-center gap-1.5 font-bold text-[var(--accent-hover)] dark:text-[var(--accent)]">
               <Navigation size={14} className="shrink-0" />
               {distanceLabel}
             </span>

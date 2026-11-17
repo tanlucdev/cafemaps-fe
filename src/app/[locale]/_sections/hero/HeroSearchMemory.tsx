@@ -37,7 +37,7 @@ export function HeroSearchMemory({ lastSearch, onResume, onClear }: HeroSearchMe
       <button
         type="button"
         onClick={onResume}
-        className="cursor-pointer rounded-full bg-[#fff0d2] px-3 py-1 text-xs font-bold text-[#201006] transition-colors hover:bg-[#fff7e8]"
+        className="cursor-pointer rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-bold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
       >
         {t("resumeView")}
       </button>

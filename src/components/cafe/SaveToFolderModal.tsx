@@ -81,7 +81,7 @@ export default function SaveToFolderModal({
           <button
             type="button"
             onClick={() => setCreating(true)}
-            className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[#875200] hover:underline dark:text-[#ffb865]"
+            className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[var(--accent)] hover:underline dark:text-[var(--accent)]"
           >
             <FolderPlus size={16} />
             {t("createFolderTitle")}
@@ -109,7 +109,7 @@ export default function SaveToFolderModal({
               type="button"
               disabled={!canCreate}
               onClick={() => select(trimmed)}
-              className="h-9 cursor-pointer rounded-xl bg-[#875200] px-3 text-xs font-semibold text-white disabled:opacity-40"
+              className="h-9 cursor-pointer rounded-xl bg-[var(--accent)] px-3 text-xs font-semibold text-[var(--accent-foreground)] disabled:opacity-40"
             >
               {t("create")}
             </button>
@@ -151,7 +151,7 @@ function FolderOption({
         <FolderOpen size={16} className="text-[#c8a97a]" />
       </span>
       <span className="min-w-0 flex-1 truncate font-medium text-[var(--foreground)]">{label}</span>
-      {active && <Check size={16} className="shrink-0 text-[#875200]" />}
+      {active && <Check size={16} className="shrink-0 text-[var(--accent)]" />}
     </button>
   );
 }

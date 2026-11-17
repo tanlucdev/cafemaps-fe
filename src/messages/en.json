@@ -1410,5 +1410,160 @@
     "noSupport": "Geolocation is not supported by your browser",
     "loadError": "Could not load nearby cafés",
     "locationError": "Could not get your location"
+  },
+  "coffeeMeetups": {
+    "brand": "Cafe Maps",
+    "title": "Coffee meetups",
+    "intro": "Create or join a study, work, or chat session at an existing cafe.",
+    "loading": "Loading meetups...",
+    "sending": "Sending...",
+    "empty": "No meetups yet.",
+    "emptyList": "No matching meetups yet.",
+    "safety": "Meet only in public places and do not share personal information until you feel safe.",
+    "acceptedTitle": "Accepted people",
+    "seatsLeft": "{count} seats left",
+    "purposes": [
+      "Study",
+      "Work",
+      "Language practice",
+      "Reading",
+      "Meet new friends",
+      "Chat",
+      "Other"
+    ],
+    "reportReasons": [
+      "Spam",
+      "Inappropriate content",
+      "Harassment",
+      "Wrong information",
+      "Other"
+    ],
+    "filters": {
+      "allPurposes": "All purposes",
+      "allAreas": "All areas",
+      "available": "Seats available only"
+    },
+    "fields": {
+      "area": "Area",
+      "cafe": "Cafe",
+      "date": "Date",
+      "description": "Description",
+      "endTime": "End time",
+      "maxParticipants": "Max people",
+      "message": "Message",
+      "organizer": "Organizer",
+      "purpose": "Purpose",
+      "reportReason": "Report reason",
+      "seats": "Seats",
+      "startTime": "Start time",
+      "time": "Time",
+      "title": "Title",
+      "contactInfo": "Contact details"
+    },
+    "actions": {
+      "accept": "Accept",
+      "cancel": "Cancel meetup",
+      "complete": "Finish",
+      "create": "Create meetup",
+      "edit": "Edit",
+      "reject": "Reject",
+      "report": "Report meetup",
+      "save": "Save meetup",
+      "share": "Share meetup",
+      "view": "View meetup",
+      "withdraw": "Withdraw request"
+    },
+    "card": {
+      "organizerSeats": "Host: {name} · {count} seats left"
+    },
+    "cta": {
+      "ended": "Meetup ended",
+      "full": "Meetup is full",
+      "join": "Ask to join",
+      "joined": "You joined",
+      "login": "Log in to ask to join",
+      "pending": "Waiting for approval"
+    },
+    "errors": {
+      "create": "Could not create meetup.",
+      "load": "Could not load meetups.",
+      "loadEdit": "Could not load meetup for editing.",
+      "request": "Could not send request."
+    },
+    "fallback": {
+      "description": "The host has not added a description yet."
+    },
+    "form": {
+      "createTitle": "Create a coffee meetup",
+      "editTitle": "Edit meetup",
+      "cafeMaps": "Cafe Maps",
+      "externalCafe": "External cafe",
+      "searchCafe": "Search cafe name or area...",
+      "searchingCafe": "Searching cafes...",
+      "emptyCafe": "No matching cafes yet.",
+      "open": "Open now",
+      "closed": "Closed now",
+      "externalName": "External cafe name",
+      "externalUrl": "Cafe link",
+      "externalDistrict": "Area",
+      "externalGate": "External cafe draft is ready, but backend does not accept it yet.",
+      "externalUnsupported": "Backend does not support external cafe meetups yet.",
+      "mapsSuggestion": "Google Maps suggestion",
+      "quickTime": "Quick time",
+      "preview": "Meetup preview",
+      "untitled": "New coffee meetup",
+      "selectCafe": "Choose a purpose and a cafe before creating a meetup.",
+      "vibe": "Cafe vibe",
+      "allVibes": "All vibes",
+      "chooseFilters": "Choose a purpose, vibe, or Near me to see up to 10 suggested cafes.",
+      "contactPlaceholder": "Phone, Zalo, Facebook…",
+      "contactHint": "Optional. These details will be public on the meetup page.",
+      "customPurpose": "Your purpose",
+      "customPurposePlaceholder": "For example: Board games, book exchange…",
+      "chooseIcon": "Choose an icon",
+      "chooseAppearance": "Icon and color",
+      "chooseColor": "Choose a color",
+      "closeAppearance": "Close icon picker"
+    },
+    "mine": {
+      "archived": "Ended or cancelled meetups",
+      "joined": "Meetups I joined",
+      "organized": "Meetups I host",
+      "pending": "Pending requests",
+      "title": "My meetups"
+    },
+    "ownerTools": {
+      "title": "Manage requests"
+    },
+    "placeholders": {
+      "message": "Message for the host..."
+    },
+    "status": {
+      "available": "Available",
+      "full": "Full"
+    },
+    "purposeIcons": {
+      "book": "Books",
+      "work": "Work",
+      "language": "Languages",
+      "friends": "Friends",
+      "chat": "Chat",
+      "coffee": "Coffee",
+      "games": "Games",
+      "music": "Music",
+      "camera": "Photography",
+      "art": "Art",
+      "sparkles": "Other"
+    },
+    "purposeColors": {
+      "brown": "Brown",
+      "green": "Green",
+      "blue": "Blue",
+      "purple": "Purple",
+      "rose": "Rose",
+      "orange": "Orange",
+      "teal": "Teal",
+      "slate": "Slate"
+    }
   }
 }

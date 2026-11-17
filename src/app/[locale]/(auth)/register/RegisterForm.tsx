@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputClassName =
-  "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[#fffaf2]/82 text-[16px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
+  "auth-input h-12 rounded-2xl border border-[#e2cda8] bg-[var(--card)]/82 text-[16px] font-semibold text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-white/7 dark:text-[#fff7e8] dark:placeholder:text-[#fff0d2]/52";
 const errorInputClassName = "auth-input-error";
 const labelClassName =
   "mb-1.5 block text-[13px] font-black text-[var(--foreground)] dark:text-[#fff0d2]";
@@ -176,7 +176,7 @@ export default function RegisterForm() {
       <Button
         type="submit"
         disabled={isPending || success}
-        className="mt-0 h-12 w-full rounded-full bg-[var(--accent)] text-[15px] font-black text-white shadow-[0_14px_30px_rgba(200,132,42,0.26)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-[var(--accent)]/30 disabled:hover:translate-y-0"
+        className="mt-0 h-12 w-full rounded-full bg-[var(--accent)] text-[15px] font-black text-[var(--accent-foreground)] shadow-[0_14px_30px_rgba(200,132,42,0.26)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-[var(--accent)]/30 disabled:hover:translate-y-0"
       >
         {isPending ? (
           <span className="inline-flex items-center gap-2">

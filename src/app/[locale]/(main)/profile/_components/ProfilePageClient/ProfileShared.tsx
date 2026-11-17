@@ -26,7 +26,7 @@ export function EmptyState({
       {actionHref && actionLabel && (
         <Link
           href={actionHref}
-          className="mt-5 inline-flex h-10 cursor-pointer items-center justify-center rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-white transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
+          className="mt-5 inline-flex h-10 cursor-pointer items-center justify-center rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-[var(--accent-foreground)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
         >
           {actionLabel}
         </Link>
@@ -40,7 +40,7 @@ export function StatusBadge({ status, copy }: { status: string; copy: ProfileCop
     status === "approved" ? copy.approved : status === "rejected" ? copy.rejected : copy.pending;
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-light)] px-3 py-1.5 text-xs font-black text-[#875200] dark:text-[#f0b869]">
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-light)] px-3 py-1.5 text-xs font-black text-[var(--accent)] dark:text-[var(--accent)]">
       <CheckCircle2 size={13} />
       {statusCopy}
     </span>

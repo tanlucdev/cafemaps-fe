@@ -43,7 +43,7 @@ export default function UserMenu({ user }: { user: AuthUser | null }) {
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "flex size-8 cursor-pointer items-center justify-center rounded-full p-0 text-xs font-black",
-          "bg-[var(--accent)] text-white transition-opacity hover:opacity-90",
+          "bg-[var(--accent)] text-[var(--accent-foreground)] transition-opacity hover:opacity-90",
         )}
         aria-label="Tài khoản"
       >

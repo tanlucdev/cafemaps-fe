@@ -128,7 +128,7 @@ function CafeRecommendationCard({
                 .join(" • ")}
             </p>
           </div>
-          <Sparkles className="mt-1 size-4 shrink-0 text-[#c8842a]" />
+          <Sparkles className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
         </div>
         <p className="mt-3 min-h-10 text-sm leading-5 text-[var(--foreground-muted)]">
           {cafe.matchReason}

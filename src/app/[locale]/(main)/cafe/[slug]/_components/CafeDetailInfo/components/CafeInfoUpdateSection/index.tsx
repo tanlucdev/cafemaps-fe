@@ -78,7 +78,7 @@ export default function CafeInfoUpdateSection({ cafeId }: CafeInfoUpdateSectionP
       <section className="border-t border-[#ffe3b7]/34 pt-3 dark:border-[#ffe3b7]/14">
         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-start gap-2">
-            <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#ffe3b7]/50 bg-[#fffaf2]/58 text-[#a86d1e] dark:border-[#ffe3b7]/14 dark:bg-white/6 dark:text-[#e6c25e]">
+            <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#ffe3b7]/50 bg-[#fffaf2]/58 text-[var(--accent)] dark:border-[#ffe3b7]/14 dark:bg-white/6 dark:text-[#e6c25e]">
               <MessageSquareText size={14} aria-hidden="true" />
             </span>
             <p className="min-w-0 text-xs leading-5 font-medium text-[var(--foreground-muted)]">
@@ -90,7 +90,7 @@ export default function CafeInfoUpdateSection({ cafeId }: CafeInfoUpdateSectionP
             variant="ghost"
             size="sm"
             onClick={openForm}
-            className="w-full text-[12.5px] font-bold text-[var(--accent-hover)] hover:bg-[#fff0dc]/60 sm:w-auto dark:text-[#f0b869] dark:hover:bg-white/8"
+            className="w-full text-[12.5px] font-bold text-[var(--accent-hover)] hover:bg-[#fff0dc]/60 sm:w-auto dark:text-[var(--accent)] dark:hover:bg-white/8"
           >
             <MessageSquareText aria-hidden="true" />
             {t("cta")}

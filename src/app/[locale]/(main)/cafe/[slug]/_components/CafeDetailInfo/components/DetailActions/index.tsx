@@ -33,7 +33,7 @@ export default function DetailActions({
           href={mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--accent)] px-3 text-[13px] font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+          className="inline-flex h-12 min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--accent)] px-3 text-[13px] font-black text-[var(--accent-foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.22)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
         >
           <Navigation size={15} className="shrink-0" />
           <span className="truncate">{directionsLabel}</span>
@@ -45,7 +45,7 @@ export default function DetailActions({
           title={saveAriaLabel}
           className={`${iconButton} ${
             saved
-              ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+              ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
               : idle
           }`}
         >
@@ -59,7 +59,7 @@ export default function DetailActions({
           title={visitedAriaLabel}
           className={`${iconButton} ${
             visited
-              ? "border-[#d9962f] bg-[#f4b35d] text-[#2c1a0e] shadow-[0_12px_28px_rgba(244,179,93,0.25)]"
+              ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_12px_28px_rgba(244,179,93,0.25)]"
               : idle
           }`}
         >
@@ -73,7 +73,7 @@ export default function DetailActions({
           title={voted ? votedLabel : voteLabel}
           className={`${iconButton} ${
             voted
-              ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+              ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
               : idle
           }`}
         >
@@ -92,7 +92,7 @@ export default function DetailActions({
         aria-label={saveAriaLabel}
         className={`flex h-11 min-w-0 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border px-2 text-sm font-black whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 sm:gap-2 sm:px-4 ${
           saved
-            ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+            ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
             : "border-[var(--border)] bg-white/68 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] dark:bg-[var(--card)]/72"
         }`}
       >
@@ -105,7 +105,7 @@ export default function DetailActions({
         aria-label={visitedAriaLabel}
         className={`flex h-11 min-w-0 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border px-2 text-sm font-black whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 sm:gap-2 sm:px-4 ${
           visited
-            ? "border-[#d9962f] bg-[#f4b35d] text-[#2c1a0e] shadow-[0_12px_28px_rgba(244,179,93,0.25)]"
+            ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_12px_28px_rgba(244,179,93,0.25)]"
             : "border-[var(--border)] bg-white/68 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] dark:bg-[var(--card)]/72"
         }`}
       >
@@ -118,7 +118,7 @@ export default function DetailActions({
         aria-label={voted ? votedLabel : voteLabel}
         className={`flex h-11 min-w-0 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border px-2 text-sm font-black whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-200 hover:-translate-y-px focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 sm:gap-2 sm:px-4 ${
           voted
-            ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
+            ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.22)]"
             : "border-[var(--border)] bg-white/68 text-[var(--foreground-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] dark:bg-[var(--card)]/72"
         }`}
       >
@@ -129,7 +129,7 @@ export default function DetailActions({
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="col-span-3 flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-white shadow-[0_12px_28px_rgba(200,132,42,0.24)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] sm:col-span-1"
+        className="col-span-3 flex h-11 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.24)] transition-all hover:-translate-y-px hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] sm:col-span-1"
       >
         <Navigation size={16} className="shrink-0" />
         <span className="truncate">{directionsLabel}</span>

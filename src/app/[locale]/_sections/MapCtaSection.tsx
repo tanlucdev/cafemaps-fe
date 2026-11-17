@@ -58,7 +58,7 @@ export default function MapCtaSection() {
                   render={<Link href="/map" />}
                   variant="default"
                   size="lg"
-                  className="min-h-11 rounded-full border border-[#ffe3b7]/28 bg-[#f4b35d] px-5 font-black text-[#2c1a0e] shadow-[0_14px_34px_rgba(244,179,93,0.28)] hover:-translate-y-0.5 hover:bg-[#ffd891] focus-visible:ring-[#ffe3b7]/70"
+                  className="min-h-11 rounded-full border border-[#ffe3b7]/28 bg-[var(--accent)] px-5 font-black text-[var(--accent-foreground)] shadow-[0_14px_34px_rgba(244,179,93,0.28)] hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] focus-visible:ring-[#ffe3b7]/70"
                 >
                   <MapPin size={16} />
                   {t("cta")}

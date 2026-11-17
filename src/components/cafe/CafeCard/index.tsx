@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
 import SaveButton from "@/components/cafe/SaveButton";
+import { CafeChristmasFrame } from "@/components/seasonal/CafeChristmasDecorations";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { AUTH_STORAGE_KEYS } from "@/constants/auth-keys";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
@@ -57,16 +58,17 @@ export default function CafeCard({
   };
 
   return (
+    <CafeChristmasFrame cafeId={cafe.id} index={index}>
     <motion.article
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={revealTransition}
       whileHover={!reduceMotion ? { y: isCinematic ? -4 : -3, scale: isCinematic ? 1.01 : 1 } : undefined}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl transition-colors duration-300",
+        "christmas-cafe-card group relative flex flex-col overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
           ? "border border-[#ffe3b7]/12 bg-[#1b0f08]/66 shadow-[0_18px_52px_rgba(0,0,0,0.28)] backdrop-blur-md hover:border-[#ffe3b7]/28 hover:shadow-[0_22px_64px_rgba(245,166,58,0.16)]"
-          : "bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
+          : "bg-[var(--card)] shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[var(--card)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
       )}
     >
       <IntentPrefetchLink
@@ -147,7 +149,7 @@ export default function CafeCard({
         initialSaved={initialSaved}
         onSavedChange={onSavedChange}
         className={cn(
-          "absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border shadow-sm backdrop-blur-md transition-transform hover:scale-110",
+          "christmas-cafe-save absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border shadow-sm backdrop-blur-md transition-transform hover:scale-110",
           isCinematic
             ? "border-[#ffe3b7]/24 bg-[#170c06]/48 text-[#fff0d4]"
             : "border-white/30 dark:border-white/10",
@@ -166,7 +168,7 @@ export default function CafeCard({
             <h3
               className={cn(
                 "line-clamp-1 text-[14px] leading-snug font-bold",
-                isCinematic ? "text-[#fff7e8]" : "text-[#1C1209] dark:text-[#FFE3D3]",
+                isCinematic ? "text-[#fff7e8]" : "text-[var(--foreground)]",
               )}
             >
               {cafe.name}
@@ -176,10 +178,10 @@ export default function CafeCard({
                 "inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold",
                 isCinematic
                   ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#ffd58a]"
-                  : "bg-[#FBF0DC] text-[#C9870C] dark:bg-[#2C1A08] dark:text-[#F0A830]",
+                  : "bg-[var(--accent-light)] text-[var(--accent)]",
               )}
             >
-              <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
+              <Star size={11} className="fill-[#F0A830] text-[var(--accent)]" />
               {rating}
             </span>
           </div>
@@ -215,10 +217,10 @@ export default function CafeCard({
                 <span
                   className={cn(
                     "flex min-w-0 items-center gap-0.5",
-                    isCinematic ? "text-[#fff0d4]/62" : "text-[#9B8B73]",
+                    isCinematic ? "text-[#fff0d4]/62" : "text-[var(--foreground-muted)]",
                   )}
                 >
-                  <MapPin size={11} className="shrink-0 text-[#C9870C]" />
+                  <MapPin size={11} className="shrink-0 text-[var(--accent)]" />
                   <span className="truncate">{locationText}</span>
                 </span>
               </>
@@ -273,5 +275,6 @@ export default function CafeCard({
         />
       )} */}
     </motion.article>
+    </CafeChristmasFrame>
   );
 }

@@ -71,7 +71,7 @@ export default function Pagination({ page, total, limit, onPageChange }: Paginat
               className={cn(
                 "size-10 shrink-0 rounded-full border text-sm font-black shadow-[var(--shadow-sm)] backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
                 p === page
-                  ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-[0_12px_28px_rgba(200,132,42,0.20)]"
+                  ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_12px_28px_rgba(200,132,42,0.20)]"
                   : "border-[var(--border)] bg-white/70 text-[var(--foreground-muted)] hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent)]",
               )}
             >

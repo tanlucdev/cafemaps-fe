@@ -19,7 +19,7 @@ export function SuccessView({ onReset }: { onReset: () => void }) {
       <div className="flex flex-col justify-center gap-3 sm:flex-row">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-[13.5px] font-bold text-white transition-colors hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/30"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-[13.5px] font-bold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--accent)]/30"
         >
           {t("success.explore")}
           <ArrowRight className="size-4" aria-hidden="true" />

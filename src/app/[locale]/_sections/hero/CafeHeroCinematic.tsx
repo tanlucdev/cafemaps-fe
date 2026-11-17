@@ -40,7 +40,7 @@ export function CafeHeroCinematic({ eyebrow, headline, subtitle }: CafeHeroCinem
         <HeroVideoBackdrop poster={HERO_POSTER} />
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--foreground)_8%,transparent)_0%,color-mix(in_srgb,var(--accent)_6%,transparent)_42%,color-mix(in_srgb,var(--foreground)_38%,transparent)_100%)]" />
-        <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,color-mix(in_srgb,var(--foreground)_68%,transparent)_0%,color-mix(in_srgb,var(--foreground)_44%,transparent)_40%,color-mix(in_srgb,var(--accent)_14%,transparent)_66%,color-mix(in_srgb,var(--foreground)_24%,transparent)_100%)]" />
+        <div style={{ background: "var(--season-hero-scrim)" }} className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,color-mix(in_srgb,var(--foreground)_68%,transparent)_0%,color-mix(in_srgb,var(--foreground)_44%,transparent)_40%,color-mix(in_srgb,var(--accent)_14%,transparent)_66%,color-mix(in_srgb,var(--foreground)_24%,transparent)_100%)]" />
         <div className="absolute inset-0 z-[3] [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.78%22_numOctaves=%222%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.48%22/%3E%3C/svg%3E')] opacity-[0.08] mix-blend-overlay" />
         <div className="pointer-events-none absolute -top-24 right-[6%] z-[4] size-[22rem] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-light)_22%,transparent)_0%,color-mix(in_srgb,var(--accent)_10%,transparent)_42%,transparent_70%)] blur-2xl" />
         <div className="pointer-events-none absolute bottom-[-8rem] left-[8%] z-[4] size-[26rem] rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-light)_22%,transparent)_0%,color-mix(in_srgb,var(--accent-hover)_10%,transparent)_44%,transparent_72%)] blur-2xl" />
@@ -52,11 +52,11 @@ export function CafeHeroCinematic({ eyebrow, headline, subtitle }: CafeHeroCinem
               {eyebrow}
             </div>
 
-            <h1 className="font-system sm:font-lora max-w-full text-[38px] leading-[1.02] font-bold text-[var(--header-nav-cinematic-hover-bg)] drop-shadow-[0_8px_28px_rgba(0,0,0,0.48)] sm:max-w-[44rem] sm:text-[58px] md:text-[68px] lg:text-[76px] xl:text-[82px]">
+            <h1 className="font-system sm:font-lora max-w-full text-[38px] leading-[1.02] font-bold text-[var(--hero-on-photo,var(--header-nav-cinematic-hover-bg))] drop-shadow-[0_8px_28px_rgba(0,0,0,0.48)] sm:max-w-[44rem] sm:text-[58px] md:text-[68px] lg:text-[76px] xl:text-[82px]">
               {headline}
             </h1>
 
-            <p className="mt-4 max-w-[36rem] text-[15px] leading-7 font-semibold text-[color-mix(in_srgb,var(--header-shell-cinematic-text)_92%,transparent)] drop-shadow-[0_5px_18px_rgba(0,0,0,0.34)] sm:text-[17px] sm:leading-8">
+            <p className="mt-4 max-w-[36rem] text-[15px] leading-7 font-semibold text-[var(--hero-on-photo,color-mix(in_srgb,var(--header-shell-cinematic-text)_92%,transparent))] drop-shadow-[0_5px_18px_rgba(0,0,0,0.34)] sm:text-[17px] sm:leading-8">
               {subtitle}
             </p>
 

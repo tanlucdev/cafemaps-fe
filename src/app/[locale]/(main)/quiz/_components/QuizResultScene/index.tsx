@@ -1,5 +1,7 @@
 "use client";
 
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
+
 import { Share2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { downloadQuizResultImage } from "@/apis/quiz";
@@ -121,8 +123,9 @@ export default function QuizResultScene({
   }
 
   return (
-    <section className="relative min-h-[100svh] bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+1.25rem)] min-[390px]:px-4 sm:px-6 lg:px-10 lg:pt-[5.75rem] lg:pb-3 dark:bg-[#1e1c1a]">
+    <section className="relative min-h-[100svh] bg-[var(--background)] px-3 pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+1.25rem)] min-[390px]:px-4 sm:px-6 lg:px-10 lg:pt-[5.75rem] lg:pb-3 dark:bg-[var(--background)]">
       <div className="relative mx-auto w-full max-w-[82rem]">
+        <SeasonalGreeting className="mb-2" />
         <QuizResultBody
           result={result}
           profiles={profiles}

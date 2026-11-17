@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
+import "./christmas.css";
 import { cn } from "@/lib/utils";
 import {
   DEFAULT_LOCALE,
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang={DEFAULT_LOCALE}
       data-scroll-behavior="smooth"
+      data-season="christmas"
       suppressHydrationWarning
       className={cn("h-full", plusJakarta.variable, lora.variable)}
     >

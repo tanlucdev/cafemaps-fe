@@ -1,5 +1,8 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
+
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Coffee, Leaf, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -35,7 +38,7 @@ type Labels = {
 };
 
 const OPTION_TONES = [
-  "bg-[#fff7e8] text-[#91632e]",
+  "bg-[#fff7e8] text-[var(--accent)]",
   "bg-[#eef7ea] text-[#58764f]",
   "bg-[#fff0f2] text-[#9c5260]",
   "bg-[#eef3fb] text-[#5d719b]",
@@ -74,11 +77,11 @@ export default function QuizQuestionScene({
   const compactOptions = current.options.length > 4;
 
   return (
-    <section className="relative flex min-h-[100svh] items-start bg-[#fbf4e8] px-3 pt-[calc(env(safe-area-inset-top,0px)+5rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+0.75rem)] min-[390px]:px-4 sm:pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] lg:px-5 lg:pt-24 lg:pb-8 dark:bg-[#1e1c1a]">
+    <section className="relative flex min-h-[100svh] items-start bg-[var(--background)] px-3 pt-[calc(env(safe-area-inset-top,0px)+5rem)] pb-[calc(var(--mobile-bottom-nav-height,72px)+env(safe-area-inset-bottom,0px)+0.75rem)] min-[390px]:px-4 sm:pt-[calc(env(safe-area-inset-top,0px)+5.75rem)] lg:px-5 lg:pt-24 lg:pb-8 dark:bg-[var(--background)]">
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-4 sm:gap-6">
         <div className="grid items-end gap-2 sm:grid-cols-[1fr_auto] sm:gap-3">
           <div>
-            <p className="inline-flex rounded-[6px] border border-[#ead5b7] bg-white/70 px-2.5 py-0.5 text-[10px] font-bold tracking-[0.12em] text-[#9a672f] uppercase shadow-sm sm:px-3 sm:py-1 sm:text-xs">
+            <p className="inline-flex rounded-[6px] border border-[var(--border)] bg-[var(--accent-light)] px-2.5 py-0.5 text-[10px] font-bold tracking-[0.12em] text-[var(--accent)] uppercase shadow-sm sm:px-3 sm:py-1 sm:text-xs">
               {labels.eyebrow}
             </p>
             <h1 className="font-display mt-1 max-w-full text-[clamp(1.42rem,7vw,2rem)] leading-[1.02] font-extrabold break-words text-[var(--foreground)] sm:mt-2 sm:text-4xl xl:text-5xl xl:leading-none">
@@ -89,21 +92,22 @@ export default function QuizQuestionScene({
             </p>
           </div>
           <div className="hidden sm:block">
-            <QuizSticker id={current.sticker} size="sm" animated={false} />
+            <ChristmasArt kind="tree" className="size-20" />
           </div>
         </div>
+        <SeasonalGreeting />
         <div className="relative overflow-hidden rounded-full border border-[#dfbf8f] bg-white/75 p-0.5 shadow-sm sm:p-1 dark:bg-white/5">
           <motion.div
-            className="relative h-1 rounded-full bg-[#c8842a] shadow-[inset_0_-1px_0_rgba(80,42,12,0.14)] sm:h-2"
+            className="relative h-1 rounded-full bg-[var(--accent)] shadow-[inset_0_-1px_0_rgba(80,42,12,0.14)] sm:h-2"
             animate={{ width: `${progress}%` }}
             transition={{ duration: reduceMotion ? 0 : 0.45, ease: "easeOut" }}
           />
         </div>
         <div className="grid gap-4 lg:grid-cols-[0.82fr_1fr] lg:gap-5">
           <DesktopSticker current={current} progress={progress} labels={labels} />
-          <div className="relative rounded-[8px] border border-[#e5cfad] bg-[#fffdf8] p-2.5 shadow-[0_18px_46px_rgba(88,55,24,0.1)] min-[390px]:p-3 sm:p-5 lg:p-4 dark:bg-[var(--card)]">
+          <div className="relative rounded-[8px] border border-[var(--border)] bg-[var(--card)] p-2.5 shadow-[0_18px_46px_rgba(88,55,24,0.1)] min-[390px]:p-3 sm:p-5 lg:p-4 dark:bg-[var(--card)]">
             <div className="mb-2 flex items-center justify-between gap-3 sm:mb-4">
-              <span className="rounded-full bg-[#fff1d2] px-2.5 py-0.5 text-[11px] font-bold text-[#9a672f] sm:px-3 sm:py-1 sm:text-xs">
+              <span className="rounded-full bg-[var(--accent-light)] px-2.5 py-0.5 text-[11px] font-bold text-[var(--accent)] sm:px-3 sm:py-1 sm:text-xs">
                 {labels.question}
               </span>
               <span className="text-xs text-[var(--foreground-muted)]">{Math.round(progress)}%</span>
@@ -153,7 +157,7 @@ export default function QuizQuestionScene({
                 <button
                   type="button"
                   onClick={onNext}
-                  className="inline-flex h-9 appearance-none items-center gap-2 rounded-full bg-[#c8842a] px-4 text-sm font-black text-white shadow-[0_12px_26px_rgba(200,132,42,0.26)] transition-colors hover:bg-[#a96b22] sm:h-11 sm:px-5"
+                  className="inline-flex h-9 appearance-none items-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[0_12px_26px_rgba(200,132,42,0.26)] transition-colors hover:bg-[var(--accent-hover)] sm:h-11 sm:px-5"
                 >
                   {labels.next}
                   <ArrowRight className="size-4" />
@@ -163,7 +167,7 @@ export default function QuizQuestionScene({
                   type="button"
                   onClick={onSubmit}
                   disabled={submitBusy}
-                  className="inline-flex h-9 appearance-none items-center gap-2 rounded-full bg-[#c8842a] px-4 text-sm font-black text-white shadow-[0_12px_26px_rgba(200,132,42,0.26)] transition-colors hover:bg-[#a96b22] sm:h-11 sm:px-5"
+                  className="inline-flex h-9 appearance-none items-center gap-2 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)] shadow-[0_12px_26px_rgba(200,132,42,0.26)] transition-colors hover:bg-[var(--accent-hover)] sm:h-11 sm:px-5"
                 >
                   {labels.lockTaste}
                   <ArrowRight className="size-4" />
@@ -192,7 +196,7 @@ function DesktopSticker({
       <div className="absolute top-10 left-10 rounded-[8px] border border-[#d8e5cf] bg-[#f1f7ed] px-4 py-3 text-xs font-semibold text-[#57764f]">
         mood note
       </div>
-      <div className="absolute top-16 right-10 rounded-[8px] border border-[#ead5b7] bg-white/85 px-4 py-3 text-xs font-semibold text-[#8a6238]">
+      <div className="absolute top-16 right-10 rounded-[8px] border border-[#ead5b7] bg-white/85 px-4 py-3 text-xs font-semibold text-[#704b28]">
         coffee first
       </div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -203,7 +207,7 @@ function DesktopSticker({
         {Math.round(progress)}% {labels.brewed}
       </div>
       <DoodleIcon Icon={Leaf} className="bottom-32 left-9 bg-[#e8f3df] text-[#5f874e]" />
-      <DoodleIcon Icon={Sparkles} className="right-10 bottom-36 bg-[#fff2c8] text-[#9a672f]" />
+      <DoodleIcon Icon={Sparkles} className="right-10 bottom-36 bg-[#fff2c8] text-[var(--accent)]" />
     </div>
   );
 }
@@ -237,7 +241,7 @@ function OptionButton({
           ? "min-h-[58px] gap-2.5 p-2.5 min-[390px]:p-3 sm:min-h-[68px] sm:gap-3 lg:min-h-[62px] lg:px-3 lg:py-2.5"
           : "min-h-[clamp(72px,9svh,92px)] gap-3 p-3 min-[390px]:p-3.5 sm:min-h-[88px] sm:gap-4 sm:p-4 lg:min-h-[72px] lg:gap-3 lg:px-3.5 lg:py-3",
         active
-          ? "border-[#c8842a] bg-[#fff4df] text-[var(--foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.16)] ring-1 ring-[#c8842a]/18"
+          ? "border-[var(--accent)] bg-[var(--accent-light)] text-[var(--foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.16)] ring-1 ring-[var(--accent)]/18"
           : "border-[#ecd9bb] text-[var(--foreground)] shadow-sm",
       )}
       onClick={() => onSelect(option)}
@@ -246,7 +250,7 @@ function OptionButton({
         className={cn(
           "relative grid size-8 shrink-0 place-items-center rounded-full border text-xs transition-[background-color,border-color,color,transform] duration-150 ease-out motion-reduce:transition-none sm:size-9",
           active
-            ? "scale-105 border-[#c8842a] bg-[#c8842a] text-white motion-reduce:scale-100"
+            ? "scale-105 border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)] motion-reduce:scale-100"
             : `border-transparent ${tone}`,
         )}
       >
@@ -273,7 +277,7 @@ function OptionButton({
       <QuestionIcon
         className={cn(
           "relative hidden size-4 shrink-0 opacity-35 sm:block",
-          active ? "text-[#c8842a]" : "text-[var(--foreground-muted)]",
+          active ? "text-[var(--accent)]" : "text-[var(--foreground-muted)]",
         )}
       />
     </button>

@@ -11,6 +11,13 @@ type Props = {
 const pick = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value || "";
 
+const pickNumber = (value: string | string[] | undefined) => {
+  const raw = pick(value);
+  if (!raw) return undefined;
+  const number = Number(raw);
+  return Number.isFinite(number) ? number : undefined;
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return createLocalizedMetadata({
@@ -30,7 +37,11 @@ export default async function CoffeeMeetupsPage({ searchParams }: Props) {
         purpose: pick(params.purpose),
         date: pick(params.date),
         area: pick(params.area),
-        available: pick(params.available) === "1",
+        available: ["1", "true"].includes(pick(params.available)),
+        nearMe: pick(params.nearMe) === "true",
+        lat: pickNumber(params.lat),
+        lng: pickNumber(params.lng),
+        radiusKm: pickNumber(params.radiusKm),
       }}
     />
   );

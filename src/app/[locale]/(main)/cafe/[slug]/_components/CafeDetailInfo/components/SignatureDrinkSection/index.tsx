@@ -13,7 +13,7 @@ export default function SignatureDrinkSection({
 
   return (
     <div className="flex items-center gap-3.5 rounded-[22px] border border-[#ffe3b7]/34 bg-white/54 p-4 shadow-[var(--shadow-sm)] backdrop-blur-md dark:border-[#ffe3b7]/14 dark:bg-[#fff1d6]/7">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)]">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.18)]">
         <Coffee size={18} />
       </span>
       <div>

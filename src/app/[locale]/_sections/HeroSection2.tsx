@@ -160,7 +160,7 @@ export default function HeroSection2() {
           transition={{ duration: 0.6 }}
           className="mb-4 flex items-center gap-2"
         >
-          <span className="flex items-center gap-1.5 rounded-full border border-[#C8842A]/60 bg-[#C8842A]/20 px-3.5 py-1 text-xs font-semibold tracking-widest text-[#F5D09A] uppercase backdrop-blur-sm">
+          <span className="flex items-center gap-1.5 rounded-full border border-[var(--accent)]/60 bg-[var(--accent)]/20 px-3.5 py-1 text-xs font-semibold tracking-widest text-[#F5D09A] uppercase backdrop-blur-sm">
             <Coffee size={11} />
             TP. Hồ Chí Minh
           </span>
@@ -200,7 +200,7 @@ export default function HeroSection2() {
                 size={16}
                 className={cn(
                   "absolute top-1/2 left-4 -translate-y-1/2 transition-colors",
-                  focused ? "text-[#C8842A]" : "text-white/50",
+                  focused ? "text-[var(--accent)]" : "text-white/50",
                 )}
               />
               <input
@@ -211,13 +211,13 @@ export default function HeroSection2() {
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 onFocus={() => setFocused(true)}
                 placeholder={PLACEHOLDER_CYCLE[placeholderIdx]}
-                className="h-14 w-full rounded-2xl border border-white/20 bg-white/10 pl-12 pr-4 text-sm text-white placeholder-white/40 backdrop-blur-md transition-all outline-none focus:border-[#C8842A]/60 focus:bg-white/15 sm:text-base"
+                className="h-14 w-full rounded-2xl border border-white/20 bg-white/10 pl-12 pr-4 text-sm text-white placeholder-white/40 backdrop-blur-md transition-all outline-none focus:border-[var(--accent)]/60 focus:bg-white/15 sm:text-base"
               />
             </div>
 
             <button
               onClick={handleSearch}
-              className="h-14 shrink-0 cursor-pointer rounded-2xl bg-[#C8842A] px-6 text-sm font-bold text-white transition-all hover:bg-[#A86A1A] active:scale-95 sm:px-8 sm:text-base"
+              className="h-14 shrink-0 cursor-pointer rounded-2xl bg-[var(--accent)] px-6 text-sm font-bold text-[var(--accent-foreground)] transition-all hover:bg-[var(--accent-hover)] active:scale-95 sm:px-8 sm:text-base"
             >
               {t("cta")}
             </button>
@@ -249,7 +249,7 @@ export default function HeroSection2() {
             <button
               key={label}
               onClick={() => handleQuickTag({ vibe, purpose })}
-              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-sm text-white/80 backdrop-blur-sm transition-all hover:border-[#C8842A]/60 hover:bg-[#C8842A]/20 hover:text-[#F5D09A] active:scale-95"
+              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-sm text-white/80 backdrop-blur-sm transition-all hover:border-[var(--accent)]/60 hover:bg-[var(--accent)]/20 hover:text-[#F5D09A] active:scale-95"
             >
               <span className="text-base leading-none">{emoji}</span>
               {label}

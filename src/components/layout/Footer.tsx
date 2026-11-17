@@ -3,6 +3,8 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getDonationSettings } from "@/apis/donation-settings";
@@ -44,6 +46,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1480px]">
         <div className="relative overflow-hidden rounded-[22px] border border-[var(--footer-panel-border)] bg-[var(--footer-panel)] px-4 py-4 shadow-[var(--footer-panel-shadow)] sm:rounded-[28px] sm:px-5 sm:py-5 lg:px-6 lg:py-6">
           <div className="pointer-events-none absolute inset-0 bg-[image:var(--footer-ambient)] dark:opacity-40" />
+          <ChristmasArt kind="bow" className="christmas-footer-bow" />
           <div className="pointer-events-none absolute inset-0 [background-image:url('data:image/svg+xml,%3Csvg_viewBox=%220_0_160_160%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.72%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22_opacity=%220.30%22/%3E%3C/svg%3E')] opacity-[0.045] mix-blend-multiply dark:mix-blend-screen" />
           <div className="pointer-events-none absolute -top-7 right-8 hidden h-24 w-24 rounded-full border border-[var(--footer-decor)] sm:block" />
           <div className="pointer-events-none absolute right-5 bottom-16 hidden rotate-[-8deg] rounded-full border border-[var(--footer-decor)] px-4 py-2 text-[10px] font-extrabold tracking-[0.14em] text-[var(--footer-decor)] uppercase lg:block">
@@ -104,6 +107,7 @@ export default function Footer() {
               <p className="mt-3 max-w-md text-sm leading-5 text-[var(--foreground-muted)]">
                 {t("tagline")}
               </p>
+              <SeasonalGreeting className="mt-2" />
               <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--footer-control-border)] bg-[var(--footer-control-bg)] px-3 py-1.5 text-xs font-black text-[var(--footer-warm-text)] shadow-[var(--footer-brand-note-shadow)] backdrop-blur-md">
                 <Coffee size={14} aria-hidden="true" />
                 {t("brandNote")}

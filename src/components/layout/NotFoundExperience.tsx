@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Coffee, Home } from "lucide-react";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import { Home } from "lucide-react";
 
 interface NotFoundExperienceProps {
   title: string;
@@ -46,7 +47,7 @@ export default function NotFoundExperience({
         <p className="mt-4 text-sm font-black tracking-[0.18em] text-[#ffd891] uppercase">404</p>
 
         <div className="mt-8 flex size-20 items-center justify-center rounded-full border border-[#ffe3b7]/24 bg-[#fff1d6]/12 shadow-[0_18px_44px_rgba(0,0,0,0.22)] backdrop-blur-md">
-          <Coffee size={38} aria-hidden="true" />
+          <ChristmasArt className="size-20" />
         </div>
 
         <h1 className="font-lora mt-6 text-3xl leading-tight font-bold text-balance text-[#fff7e8] sm:text-5xl">
@@ -56,7 +57,7 @@ export default function NotFoundExperience({
 
         <Link
           href={homeHref}
-          className="mt-8 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[#f4b35d] px-5 text-sm font-black text-[#2c1a0e] shadow-[0_14px_34px_rgba(244,179,93,0.28)] transition hover:-translate-y-0.5 hover:bg-[#ffd891] focus-visible:ring-3 focus-visible:ring-[#ffe3b7]/70 focus-visible:outline-none"
+          className="mt-8 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#ffe3b7]/28 bg-[var(--accent)] px-5 text-sm font-black text-[var(--accent-foreground)] shadow-[0_14px_34px_rgba(244,179,93,0.28)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[#ffe3b7]/70 focus-visible:outline-none"
         >
           <Home size={16} />
           {homeLabel}

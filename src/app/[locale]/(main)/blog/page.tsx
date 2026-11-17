@@ -133,7 +133,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
               delay={0.08}
               className="rounded-[24px] border border-[#ead8bf]/80 bg-[#fff8ed] p-6 shadow-[0_16px_44px_rgba(91,58,29,0.06)] dark:border-white/10 dark:bg-[#242220]"
             >
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#c8842a] text-white">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)]">
                 <Sparkles size={18} aria-hidden="true" />
               </div>
               <h2 className="font-display mt-4 text-2xl font-extrabold text-[var(--foreground)]">
@@ -156,7 +156,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
         <BlogReveal className="mt-12 flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-extrabold tracking-[0.14em] text-[#a86d1e] uppercase">
+            <p className="text-xs font-extrabold tracking-[0.14em] text-[var(--accent)] uppercase">
               {normalizedLocale === "vi" ? "Bài mới" : "Latest"}
             </p>
             <h2 className="font-display mt-2 text-3xl leading-tight font-extrabold text-[var(--foreground)]">
@@ -233,7 +233,7 @@ function BlogMiniCard({ post }: { post: ReturnType<typeof getLocalizedBlogPosts>
         />
       </div>
       <div className="p-4">
-        <p className="text-[11px] font-extrabold tracking-[0.12em] text-[#a86d1e] uppercase">
+        <p className="text-[11px] font-extrabold tracking-[0.12em] text-[var(--accent)] uppercase">
           {post.mood}
         </p>
         <h3 className="font-display mt-2 line-clamp-2 text-lg leading-tight font-extrabold text-[var(--foreground)]">

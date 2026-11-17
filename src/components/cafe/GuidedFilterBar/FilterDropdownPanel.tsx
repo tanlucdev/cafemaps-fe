@@ -141,7 +141,7 @@ export function FilterDropdownPanel({
           </button>
           <button
             onClick={onApply}
-            className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
+            className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-[var(--accent-foreground)] shadow-[0_10px_24px_rgba(200,132,42,0.18)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
           >
             {stagedActiveCount > 0 ? `${tf("apply")} (${stagedActiveCount})` : tf("apply")}
           </button>

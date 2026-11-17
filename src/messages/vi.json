@@ -1410,5 +1410,160 @@
     "noSupport": "Trình duyệt không hỗ trợ định vị",
     "loadError": "Không thể tải quán gần đây",
     "locationError": "Không thể lấy vị trí của bạn"
+  },
+  "coffeeMeetups": {
+    "brand": "Cafe Maps",
+    "title": "Kèo cà phê",
+    "intro": "Tạo hoặc tham gia một buổi học, làm việc hay trò chuyện tại một quán có sẵn.",
+    "loading": "Đang tải kèo...",
+    "sending": "Đang gửi...",
+    "empty": "Chưa có kèo.",
+    "emptyList": "Chưa có kèo phù hợp.",
+    "safety": "Chỉ gặp tại địa điểm công cộng và không chia sẻ thông tin cá nhân khi chưa cảm thấy an toàn.",
+    "acceptedTitle": "Người đã được chấp nhận",
+    "seatsLeft": "Còn {count} chỗ",
+    "purposes": [
+      "Học tập",
+      "Làm việc",
+      "Luyện ngoại ngữ",
+      "Đọc sách",
+      "Gặp bạn mới",
+      "Trò chuyện",
+      "Khác"
+    ],
+    "reportReasons": [
+      "Spam",
+      "Nội dung không phù hợp",
+      "Quấy rối",
+      "Thông tin sai",
+      "Khác"
+    ],
+    "filters": {
+      "allPurposes": "Mọi mục đích",
+      "allAreas": "Mọi khu vực",
+      "available": "Chỉ còn chỗ"
+    },
+    "fields": {
+      "area": "Khu vực",
+      "cafe": "Quán cà phê",
+      "date": "Ngày",
+      "description": "Mô tả",
+      "endTime": "Giờ kết thúc",
+      "maxParticipants": "Số người tối đa",
+      "message": "Lời nhắn",
+      "organizer": "Người tổ chức",
+      "purpose": "Mục đích",
+      "reportReason": "Lý do báo cáo",
+      "seats": "Số chỗ",
+      "startTime": "Giờ bắt đầu",
+      "time": "Thời gian",
+      "title": "Tiêu đề",
+      "contactInfo": "Thông tin liên hệ"
+    },
+    "actions": {
+      "accept": "Chấp nhận",
+      "cancel": "Huỷ kèo",
+      "complete": "Kết thúc",
+      "create": "Tạo kèo",
+      "edit": "Chỉnh sửa",
+      "reject": "Từ chối",
+      "report": "Báo cáo kèo",
+      "save": "Lưu kèo",
+      "share": "Chia sẻ kèo",
+      "view": "Xem kèo",
+      "withdraw": "Rút yêu cầu"
+    },
+    "card": {
+      "organizerSeats": "Chủ kèo: {name} · còn {count} chỗ"
+    },
+    "cta": {
+      "ended": "Kèo đã kết thúc",
+      "full": "Kèo đã đủ người",
+      "join": "Xin tham gia",
+      "joined": "Bạn đã tham gia",
+      "login": "Đăng nhập để xin tham gia",
+      "pending": "Đang chờ xác nhận"
+    },
+    "errors": {
+      "create": "Chưa tạo được kèo.",
+      "load": "Không tải được kèo.",
+      "loadEdit": "Không tải được kèo để chỉnh sửa.",
+      "request": "Chưa gửi được yêu cầu."
+    },
+    "fallback": {
+      "description": "Chủ kèo chưa thêm mô tả."
+    },
+    "form": {
+      "createTitle": "Tạo kèo cà phê",
+      "editTitle": "Chỉnh sửa kèo",
+      "cafeMaps": "Cafe Maps",
+      "externalCafe": "Quán ngoài",
+      "searchCafe": "Tìm tên quán, khu vực...",
+      "searchingCafe": "Đang tìm quán...",
+      "emptyCafe": "Chưa thấy quán phù hợp.",
+      "open": "Đang mở",
+      "closed": "Đang đóng",
+      "externalName": "Tên quán ngoài",
+      "externalUrl": "Link quán",
+      "externalDistrict": "Khu vực",
+      "externalGate": "Quán ngoài đã có bản nháp nhưng backend hiện chưa nhận khi tạo kèo.",
+      "externalUnsupported": "Backend chưa hỗ trợ tạo kèo với quán ngoài.",
+      "mapsSuggestion": "Gợi ý Google Maps",
+      "quickTime": "Giờ nhanh",
+      "preview": "Preview kèo",
+      "untitled": "Kèo cà phê mới",
+      "selectCafe": "Chọn mục đích và một quán trước khi tạo kèo.",
+      "vibe": "Không gian quán",
+      "allVibes": "Mọi không gian",
+      "chooseFilters": "Chọn mục đích, không gian hoặc Gần tôi để gợi ý tối đa 10 quán.",
+      "contactPlaceholder": "Số điện thoại, Zalo, Facebook…",
+      "contactHint": "Không bắt buộc. Thông tin này sẽ hiển thị công khai trên trang kèo.",
+      "customPurpose": "Mục đích của bạn",
+      "customPurposePlaceholder": "Ví dụ: Chơi boardgame, trao đổi sách…",
+      "chooseIcon": "Chọn biểu tượng",
+      "chooseAppearance": "Biểu tượng và màu",
+      "chooseColor": "Chọn màu",
+      "closeAppearance": "Đóng bộ chọn biểu tượng"
+    },
+    "mine": {
+      "archived": "Kèo đã kết thúc hoặc huỷ",
+      "joined": "Kèo tôi tham gia",
+      "organized": "Kèo tôi tổ chức",
+      "pending": "Yêu cầu đang chờ",
+      "title": "Kèo của tôi"
+    },
+    "ownerTools": {
+      "title": "Quản lý yêu cầu"
+    },
+    "placeholders": {
+      "message": "Lời nhắn cho chủ kèo..."
+    },
+    "status": {
+      "available": "Còn chỗ",
+      "full": "Đã đủ"
+    },
+    "purposeIcons": {
+      "book": "Đọc sách",
+      "work": "Làm việc",
+      "language": "Ngoại ngữ",
+      "friends": "Gặp bạn bè",
+      "chat": "Trò chuyện",
+      "coffee": "Cà phê",
+      "games": "Trò chơi",
+      "music": "Âm nhạc",
+      "camera": "Chụp ảnh",
+      "art": "Nghệ thuật",
+      "sparkles": "Khác"
+    },
+    "purposeColors": {
+      "brown": "Nâu",
+      "green": "Xanh lá",
+      "blue": "Xanh dương",
+      "purple": "Tím",
+      "rose": "Hồng",
+      "orange": "Cam",
+      "teal": "Xanh ngọc",
+      "slate": "Xám"
+    }
   }
 }

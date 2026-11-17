@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Flag, LoaderCircle, Share2, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import {
   acceptMeetupRequest,
@@ -10,7 +11,6 @@ import {
   getCoffeeMeetup,
   rejectMeetupRequest,
   reportCoffeeMeetup,
-  REPORT_REASONS,
   requestToJoinMeetup,
   withdrawMeetupRequest,
   type CoffeeMeetup,
@@ -18,13 +18,17 @@ import {
 } from "@/apis/coffee-meetups";
 import { getAuthUser, saveAuthReturnUrl } from "@/lib/auth-client";
 import { trackEvent } from "@/lib/analytics";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatMeetupTime, isEnded, remainingSeats } from "./format";
+import PurposeIcon from "./PurposeIcon";
 
 export default function MeetupDetailClient({ id }: { id: string }) {
   const router = useRouter();
+  const t = useTranslations("coffeeMeetups");
+  const reportReasons = t.raw("reportReasons") as string[];
   const [meetup, setMeetup] = useState<CoffeeMeetup | null>(null);
   const [message, setMessage] = useState("");
-  const [reportReason, setReportReason] = useState<MeetupReportReason>("Spam");
+  const [reportReason, setReportReason] = useState<MeetupReportReason>(reportReasons[0] ?? "Spam");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const user = typeof window === "undefined" ? null : getAuthUser();
@@ -36,20 +40,20 @@ export default function MeetupDetailClient({ id }: { id: string }) {
   const seats = meetup ? remainingSeats(meetup) : 0;
   const isOwner = Boolean(user && meetup?.organizerId === user.id);
   const cta = useMemo(() => {
-    if (!user) return "Đăng nhập để xin tham gia";
-    if (ended) return "Kèo đã kết thúc";
-    if (meetup?.myRequestStatus === "accepted") return "Bạn đã tham gia";
-    if (meetup?.myRequestStatus === "pending") return "Đang chờ xác nhận";
-    if (seats <= 0 || meetup?.status === "full") return "Kèo đã đủ người";
-    return "Xin tham gia";
-  }, [ended, meetup, seats, user]);
+    if (!user) return t("cta.login");
+    if (ended) return t("cta.ended");
+    if (meetup?.myRequestStatus === "accepted") return t("cta.joined");
+    if (meetup?.myRequestStatus === "pending") return t("cta.pending");
+    if (seats <= 0 || meetup?.status === "full") return t("cta.full");
+    return t("cta.join");
+  }, [ended, meetup, seats, t, user]);
 
   useEffect(() => {
     trackEvent("coffee_meetup_detail_view");
     getCoffeeMeetup(id)
       .then(setMeetup)
-      .catch((err) => setError(err instanceof Error ? err.message : "Không tải được kèo."));
-  }, [id]);
+      .catch((err) => setError(err instanceof Error ? err.message : t("errors.load")));
+  }, [id, t]);
 
   async function reload() {
     setMeetup(await getCoffeeMeetup(id));
@@ -67,7 +71,7 @@ export default function MeetupDetailClient({ id }: { id: string }) {
       trackEvent("coffee_meetup_request_send");
       setMessage("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Chưa gửi được yêu cầu.");
+      setError(err instanceof Error ? err.message : t("errors.request"));
     } finally {
       setBusy(false);
     }
@@ -103,35 +107,40 @@ export default function MeetupDetailClient({ id }: { id: string }) {
     <main className="min-h-[100svh] bg-[var(--background)] px-3 pt-[88px] pb-28 sm:px-6 sm:pt-24 lg:px-8">
       <article className="mx-auto max-w-3xl rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-sm)] sm:p-6">
         <div className="flex flex-wrap gap-2">
-          <span className="rounded-full bg-[var(--accent-light)] px-3 py-1 text-xs font-black text-[#875200]">
-            {meetup.purpose}
+          <span className="rounded-full bg-[var(--accent-light)] px-3 py-1 text-xs font-black text-[var(--accent)]">
+            <PurposeIcon name={meetup.purposeIcon} color={meetup.purposeColor} className="mr-1.5 inline" />{meetup.purpose}
           </span>
           <span className="rounded-full bg-[#e6f5ee] px-3 py-1 text-xs font-black text-[#166638]">
-            Còn {seats} chỗ
+            {t("seatsLeft", { count: seats })}
           </span>
         </div>
         <h1 className="mt-3 text-3xl leading-tight font-black text-[var(--foreground)]">
           {meetup.title}
         </h1>
         <p className="mt-3 text-sm font-semibold text-[var(--foreground-muted)]">
-          {meetup.description || "Chủ kèo chưa thêm mô tả."}
+          {meetup.description || t("fallback.description")}
         </p>
         <div className="mt-5 grid gap-3 rounded-[22px] border border-[var(--border)] bg-[#fffaf2] p-4 text-sm font-bold">
           <p>
-            Quán:{" "}
+            {t("fields.cafe")}:{" "}
             <Link className="text-[var(--accent-hover)]" href={`/cafe/${meetup.cafe?.slug}`}>
               {meetup.cafe?.name}
             </Link>
           </p>
-          <p>Khu vực: {meetup.cafe?.district || "TP.HCM"}</p>
-          <p>Thời gian: {formatMeetupTime(meetup)}</p>
-          <p>Người tổ chức: {meetup.organizerName}</p>
+          <p>{t("fields.area")}: {meetup.cafe?.district || "TP.HCM"}</p>
+          <p>{t("fields.time")}: {formatMeetupTime(meetup)}</p>
+          <p>{t("fields.organizer")}: {meetup.organizerName}</p>
+          {meetup.contactInfo && (
+            <p className="whitespace-pre-wrap break-words">
+              {t("fields.contactInfo")}: {meetup.contactInfo}
+            </p>
+          )}
           <p>
-            Số chỗ: {meetup.acceptedCount}/{meetup.maxParticipants}
+            {t("fields.seats")}: {meetup.acceptedCount}/{meetup.maxParticipants}
           </p>
         </div>
         <section className="mt-5">
-          <h2 className="font-black">Người đã được chấp nhận</h2>
+          <h2 className="font-black">{t("acceptedTitle")}</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {accepted.map((name) => (
               <span
@@ -144,17 +153,16 @@ export default function MeetupDetailClient({ id }: { id: string }) {
           </div>
         </section>
         <div className="mt-5 flex items-start gap-2 rounded-2xl bg-[#e6f5ee] p-3 text-sm font-bold text-[#166638]">
-          <ShieldCheck size={18} /> Chỉ gặp tại địa điểm công cộng và không chia sẻ thông tin cá
-          nhân khi chưa cảm thấy an toàn.
+          <ShieldCheck size={18} /> {t("safety")}
         </div>
         {!isOwner && user && !meetup.myRequestStatus && !ended && seats > 0 && (
           <textarea
-            aria-label="Lời nhắn"
+            aria-label={t("fields.message")}
             maxLength={200}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="mt-4 min-h-24 w-full rounded-2xl border border-[var(--border)] bg-[#fffaf2] p-3 text-sm font-semibold"
-            placeholder="Lời nhắn cho chủ kèo..."
+            className="mt-4 min-h-24 w-full rounded-2xl border border-[var(--border)] bg-[#fffaf2] p-3 text-[16px] lg:text-[16px] lg:text-sm font-semibold focus:!border-[#8f5a16] focus:!shadow-none focus:!ring-0 focus-visible:!border-[#8f5a16] focus-visible:!ring-0 focus-visible:!outline-none outline-none"
+            placeholder={t("placeholders.message")}
           />
         )}
         <div className="mt-5 flex flex-wrap gap-2">
@@ -162,9 +170,9 @@ export default function MeetupDetailClient({ id }: { id: string }) {
             <button
               disabled={busy || ended || Boolean(meetup.myRequestStatus) || seats <= 0}
               onClick={join}
-              className="h-11 rounded-full bg-[var(--accent)] px-5 text-sm font-black text-white disabled:opacity-55"
+              className="h-11 rounded-full bg-[var(--accent)] px-5 text-sm font-black text-[var(--accent-foreground)] disabled:opacity-55"
             >
-              {busy ? "Đang gửi..." : cta}
+              {busy ? t("sending") : cta}
             </button>
           )}
           {myPending && (
@@ -176,33 +184,38 @@ export default function MeetupDetailClient({ id }: { id: string }) {
               }}
               className="h-11 rounded-full border border-[var(--border)] px-5 text-sm font-black"
             >
-              Rút yêu cầu
+              {t("actions.withdraw")}
             </button>
           )}
           <button
             onClick={share}
             className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--border)] px-5 text-sm font-black"
           >
-            <Share2 size={16} /> Chia sẻ kèo
+            <Share2 size={16} /> {t("actions.share")}
           </button>
-          <select
-            aria-label="Lý do báo cáo"
-            value={reportReason}
-            onChange={(e) => setReportReason(e.target.value as MeetupReportReason)}
-            className="h-11 rounded-full border border-[var(--border)] bg-[#fffaf2] px-4 text-sm font-black"
-          >
-            {REPORT_REASONS.map((reason) => (
-              <option key={reason}>{reason}</option>
-            ))}
-          </select>
+          <Select value={reportReason} onValueChange={(value) => value && setReportReason(value as MeetupReportReason)}>
+            <SelectTrigger aria-label={t("fields.reportReason")}
+              className="rounded-full border border-[var(--border)] bg-[#fffaf2] px-4 text-[16px] font-black focus:!border-[#8f5a16] focus:!shadow-none focus:!ring-0 focus-visible:!border-[#8f5a16] focus-visible:!ring-0 focus-visible:!outline-none data-[size=default]:h-11 lg:text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent side="bottom" align="start" sideOffset={8} alignItemWithTrigger={false}
+              className="max-h-[min(16rem,var(--available-height))] rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg [scrollbar-width:thin]">
+              {reportReasons.map((reason) => <SelectItem className="min-h-11 cursor-pointer rounded-xl data-highlighted:bg-[var(--accent-light)] data-selected:bg-[var(--accent-light)] data-selected:font-bold data-selected:text-[var(--accent)]" key={reason} value={reason}>{reason}</SelectItem>)}
+            </SelectContent>
+          </Select>
           <button
             onClick={async () => {
+              if (!user) {
+                saveAuthReturnUrl();
+                router.push("/login");
+                return;
+              }
               await reportCoffeeMeetup(id, reportReason);
               trackEvent("coffee_meetup_report", { reason: reportReason });
             }}
             className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--border)] px-5 text-sm font-black"
           >
-            <Flag size={16} /> Báo cáo kèo
+            <Flag size={16} /> {t("actions.report")}
           </button>
         </div>
         {isOwner && <OwnerTools meetup={meetup} onReload={reload} />}
@@ -212,9 +225,10 @@ export default function MeetupDetailClient({ id }: { id: string }) {
 }
 
 function OwnerTools({ meetup, onReload }: { meetup: CoffeeMeetup; onReload: () => Promise<void> }) {
+  const t = useTranslations("coffeeMeetups");
   return (
     <section className="mt-6 border-t border-[var(--border)] pt-5">
-      <h2 className="font-black">Quản lý yêu cầu</h2>
+      <h2 className="font-black">{t("ownerTools.title")}</h2>
       <div className="mt-3 grid gap-2">
         {meetup.requests
           .filter((r) => r.status === "pending")
@@ -231,9 +245,9 @@ function OwnerTools({ meetup, onReload }: { meetup: CoffeeMeetup; onReload: () =
                     trackEvent("coffee_meetup_request_accept");
                     await onReload();
                   }}
-                  className="h-10 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-white"
+                  className="h-10 rounded-full bg-[var(--accent)] px-4 text-sm font-black text-[var(--accent-foreground)]"
                 >
-                  Chấp nhận
+                  {t("actions.accept")}
                 </button>
                 <button
                   onClick={async () => {
@@ -243,7 +257,7 @@ function OwnerTools({ meetup, onReload }: { meetup: CoffeeMeetup; onReload: () =
                   }}
                   className="h-10 rounded-full border border-[var(--border)] px-4 text-sm font-black"
                 >
-                  Từ chối
+                  {t("actions.reject")}
                 </button>
               </div>
             </div>
@@ -257,7 +271,7 @@ function OwnerTools({ meetup, onReload }: { meetup: CoffeeMeetup; onReload: () =
           }}
           className="h-10 rounded-full border border-[#e9a7a0] px-4 text-sm font-black text-[#C0392B]"
         >
-          Huỷ kèo
+          {t("actions.cancel")}
         </button>
         <button
           onClick={async () => {
@@ -266,13 +280,13 @@ function OwnerTools({ meetup, onReload }: { meetup: CoffeeMeetup; onReload: () =
           }}
           className="h-10 rounded-full border border-[var(--border)] px-4 text-sm font-black"
         >
-          Kết thúc
+          {t("actions.complete")}
         </button>
         <Link
           href={`/coffee-meetups/new?meetup=${meetup.id}`}
           className="h-10 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-black"
         >
-          Chỉnh sửa
+          {t("actions.edit")}
         </Link>
       </div>
     </section>

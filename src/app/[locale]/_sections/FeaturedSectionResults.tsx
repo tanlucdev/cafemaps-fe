@@ -67,7 +67,7 @@ export default function FeaturedSectionResults({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[var(--accent-hover)]"
+          className="cursor-pointer rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
         >
           {locale === "vi" ? "Thử lại" : "Retry"}
         </button>

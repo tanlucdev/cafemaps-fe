@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import IntentPrefetchLink from "@/components/cafe/IntentPrefetchLink";
 import SaveButton from "@/components/cafe/SaveButton";
+import { CafeChristmasFrame } from "@/components/seasonal/CafeChristmasDecorations";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import CafeStatsBadge from "@/components/cafe/CafeStatsBadge";
 import { formatCafeArea, getCafeTagTranslation, VIBE_TRANSLATION_KEYS } from "@/lib/cafe-labels";
@@ -59,13 +60,14 @@ function CafeListRow({
   };
 
   return (
+    <CafeChristmasFrame cafeId={cafe.id} index={index} compact>
     <motion.article
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={revealTransition}
       whileHover={!reduceMotion ? { y: isCinematic ? -3 : -2, scale: isCinematic ? 1.005 : 1 } : undefined}
       className={cn(
-        "group relative flex min-h-[140px] overflow-hidden rounded-2xl transition-colors duration-300",
+        "christmas-cafe-card group relative flex min-h-[140px] overflow-hidden rounded-2xl transition-colors duration-300",
         isCinematic
           ? "border border-[#ffe3b7]/12 bg-[#1b0f08]/66 shadow-[0_18px_52px_rgba(0,0,0,0.28)] backdrop-blur-md hover:border-[#ffe3b7]/28 hover:shadow-[0_22px_64px_rgba(245,166,58,0.16)]"
           : "bg-white shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[#1C1210] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
@@ -150,10 +152,10 @@ function CafeListRow({
                   "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
                   isCinematic
                     ? "border border-[#ffe3b7]/18 bg-[#fff1d6]/12 text-[#ffd58a]"
-                    : "bg-[#FBF0DC] text-[#C9870C]",
+                    : "bg-[#FBF0DC] text-[var(--accent)]",
                 )}
               >
-                <Star size={11} className="fill-[#F0A830] text-[#F0A830]" />
+                <Star size={11} className="fill-[#F0A830] text-[var(--accent)]" />
                 {rating}
               </span>
             </div>
@@ -166,7 +168,7 @@ function CafeListRow({
                   isCinematic ? "text-[#fff0d4]/62" : "text-[#9B8B73]",
                 )}
               >
-                <MapPin size={12} className="shrink-0 text-[#C9870C]" />
+                <MapPin size={12} className="shrink-0 text-[var(--accent)]" />
                 <span className="truncate">{locationText}</span>
               </p>
             )}
@@ -239,14 +241,15 @@ function CafeListRow({
         cafeId={cafe.id}
         locale={locale}
         className={cn(
-          "absolute top-3 right-3 z-10 h-8 w-8 rounded-full border shadow-sm transition-all",
+          "christmas-cafe-save absolute top-3 right-3 z-10 h-8 w-8 rounded-full border shadow-sm transition-all",
           isCinematic
             ? "border-[#ffe3b7]/24 bg-[#170c06]/48 text-[#fff0d4] backdrop-blur-md hover:bg-[#fff1d6]/12"
-            : "border-[#E0D3C0] bg-white text-[#875200] hover:bg-[#FBF0DC] dark:border-[#3A2A20] dark:bg-[#1C1210] dark:text-[#E0A14B]",
+            : "border-[#E0D3C0] bg-white text-[var(--accent)] hover:bg-[#FBF0DC] dark:border-[#3A2A20] dark:bg-[#1C1210] dark:text-[var(--accent)]",
         )}
       />
 
     </motion.article>
+    </CafeChristmasFrame>
   );
 }
 

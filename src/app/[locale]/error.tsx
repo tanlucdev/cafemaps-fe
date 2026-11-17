@@ -27,7 +27,7 @@ export default function Error({ error, reset }: ErrorProps) {
         </p>
         <button
           onClick={reset}
-          className="px-5 py-2.5 rounded-full bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          className="px-5 py-2.5 rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] text-sm font-medium hover:opacity-90 transition-opacity"
         >
           {t("retry")}
         </button>

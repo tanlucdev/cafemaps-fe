@@ -46,7 +46,7 @@ export function QuizResultList({
         </div>
         <Link
           href="/quiz"
-          className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-white transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
+          className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[var(--accent)] px-4 text-sm font-bold text-[var(--accent-foreground)] transition hover:bg-[var(--accent-hover)] focus-visible:ring-3 focus-visible:ring-[var(--ring)]/30 focus-visible:outline-none"
         >
           <Sparkles size={15} />
           {copy.retakeQuiz}

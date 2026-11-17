@@ -15,7 +15,7 @@ export default function RatingStars({ rating }: { rating: number }) {
             size={13}
             className={
               star <= roundedRating
-                ? "fill-[#F0A830] text-[#F0A830]"
+                ? "fill-[#F0A830] text-[var(--accent)]"
                 : "fill-[#E0D3C0] text-[#E0D3C0] dark:fill-[#4A3A2C] dark:text-[#4A3A2C]"
             }
           />

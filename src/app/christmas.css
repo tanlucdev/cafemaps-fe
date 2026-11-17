@@ -1,0 +1,293 @@
+/* Seasonal tokens inherit through portals, main pages and auth. */
+[data-season="christmas"] .christmas-cafe-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border);
+  border-radius: inherit;
+  pointer-events: none;
+}
+html[data-season="christmas"] {
+  --season-pine: #285544;
+  --season-berry: #a52f3a;
+  --season-ribbon: #9e3443;
+  --season-gold: #e4b86f;
+  --season-ink: #2c1a0e;
+  --season-paper: #fffaf2;
+  --hero-on-photo: #fff5e3;
+  --season-hero-scrim: linear-gradient(90deg, #2c1a0ee6, #2c1a0ed9 60%, #2c1a0ec9);
+  --season-soft: #e7efde;
+  --background: #fdf6ec;
+  --background-secondary: #e1ead8;
+  --foreground: #2c1a0e;
+  --foreground-muted: #735b45;
+  --accent: #9e3443;
+  --accent-hover: #82283b;
+  --accent-light: #f9e6e7;
+  --accent-foreground: #ffffff;
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-foreground);
+  --card: #fffaf2;
+  --card-foreground: var(--foreground);
+  --secondary: var(--season-soft);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--season-soft);
+  --muted-foreground: var(--foreground-muted);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --border: #cbd4c4;
+  --input: #b2bca9;
+  --ring: #8f5a16;
+  --sage: var(--season-pine);
+  --sage-light: var(--season-soft);
+  --status-open: #18733f;
+  --status-closed: #735b45;
+  --danger: var(--season-berry);
+  --destructive: var(--season-berry);
+  --app-muted: var(--foreground-muted);
+  --header-shell-cinematic-bg: rgba(231, 239, 222, .97);
+  --header-shell-cinematic-border: #a6b99b;
+  --header-nav-cinematic-active-bg: var(--accent);
+  --header-nav-cinematic-active-text: var(--accent-foreground);
+  --header-nav-cinematic-hover-bg: var(--accent-hover);
+  --header-shell-cinematic-text: var(--foreground);
+  --header-subtitle-cinematic: var(--season-pine);
+  --header-nav-cinematic-text: var(--season-pine);
+  --header-actions-cinematic-bg: #dde8d4;
+  --header-shell-surface-bg: rgba(255, 250, 242, .97);
+  --header-shell-surface-border: #9aaf98;
+  --header-nav-active-bg: #e5ecdf;
+  --header-nav-active-shadow: inset 0 -1px 0 #9e344344;
+  --header-nav-primary-hover-bg: var(--season-soft);
+  --header-login-shadow: 0 8px 20px #9e344322;
+  --header-nav-active-text: var(--season-pine);
+  --header-nav-primary-text: var(--season-pine);
+  --header-nav-text: #67503b;
+  --header-nav-hover-bg: var(--season-soft);
+  --header-nav-hover-text: var(--foreground);
+  --header-actions-surface-bg: var(--season-soft);
+  --header-actions-surface-border: var(--border);
+  --footer-panel: #edf1e9;
+  --footer-panel-border: #b7c5ae;
+  --footer-card: rgba(255, 250, 242, .88);
+  --footer-divider: #bac9b2;
+  --footer-control-border: #b7c5ae;
+  --footer-secondary-border: #9aae94;
+  --footer-warm-text: var(--season-pine);
+  --footer-cta-eyebrow-text: var(--season-pine);
+  --footer-heart: var(--season-berry);
+  --footer-heart-fill: #a5474522;
+  --footer-ambient: radial-gradient(circle at 94% 0%, #e4b86f33, transparent 36%);
+  --contribute-surface: var(--card);
+  --contribute-surface-soft: var(--season-soft);
+}
+
+html[data-season="christmas"].dark {
+  --season-pine: #a6cfb1;
+  --season-berry: #efa6a0;
+  --season-gold: #e4b86f;
+  --season-ink: #2c1a0e;
+  --season-paper: #fff5e3;
+  --season-soft: #242220;
+  --status-open: #8dcc9f;
+  --status-closed: #d0c1ac;
+  --background: #1e1c1a;
+  --background-secondary: #242220;
+  --foreground: #fff1de;
+  --foreground-muted: #d0c1ac;
+  --accent: #efa6a0;
+  --accent-hover: #ffc1bd;
+  --accent-light: #47232b;
+  --accent-foreground: #2c1a0e;
+  --card: #2a2825;
+  --border: #736a60;
+  --input: #9c9083;
+  --header-shell-surface-bg: rgba(30, 28, 26, .97);
+  --header-shell-cinematic-bg: #242220;
+  --header-actions-cinematic-bg: #242220;
+  --header-nav-active-bg: #36312b;
+  --header-nav-text: var(--foreground-muted);
+  --header-actions-surface-bg: #242220;
+  --header-locale-text: var(--foreground);
+  --header-subtitle-surface: var(--foreground-muted);
+  --footer-panel: #242220;
+  --footer-card: #302b26;
+  --footer-panel-border: #736a60;
+  --footer-control-border: #736a60;
+  --footer-secondary-border: #9c9083;
+  --footer-divider: #736a60;
+  --footer-control-bg: #ffffff08;
+  --footer-control-bg-strong: #ffffff10;
+}
+
+[data-season="christmas"] .christmas-art {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+[data-season="christmas"] .christmas-logo { position: relative; }
+[data-season="christmas"] .christmas-hat {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: -9px;
+  right: -7px;
+  transform: rotate(12deg);
+}
+[data-season="christmas"] .christmas-header-shell {
+  position: relative;
+  --header-shell-surface-bg: color-mix(in srgb, var(--season-soft) 97%, transparent);
+  --header-shell-surface-border: var(--border);
+  --header-nav-active-bg: var(--accent-light);
+  --header-nav-active-text: var(--accent);
+  --header-nav-primary-text: var(--season-pine);
+  --header-actions-surface-bg: var(--season-soft);
+}
+[data-season="christmas"] .christmas-lights {
+  position: absolute;
+  inset: -5px 18px auto;
+  width: calc(100% - 36px);
+  height: 15px;
+}
+[data-season="christmas"] .christmas-home {
+  background: radial-gradient(ellipse at 87% 42%, #a547452e, transparent 35%),
+    linear-gradient(110deg, var(--card) 28%, var(--season-soft) 100%);
+}
+[data-season="christmas"] .christmas-home-sprig {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: -54px;
+  right: 12px;
+  opacity: .22;
+  transform: rotate(18deg);
+}
+[data-season="christmas"] [data-slot="sheet-header"] {
+  background: var(--season-soft);
+  border-bottom: 1px solid var(--border);
+}
+[data-season="christmas"] .christmas-home-copy { position: relative; }
+[data-season="christmas"] .christmas-home-art {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  top: 0;
+  right: 12px;
+}
+[data-season="christmas"] .seasonal-greeting {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--season-ribbon);
+  color: #fff5e3;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+[data-season="christmas"] .seasonal-greeting > svg {
+  width: 28px; height: 28px;
+  --season-pine: #fff5e3;
+  --season-berry: #e4b86f;
+}
+[data-season="christmas"] .christmas-header-shell nav [aria-current="page"] {
+  background: var(--season-ribbon);
+  color: #fff5e3;
+}
+[data-season="christmas"] .christmas-home .seasonal-greeting { margin-top: 6px; }
+[data-season="christmas"] .christmas-footer-bow {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  top: -6px;
+  right: 12px;
+}
+[data-season="christmas"] .christmas-auth-art {
+  position: absolute;
+  width: 155px;
+  height: 155px;
+  top: 24px;
+  right: 24px;
+  padding: 10px;
+  background: #fffaf2e6;
+  border-radius: 50%;
+}
+[data-season="christmas"] .christmas-search:focus-within {
+  border-color: #8f5a16;
+  box-shadow: none;
+}
+[data-season="christmas"] :is(input:not([type="checkbox"]):not([type="radio"]), textarea):focus,
+[data-season="christmas"] [data-slot="select-trigger"]:focus-visible {
+  border-color: #8f5a16 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+[data-season="christmas"] :is(input, textarea, [data-slot="select-trigger"]):focus-visible {
+  border-radius: revert-layer !important;
+}
+[data-season="christmas"] .christmas-search input:focus { border: 0 !important; }
+[data-season="christmas"] :is([data-slot="select-content"], .christmas-panel) {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+[data-season="christmas"] [data-slot="select-item"][data-highlighted] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+[data-season="christmas"] [data-sonner-toast] {
+  --normal-bg: var(--card);
+  --normal-text: var(--foreground);
+  --normal-border: var(--border);
+  --success-bg: var(--season-soft);
+  --success-text: var(--season-pine);
+  --success-border: var(--border);
+  --error-bg: var(--card);
+  --error-text: var(--danger);
+  --error-border: var(--danger);
+}
+[data-season="christmas"] .mobile-bottom-nav {
+  background: var(--season-soft);
+  border-top-color: var(--border);
+}
+[data-season="christmas"] .mobile-bottom-nav::after { background: var(--season-soft); }
+[data-season="christmas"] .mobile-bottom-nav-item { color: var(--foreground-muted); }
+[data-season="christmas"] .mobile-bottom-nav-item.is-active { color: var(--accent); }
+[data-season="christmas"] .mobile-bottom-nav-item.is-active svg { color: var(--accent); }
+[data-season="christmas"] .mobile-bottom-nav-item::before {
+  background: var(--accent-light);
+  border-color: var(--border);
+}
+[data-season="christmas"] .mapboxgl-ctrl-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+[data-season="christmas"].dark .mapboxgl-ctrl-icon { filter: invert(1); }
+[data-season="christmas"] .christmas-bulb { animation: christmas-glow 6s ease-in-out infinite; }
+[data-season="christmas"] .christmas-steam { animation: christmas-steam 5s ease-in-out infinite; }
+@keyframes christmas-glow { 50% { opacity: .45; } }
+@keyframes christmas-steam { 50% { transform: translateY(-5px); opacity: .35; } }
+@media (min-width: 768px) {
+  [data-season="christmas"] .christmas-home-art { width: 160px; height: 160px; right: 10px; }
+}
+@media (min-width: 1024px) {
+  [data-season="christmas"] .christmas-home-art { width: 224px; height: 224px; top: -8px; right: 24px; }
+}
+@media (max-width: 767px) {
+  [data-season="christmas"] .christmas-home-copy h1 { max-width: calc(100% - 78px); }
+  [data-season="christmas"] .christmas-home .seasonal-greeting { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-season="christmas"] { scroll-behavior: auto; }
+  [data-season="christmas"] *,
+  [data-season="christmas"] *::before,
+  [data-season="christmas"] *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  [data-season="christmas"] :is(.christmas-bulb, .christmas-steam) { animation: none !important; }
+}

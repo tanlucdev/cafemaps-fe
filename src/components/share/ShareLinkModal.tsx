@@ -76,7 +76,7 @@ export default function ShareLinkModal({
                     onClick={() => handleCopyLink(link.key, link.url)}
                     className={cn(
                       "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200",
-                      copied ? "bg-green-500 text-white" : "bg-accent text-white hover:opacity-90",
+                      copied ? "bg-green-500 text-white" : "bg-accent text-[var(--accent-foreground)] hover:opacity-90",
                     )}
                   >
                     {copied ? <Check size={14} /> : <Copy size={14} />}

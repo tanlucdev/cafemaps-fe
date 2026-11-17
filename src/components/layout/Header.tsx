@@ -9,6 +9,7 @@ import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
 import { featureFlags } from "@/lib/feature-flags";
 
 const HEADER_SCROLL_ENTER_Y = 24;
@@ -66,19 +67,21 @@ export default function Header() {
         <div
           data-variant={shellVariant}
           className={cn(
-            "flex h-[52px] w-full min-w-0 items-center gap-1 rounded-full border px-1.5 backdrop-blur-xl transition-all duration-300 min-[390px]:h-[54px] min-[390px]:gap-2 min-[390px]:px-2.5 sm:h-[58px] sm:gap-3 sm:px-3",
+            "christmas-header-shell flex h-[52px] w-full min-w-0 items-center gap-1 rounded-full border px-1.5 backdrop-blur-xl transition-all duration-300 min-[390px]:h-[54px] min-[390px]:gap-2 min-[390px]:px-2.5 sm:h-[58px] sm:gap-3 sm:px-3",
             "motion-reduce:transition-none",
             isCinematicTop
               ? "border-[var(--header-shell-cinematic-border)] bg-[var(--header-shell-cinematic-bg)] text-[var(--header-shell-cinematic-text)] shadow-[var(--header-shell-cinematic-shadow)]"
               : "border-[var(--header-shell-surface-border)] bg-[var(--header-shell-surface-bg)] text-[var(--foreground)] shadow-[var(--header-shell-surface-shadow)]",
           )}
         >
+          <ChristmasArt kind="lights" className="christmas-lights" />
           <Link
             href="/"
             className="group flex min-w-0 shrink-0 items-center gap-1.5 rounded-full pr-0.5 pl-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-[390px]:gap-2 min-[390px]:pr-1 min-[390px]:pl-1.5"
             aria-label="Cafe Maps"
           >
-            <span className="flex size-9 shrink-0 items-center justify-center min-[390px]:size-10">
+            <span className="christmas-logo flex size-9 shrink-0 items-center justify-center min-[390px]:size-10">
+              <ChristmasArt kind="hat" className="christmas-hat" />
               <Image
                 src="/image/logo-icon-transparent.png"
                 alt=""

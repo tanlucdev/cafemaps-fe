@@ -161,7 +161,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <BlogReveal className="rounded-[24px] border border-[#ead8bf]/80 bg-[#fff8ed] p-5 shadow-[0_16px_44px_rgba(91,58,29,0.06)] dark:border-white/10 dark:bg-[#2a2825]">
-              <p className="text-xs font-extrabold tracking-[0.14em] text-[#a86d1e] uppercase">
+              <p className="text-xs font-extrabold tracking-[0.14em] text-[var(--accent)] uppercase">
                 {normalizedLocale === "vi" ? "Ghi chú nhanh" : "Quick notes"}
               </p>
               <ul className="mt-4 space-y-3">
@@ -213,7 +213,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                   />
                 </div>
                 <div className="p-4">
-                  <p className="text-[11px] font-extrabold tracking-[0.12em] text-[#a86d1e] uppercase">
+                  <p className="text-[11px] font-extrabold tracking-[0.12em] text-[var(--accent)] uppercase">
                     {relatedPost.category}
                   </p>
                   <h3 className="font-display mt-2 line-clamp-2 text-lg leading-tight font-extrabold text-[var(--foreground)]">
