@@ -68,6 +68,8 @@ export interface Cafe {
   menuImages?: string[] | null;
   instagramUrl?: string | null;
   photoCredits?: PhotoCredit[] | null;
+  imageSourceUsernames?: string[] | null;
+  image_source_usernames?: string[] | null;
   isFeatured?: boolean | null;
   featuredOrder?: number | null;
   isPublished: boolean;
