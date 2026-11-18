@@ -497,7 +497,7 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
         <button
           type="button"
           onClick={() => openLightbox(0)}
-          className="hover:text-accent min-h-11 hidden items-center gap-2 text-sm font-medium text-(--foreground-muted) transition-colors md:inline-flex"
+          className="hover:text-accent min-h-11 hidden items-center gap-2 text-xs font-medium text-(--foreground-muted) transition-colors md:inline-flex"
         >
           <Images size={16} />
           {t("viewAll", { count: images.length })}
