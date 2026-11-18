@@ -26,7 +26,7 @@ export default function CafePhotoCredits({ cafe }: { cafe: Cafe }) {
   if (usernames.length === 0 || cafe.images.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-1 text-[var(--foreground-muted)]">
+    <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-x-2 gap-y-1 text-[var(--foreground-muted)]">
       <span className="inline-flex items-center gap-1.5 text-xs font-medium">
         <Camera size={14} aria-hidden="true" />
         {t("photoCredit")}
