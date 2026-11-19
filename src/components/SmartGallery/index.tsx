@@ -2,7 +2,7 @@
 
 import Image, { type ImageProps } from "next/image";
 import { createPortal } from "react-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Images, X, ZoomIn } from "lucide-react";
 import { cloudinaryImageUrl, type CloudinaryImagePreset } from "@/lib/cloudinary-image";
@@ -94,6 +94,7 @@ interface SmartGalleryProps {
   orientations?: string[];
   coverImageCrop?: { x: number; y: number } | null;
   cafeName: string;
+  footer?: ReactNode;
 }
 
 function shouldSkipOptimization(src: string) {
@@ -148,7 +149,7 @@ function GalleryImage({
   );
 }
 
-export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName }: SmartGalleryProps) {
+export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName, footer }: SmartGalleryProps) {
   const t = useTranslations("gallery");
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -492,14 +493,17 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
     <>
       {mobileGallery}
       {desktopGallery}
-      <button
-        type="button"
-        onClick={() => openLightbox(0)}
-        className="hover:text-accent mt-3 ml-3 hidden items-center gap-2 text-sm font-medium text-(--foreground-muted) transition-colors md:inline-flex"
-      >
-        <Images size={16} />
-        {t("viewAll", { count: images.length })}
-      </button>
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 px-2">
+        <button
+          type="button"
+          onClick={() => openLightbox(0)}
+          className="hover:text-accent min-h-11 hidden items-center gap-2 text-xs font-medium text-(--foreground-muted) transition-colors md:inline-flex"
+        >
+          <Images size={16} />
+          {t("viewAll", { count: images.length })}
+        </button>
+        {footer}
+      </div>
 
       {lightbox}
     </>

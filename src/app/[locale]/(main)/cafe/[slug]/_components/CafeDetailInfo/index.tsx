@@ -22,7 +22,6 @@ import PriceSection from "./components/PriceSection";
 import RatingStars from "./components/RatingStars";
 import SignatureDrinkSection from "./components/SignatureDrinkSection";
 import SocialSection from "./components/SocialSection";
-import CafePhotoCredits from "../CafePhotoCredits";
 import {
   formatTime,
   getCafeAboutText,
@@ -145,7 +144,6 @@ export default function CafeDetailInfo({
   };
   return (
     <>
-      <CafePhotoCredits cafe={cafe} />
       <motion.div
         variants={panelVariants}
         initial={false}
