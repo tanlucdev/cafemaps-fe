@@ -70,6 +70,7 @@ export async function apiFetch<T>(
     fallback: _fallback,
     timeoutMs = API_TIMEOUT_MS,
     allowEmptyResponse = false,
+    next: nextOptions,
     ...fetchOptions
   } = options ?? {}
   void _fallback
@@ -94,13 +95,14 @@ export async function apiFetch<T>(
             next: {
               revalidate: READ_REVALIDATE_SECONDS,
               tags: ["cafes"],
-              ...fetchOptions.next,
+              ...nextOptions,
             },
           }
         : !isServer && isPublicRead
           ? { cache: "no-store" as const }
           : {}),
       ...fetchOptions,
+      ...(!useReadCache && nextOptions ? { next: nextOptions } : {}),
       credentials: fetchOptions.credentials ?? "include",
       signal: requestTimeout.signal,
       headers,
