@@ -94,7 +94,7 @@ try {
     await new Promise((resolve) => setTimeout(resolve, 10));
   assert.ok(releaseLostResponse, "Backend must finish the upload before dropping its response");
   releaseLostResponse();
-  await dialog.getByText("Đang xoá", { exact: true }).waitFor({ state: "hidden" });
+  await page.waitForFunction(() => document.querySelectorAll('[role="dialog"] img').length === 2);
   assert.equal(await dialog.locator("img").count(), 2);
   assert.equal(await dialog.locator('img[src$="-cancelled.webp"]').count(), 0);
   await dialog.getByRole("button", { name: "Đặt bìa", exact: true }).click();
