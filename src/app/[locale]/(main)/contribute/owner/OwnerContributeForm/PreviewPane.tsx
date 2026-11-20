@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlarmClock, BookOpen, MapPinned } from "lucide-react";
+import { CheckCircle2, AlarmClock, BookOpen, MapPinned } from "lucide-react";
 import SmartGallery from "@/components/SmartGallery";
 import { formatPrice } from "@/lib/utils";
 import type { Cafe } from "@/types/cafe";
@@ -202,4 +202,17 @@ function toPreviewCafe(draft: Draft, images: string[], menuImages: string[]): Ca
 
 function hasTaxonomy(cafe: Cafe) {
   return cafe.vibes.length + cafe.purposes.length + cafe.amenities.length + cafe.tags.length > 0;
+}
+
+export function DonePanel() {
+  return (
+    <div className="rounded-[24px] border border-[var(--border)] bg-[var(--contribute-surface)] p-6 shadow-[var(--contribute-panel-shadow)]">
+      <CheckCircle2 className="mb-4 size-10 text-[var(--accent)]" />
+      <h2 className="font-lora text-2xl font-bold">Cảm ơn bạn đã đóng góp quán</h2>
+      <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+        Quá trình duyệt và public quán có thể diễn ra trong 1-2 ngày. Sau khi quán public sẽ được
+        thông báo qua email (nếu có).
+      </p>
+    </div>
+  );
 }

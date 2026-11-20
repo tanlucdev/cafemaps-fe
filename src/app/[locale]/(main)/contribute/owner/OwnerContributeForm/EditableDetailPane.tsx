@@ -17,8 +17,8 @@ type Props = {
   menuImages: string[];
   imageKeys: string[];
   menuImageKeys: string[];
-  imageStatuses: Record<string, "uploading" | "failed">;
-  menuImageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
+  menuImageStatuses: Record<string, import("./media-queue").MediaStatus>;
   imagesLocked: boolean;
   canSubmit: boolean;
   error: string | null;

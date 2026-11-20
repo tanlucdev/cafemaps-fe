@@ -17,7 +17,7 @@ export function ImageGrid({
 }: {
   images: string[];
   imageKeys: string[];
-  imageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
   locked: boolean;
   kind: "gallery" | "menu";
   onRemove: (index: number) => void;
@@ -53,7 +53,7 @@ function ImageTile({
 }: {
   src: string;
   index: number;
-  imageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
   locked: boolean;
   kind: "gallery" | "menu";
   onRemove: (index: number) => void;
@@ -88,9 +88,15 @@ function ImageTile({
           </button>
         </div>
       )}
-      {status === "failed" && (
+      {(status === "failed" || status === "delete_failed" || status === "unknown") && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-red-950/50 p-3 text-white">
-          <p className="text-sm font-black">Tải lỗi</p>
+          <p className="text-sm font-black">
+            {status === "unknown"
+              ? "Chưa đồng bộ"
+              : status === "delete_failed"
+                ? "Xoá lỗi"
+                : "Tải lỗi"}
+          </p>
           <div className="flex gap-2">
             <button
               type="button"
@@ -98,16 +104,22 @@ function ImageTile({
               onClick={() => onRemove(index)}
               className="h-8 rounded-full bg-white px-3 text-xs font-black text-red-700 disabled:opacity-55"
             >
-              Xoá
+              {status === "unknown"
+                ? "Đồng bộ lại"
+                : status === "delete_failed"
+                  ? "Thử xoá lại"
+                  : "Xoá"}
             </button>
-            <button
-              type="button"
-              disabled={locked}
-              onClick={() => document.getElementById(replaceId)?.click()}
-              className="h-8 rounded-full bg-white px-3 text-xs font-black text-[#6f4300] disabled:opacity-55"
-            >
-              Chọn lại
-            </button>
+            {status === "failed" && (
+              <button
+                type="button"
+                disabled={locked}
+                onClick={() => document.getElementById(replaceId)?.click()}
+                className="h-8 rounded-full bg-white px-3 text-xs font-black text-[#6f4300] disabled:opacity-55"
+              >
+                Chọn lại
+              </button>
+            )}
           </div>
           <input
             id={replaceId}
@@ -117,6 +129,11 @@ function ImageTile({
             hidden
             onChange={(event) => onReplace(index, kind, event)}
           />
+        </div>
+      )}
+      {status === "deleting" && (
+        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/30 text-sm font-bold text-white">
+          <Loader2 className="size-4 animate-spin" /> Đang xoá
         </div>
       )}
       {!status && (

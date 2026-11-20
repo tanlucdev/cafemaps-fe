@@ -36,8 +36,8 @@ type Props = {
   menuImages: string[];
   imageKeys: string[];
   menuImageKeys: string[];
-  imageStatuses: Record<string, "uploading" | "failed">;
-  menuImageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
+  menuImageStatuses: Record<string, import("./media-queue").MediaStatus>;
   imagesLocked: boolean;
   remainingGalleryImages: number;
   onClose: () => void;

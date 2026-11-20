@@ -173,7 +173,7 @@ export function GalleryEditor({
 }: {
   images: string[];
   imageKeys: string[];
-  imageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
   locked: boolean;
   remainingImages: number;
   onFiles: (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => void;
@@ -220,7 +220,7 @@ export function MenuEditor({
 }: {
   images: string[];
   imageKeys: string[];
-  imageStatuses: Record<string, "uploading" | "failed">;
+  imageStatuses: Record<string, import("./media-queue").MediaStatus>;
   locked: boolean;
   onFiles: (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => void;
   onRemove: (index: number) => void;
