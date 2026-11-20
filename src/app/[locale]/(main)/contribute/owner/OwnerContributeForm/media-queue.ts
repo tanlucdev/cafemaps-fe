@@ -32,6 +32,7 @@ export class MediaQueue {
   private syncing = false;
   private session?: Session;
   private baseline = new Set<string>();
+  private removedUrls = new Set<string>();
   private deps!: Dependencies;
   constructor(deps?: Dependencies) {
     if (deps) this.deps = deps;
@@ -145,6 +146,7 @@ export class MediaQueue {
       const session = this.session ?? (await this.deps.session());
       this.session = session;
       await this.deps.remove(session, item.payloadUrl!);
+      this.removedUrls.add(item.payloadUrl!);
       this.discard(item);
       this.merge(item.payloadUrl);
     } catch (error) {
@@ -154,6 +156,7 @@ export class MediaQueue {
           if (
             ![...(payload.images ?? []), ...(payload.menuImages ?? [])].includes(item.payloadUrl!)
           ) {
+            this.removedUrls.add(item.payloadUrl!);
             this.discard(item);
             this.merge(item.payloadUrl, payload);
             return;
@@ -175,6 +178,7 @@ export class MediaQueue {
       const payload = await this.deps.read(this.session);
       const known = new Set([
         ...this.baseline,
+        ...this.removedUrls,
         ...this.items.flatMap((item) => (item.payloadUrl ? [item.payloadUrl] : [])),
       ]);
       for (const kind of ["gallery", "menu"] as const) {
@@ -208,7 +212,13 @@ export class MediaQueue {
     this.emit();
   }
   private merge(removed?: string, synced?: MediaPayload) {
-    if (!this.stopped) this.deps.merge(this.items, removed, synced);
+    if (this.stopped) return;
+    const payload = synced && {
+      ...synced,
+      images: synced.images?.filter((url) => !this.removedUrls.has(url)),
+      menuImages: synced.menuImages?.filter((url) => !this.removedUrls.has(url)),
+    };
+    this.deps.merge(this.items, removed, payload);
   }
   private emit() {
     if (!this.stopped) this.deps.changed();

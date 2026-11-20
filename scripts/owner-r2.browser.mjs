@@ -20,9 +20,11 @@ try {
   const errors = [],
     traffic = [],
     uploads = [];
+  let loseUploadResponse = false,
+    releaseLostResponse;
   let active = 0,
     maximum = 0,
-    failDelete = true,
+    failDelete = false,
     failUpload = false;
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("request", (request) => traffic.push({ url: request.url(), method: request.method() }));
@@ -34,6 +36,16 @@ try {
     }
     if (route.request().method() !== "POST") {
       await route.continue();
+      return;
+    }
+    if (loseUploadResponse) {
+      loseUploadResponse = false;
+      const response = await route.fetch();
+      assert.equal(response.status(), 201);
+      await new Promise((resolve) => {
+        releaseLostResponse = resolve;
+      });
+      await route.fulfill({ status: 504 });
       return;
     }
     if (failUpload) {
@@ -74,8 +86,20 @@ try {
   const sources = await dialog.locator("img").evaluateAll((nodes) => nodes.map((node) => node.src));
   assert.match(sources[0], /-gallery\.webp$/);
   assert.match(sources[1], /-gallery2\.webp$/);
+  loseUploadResponse = true;
+  await dialog.locator("#owner-gallery-upload").setInputFiles({ ...image, name: "cancelled.png" });
+  await dialog.getByRole("button", { name: "Huỷ", exact: true }).click();
+  const deadline = Date.now() + 10000;
+  while (!releaseLostResponse && Date.now() < deadline)
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  assert.ok(releaseLostResponse, "Backend must finish the upload before dropping its response");
+  releaseLostResponse();
+  await dialog.getByText("Đang xoá", { exact: true }).waitFor({ state: "hidden" });
+  assert.equal(await dialog.locator("img").count(), 2);
+  assert.equal(await dialog.locator('img[src$="-cancelled.webp"]').count(), 0);
   await dialog.getByRole("button", { name: "Đặt bìa", exact: true }).click();
   assert.match(await dialog.locator("img").first().getAttribute("src"), /-gallery2\.webp$/);
+  failDelete = true;
   await dialog.getByRole("button", { name: "Xoá ảnh", exact: true }).first().click();
   await dialog.getByRole("button", { name: "Thử xoá lại", exact: true }).waitFor();
   assert.equal(await dialog.locator("img").count(), 2);
@@ -120,7 +144,7 @@ try {
   );
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: gallery/menu, two concurrent requests, order, cover, delete retry, replacement, preview, save/submit; no Cloudinary POST or React errors",
+    "PASS: gallery/menu, two concurrent requests, order, cover, delete retry, replacement, cancelled upload with lost response, preview, save/submit; no Cloudinary POST or React errors",
   );
 } catch (error) {
   console.error(await page.locator("body").innerText());

@@ -142,14 +142,33 @@ test("lost response reads draft, recovers URL without a second POST", async () =
 });
 
 test("cancelled upload with lost response is cleaned after reconciliation", async () => {
-  const f = fixture({ read: async () => ({ images: ["old", "recovered"] }) });
-  f.queue.add([f.item("a")]);
-  await tick();
-  await f.queue.remove("a");
-  f.requests[0].reject(new Error("connection lost"));
-  await tick();
-  assert.deepEqual(f.removed, ["recovered"]);
-  assert.equal(f.queue.pending || f.queue.failed, false);
+  for (const kind of ["gallery", "menu"]) {
+    const field = kind === "gallery" ? "images" : "menuImages";
+    let draft = { name: "Unsaved text", [field]: ["old"] };
+    const f = fixture({
+      read: async () => ({ [field]: ["old", "recovered"] }),
+      merge: (items, removed, synced) => {
+        draft = mergeMediaDraft(draft, items, removed, synced);
+      },
+    });
+    f.queue.add([f.item("a", kind)]);
+    await tick();
+    await f.queue.remove("a");
+    f.requests[0].reject(new Error("connection lost"));
+    await tick();
+    assert.deepEqual(f.removed, ["recovered"]);
+    assert.deepEqual(draft[field], ["old"]);
+    assert.equal(draft.name, "Unsaved text");
+    assert.equal(f.queue.pending || f.queue.failed, false);
+    await f.queue.reconcile();
+    assert.deepEqual(draft[field], ["old"]);
+    f.queue.add([f.item("next", kind)]);
+    await tick();
+    f.requests[1].reject({ status: 408 });
+    await tick();
+    assert.equal(f.queue.failed, true);
+    assert.deepEqual(draft[field], ["old"]);
+  }
 });
 
 test("failed reconciliation stays unknown and blocked; retry reads, never POSTs again", async () => {
