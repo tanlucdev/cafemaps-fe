@@ -6,7 +6,6 @@ import { acceptsMarkdown } from "./lib/agent-content";
 
 const intlMiddleware = createMiddleware(routing);
 const GUARDED_PATHS = ["/contribute/owner"];
-const GUEST_ONLY_PATHS = ["/login", "/register"];
 const locales = routing.locales as readonly string[];
 const PUBLIC_FILE = /\.(?:avif|css|gif|ico|jpg|jpeg|js|json|map|mp4|png|svg|txt|webp|woff2?|xml)$/i;
 const NOT_FOUND_HTML = `<!doctype html>
@@ -152,25 +151,16 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  const checksAuth =
-    matchesPath(strippedPath, GUARDED_PATHS) || matchesPath(strippedPath, GUEST_ONLY_PATHS);
-  const isAuthenticated =
-    checksAuth && Boolean(request.cookies.get(AUTH_COOKIE_KEYS.accessToken)?.value);
+  const hasAuthCookie = Boolean(request.cookies.get(AUTH_COOKIE_KEYS.accessToken)?.value);
 
-  if (matchesPath(strippedPath, GUARDED_PATHS) && !isAuthenticated) {
+  if (matchesPath(strippedPath, GUARDED_PATHS) && !hasAuthCookie) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = `/${getLocale(pathname)}/login`;
     loginUrl.searchParams.set("returnUrl", `${pathname}${search}`);
     return NextResponse.redirect(loginUrl);
   }
 
-  if (matchesPath(strippedPath, GUEST_ONLY_PATHS) && isAuthenticated) {
-    const homeUrl = request.nextUrl.clone();
-    homeUrl.pathname = `/${getLocale(pathname)}`;
-    homeUrl.search = "";
-    return NextResponse.redirect(homeUrl);
-  }
-
+  // An expired cookie must not prevent signing in again.
   return intlMiddleware(request);
 }
 
