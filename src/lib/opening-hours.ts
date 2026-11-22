@@ -24,6 +24,12 @@ export function parseOpeningTimeMinutes(time: string | null | undefined): number
   return hours * 60 + minutes
 }
 
+export function formatOpeningTime(time: string | null | undefined): string | null {
+  const minutes = parseOpeningTimeMinutes(time)
+  if (minutes == null) return null
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`
+}
+
 export function getCafeOpenStatus(
   openingTime: string | null | undefined,
   closingTime: string | null | undefined,

@@ -1290,5 +1290,281 @@
     "noSupport": "Geolocation is not supported by your browser",
     "loadError": "Could not load nearby cafés",
     "locationError": "Could not get your location"
+  },
+  "coffeeMeetups": {
+    "brand": "Cafe Maps",
+    "title": "Coffee meetups",
+    "intro": "Create or join a study, work, or chat session at an existing cafe.",
+    "loading": "Loading meetups...",
+    "sending": "Sending...",
+    "empty": "No meetups yet.",
+    "emptyList": "No matching meetups yet.",
+    "safety": "Meet only in public places and do not share personal information until you feel safe.",
+    "acceptedTitle": "Accepted people",
+    "people": "people",
+    "linkedCafeMissing": "This linked cafe is no longer on Cafe Maps.",
+    "invitation": {
+      "sample": "Sample invitation",
+      "previous": "Previous invitation",
+      "next": "Next invitation",
+      "preview": "Preview invitation",
+      "draftHint": "Preview based on the details you entered.",
+      "dateMissing": "No date selected",
+      "timeMissing": "No time selected",
+      "placeMissing": "No location selected",
+      "design": "Choose a design and color",
+      "template": "Invitation design",
+      "color": "Invitation color",
+      "templates": {
+        "envelope": "Envelope",
+        "postcard": "Postcard",
+        "ticket": "Coffee ticket",
+        "notebook": "Notebook",
+        "menu": "Coffee menu",
+        "picnic": "Picnic cloth",
+        "film": "Film strip",
+        "ribbon": "Gift wrap",
+        "stars": "Starlight",
+        "latte": "Latte swirl",
+        "matchbox": "Matchbox",
+        "pressed-flower": "Pressed flower",
+        "receipt": "Cafe receipt",
+        "window": "Window frame",
+        "checkers": "Retro checkers"
+      },
+      "colors": {
+        "caramel": "Caramel cream",
+        "rose": "Peach rose",
+        "matcha": "Matcha green",
+        "blue": "Sky blue",
+        "cocoa": "Cocoa brown"
+      },
+      "from": "{name} invites you for coffee",
+      "share": "Share invitation",
+      "meetupInfo": "Meetup information",
+      "illustration": "Illustration",
+      "link": "Invitation link",
+      "download": "Download PNG",
+      "downloading": "Preparing image…",
+      "downloadError": "Could not create the image. Please try again.",
+      "copied": "Invitation link copied.",
+      "error": "Couldn't copy the link. You can share it from the address bar."
+    },
+    "seatsLeft": "{count} seats left",
+    "purposes": [
+      "Study",
+      "Work",
+      "Language practice",
+      "Reading",
+      "Meet new friends",
+      "Chat",
+      "Other"
+    ],
+    "reportReasons": [
+      "Spam",
+      "Inappropriate content",
+      "Harassment",
+      "Wrong information",
+      "Other"
+    ],
+    "filters": {
+      "allPurposes": "All purposes",
+      "allAreas": "All areas",
+      "available": "Seats available only",
+      "reset": "Clear filters"
+    },
+    "fields": {
+      "area": "Area",
+      "cafe": "Cafe",
+      "date": "Date",
+      "description": "Description",
+      "endTime": "End time",
+      "maxParticipants": "Max people",
+      "message": "Message",
+      "organizer": "Organizer",
+      "purpose": "Purpose",
+      "reportReason": "Report reason",
+      "seats": "Seats",
+      "startTime": "Start time",
+      "time": "Time",
+      "title": "Title",
+      "contactInfo": "Contact details",
+      "placeType": "Place type"
+    },
+    "actions": {
+      "accept": "Accept",
+      "cancel": "Cancel meetup",
+      "complete": "Finish",
+      "create": "Create meetup",
+      "edit": "Edit",
+      "reject": "Reject",
+      "report": "Report meetup",
+      "save": "Save meetup",
+      "share": "Share meetup",
+      "view": "View meetup",
+      "withdraw": "Withdraw request"
+    },
+    "card": {
+      "organizerSeats": "Host: {name} · {count} seats left"
+    },
+    "cta": {
+      "ended": "Meetup ended",
+      "full": "Meetup is full",
+      "join": "Ask to join",
+      "joined": "You joined",
+      "login": "Log in to ask to join",
+      "pending": "Waiting for approval"
+    },
+    "errors": {
+      "create": "Could not create meetup.",
+      "load": "Could not load meetups.",
+      "loadEdit": "Could not load meetup for editing.",
+      "request": "Could not send request."
+    },
+    "fallback": {
+      "description": "The host has not added a description yet."
+    },
+    "form": {
+      "createTitle": "Create a coffee meetup",
+      "editTitle": "Edit meetup",
+      "searchCafe": "Search cafe name or area...",
+      "searchingCafe": "Searching cafes...",
+      "emptyCafe": "No matching cafes yet.",
+      "open": "Open now",
+      "closed": "Closed now",
+      "quickTime": "Quick time",
+      "preview": "Meetup preview",
+      "untitled": "New coffee meetup",
+      "selectCafe": "Choose a purpose and a cafe before creating a meetup.",
+      "vibe": "Cafe vibe",
+      "allVibes": "All vibes",
+      "chooseFilters": "Choose a purpose, vibe, or Near me to see up to 10 suggested cafes.",
+      "contactPlaceholder": "Phone, Zalo, Facebook…",
+      "contactHint": "Optional. These details will be public on the meetup page.",
+      "savedCafe": "Cafe Maps place",
+      "externalPlace": "External cafe",
+      "externalName": "Cafe name",
+      "googleMaps": "Google Maps link",
+      "invalidGoogleMaps": "Enter a valid Google Maps link.",
+      "googleMapsOpen": "Open Google Maps",
+      "invalidTime": "Start time must be in the future and end time must be after start time.",
+      "customPurpose": "Your purpose",
+      "customPurposePlaceholder": "For example: Board games, book exchange…",
+      "chooseIcon": "Choose an icon",
+      "chooseAppearance": "Icon and color",
+      "chooseColor": "Choose a color",
+      "closeAppearance": "Close icon picker",
+      "decreaseParticipants": "Decrease participants",
+      "increaseParticipants": "Increase participants",
+      "selectedCafe": "Selected cafe",
+      "changeCafe": "Click to change cafe",
+      "pickCafe": "Pick a cafe for your meetup",
+      "pickerHint": "Browse photos, search, and choose a place you like.",
+      "pickerTitle": "Find your kind of cafe",
+      "pickerDescription": "Choose a place to meet.",
+      "quickPreview": "Quick look",
+      "previewCafe": "Preview {name}",
+      "previewContent": "Cafe information",
+      "previewMenu": "View menu",
+      "previewMenuPage": "Menu page {page}",
+      "chooseCafe": "Choose this cafe",
+      "cafeDetails": "Full details",
+      "unknownHours": "Hours unknown",
+      "savedCafeHint": "Browse and choose a listed cafe",
+      "externalPlaceHint": "Add a cafe name and Google Maps link",
+      "previewHours": "Opening hours",
+      "previewPrice": "Price range",
+      "closePicker": "Close",
+      "retryCafes": "Try again",
+      "pickerEmptyHint": "Try another search, vibe, or a wider radius.",
+      "moreCafes": "Load more cafes",
+      "cafeResults": "Showing {count} of {total} cafes"
+    },
+    "mine": {
+      "archived": "Ended or cancelled meetups",
+      "joined": "Meetups I joined",
+      "organized": "Meetups I host",
+      "pending": "Pending requests",
+      "title": "My meetups"
+    },
+    "ownerTools": {
+      "title": "Manage requests"
+    },
+    "placeholders": {
+      "message": "Message for the host..."
+    },
+    "status": {
+      "available": "Available",
+      "full": "Full",
+      "cancelled": "Cancelled",
+      "ended": "Ended"
+    },
+    "purposeIcons": {
+      "book": "Books",
+      "work": "Work",
+      "language": "Languages",
+      "friends": "Friends",
+      "chat": "Chat",
+      "coffee": "Coffee",
+      "games": "Games",
+      "music": "Music",
+      "camera": "Photography",
+      "art": "Art",
+      "sparkles": "Other"
+    },
+    "purposeColors": {
+      "brown": "Brown",
+      "green": "Green",
+      "blue": "Blue",
+      "purple": "Purple",
+      "rose": "Rose",
+      "orange": "Orange",
+      "teal": "Teal",
+      "slate": "Slate"
+    },
+    "pagination": {
+      "label": "Meetup pages",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "hero": {
+      "eyebrow": "Meet beyond the screen",
+      "headline": "A little coffee.",
+      "highlight": "A new connection.",
+      "description": "A familiar cafe, a new face. Find someone to study, work, or simply share a good cup of coffee with.",
+      "location": "Meet in Saigon",
+      "smallGroups": "Small groups, easy connections",
+      "note": "Coffee tastes better together.",
+      "noteCaption": "Make time for good company",
+      "sticker": "Your kind of company",
+      "ticket": "Your coffee ticket"
+    },
+    "calendar": {
+      "label": "Meetup date",
+      "anyDay": "Pick a date",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "clear": "Any day",
+      "close": "Close calendar"
+    },
+    "demo": {
+      "notice": "Explore 10 sample invitations. These previews are not open for registration.",
+      "detail": "This is a sample meetup for preview only."
+    },
+    "discover": {
+      "eyebrow": "Find your kind of company",
+      "title": "What are you up for today?",
+      "results": "Upcoming coffee plans"
+    },
+    "emptyState": {
+      "eyebrow": "There is a seat waiting",
+      "title": "The first coffee plan could be yours.",
+      "description": "Pick a cafe you love and invite a little company. A cup of coffee might be the start of a new friendship.",
+      "filteredTitle": "No plans match just yet.",
+      "filteredDescription": "Try another date, area, or fewer filters. Or start a coffee plan of your own."
+    }
   }
 }

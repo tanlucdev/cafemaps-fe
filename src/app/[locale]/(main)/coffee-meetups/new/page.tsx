@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { getCafes } from "@/apis/cafes";
 import NewMeetupClient from "@/components/coffee-meetups/NewMeetupClient";
 import { featureFlags } from "@/lib/feature-flags";
 import { createLocalizedMetadata } from "@/lib/metadata";
+import { getCafeBySlug } from "@/apis/cafes";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -25,12 +25,14 @@ export default async function NewMeetupPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const query = await searchParams;
   if (!featureFlags.coffeeMeetupsEnabled) return null;
-  const cafes = await getCafes({ limit: 200 }, locale);
+  const preselectedCafeId = pick(query.cafeId);
+  const cafe = preselectedCafeId ? await getCafeBySlug(preselectedCafeId, locale) : null;
   return (
     <NewMeetupClient
-      cafes={cafes}
-      preselectedCafeId={pick(query.cafeId)}
+      cafes={cafe ? [cafe] : []}
+      preselectedCafeId={preselectedCafeId}
       editMeetupId={pick(query.meetup)}
+      initialDesign={{ template: pick(query.template), color: pick(query.color) }}
     />
   );
 }

@@ -20,8 +20,9 @@ interface GuidedFilterBarProps {
   filter: Filter;
   onChange: (filter: Filter) => void;
   districts?: string[];
+  inline?: boolean;
 }
-export default function GuidedFilterBar({ filter, onChange, districts }: GuidedFilterBarProps) {
+export default function GuidedFilterBar({ filter, onChange, districts, inline }: GuidedFilterBarProps) {
   const tNearby = useTranslations("nearby");
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const filterRef = useRef(filter);
@@ -88,6 +89,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
     <div>
       <div className="relative hidden md:block">
         <FilterChipsRow
+          inline={inline}
           filter={filter}
           onChange={onChange}
           nearMeLoading={nearMeLoading}
@@ -107,6 +109,7 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
 
         {dropdownMounted && (
           <FilterDropdownPanel
+            inline={inline}
             staged={staged}
             dropdownOpen={dropdownOpen}
             dropdownRef={dropdownRef}
