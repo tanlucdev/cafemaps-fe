@@ -3,7 +3,7 @@
 import GalleryImage from "./GalleryImage";
 import { CafeChristmasGarland } from "@/components/seasonal/CafeChristmasDecorations";
 import { MobileMainImage, GalleryLightbox } from "./parts";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Images, ZoomIn } from "lucide-react";
 
@@ -12,9 +12,10 @@ interface SmartGalleryProps {
   orientations?: string[];
   coverImageCrop?: { x: number; y: number } | null;
   cafeName: string;
+  footer?: ReactNode;
 }
 
-export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName }: SmartGalleryProps) {
+export default function SmartGallery({ images, orientations = [], coverImageCrop, cafeName, footer }: SmartGalleryProps) {
   const t = useTranslations("gallery");
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -229,14 +230,17 @@ export default function SmartGallery({ images, orientations = [], coverImageCrop
       <CafeChristmasGarland />
       {mobileGallery}
       {desktopGallery}
-      <button
-        type="button"
-        onClick={() => openLightbox(0)}
-        className="hover:text-accent mt-3 ml-3 hidden items-center gap-2 text-sm font-medium text-(--foreground-muted) transition-colors md:inline-flex"
-      >
-        <Images size={16} />
-        {t("viewAll", { count: images.length })}
-      </button>
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 px-2">
+        <button
+          type="button"
+          onClick={() => openLightbox(0)}
+          className="hover:text-accent min-h-11 hidden items-center gap-2 text-xs font-medium text-(--foreground-muted) transition-colors md:inline-flex"
+        >
+          <Images size={16} />
+          {t("viewAll", { count: images.length })}
+        </button>
+        {footer}
+      </div>
 
       {lightboxIndex !== null && <GalleryLightbox images={images} lightboxIndex={lightboxIndex} cafeName={cafeName} closeLightbox={closeLightbox} moveLightbox={moveLightbox} renderedIndices={renderedIndices} setActiveIndex={setActiveIndex} setLightboxIndex={setLightboxIndex} objectPosition={objectPosition} />}
     </>

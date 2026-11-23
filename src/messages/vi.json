@@ -274,7 +274,8 @@
       "parking": "Gửi xe",
       "parkingType": "Chỗ để xe",
       "instagram": "Instagram quán",
-      "photoCredit": "Ảnh từ",
+      "photoCredit": "Nguồn ảnh",
+      "photoCreditLink": "Xem Instagram của nguồn ảnh {username} (mở tab mới)",
       "openAllDay": "Mở cả ngày",
       "closedToday": "Đóng cửa hôm nay",
       "updateInfo": {

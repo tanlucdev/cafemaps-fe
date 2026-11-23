@@ -274,7 +274,8 @@
       "parking": "Parking",
       "parkingType": "Parking",
       "instagram": "Instagram",
-      "photoCredit": "Photos by",
+      "photoCredit": "Photo credits",
+      "photoCreditLink": "View photo source {username} on Instagram (opens in a new tab)",
       "openAllDay": "Open all day",
       "closedToday": "Closed today",
       "updateInfo": {

@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -21,19 +20,18 @@ import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client";
 import SaveToFolderModal from "@/components/cafe/SaveToFolderModal";
 import ShareModal from "./ShareModal";
 import CafeDetailInfo from "./CafeDetailInfo";
+import CafePhotoCredits from "./CafePhotoCredits";
 import CafeMenuModal from "./CafeMenuModal";
 import CafeReviews from "./CafeReviews";
 import { useCafeVisited } from "./useCafeVisited";
 import { useTrackCafeView } from "./useTrackCafeView";
 import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
 import { featureFlags } from "@/lib/feature-flags";
-
 interface CafeDetailContentProps {
   cafe: Cafe;
   locale: string;
   aboveReviews?: ReactNode;
 }
-
 export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDetailContentProps) {
   useFeedbackCafeId(cafe.id);
   const t = useTranslations("cafe");
@@ -55,12 +53,10 @@ export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDe
   const [menuOpen, setMenuOpen] = useState(false);
   const viewCount = useTrackCafeView(cafe.id, cafe.viewCount);
   const menuImages = (cafe.menuImages?.length ? cafe.menuImages : cafe.menuImage ? [cafe.menuImage] : []).filter(Boolean) as string[];
-
   const cafeUrl =
     typeof window !== "undefined"
       ? window.location.href
       : `https://cafefinder.vn/${locale}/cafe/${cafe.slug}`;
-
   const mapsUrl =
     cafe.googleMapsUrl ??
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -75,26 +71,21 @@ export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDe
   const heroTransition = reduceMotion
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 180, damping: 24, mass: 0.82 };
-
   useEffect(() => {
     let cancelled = false;
-
     async function loadVoteState() {
       const token = await getCurrentAccessToken();
       if (!token) return;
       const ids = await getMyCafeVotes(token);
       if (!cancelled && ids.includes(cafe.id)) setVoted(true);
     }
-
     void loadVoteState().catch(() => undefined);
     return () => {
       cancelled = true;
     };
   }, [cafe.id]);
-
   async function handleSave() {
     if (loadingSave) return;
-
     const token = await getCurrentAccessToken();
     if (!token) {
       saveAuthReturnUrl();
@@ -240,6 +231,7 @@ export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDe
             orientations={cafe.image_orientations ?? []}
             coverImageCrop={cafe.coverImageCrop}
             cafeName={cafe.name}
+            footer={<CafePhotoCredits cafe={cafe} />}
           />
           {menuImages.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-3 px-1 pb-1">

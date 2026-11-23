@@ -1,6 +1,6 @@
 "use client";
-import { type ChangeEvent, useRef, useState } from "react";
-import { CheckCircle2, Eye, Loader2 } from "lucide-react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
+import { Eye, Loader2 } from "lucide-react";
 import { ApiError, isUnauthorizedError } from "@/apis/http";
 import {
   createSubmission,
@@ -14,14 +14,26 @@ import { cn } from "@/lib/utils";
 import { MAX_IMAGE_BYTES } from "../../contribute-form.constants";
 import { isAllowedImageFile } from "../../contribute-form.helpers";
 import { EditableDetailPane } from "./EditableDetailPane";
-import { limitOwnerGalleryFiles, ownerGalleryLimitMessage, remainingOwnerGalleryImages } from "./image-limits";
-import { emptyDraft, getRequiredItems, moveToFront, normalizeDraft, REQUIRED_PREVIEW_MESSAGE, type Draft } from "./model";
+import {
+  limitOwnerGalleryFiles,
+  ownerGalleryLimitMessage,
+  remainingOwnerGalleryImages,
+} from "./image-limits";
+import {
+  emptyDraft,
+  getRequiredItems,
+  moveToFront,
+  normalizeDraft,
+  REQUIRED_PREVIEW_MESSAGE,
+  type Draft,
+} from "./model";
 import { OwnerFieldOverviewSheet } from "./OwnerFieldOverviewSheet";
-import { PreviewPane } from "./PreviewPane";
+import { DonePanel, PreviewPane } from "./PreviewPane";
 import { type UploadKind, useImageUploads } from "./useImageUploads";
-
 export default function ContributeForm() {
   const router = useRouter();
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,16 +49,21 @@ export default function ContributeForm() {
     hasUploadPending,
     hasUploadFailed,
     startUploads,
+    isBlocked,
+    removePersistedAsset,
     removeUploadAt,
     moveGalleryUploadToFront,
   } = useImageUploads({
     tokenOrLogin,
     ensureSubmissionId,
     setDraft,
-    normalizeDraft,
+    draft,
     onError: setError,
   });
-  const requiredItems = getRequiredItems(draft, (draft.images?.length ?? 0) + galleryUploads.length);
+  const requiredItems = getRequiredItems(
+    draft,
+    (draft.images?.length ?? 0) + galleryUploads.filter((item) => !item.payloadUrl).length,
+  );
   const missingRequiredCount = requiredItems.filter((item) => !item.done).length;
   const canPreview = missingRequiredCount === 0;
   const galleryShadowUrls = new Set(galleryUploads.map((item) => item.payloadUrl).filter(Boolean));
@@ -66,7 +83,6 @@ export default function ContributeForm() {
   }
   async function saveDraft(token: string) {
     const normalizedDraft = normalizeDraft(draft);
-    setDraft(normalizedDraft);
     const payload: CafeSubmissionPayload = { ...normalizedDraft };
     delete (payload as Draft).note;
     const data = {
@@ -80,8 +96,7 @@ export default function ContributeForm() {
     const submission = submissionId
       ? await updateSubmission(submissionId, data, token)
       : await createSubmission(data, token);
-    setSubmissionId(submission.id);
-    if (submission.payload) setDraft((prev) => normalizeDraft({ ...submission.payload, ...prev }));
+    if (mounted.current) setSubmissionId(submission.id);
     return submission.id;
   }
   async function ensureSubmissionId(token: string) {
@@ -98,28 +113,20 @@ export default function ContributeForm() {
       setError(REQUIRED_PREVIEW_MESSAGE);
       return;
     }
-    if (hasUploadPending || hasUploadFailed) {
-      setError(hasUploadPending ? "Đợi ảnh tải xong rồi gửi duyệt." : "Xoá hoặc chọn lại ảnh tải lỗi rồi gửi duyệt.");
+    if (isBlocked()) {
+      setError(
+        hasUploadPending
+          ? "Đợi ảnh tải xong rồi gửi duyệt."
+          : "Xoá hoặc chọn lại ảnh tải lỗi rồi gửi duyệt.",
+      );
       return;
     }
     setLoading(true);
     try {
       const token = await tokenOrLogin();
       if (!token) return;
+      if (isBlocked()) return;
       const id = await saveDraft(token);
-      const payload = normalizeDraft(draft);
-      await updateSubmission(
-        id,
-        {
-          name: payload.name || draft.name || "",
-          submissionType: "owner",
-          address: payload.address || draft.address || undefined,
-          googleMapsUrl: payload.googleMapsUrl || draft.googleMapsUrl || undefined,
-          note: draft.note || undefined,
-          payload,
-        },
-        token,
-      );
       if (!uploadOnly) {
         await submitSubmission(id, token);
         setDone(true);
@@ -142,7 +149,8 @@ export default function ContributeForm() {
   const onFiles = (event: ChangeEvent<HTMLInputElement>, kind: "gallery" | "menu") => {
     const selected = Array.from(event.target.files ?? []);
     let files = selected.filter(isAllowedImageFile);
-    if (selected.length - files.length) setError(`Ảnh không hợp lệ hoặc lớn hơn ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
+    if (selected.length - files.length)
+      setError(`Ảnh không hợp lệ hoặc lớn hơn ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`);
     if (kind === "gallery") {
       const remaining = remainingOwnerGalleryImages(previewImages.length);
       const accepted = limitOwnerGalleryFiles(files, previewImages.length);
@@ -156,14 +164,7 @@ export default function ContributeForm() {
     const savedCount = savedImages.length;
     if (index < savedCount) {
       const url = savedImages[index];
-      const draftIndex = draft.images?.indexOf(url) ?? -1;
-      setDraft((prev) =>
-        normalizeDraft({
-          ...prev,
-          images: prev.images?.filter((item) => item !== url),
-          imageOrientations: draftIndex < 0 ? prev.imageOrientations : prev.imageOrientations?.filter((_, itemIndex) => itemIndex !== draftIndex),
-        }),
-      );
+      removePersistedAsset("gallery", url);
       return;
     }
     removeUploadAt("gallery", index - savedCount);
@@ -183,21 +184,20 @@ export default function ContributeForm() {
     }
     moveGalleryUploadToFront(index - savedCount);
   };
-
   const removeMenuImage = (index: number) => {
     const savedCount = savedMenuImages.length;
     if (index < savedCount) {
       const url = savedMenuImages[index];
-      setDraft((prev) => ({
-        ...prev,
-        menuImages: prev.menuImages?.filter((item) => item !== url),
-      }));
+      removePersistedAsset("menu", url);
       return;
     }
     removeUploadAt("menu", index - savedCount);
   };
-
-  const replaceUploadImage = (index: number, kind: UploadKind, event: ChangeEvent<HTMLInputElement>) => {
+  const replaceUploadImage = (
+    index: number,
+    kind: UploadKind,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
     const [file] = Array.from(event.target.files ?? []).filter(isAllowedImageFile);
     event.target.value = "";
     if (!file) {
@@ -217,22 +217,10 @@ export default function ContributeForm() {
     }
     setReviewing(true);
   };
-
-  if (done) {
-    return (
-      <div className="rounded-[24px] border border-[var(--border)] bg-[var(--contribute-surface)] p-6 shadow-[var(--contribute-panel-shadow)]">
-        <CheckCircle2 className="mb-4 size-10 text-[var(--accent)]" />
-        <h2 className="font-lora text-2xl font-bold">Cảm ơn bạn đã đóng góp quán</h2>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Quá trình duyệt và public quán có thể diễn ra trong 1-2 ngày. Sau khi quán public sẽ được thông báo qua email (nếu có).
-        </p>
-      </div>
-    );
-  }
-
+  if (done) return <DonePanel />;
   if (reviewing) {
     return (
-      <div className="min-w-0 max-w-full space-y-4 overflow-x-hidden pb-[calc(var(--mobile-bottom-nav-height)+env(safe-area-inset-bottom,0px)+112px)]">
+      <div className="max-w-full min-w-0 space-y-4 overflow-x-hidden pb-[calc(var(--mobile-bottom-nav-height)+env(safe-area-inset-bottom,0px)+112px)]">
         <PreviewPane draft={draft} images={previewImages} menuImages={previewMenuImages} />
         {error && (
           <p className="rounded-xl border border-red-300 bg-red-50 p-3 text-sm font-semibold text-red-700">
@@ -253,13 +241,18 @@ export default function ContributeForm() {
             disabled={loading || hasUploadPending || hasUploadFailed}
             onClick={() => persist(false)}
           >
-            {loading ? "Đang gửi..." : hasUploadPending ? "Đang tải ảnh..." : hasUploadFailed ? "Sửa ảnh lỗi" : "Gửi duyệt"}
+            {loading
+              ? "Đang gửi..."
+              : hasUploadPending
+                ? "Đang tải ảnh..."
+                : hasUploadFailed
+                  ? "Sửa ảnh lỗi"
+                  : "Gửi duyệt"}
           </button>
         </div>
       </div>
     );
   }
-
   return (
     <div className="min-w-0">
       <OwnerFieldOverviewSheet />
@@ -272,7 +265,7 @@ export default function ContributeForm() {
         menuImageKeys={previewMenuImageKeys}
         imageStatuses={imageStatuses}
         menuImageStatuses={menuImageStatuses}
-        imagesLocked={hasUploadPending}
+        imagesLocked={loading}
         canSubmit={canPreview}
         error={error}
         onFiles={onFiles}
@@ -288,11 +281,18 @@ export default function ContributeForm() {
           onClick={openReview}
           className={cn(
             "inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 text-sm font-bold text-white shadow-[0_18px_50px_rgba(44,26,14,0.18)] transition hover:bg-[var(--accent-hover)]",
-            (!canPreview || loading || hasUploadPending || hasUploadFailed) && "cursor-not-allowed opacity-55",
+            (!canPreview || loading || hasUploadPending || hasUploadFailed) &&
+              "cursor-not-allowed opacity-55",
           )}
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : <Eye size={16} />}
-          {loading || hasUploadPending ? "Đang tải..." : hasUploadFailed ? "Sửa ảnh lỗi" : canPreview ? "Xem lại" : `Còn ${missingRequiredCount} mục cần thêm`}
+          {loading || hasUploadPending
+            ? "Đang tải..."
+            : hasUploadFailed
+              ? "Sửa ảnh lỗi"
+              : canPreview
+                ? "Xem lại"
+                : `Còn ${missingRequiredCount} mục cần thêm`}
         </button>
       </div>
     </div>

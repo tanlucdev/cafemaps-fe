@@ -1,294 +1,116 @@
 "use client";
 
-import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
 import {
-  deleteSubmissionAsset,
-  persistSubmissionAsset,
-  signSubmissionAssets,
-  uploadSignedSubmissionAsset,
-  type SubmissionAssetField,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import {
+  deleteSubmissionImage,
+  getSubmissionDraft,
+  uploadSubmissionImage,
 } from "@/apis/submissions";
-import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 import { createHeicPlaceholderDataUrl, isHeicFile } from "../../contribute-form.helpers";
-import type { Draft } from "./model";
+import { normalizeDraft, type Draft } from "./model";
+import {
+  mergeMediaDraft,
+  MediaQueue,
+  type MediaItem,
+  type MediaStatus,
+  type UploadKind,
+} from "./media-queue";
+export type { UploadKind } from "./media-queue";
 
-export type UploadKind = "gallery" | "menu";
-type UploadStatus = "uploading" | "failed";
-type UploadItem = {
-  id: string;
-  file: File;
-  displayUrl: string;
-  payloadUrl?: string;
-  status?: UploadStatus;
-};
-type AssetRef = { submissionId: string; token: string; publicId: string };
-type Options = {
+export function useImageUploads(options: {
   tokenOrLogin: () => Promise<string | null>;
   ensureSubmissionId: (token: string) => Promise<string>;
   setDraft: Dispatch<SetStateAction<Draft>>;
-  normalizeDraft: (draft: Draft) => Draft;
+  draft: Draft;
   onError: (message: string) => void;
-};
-
-export function useImageUploads({
-  tokenOrLogin,
-  ensureSubmissionId,
-  setDraft,
-  normalizeDraft,
-  onError,
-}: Options) {
-  const [galleryUploads, setGalleryUploads] = useState<UploadItem[]>([]);
-  const [menuUploads, setMenuUploads] = useState<UploadItem[]>([]);
-  const activeUploadIds = useRef(new Set<string>());
-  const controllers = useRef(new Map<string, AbortController>());
-  const assets = useRef(new Map<string, AssetRef>());
-  const persistedAssets = useRef(new Map<string, AssetRef>());
-  const previewUrls = useRef(new Set<string>());
-  const uploads = [...galleryUploads, ...menuUploads];
-
-  useEffect(
-    () => () => {
-      controllers.current.forEach((controller) => controller.abort());
-      assets.current.forEach(
-        (asset) => void deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId),
-      );
-      previewUrls.current.forEach((url) => URL.revokeObjectURL(url));
-    },
-    [],
-  );
-
+}) {
+  const [, refresh] = useState(0);
+  const previews = useRef(new Set<string>());
+  const [queue] = useState(() => new MediaQueue());
+  useLayoutEffect(() => {
+    queue.configure({
+      session: async () => {
+        const token = await options.tokenOrLogin();
+        if (!token) throw new Error("Login required");
+        return { token, id: await options.ensureSubmissionId(token) };
+      },
+      upload: ({ id, token }, file, kind) =>
+        uploadSubmissionImage(id, token, file, kind === "gallery" ? "images" : "menuImages"),
+      remove: ({ id, token }, url) => deleteSubmissionImage(id, token, url),
+      read: ({ id, token }) => getSubmissionDraft(id, token),
+      snapshot: () => options.draft,
+      changed: () => refresh((value) => value + 1),
+      error: (message) => options.onError(message),
+      release: (url) => {
+        if (previews.current.delete(url)) URL.revokeObjectURL(url);
+      },
+      merge: (items, removed, synced) => {
+        const snapshot = items.map((item) => ({ ...item }));
+        options.setDraft((prev) =>
+          normalizeDraft(mergeMediaDraft(prev, snapshot, removed, synced)),
+        );
+      },
+    });
+  }, [queue, options]);
+  useEffect(() => {
+    queue.start();
+    return () => queue.stop();
+  }, [queue]);
+  const galleryUploads = queue.items.filter((item) => item.kind === "gallery");
+  const menuUploads = queue.items.filter((item) => item.kind === "menu");
+  const statuses = (items: MediaItem[]): Record<string, MediaStatus> =>
+    Object.fromEntries(
+      items.flatMap((item) => (item.status ? [[item.displayUrl, item.status]] : [])),
+    );
   return {
     galleryUploads,
     menuUploads,
-    imageStatuses: uploadStatuses(galleryUploads),
-    menuImageStatuses: uploadStatuses(menuUploads),
-    hasUploadPending: uploads.some((item) => item.status === "uploading"),
-    hasUploadFailed: uploads.some((item) => item.status === "failed"),
-    startUploads,
-    removeUploadAt,
-    removePersistedAsset,
-    moveGalleryUploadToFront,
-  };
-
-  function startUploads(files: File[], kind: UploadKind) {
-    if (!files.length) return;
-    const items = files.map(createUploadItem);
-    items.forEach((item) => activeUploadIds.current.add(item.id));
-    if (kind === "gallery") setGalleryUploads((prev) => [...prev, ...items]);
-    else setMenuUploads((prev) => [...prev, ...items]);
-    void uploadBatch(items, kind);
-  }
-
-  async function uploadBatch(items: UploadItem[], kind: UploadKind) {
-    try {
-      const token = await tokenOrLogin();
-      if (!token) throw new Error("Login required");
-      const submissionId = await ensureSubmissionId(token);
-      const field: SubmissionAssetField = kind === "gallery" ? "images" : "menuImages";
-      const signed = await signSubmissionAssets(
-        submissionId,
-        token,
-        items.map(() => field),
-      );
-      if (signed.assets.length !== items.length) throw new Error("Signature count mismatch");
-
-      await mapLimit(items, 2, async (item, index) => {
-        const signature = signed.assets[index];
-        const asset = {
-          submissionId,
-          token,
-          publicId: `${signature.params.folder}/${signature.params.public_id}`,
-        };
-        assets.current.set(item.id, asset);
-        if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
-
-        const controller = new AbortController();
-        controllers.current.set(item.id, controller);
-        try {
-          const uploaded = await uploadSignedSubmissionAsset(
-            item.file,
-            { ...signed, ...signature },
-            controller.signal,
-          );
-          if (uploaded.publicId !== asset.publicId)
-            throw new Error("Cloudinary public ID mismatch");
-          if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
-          await persistSubmissionAsset(submissionId, token, uploaded, controller.signal);
-          if (!activeUploadIds.current.has(item.id)) return cleanup(item.id);
-          assets.current.delete(item.id);
-          persistedAssets.current.set(uploaded.secureUrl, asset);
-          setDraft((prev) => normalizeDraft(mergeUploadedUrl(prev, uploaded.secureUrl, kind)));
-          markUploadUploaded(kind, item.id, uploaded.secureUrl);
-          const displayUrl = cloudinaryImageUrl(
-            uploaded.secureUrl,
-            kind === "gallery" ? "gallery" : "menu",
-          );
-          preload(displayUrl, () => swapDisplayUrl(kind, item.id, displayUrl));
-        } catch (error) {
-          await cleanup(item.id);
-          if (activeUploadIds.current.has(item.id) && !isAbort(error))
-            markUpload(kind, item.id, "failed");
-        } finally {
-          controllers.current.delete(item.id);
-          activeUploadIds.current.delete(item.id);
-        }
-      });
-    } catch {
-      items.forEach((item) => {
-        void cleanup(item.id);
-        if (activeUploadIds.current.has(item.id)) markUpload(kind, item.id, "failed");
-        activeUploadIds.current.delete(item.id);
-      });
-      onError("Không thể tải ảnh. Thử lại nhé.");
-    }
-  }
-
-  function removeUploadAt(kind: UploadKind, index: number) {
-    const item = (kind === "gallery" ? galleryUploads : menuUploads)[index];
-    if (!item) return;
-    activeUploadIds.current.delete(item.id);
-    controllers.current.get(item.id)?.abort();
-    void cleanup(item.id);
-    if (item.payloadUrl) {
-      removeUploadedUrl(kind, item.payloadUrl);
-      void removePersistedAsset(item.payloadUrl);
-    }
-    if (previewUrls.current.delete(item.displayUrl)) URL.revokeObjectURL(item.displayUrl);
-    const remove = (items: UploadItem[]) => items.filter((current) => current.id !== item.id);
-    if (kind === "gallery") setGalleryUploads(remove);
-    else setMenuUploads(remove);
-  }
-
-  async function cleanup(uploadId: string) {
-    const asset = assets.current.get(uploadId);
-    if (!asset) return;
-    assets.current.delete(uploadId);
-    try {
-      await deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId);
-    } catch {
-      onError("Không thể dọn ảnh đã tải. Thử lại sau nhé.");
-    }
-  }
-
-  async function removePersistedAsset(url: string) {
-    const asset = persistedAssets.current.get(url);
-    if (!asset) return;
-    persistedAssets.current.delete(url);
-    try {
-      await deleteSubmissionAsset(asset.submissionId, asset.token, asset.publicId);
-    } catch {
-      onError("Không thể xoá ảnh đã tải. Thử lại nhé.");
-    }
-  }
-
-  function markUpload(kind: UploadKind, id: string, status: UploadStatus) {
-    const update = (items: UploadItem[]) =>
-      items.map((item) => (item.id === id ? { ...item, status } : item));
-    if (kind === "gallery") setGalleryUploads(update);
-    else setMenuUploads(update);
-  }
-
-  function markUploadUploaded(kind: UploadKind, id: string, payloadUrl: string) {
-    const update = (items: UploadItem[]) =>
-      items.map((item) => (item.id === id ? { ...item, payloadUrl, status: undefined } : item));
-    if (kind === "gallery") setGalleryUploads(update);
-    else setMenuUploads(update);
-  }
-
-  function swapDisplayUrl(kind: UploadKind, id: string, displayUrl: string) {
-    const update = (items: UploadItem[]) =>
-      items.map((item) => {
-        if (item.id !== id) return item;
-        if (previewUrls.current.delete(item.displayUrl)) URL.revokeObjectURL(item.displayUrl);
-        return { ...item, displayUrl };
-      });
-    if (kind === "gallery") setGalleryUploads(update);
-    else setMenuUploads(update);
-  }
-
-  function removeUploadedUrl(kind: UploadKind, url: string) {
-    setDraft((prev) => {
-      if (kind === "menu")
-        return { ...prev, menuImages: prev.menuImages?.filter((item) => item !== url) };
-      const removeIndex = prev.images?.indexOf(url) ?? -1;
-      return normalizeDraft({
-        ...prev,
-        images: prev.images?.filter((item) => item !== url),
-        imageOrientations:
-          removeIndex < 0
-            ? prev.imageOrientations
-            : prev.imageOrientations?.filter((_, index) => index !== removeIndex),
-      });
-    });
-  }
-
-  function moveGalleryUploadToFront(index: number) {
-    const url = galleryUploads[index]?.payloadUrl;
-    if (url)
-      setDraft((prev) => {
-        const draftIndex = prev.images?.indexOf(url) ?? -1;
-        return normalizeDraft({
-          ...prev,
-          images: moveToFront(prev.images ?? [], draftIndex),
-          imageOrientations: moveToFront(prev.imageOrientations ?? [], draftIndex),
-        });
-      });
-    setGalleryUploads((prev) => moveToFront(prev, index));
-  }
-
-  function createUploadItem(file: File): UploadItem {
-    const id = `${Date.now()}-${globalThis.crypto?.randomUUID?.() ?? Math.random()}`;
-    if (isHeicFile(file))
-      return { id, file, displayUrl: createHeicPlaceholderDataUrl(file.name), status: "uploading" };
-    const displayUrl = URL.createObjectURL(file);
-    previewUrls.current.add(displayUrl);
-    return { id, file, displayUrl, status: "uploading" };
-  }
-}
-
-function isAbort(error: unknown) {
-  return error instanceof DOMException && error.name === "AbortError";
-}
-function uploadStatuses(items: UploadItem[]): Record<string, UploadStatus> {
-  return Object.fromEntries(
-    items.flatMap((item) => (item.status ? [[item.displayUrl, item.status]] : [])),
-  );
-}
-function moveToFront<T>(items: T[], index: number) {
-  if (index <= 0 || index >= items.length) return items;
-  const next = [...items];
-  return [next.splice(index, 1)[0], ...next];
-}
-function mergeUploadedUrl(prev: Draft, url: string, kind: UploadKind): Draft {
-  if (kind === "menu") return { ...prev, menuImages: unique([...(prev.menuImages ?? []), url]) };
-  if (prev.images?.includes(url)) return prev;
-  const images = [...(prev.images ?? []), url];
-  return {
-    ...prev,
-    images,
-    imageOrientations: [...(prev.imageOrientations ?? []), "unknown"].slice(0, images.length),
-  };
-}
-function unique(items: string[]) {
-  return [...new Set(items.filter(Boolean))];
-}
-function preload(url: string, onLoad: () => void) {
-  const image = new Image();
-  image.onload = onLoad;
-  image.src = url;
-}
-async function mapLimit<T>(
-  items: T[],
-  limit: number,
-  task: (item: T, index: number) => Promise<void>,
-) {
-  let next = 0;
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, async () => {
-      while (next < items.length) {
-        const index = next++;
-        await task(items[index], index);
+    imageStatuses: statuses(galleryUploads),
+    menuImageStatuses: statuses(menuUploads),
+    hasUploadPending: queue.pending,
+    hasUploadFailed: queue.failed,
+    isBlocked: () => queue.pending || queue.failed,
+    startUploads(files: File[], kind: UploadKind) {
+      if (kind === "gallery") {
+        const gallery = queue.items.filter((item) => item.kind === "gallery");
+        const used =
+          new Set([
+            ...(options.draft.images ?? []),
+            ...gallery.flatMap((item) => (item.payloadUrl ? [item.payloadUrl] : [])),
+          ]).size + gallery.filter((item) => !item.payloadUrl).length;
+        const remaining = Math.max(0, 12 - used);
+        if (files.length > remaining) options.onError("Gallery tối đa 12 ảnh.");
+        files = files.slice(0, remaining);
       }
-    }),
-  );
+      queue.add(
+        files.map((file) => {
+          const displayUrl = isHeicFile(file)
+            ? createHeicPlaceholderDataUrl(file.name)
+            : URL.createObjectURL(file);
+          if (displayUrl.startsWith("blob:")) previews.current.add(displayUrl);
+          return { id: crypto.randomUUID(), file, kind, displayUrl, status: "uploading" };
+        }),
+      );
+    },
+    removeUploadAt(kind: UploadKind, index: number) {
+      const item = (kind === "gallery" ? galleryUploads : menuUploads)[index];
+      if (item) void queue.remove(item.id);
+    },
+    removePersistedAsset(kind: UploadKind, url: string) {
+      const item = { id: crypto.randomUUID(), kind, displayUrl: url, payloadUrl: url };
+      queue.add([item]);
+      void queue.remove(item.id);
+    },
+    moveGalleryUploadToFront(index: number) {
+      const item = galleryUploads[index];
+      if (item) queue.moveFirst(item.id);
+    },
+  };
 }
