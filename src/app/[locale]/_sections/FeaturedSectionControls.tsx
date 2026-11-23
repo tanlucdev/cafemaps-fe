@@ -34,8 +34,7 @@ export default function FeaturedSectionControls({
   return (
     <section className="christmas-home relative z-30 border-b border-[var(--border)] bg-[var(--card)]/82 pt-[104px] pb-4 shadow-[0_12px_34px_rgba(44,26,14,0.06)] backdrop-blur-xl sm:pt-[108px] sm:pb-5">
       <div className="christmas-home-copy mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ChristmasArt kind="sprig" className="christmas-home-sprig hidden md:block" />
-        <ChristmasArt className="christmas-home-art" />
+        <ChristmasArt kind="hero" sizes="(min-width: 1024px) 224px, (min-width: 768px) 160px, 92px" className="christmas-home-art" />
         <motion.div {...headerMotion} className="max-w-3xl pb-4 md:pb-5 md:max-w-[calc(100%-180px)] lg:max-w-3xl">
           <p className="mb-2 hidden md:inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--accent-light)] px-3 py-1.5 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md">
             <Coffee size={13} aria-hidden /> {ts("eyebrow")}
@@ -73,7 +72,7 @@ export default function FeaturedSectionControls({
           </div>
         </motion.div>
 
-        <div className="-mx-2 mt-6 md:sticky md:top-[82px] md:z-50 md:mx-0 md:mt-7 md:rounded-[24px] md:border md:border-[var(--border)] md:bg-[var(--surface-raised)]/92 md:px-4 md:shadow-[var(--shadow-warm)] md:backdrop-blur-xl">
+        <div className="-mx-2 mt-6 md:sticky md:top-[82px] md:z-50 md:mx-0 md:mt-7">
           <GuidedFilterBar filter={filter} onChange={onFilterChange} districts={activeDistricts} />
         </div>
       </div>

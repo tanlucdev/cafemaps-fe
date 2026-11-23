@@ -1,3 +1,6 @@
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import { Coffee, Edit3, UserRound } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { ProfileCopy } from "./constants";
@@ -19,19 +22,13 @@ export function ProfileHeader({
   hasPreviewProfileData: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-4 shadow-[var(--shadow-sm)] sm:rounded-[32px] sm:p-7 dark:bg-[var(--card)]">
-      <div
-        className="absolute top-5 right-5 hidden h-24 w-24 rounded-full border border-dashed border-[#d9b47d] opacity-50 sm:block"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute right-20 bottom-6 hidden h-10 w-20 rotate-[-12deg] rounded-full border border-[#e6c89f] opacity-45 lg:block"
-        aria-hidden="true"
-      />
+    <section className={`${seasonal.hero} relative overflow-hidden rounded-3xl border border-[var(--border)] bg-[#fffaf2] p-4 shadow-[var(--shadow-sm)] sm:rounded-[32px] sm:p-7 dark:bg-[var(--card)]`}>
+      <div className={seasonal.intro}><SeasonalGreeting /><ChristmasArt kind="cup" className={seasonal.art} /></div>
+      <ChristmasArt kind="lights" className={seasonal.lights} />
 
       <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="flex size-18 shrink-0 items-center justify-center rounded-[24px] bg-[var(--accent)] text-xl font-black text-[var(--accent-foreground)] shadow-[0_14px_30px_rgba(200,132,42,0.22)] sm:size-20 sm:rounded-[26px] sm:text-2xl">
+          <div className={`${seasonal.avatar} flex size-18 shrink-0 items-center justify-center rounded-[24px] bg-[var(--accent)] text-xl font-black text-[var(--accent-foreground)] shadow-[0_14px_30px_rgba(200,132,42,0.22)] sm:size-20 sm:rounded-[26px] sm:text-2xl`}>
             {initials}
           </div>
           <div className="min-w-0">
@@ -76,7 +73,7 @@ export function ProfileHeader({
 
 export function ProfileStats({ stats }: { stats: ProfileStat[] }) {
   return (
-    <section className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+    <section className={`${seasonal.stats} mt-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4`}>
       {stats.map(({ label, value, icon: Icon }) => (
         <div
           key={label}

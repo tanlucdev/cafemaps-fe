@@ -1,5 +1,7 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import styles from "./ChristmasFilter.module.css";
 import { useTranslations } from "next-intl";
 import type { Purpose, Vibe } from "@/types/cafe";
 import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipButton";
@@ -36,6 +38,7 @@ export function FilterOptionGroups({
   const groups = [
     {
       label: tf("vibe"),
+      art: "tree" as const,
       content: VIBES.map((vibe) => (
         <FilterChipButton key={vibe} active={staged.vibes.includes(vibe)} onClick={() => onToggleVibe(vibe)}>
           {VIBE_ICONS[vibe]}
@@ -45,6 +48,7 @@ export function FilterOptionGroups({
     },
     {
       label: tf("purpose"),
+      art: "book" as const,
       content: PURPOSES.map((purpose) => (
         <FilterChipButton key={purpose} active={staged.purposes.includes(purpose)} onClick={() => onTogglePurpose(purpose)}>
           {PURPOSE_ICONS[purpose]}
@@ -54,6 +58,7 @@ export function FilterOptionGroups({
     },
     {
       label: tf("tags.label"),
+      art: "lantern" as const,
       content: FILTER_TAGS.map((tag) => (
         <FilterChipButton key={tag} active={staged.tags.includes(tag)} onClick={() => onToggleTag(tag)}>
           {TAG_ICONS[tag]}
@@ -63,6 +68,7 @@ export function FilterOptionGroups({
     },
     {
       label: tf("price"),
+      art: "gift" as const,
       content: PRICE_OPTIONS.map((option) => (
         <FilterChipButton key={option.value} active={staged.price === option.value} onClick={() => onSetPrice(option.value)}>
           {tf(`priceRanges.${option.translationKey}`)}
@@ -72,11 +78,11 @@ export function FilterOptionGroups({
   ];
 
   return groups.map((group) => (
-    <section key={group.label}>
-      <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-        {group.label}
+    <section key={group.label} className={styles.group}>
+      <p className={styles.groupHeading}>
+        <ChristmasArt kind={group.art} />{group.label}
       </p>
-      <div className="flex flex-wrap gap-2">{group.content}</div>
+      <div className="flex flex-wrap gap-1.5">{group.content}</div>
     </section>
   ));
 }

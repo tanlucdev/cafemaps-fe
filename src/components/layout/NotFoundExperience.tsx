@@ -35,7 +35,7 @@ export default function NotFoundExperience({
           className="inline-flex min-h-11 items-center gap-3 rounded-full border border-[#ffe3b7]/22 bg-[#fff1d6]/12 px-3.5 py-2 text-sm font-bold text-[#fff0d4] shadow-[0_14px_34px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:bg-[#fff1d6]/18 focus-visible:ring-3 focus-visible:ring-[#ffe3b7]/60 focus-visible:outline-none"
         >
           <Image
-            src="/image/logo-icon-transparent.png"
+            src="/image/christmas/logo-icon.webp"
             alt=""
             width={28}
             height={28}

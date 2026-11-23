@@ -1,3 +1,4 @@
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import { Bookmark, Clock3, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ export function ProfileContent({
   onChange: (tab: ProfileTab) => void;
 }) {
   return (
-    <section className="min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-[var(--shadow-sm)] sm:p-4">
+    <section className={`${seasonal.content} min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-[var(--shadow-sm)] sm:p-4`}>
       <ProfileTabs activeTab={activeTab} copy={copy} isLoggedIn={isLoggedIn} onChange={onChange} />
       <div className="mt-4">
         {activeTab === "saved" && <SavedCafeList cafes={cafes} copy={copy} />}

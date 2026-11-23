@@ -15,6 +15,8 @@ import { useRouter } from "@/i18n/navigation"
 import { getCurrentAccessToken, saveAuthReturnUrl } from "@/lib/auth-client"
 import type { CafeReview, CafeReviewListResponse } from "@/types/review"
 import { ReviewRow, Stars } from "./ReviewParts"
+import ChristmasArt from "@/components/seasonal/ChristmasArt"
+import styles from "../CafeDetailSeasonal.module.css"
 
 const reviewsPageSize = 3, longReviewLength = 180
 
@@ -156,16 +158,19 @@ export default function CafeReviews({ cafeId, locale }: { cafeId: string; locale
   }
 
   return (
-    <section className="rounded-2xl border border-[#FFE3B7]/55 bg-white/72 p-4 shadow-[0_14px_36px_rgba(44,26,14,0.07)] backdrop-blur-md dark:border-[#FFE3B7]/14 dark:bg-[#1B0F08]/58">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+    <section className={`${styles.reviews} rounded-2xl border border-[#FFE3B7]/55 bg-white/72 p-4 shadow-[0_14px_36px_rgba(44,26,14,0.07)] backdrop-blur-md dark:border-[#FFE3B7]/14 dark:bg-[#1B0F08]/58`}>
+      <div className={`${styles.heading} flex flex-wrap items-center gap-x-3 gap-y-1`}>
+        <ChristmasArt kind="cocoa" className={styles.icon} />
         <h2 className="text-lg font-extrabold text-[#1C1209] dark:text-[#FFF8ED]">{t("title")}</h2>
         <p className="text-sm font-semibold text-[#7A664F] dark:text-[#E8D4BA]">
           {summary?.averageRating?.toFixed(1) ?? "-"} ★ · {t("summary", { reviewCount: summary?.reviewCount ?? 0 })}
         </p>
+        <ChristmasArt kind="sprig" className={styles.sprig} />
       </div>
+      <ChristmasArt kind="lights" className={styles.lights} />
 
       {(loading || !token || editing || !mine) && (
-        <div className="mt-4 rounded-xl border border-[#F3DFC2]/80 bg-[#FFFDF8]/85 p-3 dark:border-[#4A3320] dark:bg-[#1E140D]">
+        <div className={`${styles.reviewPanel} mt-4 rounded-xl border border-[#F3DFC2]/80 bg-[#FFFDF8]/85 p-3 dark:border-[#4A3320] dark:bg-[#1E140D]`}>
           {loading ? (
             <p className="text-sm text-[#8A7967]">{t("loading")}</p>
           ) : token && editing ? (
@@ -203,7 +208,7 @@ export default function CafeReviews({ cafeId, locale }: { cafeId: string; locale
                 type="button"
                 onClick={submit}
                 disabled={saving}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white transition-colors hover:bg-[#A96E08] disabled:opacity-60"
+                className={`${styles.primary} inline-flex h-8 items-center gap-1.5 rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white transition-colors hover:bg-[#A96E08] disabled:opacity-60`}
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Edit3 size={14} />}
                 {mine ? t("saveEdit") : t("submit")}
@@ -216,7 +221,7 @@ export default function CafeReviews({ cafeId, locale }: { cafeId: string; locale
               <button
                 type="button"
                 onClick={() => edit()}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white hover:bg-[#A96E08]"
+                className={`${styles.primary} inline-flex h-8 items-center gap-1.5 rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white hover:bg-[#A96E08]`}
               >
                 <Edit3 size={14} />
                 {t("formTitle")}
@@ -225,7 +230,7 @@ export default function CafeReviews({ cafeId, locale }: { cafeId: string; locale
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-sm font-semibold text-[#5C4A2F] dark:text-[#F8E7CC]">{t("loginCopy")}</p>
-              <button type="button" onClick={login} className="inline-flex h-8 items-center justify-center rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white hover:bg-[#A96E08]">
+              <button type="button" onClick={login} className={`${styles.primary} inline-flex h-8 items-center justify-center rounded-full bg-[#1C1209] px-3 text-sm font-extrabold text-white hover:bg-[#A96E08]`}>
                 {t("login")}
               </button>
             </div>

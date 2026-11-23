@@ -76,7 +76,7 @@ export default function CafeCard({
   );
 
   return (
-    <CafeChristmasFrame cafeId={cafe.id} index={index}>
+    <CafeChristmasFrame cafeId={cafe.id}>
     <motion.article
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -91,6 +91,7 @@ export default function CafeCard({
           : "bg-[var(--card)] shadow-[0_1px_3px_rgba(40,22,4,0.06)] dark:bg-[var(--card)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
       )}
     >
+      <div className="relative">
       <IntentPrefetchLink
         href={href}
         className="block outline-none focus-visible:ring-2 focus-visible:ring-[#ffe3b7]"
@@ -168,7 +169,7 @@ export default function CafeCard({
           )}
 
           {mobileCompact && mobileImageMeta && (
-            <span className="absolute bottom-2.5 left-2.5 z-10 inline-flex max-w-[calc(100%-1.25rem)] items-center gap-1 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md md:hidden">
+            <span className="absolute bottom-2.5 left-2.5 z-10 inline-flex max-w-[calc(100%-4rem)] items-center gap-1 rounded-full bg-[rgba(18,10,2,0.68)] px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-md md:hidden">
               {mobileDistanceText ? (
                 <Navigation size={11} className="shrink-0 text-[#F0A830]" />
               ) : (
@@ -180,19 +181,21 @@ export default function CafeCard({
         </div>
       </IntentPrefetchLink>
 
-      {/* Save button — top right, overlaid on image */}
+      {/* Save button inside the image, clear of the corner decoration. */}
       <SaveButton
         cafeId={cafe.id}
         locale={locale}
         initialSaved={initialSaved}
         onSavedChange={onSavedChange}
         className={cn(
-          "christmas-cafe-save absolute top-2.5 right-2.5 z-10 h-8 w-8 rounded-full border shadow-sm backdrop-blur-md transition-transform hover:scale-110",
+          "christmas-cafe-save absolute bottom-2.5 right-2.5 z-10 h-8 w-8 rounded-full border shadow-sm backdrop-blur-md transition-transform hover:scale-110",
           isCinematic
             ? "border-[#ffe3b7]/24 bg-[#170c06]/48 text-[#fff0d4]"
             : "border-white/30 dark:border-white/10",
         )}
       />
+
+      </div>
 
       <CardContent cafe={cafe} locale={locale} href={href} saveReturnUrl={saveReturnUrl} mobileCompact={mobileCompact} isCinematic={isCinematic} ratingBadge={ratingBadge} openStatus={openStatus} locationText={locationText} tags={tags} tCafe={tCafe} tFilters={tFilters} />
       {/* Hover preview popup disabled per request.

@@ -10,6 +10,7 @@ import { useAuthState } from "@/components/layout/useAuthState";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { featureFlags } from "@/lib/feature-flags";
+import Snowfall from "@/components/seasonal/Snowfall";
 import ChristmasArt from "@/components/seasonal/ChristmasArt";
 import { ThemeToggle } from "@/components/providers/ThemeProvider";
 
@@ -58,14 +59,12 @@ export default function Header() {
             aria-label="Cafe Maps"
           >
             <span className="christmas-logo flex size-9 shrink-0 items-center justify-center min-[390px]:size-10">
-              <ChristmasArt kind="hat" className="christmas-hat" />
               <Image
-                src="/image/logo-icon-transparent.png"
+                src="/image/christmas/logo-icon.webp"
                 alt=""
                 width={34}
                 height={34}
-                priority
-                className="size-9 min-[390px]:size-10"
+                className="size-9 scale-110 min-[390px]:size-10"
               />
             </span>
             <span className="hidden min-w-0 flex-col leading-none sm:flex">
@@ -98,9 +97,11 @@ export default function Header() {
                   href={link.href}
                   prefetch={disablePrefetch ? false : undefined}
                   onClick={() => setPendingPathname(link.href)}
+                  aria-label={link.label}
+                  title={link.label}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "relative inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-bold whitespace-nowrap transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+                    "relative inline-flex h-10 items-center gap-1.5 rounded-full px-2 text-[13px] xl:px-3.5 font-bold whitespace-nowrap transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
                     isActive
                       ? "bg-[var(--header-nav-active-bg)] text-[var(--header-nav-active-text)] shadow-[var(--header-nav-active-shadow)]"
                       : link.primary
@@ -109,7 +110,7 @@ export default function Header() {
                   )}
                 >
                   <Icon size={14} strokeWidth={isActive || link.primary ? 2.2 : 1.7} />
-                  {link.label}
+                  <span className="hidden xl:inline">{link.label}</span>
                 </Link>
               );
             })}
@@ -121,6 +122,7 @@ export default function Header() {
               "border-[var(--header-actions-surface-border)] bg-[var(--header-actions-surface-bg)] shadow-[var(--header-actions-surface-shadow)]",
             )}
           >
+            <Snowfall />
             <ThemeToggle />
             <LocaleSwitcher
               className={cn(

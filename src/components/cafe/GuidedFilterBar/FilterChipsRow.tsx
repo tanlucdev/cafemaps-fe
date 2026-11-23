@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./ChristmasFilter.module.css";
 import { useTranslations } from "next-intl";
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import NearMeButton from "@/components/cafe/NearMeButton";
@@ -55,15 +56,15 @@ export function FilterChipsRow({
   const extraVibes = VIBES.length - TOP_VIBES.length;
 
   return (
-    <div className="scrollbar-hide -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-3 pb-3.5">
+    <div className={`${styles.quickRow} scrollbar-hide -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-3 pb-3.5`}>
       <FilterChipButton
         ref={toggleBtnRef}
         active={dropdownMounted || activeCount > 0}
         onClick={onToggleDropdown}
-        className="flex-none px-3.5 text-[13px] whitespace-nowrap"
+        className={`${styles.mainToggle} flex-none px-3.5 text-[13px] whitespace-nowrap`}
         activeClassName="border-[var(--accent)] bg-[var(--accent-light)] text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.14)]"
       >
-        <SlidersHorizontal size={14} />
+        <SlidersHorizontal aria-hidden="true" size={14} />
         {tf("vibe")}
         {activeCount > 0 ? (
           <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent-light)] px-0.5 text-[10px] font-extrabold text-[var(--accent)]">
@@ -83,12 +84,13 @@ export function FilterChipsRow({
       <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
 
       <button
+        aria-pressed={filter.openNow ?? false}
         onClick={toggleOpenNow}
         className={cn(
           "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
           filter.openNow
-            ? "border-[#8fd6a8] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] shadow-[0_10px_24px_rgba(30,160,85,0.12)]"
-            : "border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)] hover:border-[#8fd6a8] hover:bg-[var(--status-open-background)] hover:text-[var(--status-open-foreground)]",
+            ? "border-[var(--status-open)] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] shadow-[0_10px_24px_rgba(30,160,85,0.12)]"
+            : "border-[var(--border)] bg-[var(--surface-raised)]/82 text-[var(--foreground-muted)] hover:border-[var(--status-open)] hover:bg-[var(--status-open-background)] hover:text-[var(--status-open-foreground)]",
         )}
       >
         <span className="relative flex h-2 w-2">

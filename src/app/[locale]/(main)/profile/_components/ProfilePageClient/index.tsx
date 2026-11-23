@@ -1,5 +1,6 @@
 "use client";
 
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { Bookmark, MessageCircle, PlusCircle, Sparkles } from "lucide-react";
 import { getAuthUser, type AuthUser } from "@/lib/auth-client";
@@ -65,7 +66,7 @@ export default function ProfilePageClient({
   }, [initialTab]);
 
   return (
-    <main className="min-h-[100svh] bg-[var(--background)] px-3 pt-[88px] pb-28 sm:px-6 sm:pt-24 lg:px-8">
+    <main className={`${seasonal.page} min-h-[100svh] bg-[var(--background)] px-3 pt-[88px] pb-28 sm:px-6 sm:pt-24 lg:px-8`}>
       <div className="mx-auto max-w-6xl">
         <ProfileHeader
           copy={copy}

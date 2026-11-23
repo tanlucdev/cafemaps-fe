@@ -1,5 +1,7 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import styles from "./GuidedFilterBar/ChristmasFilter.module.css";
 import type { CafeFilter as Filter } from "@/types/cafe";
 import { useGuidedFilter } from "@/components/cafe/hooks/useGuidedFilter";
 import { FilterChipsRow } from "@/components/cafe/GuidedFilterBar/FilterChipsRow";
@@ -47,7 +49,11 @@ export default function GuidedFilterBar({ filter, onChange, districts }: GuidedF
   } = useGuidedFilter(filter, onChange);
 
   return (
-    <div>
+    <div className={styles.frame} data-christmas-filter>
+      <div className={styles.trim} aria-hidden="true">
+        <ChristmasArt kind="sprig" className={styles.sprig} />
+        <ChristmasArt kind="bow" className={styles.bow} />
+      </div>
       <div className="relative hidden md:block">
         <FilterChipsRow
           filter={filter}

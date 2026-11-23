@@ -1,6 +1,5 @@
 .frame { position: relative; min-width: 0; }
 .frame > article { height: 100%; }
-:global([data-season="christmas"]) .frame :global(.christmas-cafe-save) { top: 44px; }
 .trim, .garland { display: none; pointer-events: none; }
 :global([data-season="christmas"]) .trim {
   display: block;
@@ -33,20 +32,19 @@
   position: relative;
   align-items: center;
   justify-content: space-between;
-  height: 36px;
+  height: 44px;
   overflow: hidden;
 }
 .sprig { width: 52px; height: 52px; transform: rotate(12deg); }
-.bow { width: 36px; height: 36px; }
-.lights { position: absolute; left: 52px; top: 5px; width: calc(100% - 94px); height: 16px; }
+.santa { width: 48px; height: 48px; flex-shrink: 0; }
+.lights { position: absolute; left: 52px; top: 5px; width: calc(100% - 108px); height: 16px; }
 @media (min-width: 768px) {
-  :global([data-season="christmas"]) .frame :global(.christmas-cafe-save) { top: 52px; }
   :global([data-season="christmas"]) .trim { top: -24px; width: 64px; height: 64px; }
   .ornament { width: 64px; height: 64px; }
   :global([data-season="christmas"]) .compact { top: -20px; width: 52px; height: 52px; }
   .compact .ornament { width: 52px; height: 52px; }
-  :global([data-season="christmas"]) .garland { height: 44px; }
+  :global([data-season="christmas"]) .garland { height: 52px; }
   .sprig { width: 68px; height: 68px; }
-  .bow { width: 44px; height: 44px; }
-  .lights { left: 68px; width: calc(100% - 120px); }
+  .santa { width: 56px; height: 56px; }
+  .lights { left: 68px; width: calc(100% - 132px); }
 }

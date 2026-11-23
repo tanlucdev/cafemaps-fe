@@ -1,5 +1,8 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +19,7 @@ import { SavedModals } from './SavedModals';
 export function SavedCollectionView({state}: {state: ReturnType<typeof useSavedPageState>}) {
 const { t, entries, entriesLoading, activeCollection, setActiveCollection, quickFilter, setQuickFilter, district, setDistrict, search, setSearch, filtersOpen, setFiltersOpen, setShowCreateFolder, setRenameTarget, setDeleteTarget, setMoveTarget, collections, visibleCafes, activeFilterCount, handleSavedChange, locale } = state;
 return (
-    <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[72px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:px-8 lg:pb-20 lg:pt-28">
+    <section className={`${seasonal.page} relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[72px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:px-8 lg:pb-20 lg:pt-28`}>
       <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#8b5b2b_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-[#fff0d2]/55 to-transparent dark:from-white/6" />
 
@@ -24,7 +27,9 @@ return (
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div className="mb-5 grid gap-4 lg:mb-7 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-stretch">
-        <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/72 p-4 shadow-[0_18px_58px_rgba(44,26,14,0.1)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-6 lg:p-7">
+        <div className={`${seasonal.hero} rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/72 p-4 shadow-[0_18px_58px_rgba(44,26,14,0.1)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-6 lg:p-7`}>
+          <div className={seasonal.intro}><SeasonalGreeting /><ChristmasArt kind="house" className={seasonal.art} /></div>
+          <ChristmasArt kind="lights" className={seasonal.lights} />
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/70 bg-white/55 px-3 py-1.5 text-[12px] font-bold text-[var(--accent)] shadow-[0_10px_28px_rgba(44,26,14,0.06)] dark:border-white/10 dark:bg-white/7">
               <Bookmark className="size-3.5" aria-hidden="true" />
@@ -79,7 +84,7 @@ return (
         </div>
       </div>
 
-      <div className="rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/64 p-3 shadow-[0_20px_70px_rgba(44,26,14,0.09)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-5">
+      <div className={`${seasonal.panel} rounded-[28px] border border-[#ffe3b7]/60 bg-[#fffaf2]/64 p-3 shadow-[0_20px_70px_rgba(44,26,14,0.09)] backdrop-blur dark:border-white/10 dark:bg-white/5 sm:p-5`}>
 
       {/* ── Collections row ──────────────────────────────────────────────────── */}
       {(entries.length > 0 || collections.length > 0) && (

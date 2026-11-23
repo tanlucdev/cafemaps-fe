@@ -31,6 +31,7 @@ export const FilterChipButton = forwardRef<HTMLButtonElement, FilterChipButtonPr
   ) => (
     <button
       ref={ref}
+      data-filter-chip
       aria-pressed={active}
       className={cn(CHIP_BASE, active ? activeClassName : inactiveClassName, className)}
       {...props}

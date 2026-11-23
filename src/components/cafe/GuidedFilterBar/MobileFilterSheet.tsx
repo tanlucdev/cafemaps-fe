@@ -1,5 +1,7 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import styles from "./ChristmasFilter.module.css";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import type { Vibe, Purpose } from "@/types/cafe";
@@ -57,19 +59,21 @@ export function MobileFilterSheet({
       <SheetContent
         side="bottom"
         overlayClassName="z-[89]"
-        className="z-[90] max-h-[88dvh] gap-0 rounded-t-[24px] border-[var(--border)] bg-[#fffaf2] p-0 dark:bg-[var(--card)]"
+        className={`${styles.sheet} z-[90] max-h-[88dvh] gap-0 rounded-t-[24px] border-[var(--border)] bg-[var(--card)] p-0`}
       >
-        <SheetHeader className="sticky top-0 z-10 shrink-0 border-b border-[var(--border)] bg-[#fffaf2] pr-12 dark:bg-[var(--card)]">
-          <SheetTitle>{tg("mobile.title")}</SheetTitle>
+        <SheetHeader className="sticky top-0 z-10 shrink-0 border-b border-[var(--border)] bg-[var(--card)] pr-12">
+          <SheetTitle className="flex items-center gap-2 text-[var(--season-pine)]">
+            <ChristmasArt kind="tree" className="size-6" />{tg("mobile.title")}
+          </SheetTitle>
           <SheetDescription>{tg("mobile.description")}</SheetDescription>
         </SheetHeader>
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-6">
           {filterNearMe && (
             <section className="mb-6">
               <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
                 {tg("mobile.distance")}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {DISTANCE_OPTIONS.map(({ km }) => (
                   <FilterChipButton
                     key={km}
@@ -82,7 +86,7 @@ export function MobileFilterSheet({
               </div>
             </section>
           )}
-          <div className="space-y-6">
+          <div className="space-y-3">
             <FilterOptionGroups
               staged={staged}
               onToggleVibe={onToggleVibe}
@@ -90,11 +94,11 @@ export function MobileFilterSheet({
               onToggleTag={onToggleTag}
               onSetPrice={onSetPrice}
             />
-            <section>
-              <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-                {tf("openingHours")}
+            <section className={styles.group}>
+              <p className={styles.groupHeading}>
+                <ChristmasArt kind="cocoa" />{tf("openingHours")}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 <FilterChipButton
                   active={staged.hours === "open_at_7"}
                   onClick={() => onSetHours("open_at_7")}
@@ -111,7 +115,7 @@ export function MobileFilterSheet({
             </section>
           </div>
         </div>
-        <SheetFooter className="sticky bottom-0 z-10 shrink-0 flex-row items-center justify-between border-t border-[var(--border)] bg-[#fffaf2] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] dark:bg-[var(--card)]">
+        <SheetFooter className="sticky bottom-0 z-10 shrink-0 flex-row items-center justify-between border-t border-[var(--border)] bg-[var(--card)] px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
             onClick={onClearAll}
@@ -122,7 +126,7 @@ export function MobileFilterSheet({
           <button
             type="button"
             onClick={onApply}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-white shadow-[0_10px_24px_rgba(200,132,42,0.18)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-[var(--accent-foreground)] shadow-[var(--shadow-sm)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
           >
             <Search size={14} />
             {tg("mobile.viewResults")}

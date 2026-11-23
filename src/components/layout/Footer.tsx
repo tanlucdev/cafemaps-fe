@@ -93,7 +93,7 @@ export default function Footer() {
             <div className={`min-w-0 ${showDonation ? "" : "sm:col-span-2 lg:col-span-1"}`}>
               <Link href="/" className="group flex w-fit items-center gap-3" aria-label="Cafe Maps">
                 <Image
-                  src="/image/logo-icon-transparent.png"
+                  src="/image/christmas/logo-icon.webp"
                   alt="Cafe Maps"
                   width={38}
                   height={38}

@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import ChristmasMusic from "@/components/seasonal/ChristmasMusic";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
@@ -33,7 +34,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         }}
       />
       <ThemeProvider>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          {children}
+          <ChristmasMusic />
+        </QueryProvider>
       </ThemeProvider>
     </NextIntlClientProvider>
   );

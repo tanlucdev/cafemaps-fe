@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState, type ReactNode } from "react";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { BookOpen, CalendarPlus, ChevronLeft, Share2 } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import SmartGallery from "@/components/SmartGallery";
 import type { Cafe } from "@/types/cafe";
@@ -26,7 +26,8 @@ import CafeReviews from "./CafeReviews";
 import { useCafeVisited } from "./useCafeVisited";
 import { useTrackCafeView } from "./useTrackCafeView";
 import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
-import { featureFlags } from "@/lib/feature-flags";
+import CafeDetailActions from "./CafeDetailActions";
+
 interface CafeDetailContentProps {
   cafe: Cafe;
   locale: string;
@@ -35,7 +36,6 @@ interface CafeDetailContentProps {
 export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDetailContentProps) {
   useFeedbackCafeId(cafe.id);
   const t = useTranslations("cafe");
-  const tc = useTranslations("common");
   const router = useRouter();
   const reduceMotion = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -187,34 +187,10 @@ export default function CafeDetailContent({ cafe, locale, aboveReviews }: CafeDe
         initial={reduceMotion ? false : { opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={heroTransition}
-        className="mx-auto flex w-full max-w-2xl min-w-0 items-center justify-between px-4 pt-5 pb-3 sm:px-6 lg:max-w-[960px] lg:px-10"
+        className="mx-auto flex w-full max-w-2xl min-w-0 flex-wrap items-center justify-between gap-2 px-4 pt-5 pb-3 sm:px-6 lg:max-w-[960px] lg:px-10"
       >
-        <motion.button
-          onClick={handleBack}
-          whileHover={reduceMotion ? undefined : { y: -2, scale: 1.02 }}
-          whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-          className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/62 px-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72"
-        >
-          <ChevronLeft size={16} />
-          {tc("back")}
-        </motion.button>
-        <div className="flex items-center gap-2">
-          {featureFlags.coffeeMeetupsEnabled && (
-            <Link href={`/coffee-meetups/new?cafeId=${encodeURIComponent(cafe.id)}`} className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/62 px-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72">
-              <CalendarPlus size={14} />
-              Tạo kèo tại quán này
-            </Link>
-          )}
-          <motion.button
-            onClick={() => setShareOpen(true)}
-            whileHover={reduceMotion ? undefined : { y: -2, scale: 1.02 }}
-            whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/62 px-3 text-sm font-bold text-[var(--foreground-muted)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:border-[var(--accent)] hover:bg-[var(--accent-light)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] dark:bg-[var(--card)]/72"
-          >
-            <Share2 size={14} />
-            {t("share")}
-          </motion.button>
-        </div>
+        <CafeDetailActions cafeId={cafe.id} locale={locale} reduceMotion={reduceMotion}
+          onBack={handleBack} onShare={() => setShareOpen(true)} />
       </motion.div>
 
       <div className="mx-auto w-full max-w-2xl min-w-0 space-y-5 px-4 pb-4 sm:px-6 lg:max-w-[960px] lg:px-10">

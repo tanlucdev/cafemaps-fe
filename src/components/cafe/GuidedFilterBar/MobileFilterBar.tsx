@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./ChristmasFilter.module.css";
 import { useEffect, useState } from "react";
 import { ChevronRight, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -41,21 +42,23 @@ export function MobileFilterBar({
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-2 rounded-[20px] border border-[var(--border)] bg-[#fffaf2]/76 p-2 shadow-[var(--shadow-sm)] backdrop-blur-md md:hidden dark:bg-[var(--card)]">
+      <div className="grid grid-cols-2 gap-2 md:hidden">
         <button
           type="button"
           onClick={onOpen}
+          aria-haspopup="dialog"
           className={cn(
             menuCardClass,
+            styles.mainToggle,
             activeCount > 0
               ? "border-[var(--accent)] bg-[var(--accent)] text-white hover:brightness-95"
               : creamCardClass,
           )}
         >
-          <SlidersHorizontal size={15} className="shrink-0" />
+          <SlidersHorizontal aria-hidden="true" size={15} className="shrink-0" />
           <span className="truncate">{tg("mobile.title")}</span>
           {activeCount > 0 && (
-            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[#fff0d2] px-0.5 text-[10px] font-extrabold text-[#201006]">
+            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-[var(--accent-foreground)] px-0.5 text-[10px] font-extrabold text-[var(--accent)]">
               {activeCount}
             </span>
           )}
@@ -68,7 +71,7 @@ export function MobileFilterBar({
           className={cn(
             menuCardClass,
             filter.openNow
-              ? "border-[#8fd6a8] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] hover:brightness-95"
+              ? "border-[var(--status-open)] bg-[var(--status-open-background)] text-[var(--status-open-foreground)] hover:brightness-95"
               : creamCardClass,
           )}
         >

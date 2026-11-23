@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState, type FormEvent } from "react";
 import Image from "next/image";
-import { ArrowLeft, Coffee, Download, MessageSquareText, X } from "lucide-react";
+import { ArrowLeft, Download, MessageSquareText, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createFeedback, type FeedbackType } from "@/apis/feedback";
 import { useFeedbackCafeId } from "@/components/layout/FeedbackCafeContext";
@@ -258,7 +258,7 @@ export default function DonateFloatingButton() {
           aria-expanded={open}
           className="grid size-14 cursor-pointer place-items-center rounded-full bg-[var(--accent)] text-[var(--background)] shadow-lg transition hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] focus-visible:outline-none"
         >
-          <Coffee className="size-6" aria-hidden="true" />
+          <Image src="/icons/christmas/coffee-support.svg" alt="" width={56} height={56} className="pointer-events-none size-14" />
         </button>
       </div>
   );

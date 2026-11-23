@@ -15,49 +15,11 @@ import { VIBES, PURPOSES, AREAS, type CafeFilter as Filter } from "@/types/cafe"
 import {
   FILTER_TAGS,
   TAG_ICONS,
+  VIBE_ICONS,
+  PURPOSE_ICONS,
   TAG_TRANSLATION_KEYS,
   type FilterTag,
 } from "@/components/cafe/constants/filter-constants";
-import {
-  Leaf,
-  Coffee,
-  Lightbulb,
-  Heart,
-  Music,
-  Wine,
-  Wind,
-  Smile,
-  Briefcase,
-  BookOpen,
-  Users,
-  User,
-  PartyPopper,
-  MessageCircle,
-} from "lucide-react";
-
-const VIBE_ICONS: Record<string, React.ElementType> = {
-  "yên tĩnh": Wind,
-  "nhộn nhịp": Smile,
-  vintage: Coffee,
-  "hiện đại": Lightbulb,
-  "thiên nhiên": Leaf,
-  "sáng tạo": Lightbulb,
-  "lãng mạn": Heart,
-  minimalist: Leaf,
-  "sôi động": PartyPopper,
-  chill: Wine,
-  acoustic: Music,
-};
-
-const PURPOSE_ICONS: Record<string, React.ElementType> = {
-  "làm việc": Briefcase,
-  "học tập": BookOpen,
-  "hẹn hò": Heart,
-  "họp nhóm": Users,
-  "chill một mình": User,
-  "gặp bạn bè": MessageCircle,
-};
-
 const PRICE_OPTIONS = [
   { translationKey: "under_50k", value: "under_50k" },
   { translationKey: "50k_100k", value: "price_50k_100k" },
@@ -103,7 +65,6 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         </h3>
         <div className="flex flex-wrap gap-2">
           {VIBES.map((vibe) => {
-            const Icon = VIBE_ICONS[vibe] || Coffee;
             return (
               <Badge
                 key={vibe}
@@ -113,7 +74,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 onClick={() => toggleArray("vibes", vibe)}
                 className="flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm"
               >
-                {Icon && <Icon size={14} />}
+                {VIBE_ICONS[vibe]}
                 {vibe}
               </Badge>
             );
@@ -128,7 +89,6 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
         </h3>
         <div className="flex flex-wrap gap-2">
           {PURPOSES.map((purpose) => {
-            const Icon = PURPOSE_ICONS[purpose] || User;
             return (
               <Badge
                 key={purpose}
@@ -138,7 +98,7 @@ export default function CafeFilter({ filter, onChange }: CafeFilterProps) {
                 onClick={() => toggleArray("purposes", purpose)}
                 className="flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm"
               >
-                {Icon && <Icon size={14} />}
+                {PURPOSE_ICONS[purpose]}
                 {purpose}
               </Badge>
             );

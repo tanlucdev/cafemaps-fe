@@ -62,7 +62,7 @@ function CafeListRow({
   };
 
   return (
-    <CafeChristmasFrame cafeId={cafe.id} index={index} compact>
+    <CafeChristmasFrame cafeId={cafe.id} compact>
     <motion.article
       initial={animationType === "fade" || reduceMotion ? false : revealInitial}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -244,7 +244,7 @@ function CafeListRow({
         cafeId={cafe.id}
         locale={locale}
         className={cn(
-          "christmas-cafe-save absolute top-3 right-3 z-10 h-8 w-8 rounded-full border shadow-sm transition-all",
+          "christmas-cafe-save absolute bottom-3 left-[88px] z-10 h-8 w-8 sm:left-[136px] rounded-full border shadow-sm transition-all",
           isCinematic
             ? "border-[#ffe3b7]/24 bg-[#170c06]/48 text-[#fff0d4] backdrop-blur-md hover:bg-[#fff1d6]/12"
             : "border-[#E0D3C0] bg-white text-[var(--accent)] hover:bg-[#FBF0DC] dark:border-[#3A2A20] dark:bg-[#1C1210] dark:text-[var(--accent)]",

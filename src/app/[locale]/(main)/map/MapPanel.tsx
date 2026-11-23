@@ -47,7 +47,7 @@ export function MapPanel({
         <div className="grid min-h-[220px] place-items-center rounded-2xl border border-dashed border-[var(--border)] bg-[var(--card)]/60 px-5 py-8 text-center">
           <div>
             <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-[var(--accent-light)] text-[var(--accent)]">
-              <ChristmasArt kind="tree" className="size-12" />
+              <ChristmasArt kind="house" className="size-12" />
             </div>
             <p className="font-black text-[var(--foreground)]">{t("emptyTitle")}</p>
             <p className="mt-1 text-sm leading-6 text-[var(--foreground-muted)]">{t("emptySubtitle")}</p>

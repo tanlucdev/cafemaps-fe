@@ -1,5 +1,7 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import styles from "./ChristmasFilter.module.css";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { StagedFilter } from "@/components/cafe/hooks/useGuidedFilter";
@@ -50,8 +52,12 @@ export function FilterDropdownPanel({
         dropdownOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
-      <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-raised)]/96 shadow-[var(--shadow-warm)] backdrop-blur-xl">
-        <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
+      <div className={`${styles.panel} rounded-[24px] border border-[var(--border)] bg-[var(--surface-raised)] shadow-[var(--shadow-warm)]`}>
+        <div className={styles.panelHeading}>
+          <span>{tg("mobile.title")}</span>
+          <ChristmasArt kind="sprig" className="size-7" />
+        </div>
+        <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-4">
           <FilterOptionGroups
             staged={staged}
             onToggleVibe={onToggleVibeStaged}
@@ -59,11 +65,11 @@ export function FilterDropdownPanel({
             onToggleTag={onToggleTagStaged}
             onSetPrice={onSetPriceStaged}
           />
-          <div>
-            <p className="mb-3 text-[10px] font-extrabold tracking-[0.09em] text-[var(--foreground-muted)] uppercase">
-              {tf("openingHours")}
+          <section className={styles.group}>
+            <p className={styles.groupHeading}>
+              <ChristmasArt kind="cocoa" />{tf("openingHours")}
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               <FilterChipButton
                 active={staged.hours === "open_at_7"}
                 onClick={() => onSetHoursStaged("open_at_7")}
@@ -77,10 +83,17 @@ export function FilterDropdownPanel({
                 {tg("open24Hours")}
               </FilterChipButton>
             </div>
+          </section>
+          <div className={styles.scene} aria-hidden="true">
+            <ChristmasArt kind="lights" className={styles.sceneLights} />
+            <ChristmasArt kind="tree" sizes="70px" className={styles.sceneTree} />
+            <ChristmasArt kind="santa" sizes="70px" className={styles.sceneSanta} />
+            <ChristmasArt kind="cup" sizes="70px" className={styles.sceneCup} />
+            <ChristmasArt kind="star" className={styles.sceneStar} />
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">
+        <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-2">
           <button
             onClick={onClearAll}
             className="cursor-pointer text-xs font-bold text-[var(--foreground-muted)] underline underline-offset-2 transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"

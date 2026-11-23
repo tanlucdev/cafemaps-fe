@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
 import { Coffee, LoaderCircle } from "lucide-react";
 import CafeList from "@/components/cafe/CafeList";
 import CafeGrid from "@/components/cafe/CafeGrid";
@@ -90,7 +91,7 @@ export default function FeaturedSectionResults({
   if (total === 0 && (!serverBacked || teaserSlots === 0)) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface)]/88 py-20 text-center shadow-[var(--shadow-sm)] backdrop-blur-md">
-        <Coffee size={40} className="text-[var(--accent)]/60" />
+        <ChristmasArt kind="cat" sizes="96px" className="size-24" />
         <p className="text-base font-medium text-[var(--foreground-muted)]">
           {ts("noResultsMessage")}
         </p>

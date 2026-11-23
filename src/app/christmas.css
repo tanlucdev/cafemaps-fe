@@ -9,8 +9,9 @@
 }
 html[data-season="christmas"] {
   --season-pine: #285544;
-  --season-berry: #a52f3a;
-  --season-ribbon: #9e3443;
+  --season-red: #c62828;
+  --season-berry: var(--season-red);
+  --season-ribbon: var(--season-red);
   --season-gold: #e4b86f;
   --season-ink: #2c1a0e;
   --season-paper: #fffaf2;
@@ -21,9 +22,9 @@ html[data-season="christmas"] {
   --background-secondary: #e1ead8;
   --foreground: #2c1a0e;
   --foreground-muted: #735b45;
-  --accent: #9e3443;
-  --accent-hover: #82283b;
-  --accent-light: #f9e6e7;
+  --accent: var(--season-berry);
+  --accent-hover: color-mix(in srgb, var(--accent) 80%, black);
+  --accent-light: color-mix(in srgb, var(--accent) 10%, var(--card));
   --accent-foreground: #ffffff;
   --primary: var(--accent);
   --primary-foreground: var(--accent-foreground);
@@ -59,9 +60,9 @@ html[data-season="christmas"] {
   --header-shell-surface-bg: rgba(255, 250, 242, .97);
   --header-shell-surface-border: #9aaf98;
   --header-nav-active-bg: #e5ecdf;
-  --header-nav-active-shadow: inset 0 -1px 0 #9e344344;
+  --header-nav-active-shadow: inset 0 -1px 0 color-mix(in srgb, var(--accent) 27%, transparent);
   --header-nav-primary-hover-bg: var(--season-soft);
-  --header-login-shadow: 0 8px 20px #9e344322;
+  --header-login-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 13%, transparent);
   --header-nav-active-text: var(--season-pine);
   --header-nav-primary-text: var(--season-pine);
   --header-nav-text: #67503b;
@@ -78,7 +79,7 @@ html[data-season="christmas"] {
   --footer-warm-text: var(--season-pine);
   --footer-cta-eyebrow-text: var(--season-pine);
   --footer-heart: var(--season-berry);
-  --footer-heart-fill: #a5474522;
+  --footer-heart-fill: color-mix(in srgb, var(--season-berry) 13%, transparent);
   --footer-ambient: radial-gradient(circle at 94% 0%, #e4b86f33, transparent 36%);
   --contribute-surface: var(--card);
   --contribute-surface-soft: var(--season-soft);
@@ -86,7 +87,7 @@ html[data-season="christmas"] {
 
 html[data-season="christmas"].dark {
   --season-pine: #a6cfb1;
-  --season-berry: #efa6a0;
+  --season-berry: color-mix(in srgb, var(--season-red) 40%, var(--season-paper));
   --season-gold: #e4b86f;
   --season-ink: #2c1a0e;
   --season-paper: #fff5e3;
@@ -97,9 +98,7 @@ html[data-season="christmas"].dark {
   --background-secondary: #242220;
   --foreground: #fff1de;
   --foreground-muted: #d0c1ac;
-  --accent: #efa6a0;
-  --accent-hover: #ffc1bd;
-  --accent-light: #47232b;
+  --accent-hover: color-mix(in srgb, var(--accent) 85%, white);
   --accent-foreground: #2c1a0e;
   --card: #2a2825;
   --border: #736a60;
@@ -124,17 +123,11 @@ html[data-season="christmas"].dark {
 
 [data-season="christmas"] .christmas-art {
   pointer-events: none;
+  object-fit: contain;
+  user-select: none;
   flex-shrink: 0;
 }
 [data-season="christmas"] .christmas-logo { position: relative; }
-[data-season="christmas"] .christmas-hat {
-  position: absolute;
-  width: 27px;
-  height: 27px;
-  top: -9px;
-  right: -7px;
-  transform: rotate(12deg);
-}
 [data-season="christmas"] .christmas-header-shell {
   position: relative;
   --header-shell-surface-bg: color-mix(in srgb, var(--season-soft) 97%, transparent);
@@ -151,18 +144,10 @@ html[data-season="christmas"].dark {
   height: 15px;
 }
 [data-season="christmas"] .christmas-home {
-  background: radial-gradient(ellipse at 87% 42%, #a547452e, transparent 35%),
+  background: radial-gradient(ellipse at 87% 42%, color-mix(in srgb, var(--season-red) 18%, transparent), transparent 35%),
     linear-gradient(110deg, var(--card) 28%, var(--season-soft) 100%);
 }
-[data-season="christmas"] .christmas-home-sprig {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  top: -54px;
-  right: 12px;
-  opacity: .22;
-  transform: rotate(18deg);
-}
+
 [data-season="christmas"] [data-slot="sheet-header"] {
   background: var(--season-soft);
   border-bottom: 1px solid var(--border);
@@ -189,10 +174,12 @@ html[data-season="christmas"].dark {
   font-weight: 600;
   line-height: 1.6;
 }
-[data-season="christmas"] .seasonal-greeting > svg {
+[data-season="christmas"] .seasonal-greeting > .christmas-art {
   width: 28px; height: 28px;
-  --season-pine: #fff5e3;
-  --season-berry: #e4b86f;
+  box-sizing: border-box;
+  padding: 3px;
+  border-radius: 50%;
+  background: #fff5e3;
 }
 [data-season="christmas"] .christmas-header-shell nav [aria-current="page"] {
   background: var(--season-ribbon);
@@ -206,28 +193,15 @@ html[data-season="christmas"].dark {
   top: -6px;
   right: 12px;
 }
-[data-season="christmas"] .christmas-auth-art {
-  position: absolute;
-  width: 155px;
-  height: 155px;
-  top: 24px;
-  right: 24px;
-  padding: 10px;
-  background: #fffaf2e6;
-  border-radius: 50%;
+[data-auth-page] .auth-portrait { background: none; }
+@media (min-width: 1024px) {
+  [data-auth-page] .auth-portrait {
+    background: url("/image/christmas/auth-left-portrait.webp") center / cover no-repeat;
+  }
 }
 [data-season="christmas"] .christmas-search:focus-within {
   border-color: #8f5a16;
   box-shadow: none;
-}
-[data-season="christmas"] :is(input:not([type="checkbox"]):not([type="radio"]), textarea):focus,
-[data-season="christmas"] [data-slot="select-trigger"]:focus-visible {
-  border-color: #8f5a16 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-[data-season="christmas"] :is(input, textarea, [data-slot="select-trigger"]):focus-visible {
-  border-radius: revert-layer !important;
 }
 [data-season="christmas"] .christmas-search input:focus { border: 0 !important; }
 [data-season="christmas"] :is([data-slot="select-content"], .christmas-panel) {
@@ -278,8 +252,8 @@ html[data-season="christmas"].dark {
   [data-season="christmas"] .christmas-home-art { width: 224px; height: 224px; top: -8px; right: 24px; }
 }
 @media (max-width: 767px) {
-  [data-season="christmas"] .christmas-home-copy h1 { max-width: calc(100% - 78px); }
-  [data-season="christmas"] .christmas-home .seasonal-greeting { font-size: 11px; }
+  [data-season="christmas"] .christmas-home-copy h1 { max-width: calc(100% - 92px); white-space: normal; text-wrap: balance; }
+  [data-season="christmas"] .christmas-home .seasonal-greeting { max-width: calc(100% - 96px); font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-season="christmas"] { scroll-behavior: auto; }

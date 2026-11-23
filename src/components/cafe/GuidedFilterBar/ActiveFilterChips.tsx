@@ -88,7 +88,7 @@ export function ActiveFilterChips({ filter, onChange, clearAll }: ActiveFilterCh
         <button
           key={chip.label}
           onClick={chip.remove}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent-light)] px-3 py-1 text-xs font-bold text-[var(--accent)] shadow-[0_10px_24px_rgba(200,132,42,0.12)] backdrop-blur-md transition-all hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--accent)] bg-[var(--accent-light)] px-3 py-1 text-xs font-bold text-[var(--accent)] shadow-[var(--shadow-sm)] backdrop-blur-md transition-all hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
         >
           {capitalize(chip.label)}
           <X size={11} />

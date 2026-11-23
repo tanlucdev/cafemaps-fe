@@ -4,7 +4,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Coffee, Compass, MapPin, ShieldCheck, Sparkles } from "lucide-react";
 import Image from "next/image";
-import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import Snowfall from "@/components/seasonal/Snowfall";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -54,28 +54,21 @@ export default function AuthShell({ children }: AuthShellProps) {
       data-auth-page="true"
       className="relative min-h-[100dvh] overflow-hidden bg-[#1f1209] px-4 py-4 text-[#fff7e8] sm:px-6 lg:px-8"
     >
-      <Image
-        src="/image/auth-christmas-illustration.svg"
-        alt=""
-        fill
-        sizes="100vw"
-        className="absolute inset-0 object-cover opacity-52"
-        priority
-      />
+      <picture className="pointer-events-none absolute inset-0">
+        <source media="(max-width: 767px)" srcSet="/image/christmas/auth-background-mobile.webp" />
+        <img
+          src="/image/christmas/auth-background-desktop.webp"
+          alt=""
+          fetchPriority="high"
+          className="size-full object-cover opacity-52"
+        />
+      </picture>
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(31,18,9,0.94),rgba(31,18,9,0.78)_42%,rgba(31,18,9,0.52))]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,rgba(31,18,9,0.96),rgba(31,18,9,0))]" />
 
       <div className="relative mx-auto grid min-h-[calc(100dvh-2rem)] w-full max-w-6xl min-w-0 items-center gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <aside className="hidden min-h-[620px] overflow-hidden rounded-[32px] border border-[#ffe3b7]/18 bg-[#1f1209]/38 shadow-[0_24px_72px_rgba(0,0,0,0.34)] backdrop-blur-md lg:block">
-          <div className="relative h-full min-h-[620px]">
-            <Image
-              src="/image/auth-christmas-illustration.svg"
-              alt=""
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-              priority
-            />
+          <div className="auth-portrait relative h-full min-h-[620px]">
             <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(31,18,9,0.3)_65%,rgba(31,18,9,0.55))]" />
             <div className="absolute inset-x-0 bottom-0 p-8 xl:p-10">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ffe3b7]/22 bg-[#1f1209]/44 px-3 py-1.5 text-xs font-bold text-[#ffe3b7] backdrop-blur-md">
@@ -114,20 +107,22 @@ export default function AuthShell({ children }: AuthShellProps) {
               aria-label="Cafe Maps"
             >
               <span className="christmas-logo flex size-11 shrink-0 items-center justify-center">
-                <ChristmasArt kind="hat" className="christmas-hat" />
-                <Image src="/image/logo-icon-transparent.png" alt="" width={42} height={42} loading="lazy" />
+                <Image src="/image/christmas/logo-icon.webp" alt="" width={42} height={42} />
               </span>
               <span className="min-w-0 text-sm font-black text-[var(--foreground)] dark:text-[#fff7e8]">
                 {t("brand")}
               </span>
             </Link>
-            <Link
+            <div className="flex shrink-0 items-center gap-2">
+              <Snowfall />
+              <Link
               href="/"
               className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/52 px-3 text-xs font-bold text-[var(--foreground-muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffaf2] dark:border-[#ffe3b7]/16 dark:bg-white/8 dark:text-[#fff0d2]/78 dark:hover:text-[#fff7e8] dark:focus-visible:ring-offset-[#21170f]"
             >
               <ArrowLeft size={14} aria-hidden="true" />
               <span className="hidden min-[380px]:inline">{t("backHome")}</span>
-            </Link>
+              </Link>
+            </div>
           </div>
 
           <div className="mb-4 overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--accent-light)]/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] dark:border-[#ffe3b7]/12 dark:bg-white/7">

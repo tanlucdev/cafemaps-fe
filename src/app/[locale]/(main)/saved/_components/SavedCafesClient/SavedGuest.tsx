@@ -1,5 +1,8 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import SeasonalGreeting from "@/components/seasonal/SeasonalGreeting";
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Bookmark, Coffee, Layers3, LogIn, UserPlus } from "lucide-react";
@@ -8,7 +11,7 @@ import { useTranslations } from "next-intl";
 export function SavedGuest() {
 const t = useTranslations("saved");
 return (
-      <section className="relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[76px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:pb-16 lg:pt-28">
+      <section className={`${seasonal.page} relative min-h-[100svh] overflow-hidden bg-[var(--background)] px-4 pb-[calc(var(--mobile-bottom-nav-height)+28px)] pt-[76px] text-[var(--foreground)] sm:px-6 sm:pt-[104px] lg:pb-16 lg:pt-28`}>
         <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#8b5b2b_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-linear-to-b from-[#fff0d2]/55 to-transparent dark:from-white/6" />
 
@@ -28,7 +31,9 @@ return (
               <p className="mt-2 text-sm leading-6 text-[#fff7e8]/84">{t("loginVisualCaption")}</p>
             </div>
           </div>
-          <div className="flex flex-col justify-center bg-[#fffaf2]/94 p-6 backdrop-blur dark:bg-[#1f1209]/92 sm:p-9 lg:p-12">
+          <div className={`${seasonal.hero} flex flex-col justify-center bg-[#fffaf2]/94 p-6 backdrop-blur dark:bg-[#1f1209]/92 sm:p-9 lg:p-12`}>
+            <div className={seasonal.intro}><SeasonalGreeting /><ChristmasArt kind="gift" className={seasonal.art} /></div>
+            <ChristmasArt kind="lights" className={seasonal.lights} />
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#ffe3b7]/70 bg-white/55 px-3 py-1.5 text-[12px] font-bold text-[var(--accent)] shadow-[0_10px_28px_rgba(44,26,14,0.07)] dark:border-white/10 dark:bg-white/7">
               <Bookmark className="size-3.5" aria-hidden="true" />
               {t("collection")}

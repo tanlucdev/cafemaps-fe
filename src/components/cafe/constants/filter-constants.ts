@@ -1,20 +1,4 @@
 import type { ReactNode } from "react";
-import {
-  Zap,
-  Sparkles,
-  Heart,
-  Minus,
-  Coffee,
-  Palette,
-  Leaf,
-  Briefcase,
-  BookOpen,
-  Users,
-  User,
-  TreePine,
-  Cigarette,
-  Camera,
-} from "lucide-react";
 import { createElement } from "react";
 import type { Vibe, Purpose } from "@/types/cafe";
 import { VIBES, PURPOSES } from "@/types/cafe";
@@ -71,28 +55,43 @@ export const TAG_TRANSLATION_KEYS: Record<FilterTag, string> = {
   "chỗ hút thuốc": "smoking",
 };
 
+// ponytail: 72px WebP covers 18px chips up to 4× density; regenerate for larger UI.
+function filterIcon(slug: string): ReactNode {
+  return createElement("img", {
+    src: `/image/christmas/filter/${slug}.webp`,
+    width: 18,
+    height: 18,
+    alt: "",
+    "aria-hidden": true,
+    loading: "lazy",
+    decoding: "async",
+    draggable: false,
+    className: "shrink-0 object-contain pointer-events-none select-none",
+  });
+}
+
 export const VIBE_ICONS: Record<Vibe, ReactNode> = {
-  "yên tĩnh": createElement(Minus, { size: 11 }),
-  "nhộn nhịp": createElement(Zap, { size: 11 }),
-  vintage: createElement(Coffee, { size: 11 }),
-  "hiện đại": createElement(Sparkles, { size: 11 }),
-  "thiên nhiên": createElement(Leaf, { size: 11 }),
-  "sáng tạo": createElement(Palette, { size: 11 }),
-  "lãng mạn": createElement(Heart, { size: 11 }),
-  minimalist: createElement(Minus, { size: 11 }),
+  "yên tĩnh": filterIcon("vibe-yen-tinh"),
+  "nhộn nhịp": filterIcon("vibe-nhon-nhip"),
+  vintage: filterIcon("vibe-vintage"),
+  "hiện đại": filterIcon("vibe-hien-dai"),
+  "thiên nhiên": filterIcon("vibe-thien-nhien"),
+  "sáng tạo": filterIcon("vibe-sang-tao"),
+  "lãng mạn": filterIcon("vibe-lang-man"),
+  minimalist: filterIcon("vibe-minimalist"),
 };
 
 export const PURPOSE_ICONS: Record<Purpose, ReactNode> = {
-  "làm việc": createElement(Briefcase, { size: 11 }),
-  "học tập": createElement(BookOpen, { size: 11 }),
-  "hẹn hò": createElement(Heart, { size: 11 }),
-  "họp nhóm": createElement(Users, { size: 11 }),
-  "chill một mình": createElement(User, { size: 11 }),
-  "gặp bạn bè": createElement(Users, { size: 11 }),
-  "chụp ảnh": createElement(Camera, { size: 11 }),
+  "làm việc": filterIcon("purpose-lam-viec"),
+  "học tập": filterIcon("purpose-hoc-tap"),
+  "hẹn hò": filterIcon("purpose-hen-ho"),
+  "họp nhóm": filterIcon("purpose-hop-nhom"),
+  "chill một mình": filterIcon("purpose-chill-mot-minh"),
+  "gặp bạn bè": filterIcon("purpose-gap-ban-be"),
+  "chụp ảnh": filterIcon("purpose-check-in-chup-anh"),
 };
 
 export const TAG_ICONS: Record<FilterTag, ReactNode> = {
-  "ngoài trời": createElement(TreePine, { size: 11 }),
-  "chỗ hút thuốc": createElement(Cigarette, { size: 11 }),
+  "ngoài trời": filterIcon("utility-ngoai-troi"),
+  "chỗ hút thuốc": filterIcon("utility-cho-hut-thuoc"),
 };

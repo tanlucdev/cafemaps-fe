@@ -1,3 +1,4 @@
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -110,7 +111,7 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section className="min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-sm)]">
+    <section className={`${seasonal.panel} min-w-0 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-sm)]`}>
       <div className="mb-4 flex items-center gap-2">
         <div className="flex size-9 items-center justify-center rounded-2xl bg-[var(--accent-light)] text-[var(--accent)]">
           <Icon size={17} />

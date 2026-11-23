@@ -1,0 +1,92 @@
+.intro, .lights, .bow, .hat, .emptyArt { display: none; }
+
+:global([data-season="christmas"]) .page {
+  background: radial-gradient(ellipse at top right, var(--season-soft), transparent 60%), var(--background);
+}
+
+:global([data-season="christmas"]) .hero {
+  background: linear-gradient(120deg, var(--card), var(--season-soft));
+  border-color: var(--border);
+}
+
+:global([data-season="christmas"]) .intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+:global([data-season="christmas"]) .intro > p { min-width: 0; }
+.art { width: 64px; height: 64px; }
+:global([data-season="christmas"]) .lights {
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 20px;
+}
+
+:global([data-season="christmas"]) .hero h1 { color: var(--season-pine); }
+:global([data-season="christmas"]) .avatar { position: relative; }
+:global([data-season="christmas"]) .hat {
+  display: block;
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  top: -22px;
+  right: -12px;
+  transform: rotate(14deg);
+}
+
+:global([data-season="christmas"]) :is(.panel, .content) {
+  border-color: var(--border);
+  background: var(--card);
+}
+:global([data-season="christmas"]) .panel { border-top: 3px solid var(--season-pine); }
+:global([data-season="christmas"]) .panel h2 { color: var(--season-pine); }
+:global([data-season="christmas"]) .stats > div {
+  border-top: 3px solid var(--season-pine);
+  background: linear-gradient(145deg, var(--season-soft), var(--card));
+}
+:global([data-season="christmas"]) .stats > div:nth-child(even) { border-top-color: var(--season-ribbon); }
+:global([data-season="christmas"]) .stats > div:nth-child(odd) > div {
+  color: var(--season-pine);
+  background: var(--season-soft);
+}
+:global([data-season="christmas"]) .content [role="tab"][aria-selected="true"] {
+  background: var(--season-ribbon);
+  color: #fffaf2;
+}
+:global([data-season="christmas"]) .content article {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+:global([data-season="christmas"]) .folder > button > div:first-child {
+  border-color: var(--border);
+  border-bottom: 3px solid var(--season-ribbon);
+}
+:global([data-season="christmas"]) .bow {
+  display: block;
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  left: 4px;
+  bottom: 0;
+  z-index: 1;
+}
+
+:global([data-season="christmas"]) .empty {
+  background: var(--season-soft);
+  border-color: var(--border);
+}
+:global([data-season="christmas"]) .emptyIcon { display: none; }
+:global([data-season="christmas"]) .emptyArt { display: block; width: 56px; height: 56px; }
+:global([data-season="christmas"]) .photoScrim {
+  background: linear-gradient(to top, #153e31f5, #153e31b3, #153e3140);
+}
+
+@media (max-width: 479px) {
+  .art { width: 48px; height: 48px; }
+  :global([data-season="christmas"]) .intro { gap: 6px; }
+}

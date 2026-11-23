@@ -92,7 +92,7 @@ export default function QuizQuestionScene({
             </p>
           </div>
           <div className="hidden sm:block">
-            <ChristmasArt kind="tree" className="size-20" />
+            <ChristmasArt kind="tree" sizes="80px" className="size-20" />
           </div>
         </div>
         <SeasonalGreeting />

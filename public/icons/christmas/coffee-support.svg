@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Cafe Maps — Ủng hộ và góp ý Giáng sinh</title>
+<desc id="desc">Ly latte trái tim trên nút màu đỏ rượu vang, mũ Noel nhỏ, nhánh lá và sao vàng.</desc>
+<defs>
+ <linearGradient id="base" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b33243"/><stop offset=".68" stop-color="#a32a3d"/><stop offset="1" stop-color="#86283a"/></linearGradient>
+ <linearGradient id="cup" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9e9"/><stop offset=".6" stop-color="#f9e9d2"/><stop offset="1" stop-color="#ecd2b1"/></linearGradient>
+ <linearGradient id="hat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d64d4e"/><stop offset=".6" stop-color="#b82e3d"/><stop offset="1" stop-color="#922834"/></linearGradient>
+ <linearGradient id="coffee" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9b623c"/><stop offset="1" stop-color="#784527"/></linearGradient>
+ <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a0b883"/><stop offset="1" stop-color="#557e5b"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#5b2025" flood-opacity=".22"/></filter>
+</defs>
+<circle cx="256" cy="256" r="246" fill="#752435"/>
+<circle cx="256" cy="256" r="235" fill="url(#base)"/>
+<circle cx="256" cy="256" r="216" fill="none" stroke="#dd6870" stroke-width="5" opacity=".72"/>
+<path d="M80 181 C105 113 154 82 213 66" fill="none" stroke="#ef8a87" stroke-opacity=".24" stroke-width="6" stroke-linecap="round"/>
+<!-- steam: two visible curls -->
+<path d="M206 145 C179 124 194 102 201 86 C209 70 202 61 199 55" fill="none" stroke="#ffedcc" stroke-width="12" stroke-linecap="round"/>
+<path d="M258 147 C236 130 250 109 260 89 C267 73 263 64 258 58" fill="none" stroke="#ffedcc" stroke-width="12" stroke-linecap="round"/>
+<!-- Santa hat peeks behind coffee rim -->
+<path d="M264 148 C279 114 314 99 333 101 C365 104 379 126 380 154 C345 152 297 159 264 148 Z" fill="url(#hat)" stroke="#543328" stroke-width="8" stroke-linejoin="round"/>
+<path d="M291 128 C306 112 331 108 341 113" fill="none" stroke="#f27371" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+<path d="M268 157 C306 144 342 147 368 160" fill="none" stroke="#f4e3cb" stroke-width="24" stroke-linecap="round"/>
+<path d="M269 155 C302 147 343 149 368 159" fill="none" stroke="#fff9ec" stroke-width="17" stroke-linecap="round"/>
+<circle cx="386" cy="147" r="25" fill="#e6d0b2"/>
+<circle cx="386" cy="144" r="20" fill="#fff9e8"/>
+<circle cx="378" cy="139" r="7" fill="#fff" opacity=".68"/>
+<!-- handle behind cup for accurate silhouette -->
+<path d="M358 231 C409 199 444 234 437 291 C432 332 400 359 353 352 L359 315 C385 318 405 305 408 279 C411 255 395 247 362 266 Z" fill="url(#cup)" stroke="#4f3129" stroke-width="10" stroke-linejoin="round"/>
+<path d="M373 272 C393 259 406 271 405 284 C400 309 384 312 366 308" fill="none" stroke="#fff8e8" stroke-width="6" stroke-linecap="round"/>
+<!-- cup body, gentle rounded sides -->
+<g filter="url(#shadow)"><path d="M105 215 C121 252 128 327 149 357 C167 391 216 400 258 400 C300 400 344 388 362 357 C375 330 379 254 383 215 Z" fill="url(#cup)" stroke="#4e3029" stroke-width="10" stroke-linejoin="round"/></g>
+<path d="M134 268 C147 310 151 352 186 368" fill="none" stroke="#fffdf5" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+<path d="M335 352 C330 365 316 376 303 380" fill="none" stroke="#d7b395" stroke-width="6" stroke-linecap="round" opacity=".56"/>
+<!-- ellipse of latte foam and coffee -->
+<ellipse cx="245" cy="214" rx="139" ry="53" fill="#6e402a" stroke="#4b2f27" stroke-width="9"/>
+<ellipse cx="245" cy="211" rx="125" ry="42" fill="#fff1d8"/>
+<ellipse cx="245" cy="211" rx="109" ry="32" fill="url(#coffee)"/>
+<!-- easily read heart-shaped latte art -->
+<path d="M246 198 C230 178 203 187 203 207 C203 224 227 241 246 253 C266 239 291 224 291 205 C291 185 265 177 246 198 Z" fill="#fff6df"/>
+<path d="M192 210 C207 230 225 242 246 249 C270 240 284 226 303 207" fill="none" stroke="#fff3d7" stroke-width="7" stroke-linecap="round"/>
+<path d="M213 215 Q230 227 246 232 Q264 228 284 212" fill="none" stroke="#fff7e4" stroke-width="5" stroke-linecap="round"/>
+<!-- little heart on cup to signify support -->
+<path d="M245 281 C231 259 206 265 206 286 C206 306 228 324 245 337 C264 323 284 308 284 286 C284 266 258 259 245 281 Z" fill="#b92e41"/>
+<path d="M215 286 C219 278 225 277 231 277" fill="none" stroke="#eb8e94" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+<!-- evergreen leaf group -->
+<g stroke="#365c49" stroke-linejoin="round" stroke-width="6">
+ <path d="M147 355 C107 344 92 321 81 303 C113 297 144 307 162 344 Z" fill="url(#leaf)"/>
+ <path d="M141 356 C114 369 92 396 90 418 C128 414 152 392 159 365 Z" fill="#64936e"/>
+</g>
+<path d="M105 320 L151 354 M108 402 L153 361" fill="none" stroke="#bbcc9d" stroke-width="4" stroke-linecap="round"/>
+<circle cx="144" cy="374" r="19" fill="#f1b657" stroke="#643b2b" stroke-width="6"/>
+<!-- tiny gold sparkle on right, inside but close to rim -->
+<path d="M420 389 Q429 408 449 420 Q429 430 420 453 Q409 430 390 420 Q411 408 420 389 Z" fill="#f7c25f" stroke="#f6d89e" stroke-width="2"/>
+</svg>

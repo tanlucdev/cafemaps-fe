@@ -1,3 +1,5 @@
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import type { LucideIcon } from "lucide-react";
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
@@ -17,9 +19,10 @@ export function EmptyState({
   actionLabel?: string;
 }) {
   return (
-    <div className="flex min-h-72 flex-col items-center justify-center rounded-3xl border border-dashed border-[#dfc9aa] bg-[#fffaf2] px-5 py-10 text-center dark:border-white/15 dark:bg-white/5">
+    <div className={`${seasonal.empty} flex min-h-72 flex-col items-center justify-center rounded-3xl border border-dashed border-[#dfc9aa] bg-[#fffaf2] px-5 py-10 text-center dark:border-white/15 dark:bg-white/5`}>
       <div className="mb-4 flex size-14 items-center justify-center rounded-3xl bg-[var(--accent-light)] text-[var(--accent)]">
-        <Icon size={24} />
+        <span className={seasonal.emptyIcon}><Icon size={24} /></span>
+          <ChristmasArt kind="gift" className={seasonal.emptyArt} />
       </div>
       <h2 className="text-lg font-black text-[var(--foreground)]">{title}</h2>
       <p className="mt-2 max-w-sm text-sm text-[var(--foreground-muted)]">{body}</p>

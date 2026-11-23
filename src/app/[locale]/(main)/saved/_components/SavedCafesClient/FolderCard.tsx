@@ -1,5 +1,7 @@
 "use client";
 
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import seasonal from "@/components/seasonal/SeasonalPages.module.css";
 import { cloudinaryImageUrl } from "@/lib/cloudinary-image";
 
 import { useEffect, useRef, useState } from "react";
@@ -88,7 +90,7 @@ export function FolderCard({
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
-    <div className="group relative min-w-[150px] shrink-0 sm:min-w-[168px]">
+    <div className={`${seasonal.folder} group relative min-w-[150px] shrink-0 sm:min-w-[168px]`}>
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={onClick}
@@ -135,6 +137,7 @@ export function FolderCard({
               )}
             </div>
           )}
+          <ChristmasArt kind="bow" className={seasonal.bow} />
           {active && (
             <div className="pointer-events-none absolute inset-0 rounded-[18px] bg-linear-to-t from-[#1f1209]/28 to-transparent ring-2 ring-inset ring-[var(--accent)]/40" />
           )}

@@ -6,6 +6,8 @@ import { createLocalizedMetadata, getSiteUrl } from "@/lib/metadata";
 import CafeDetailContent from "./_components/CafeDetailContent";
 import { getSimilarCafes } from "@/apis/chains";
 import CafeCard from "@/components/cafe/CafeCard";
+import ChristmasArt from "@/components/seasonal/ChristmasArt";
+import styles from "./_components/CafeDetailSeasonal.module.css";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -110,10 +112,15 @@ export default async function CafeDetailPage({ params }: PageProps) {
         locale={locale}
         aboveReviews={
           similar.length ? (
-            <section className="mx-auto mt-8 w-full max-w-full">
-              <h2 className="mb-4 text-2xl font-black">
-                {locale === "vi" ? "Gợi ý cùng vibe" : "Similar vibe"}
-              </h2>
+            <section className={`${styles.related} mx-auto mt-8 w-full max-w-full`}>
+              <div className={styles.heading}>
+                <ChristmasArt kind="tree" className={styles.icon} />
+                <h2 className="text-2xl font-black">
+                  {locale === "vi" ? "Gợi ý cùng vibe" : "Similar vibe"}
+                </h2>
+                <ChristmasArt kind="sprig" className={styles.sprig} />
+              </div>
+              <ChristmasArt kind="lights" className={styles.lights} />
               <div className="similar-marquee" tabIndex={0}>
                 <div className="similar-marquee-track flex flex-nowrap">
                   {[false, true].map((duplicate) => (
@@ -126,7 +133,7 @@ export default async function CafeDetailPage({ params }: PageProps) {
                       {similar.map((item, index) => (
                         <div key={`${duplicate ? "copy-" : ""}${item.cafe.id}`} className="similar-marquee-card">
                           <CafeCard cafe={item.cafe} locale={locale} index={index} mobileCompact />
-                          <p className="mt-2 text-xs font-bold text-[var(--foreground-muted)]">
+                          <p className={`${styles.caption} mt-2 text-xs font-bold text-[var(--foreground-muted)]`}>
                             {locale === "vi" ? `Cùng vibe ${item.matchedVibe}` : `Same vibe: ${item.matchedVibe}`}
                           </p>
                         </div>

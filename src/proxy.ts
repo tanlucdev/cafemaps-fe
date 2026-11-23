@@ -7,7 +7,7 @@ import { acceptsMarkdown } from "./lib/agent-content";
 const intlMiddleware = createMiddleware(routing);
 const GUARDED_PATHS = ["/contribute/owner"];
 const locales = routing.locales as readonly string[];
-const PUBLIC_FILE = /\.(?:avif|css|gif|ico|jpg|jpeg|js|json|map|mp4|png|svg|txt|webp|woff2?|xml)$/i;
+const PUBLIC_FILE = /\.(?:avif|css|gif|ico|jpg|jpeg|js|json|map|mp3|mp4|png|svg|txt|webp|woff2?|xml)$/i;
 const NOT_FOUND_HTML = `<!doctype html>
 <html lang="vi">
   <head><meta charset="utf-8"><title>404 - Cafe Maps</title></head>
