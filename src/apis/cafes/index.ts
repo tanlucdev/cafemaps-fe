@@ -1,4 +1,5 @@
 import type { CafeFilter } from "@/types/cafe";
+import { apiFetch } from "@/apis/http";
 import { getNearbyCafes } from "./queries";
 
 export { normalizeCafeLocale } from "./mapper";
@@ -11,6 +12,24 @@ export * from "./queries";
 export * from "./submissions";
 export * from "@/apis/auth";
 export * from "@/apis/saved";
+
+type CafeSitemapEntry = { slug: string; district: string | null };
+
+export async function getCafeSitemapEntries() {
+  const entries = await apiFetch<unknown>("/cafes/sitemap/entries", {
+    next: { revalidate: 3600, tags: ["cafes"] },
+  });
+  if (
+    !Array.isArray(entries) ||
+    !entries.every((entry): entry is CafeSitemapEntry =>
+      entry != null && typeof entry.slug === "string" &&
+      (entry.district === null || typeof entry.district === "string"),
+    )
+  ) {
+    throw new Error("Invalid cafe sitemap response");
+  }
+  return entries;
+}
 
 export async function searchNearbyCafes(search: string, locale: string, filter: CafeFilter, signal?: AbortSignal, limit = 10) {
   const { lat, lng, radiusKm = 2 } = filter;
