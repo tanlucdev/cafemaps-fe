@@ -1,3 +1,4 @@
+import { featureFlags } from "@/lib/feature-flags";
 import Header from "@/components/layout/Header";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import PageTransition from "@/components/providers/PageTransition";
@@ -12,13 +13,13 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="app-shell flex min-h-[100svh] flex-col">
-      <Header />
+      <Header meetupEnabled={featureFlags.coffeeMeetupsEnabled} />
       <FeedbackCafeProvider>
         <PageTransition>{children}</PageTransition>
         <RouteAwareFooter />
         <DonateFloatingButton />
       </FeedbackCafeProvider>
-      <MobileBottomNav />
+      <MobileBottomNav meetupEnabled={featureFlags.coffeeMeetupsEnabled} />
     </div>
   );
 }

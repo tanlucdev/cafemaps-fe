@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Heart, PenLine, Search, Sparkles, UserRound } from "lucide-react";
+import { CalendarDays, Heart, PenLine, Search, Sparkles, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function MobileBottomNav() {
+export default function MobileBottomNav({ meetupEnabled }: { meetupEnabled: boolean }) {
   const pathname = usePathname();
   const t = useTranslations("bottomNav");
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
@@ -19,6 +19,7 @@ export default function MobileBottomNav() {
   const tabs = [
     { href: "/", icon: Search, label: t("search") },
     { href: "/quiz", icon: Sparkles, label: t("quiz") },
+    ...(meetupEnabled ? [{ href: "/coffee-meetups", icon: CalendarDays, label: t("meetups") }] : []),
     { href: "/saved", icon: Heart, label: t("saved") },
     { href: "/contribute", icon: PenLine, label: t("contribute") },
     { href: "/profile", icon: UserRound, label: t("profile") },
@@ -32,7 +33,7 @@ export default function MobileBottomNav() {
 
   return (
     <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile navigation">
-      <div className="mobile-bottom-nav-inner">
+      <div className="mobile-bottom-nav-inner" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}>
         {tabs.map(({ href, icon: Icon, label }) => {
           const isActive = isActiveRoute(href);
           return (

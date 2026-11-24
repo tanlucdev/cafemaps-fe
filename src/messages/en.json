@@ -1,5 +1,6 @@
 {
   "nav": {
+    "meetups": "Meetups",
     "explore": "Explore",
     "blog": "Blog",
     "quiz": "Find your vibe",
@@ -1207,6 +1208,7 @@
     }
   },
   "bottomNav": {
+    "meetups": "Meetups",
     "home": "Home",
     "search": "Search",
     "quiz": "Vibe",

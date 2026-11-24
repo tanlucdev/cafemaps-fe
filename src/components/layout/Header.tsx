@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, PenLine, Compass, LogIn, Sparkles, User } from "lucide-react";
+import { Bookmark, CalendarDays, PenLine, Compass, LogIn, Sparkles, User } from "lucide-react";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/providers/ThemeProvider";
 
-export default function Header() {
+export default function Header({ meetupEnabled }: { meetupEnabled: boolean }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
@@ -24,6 +24,7 @@ export default function Header() {
   const navLinks = [
     { href: "/", label: t("explore"), icon: Compass, primary: true },
     { href: "/quiz", label: t("quiz"), icon: Sparkles },
+    ...(meetupEnabled ? [{ href: "/coffee-meetups", label: t("meetups"), icon: CalendarDays }] : []),
     // { href: "/blog", label: t("blog"), icon: BookOpen },
     { href: "/saved", label: t("saved"), icon: Bookmark },
     { href: "/contribute", label: t("contribute"), icon: PenLine },
@@ -83,7 +84,8 @@ export default function Header() {
 
           <nav className="ml-2 hidden flex-1 items-center gap-1 md:flex" aria-label="Primary">
             {navLinks.map((link) => {
-              const isActive = activePathname === link.href;
+              const isActive = activePathname === link.href ||
+                (link.href === "/coffee-meetups" && activePathname.startsWith("/coffee-meetups/"));
               const Icon = link.icon;
               return (
                 <Link
