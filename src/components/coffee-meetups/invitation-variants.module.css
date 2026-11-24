@@ -1,0 +1,34 @@
+.card[data-template="matchbox"] {
+  border: .6rem solid var(--accent-ink);
+  border-radius: .55rem;
+}
+.card[data-template="matchbox"] > div { border-style: double; border-width: 3px; }
+.card[data-template="matchbox"] [data-invitation-photo] { rotate: -2deg; }
+
+.card[data-template="pressed-flower"] {
+  background: radial-gradient(ellipse at 0 0, var(--wash) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, var(--wash) 0%, transparent 45%), var(--paper);
+}
+.card[data-template="pressed-flower"] > div { border-radius: 2rem .75rem; }
+.card[data-template="pressed-flower"] [data-invitation-photo] { border-radius: 45% 45% .45rem .45rem; overflow: hidden; }
+
+.card[data-template="receipt"] {
+  border-radius: .25rem;
+  border-block: .35rem dotted var(--line);
+}
+.card[data-template="receipt"] > div { border: 1px dashed var(--line); border-radius: .25rem; }
+.card[data-template="receipt"] [data-invitation-photo] { border-radius: .2rem; box-shadow: none; }
+
+.card[data-template="window"] {
+  background-color: var(--wash);
+}
+.card[data-template="window"] > div { background: var(--paper); border: 3px double var(--line); }
+.card[data-template="window"] [data-invitation-photo] { border-inline: .35rem solid var(--wash); }
+.card[data-template="window"] [data-invitation-photo] > div { aspect-ratio: 4 / 3; }
+
+.card[data-template="checkers"] {
+  border-radius: 1rem;
+  background: repeating-conic-gradient(var(--wash) 0% 25%, var(--line) 0% 50%) 0 0 / 1.25rem 1.25rem;
+}
+.card[data-template="checkers"] > div { border-radius: .6rem; background: var(--paper); }
+.card[data-template="checkers"] [data-invitation-photo] { rotate: 2deg; }

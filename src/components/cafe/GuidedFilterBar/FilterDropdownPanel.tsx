@@ -10,6 +10,7 @@ import { FilterChipButton } from "@/components/cafe/GuidedFilterBar/FilterChipBu
 
 interface FilterDropdownPanelProps {
   staged: StagedFilter;
+  inline?: boolean;
   dropdownOpen: boolean;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
   onToggleVibeStaged: (v: Vibe) => void;
@@ -22,6 +23,7 @@ interface FilterDropdownPanelProps {
 }
 export function FilterDropdownPanel({
   staged,
+  inline,
   dropdownOpen,
   dropdownRef,
   onToggleVibeStaged,
@@ -46,12 +48,13 @@ export function FilterDropdownPanel({
     <div
       ref={dropdownRef}
       className={cn(
-        "absolute top-full right-0 left-0 z-50 mt-1 transition-all duration-300",
+        "mt-1 transition-all duration-300",
+        inline ? "mb-3" : "absolute top-full right-0 left-0 z-50",
         dropdownOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
       <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-raised)]/96 shadow-[var(--shadow-warm)] backdrop-blur-xl">
-        <div className="grid gap-6 p-4 sm:grid-cols-4 sm:p-6">
+        <div className={cn("grid gap-6 p-4 sm:p-6", inline ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-4")}>
           <FilterOptionGroups
             staged={staged}
             onToggleVibe={onToggleVibeStaged}
@@ -82,12 +85,14 @@ export function FilterDropdownPanel({
 
         <div className="flex items-center justify-between border-t border-[var(--border)] px-4 py-4 sm:px-6">
           <button
+            type="button"
             onClick={onClearAll}
             className="cursor-pointer text-xs font-bold text-[var(--foreground-muted)] underline underline-offset-2 transition-colors hover:text-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             {tf("clear")}
           </button>
           <button
+            type="button"
             onClick={onApply}
             className="cursor-pointer rounded-full bg-[var(--accent)] px-6 py-2 text-xs font-black text-[var(--accent-foreground)] shadow-[var(--shadow-sm)] transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95"
           >

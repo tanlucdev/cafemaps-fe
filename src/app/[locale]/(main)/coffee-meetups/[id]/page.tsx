@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import MeetupDetailClient from "@/components/coffee-meetups/MeetupDetailClient";
 import { featureFlags } from "@/lib/feature-flags";
@@ -18,5 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function MeetupDetailPage({ params }: Props) {
   const { id } = await params;
   if (!featureFlags.coffeeMeetupsEnabled) return null;
-  return <MeetupDetailClient id={id} />;
+  return (
+    <Suspense>
+      <MeetupDetailClient id={id} />
+    </Suspense>
+  );
 }

@@ -30,7 +30,12 @@ export default async function CoffeeMeetupsPage({ searchParams }: Props) {
         purpose: pick(params.purpose),
         date: pick(params.date),
         area: pick(params.area),
-        available: pick(params.available) === "1",
+        available: ["1", "true"].includes(pick(params.available)),
+        nearMe: pick(params.nearMe) === "true",
+        lat: Number(pick(params.lat)) || undefined,
+        lng: Number(pick(params.lng)) || undefined,
+        radiusKm: Number(pick(params.radiusKm)) || 2,
+        page: Number(pick(params.page)) || 1,
       }}
     />
   );

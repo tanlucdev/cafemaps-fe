@@ -30,6 +30,7 @@ interface FilterChipsRowProps {
   toggleOpenNow: () => void;
   setDistance: (km: number) => void;
   districts?: string[];
+  inline?: boolean;
 }
 
 export function FilterChipsRow({
@@ -48,6 +49,7 @@ export function FilterChipsRow({
   toggleOpenNow,
   setDistance,
   districts,
+  inline,
 }: FilterChipsRowProps) {
   const tf = useTranslations("filters");
   const tg = useTranslations("guidedFilter");
@@ -55,7 +57,7 @@ export function FilterChipsRow({
   const extraVibes = VIBES.length - TOP_VIBES.length;
 
   return (
-    <div className="scrollbar-hide -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-3 pb-3.5">
+    <div className={cn("flex items-center gap-2 px-1", inline ? "flex-wrap py-2" : "scrollbar-hide -mx-1 overflow-x-auto pt-3 pb-3.5")}>
       <FilterChipButton
         ref={toggleBtnRef}
         active={dropdownMounted || activeCount > 0}
@@ -80,9 +82,10 @@ export function FilterChipsRow({
         )}
       </FilterChipButton>
 
-      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
+      <div className={cn("mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]", inline && "hidden")} />
 
       <button
+        type="button"
         onClick={toggleOpenNow}
         className={cn(
           "inline-flex flex-none cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-bold whitespace-nowrap shadow-[var(--shadow-sm)] backdrop-blur-md transition-all duration-150 hover:-translate-y-px hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] active:scale-95",
@@ -124,11 +127,11 @@ export function FilterChipsRow({
           </FilterChipButton>
         ))}
 
-      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
+      <div className={cn("mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]", inline && "hidden")} />
 
       <DistrictMultiSelect districts={districts} filter={filter} onChange={onChange} />
 
-      <div className="mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]" />
+      <div className={cn("mx-0.5 h-4 w-px flex-none border-l border-[var(--border)]", inline && "hidden")} />
 
       {TOP_VIBES.map((v) => (
         <FilterChipButton

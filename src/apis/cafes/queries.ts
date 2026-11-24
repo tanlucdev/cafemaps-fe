@@ -41,6 +41,18 @@ export async function getCafes(filter?: CafeFilter, locale?: string | null): Pro
   }
 }
 
+export async function searchCafes(
+  search: string,
+  locale?: string | null,
+  filter?: Pick<CafeFilter, "purposes" | "vibes">,
+  signal?: AbortSignal,
+) {
+  const { cafes } = await getCafesWithMeta(
+    { ...filter, search: search.trim(), limit: 10 }, locale, { fallback: false, signal },
+  )
+  return cafes
+}
+
 export async function getCafesWithMeta(
   filter?: CafeFilter,
   locale?: string | null,
@@ -109,17 +121,19 @@ export async function getNearbyCafes(
   lng: number,
   radiusKm = 2,
   _locale?: string | null,
+  options?: NextRequestInit,
+  filters?: Pick<CafeFilter, "search" | "vibes" | "purposes">,
 ): Promise<Cafe[]> {
-  void _locale;
   const params = new URLSearchParams({
     lat: String(lat),
     lng: String(lng),
     radius: String(radiusKm),
-    distanceMode: "route",
+    distanceMode: filters ? "straight" : "route",
+    ...(filters?.search ? { search: filters.search } : {}),
+    ...(filters?.vibes?.length ? { vibes: filters.vibes.join(",") } : {}),
+    ...(filters?.purposes?.length ? { purposes: filters.purposes.join(",") } : {}),
   });
-  const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, {
-    cache: "no-store",
-  });
+  const raw = await apiFetch<RawCafe[]>(`/cafes/nearby?${params.toString()}`, { ...options, cache: "no-store" });
   return raw.map((cafe) => mapApiCafe(cafe, _locale));
 }
 

@@ -20,6 +20,7 @@ export default function ShareLinkModal({
   links,
   copyLabel,
   copiedLabel,
+  footer,
 }: {
   open: boolean;
   onClose: () => void;
@@ -27,6 +28,7 @@ export default function ShareLinkModal({
   links: ShareLinkItem[];
   copyLabel: string;
   copiedLabel: string;
+  footer?: ReactNode;
 }) {
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
@@ -87,6 +89,7 @@ export default function ShareLinkModal({
             );
           })}
         </div>
+        {footer}
       </div>
     </Modal>
   );
