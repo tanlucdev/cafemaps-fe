@@ -16,7 +16,9 @@ export * from "@/apis/saved";
 type CafeSitemapEntry = { slug: string; district: string | null };
 
 export async function getCafeSitemapEntries() {
-  const entries = await apiFetch<unknown>("/cafes/sitemap/entries");
+  const entries = await apiFetch<unknown>("/cafes/sitemap/entries", {
+    next: { revalidate: 3600, tags: ["cafes"] },
+  });
   if (
     !Array.isArray(entries) ||
     !entries.every((entry): entry is CafeSitemapEntry =>
