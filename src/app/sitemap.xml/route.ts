@@ -1,7 +1,7 @@
 import { getSiteUrl } from "@/lib/metadata"
 import { getCafeSitemapGroups, xmlResponse, xmlEscape, SITEMAP_NAMESPACE } from "@/lib/sitemap"
 
-export const revalidate = 3600
+export const revalidate = 0
 
 export async function GET() {
   const siteUrl = getSiteUrl()

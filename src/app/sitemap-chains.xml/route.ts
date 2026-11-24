@@ -2,7 +2,7 @@ import { getChains } from "@/apis/chains"
 import { routing } from "@/i18n/routing"
 import { localizedSitemap } from "@/lib/sitemap"
 
-export const revalidate = 3600
+export const revalidate = 0
 
 export async function GET() {
   const first = await getChains(routing.defaultLocale, 1, 50)
