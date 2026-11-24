@@ -26,7 +26,7 @@ export function localizedPath(locale: Locale, pathname = "") {
   return `/${locale}${cleanPath ? `/${cleanPath}` : ""}`
 }
 
-export function getLanguageAlternates(pathname = ""): Metadata["alternates"] {
+export function getLanguageAlternates(pathname = "") {
   return {
     languages: {
       "vi-VN": localizedPath("vi", pathname),

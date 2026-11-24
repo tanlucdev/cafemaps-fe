@@ -67,6 +67,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/sitemap-cafes-:district([a-z0-9-]+).xml",
+        destination: "/sitemaps/cafes/:district",
+      },
+      {
         source: "/api-proxy/:path*",
         destination: `${API_URL}/:path*`,
       },
