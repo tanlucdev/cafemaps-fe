@@ -1,5 +1,6 @@
 {
   "nav": {
+    "meetups": "Kèo cà phê",
     "explore": "Khám phá",
     "blog": "Blog",
     "quiz": "Khám phá gu",
@@ -1335,6 +1336,7 @@
     }
   },
   "bottomNav": {
+    "meetups": "Kèo cà phê",
     "home": "Trang chủ",
     "search": "Tìm kiếm",
     "quiz": "Gu",
