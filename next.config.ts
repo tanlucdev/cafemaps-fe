@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { HTML_LIMITED_BOT_UA_RE } from "next/dist/shared/lib/router/utils/html-bots";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,6 +12,8 @@ const PROJECT_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: PROJECT_ROOT,
+  // Google requires canonical links in the HTML head. Preserve Next.js defaults.
+  htmlLimitedBots: new RegExp(`Googlebot|${HTML_LIMITED_BOT_UA_RE.source}`, HTML_LIMITED_BOT_UA_RE.flags),
   experimental: {
     proxyClientMaxBodySize: "42mb",
   },
@@ -27,9 +30,14 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: "/:locale/search",
+        source: "/:locale(vi|en)/search",
         destination: "/:locale",
-        permanent: false,
+        permanent: true,
+      },
+      {
+        source: "/search",
+        destination: "/vi",
+        permanent: true,
       },
     ];
   },

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
-import { getCafeBySlug } from "@/lib/api";
+import { cache, Suspense } from "react";
+import { getCafeBySlug } from "@/apis/cafes";
 import { createLocalizedMetadata, getSiteUrl } from "@/lib/metadata";
 import CafeDetailContent from "./_components/CafeDetailContent";
+import CafeDetailLoading from "./_components/CafeDetailLoading";
 import { getSimilarCafes } from "@/apis/chains";
 import CafeCard from "@/components/cafe/CafeCard";
 
@@ -11,7 +12,11 @@ interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-const getCafe = cache((slug: string, locale: string) => getCafeBySlug(slug, locale));
+const getCafe = cache(async (slug: string, locale: string) => {
+  const cafe = await getCafeBySlug(slug, locale, { fallback: false });
+  if (!cafe) notFound();
+  return cafe;
+});
 
 export const revalidate = 300;
 export const dynamic = "force-dynamic";
@@ -47,7 +52,7 @@ function createCafeJsonLd(
         openingHours: `${cafe.openingTime.slice(0, 5)}-${cafe.closingTime.slice(0, 5)}`,
       }),
     image: cafe.images,
-    url: new URL(`/${locale}/cafe/${cafe.slug}`, getSiteUrl()).toString(),
+    url: new URL(`/${locale}/cafe/${encodeURIComponent(cafe.slug)}`, getSiteUrl()).toString(),
   };
 }
 
@@ -55,17 +60,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale, slug } = await params;
   const cafe = await getCafe(slug, locale);
 
-  if (!cafe) {
-    return {
-      title: "Cafe not found",
-      robots: { index: false, follow: false },
-    };
-  }
-
   return {
     ...createLocalizedMetadata({
       locale,
-      pathname: `/cafe/${cafe.slug}`,
+      pathname: `/cafe/${encodeURIComponent(cafe.slug)}`,
       title: cafe.name,
       description: getDescription(cafe),
       image: cafe.coverImage ?? undefined,
@@ -78,7 +76,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         ? [{ url: cafe.coverImage, width: 1200, height: 630, alt: cafe.name }]
         : [],
       siteName: "Cafe Maps",
-      url: `/${locale}/cafe/${cafe.slug}`,
+      url: `/${locale}/cafe/${encodeURIComponent(cafe.slug)}`,
       ...getOpenGraphLocale(locale),
       type: "website",
     },
@@ -89,12 +87,24 @@ export default async function CafeDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   const cafe = await getCafe(slug, locale);
 
-  if (!cafe) notFound();
+  return (
+    <Suspense fallback={<CafeDetailLoading />}>
+      <CafeDetail cafe={cafe} locale={locale} />
+    </Suspense>
+  );
+}
 
+async function CafeDetail({
+  cafe,
+  locale,
+}: {
+  cafe: NonNullable<Awaited<ReturnType<typeof getCafeBySlug>>>;
+  locale: string;
+}) {
   const jsonLd = createCafeJsonLd(cafe, locale);
   let similar = [] as Awaited<ReturnType<typeof getSimilarCafes>>;
   try {
-    similar = await getSimilarCafes(slug, locale);
+    similar = await getSimilarCafes(cafe.slug, locale);
   } catch {
     similar = [];
   }

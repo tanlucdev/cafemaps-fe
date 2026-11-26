@@ -6,6 +6,7 @@ export const routing = defineRouting({
   localePrefix: "always",
   localeDetection: false,
   localeCookie: false,
+  alternateLinks: false, // Page metadata supplies canonical hreflang URLs without query parameters.
 })
 
 export type Locale = (typeof routing.locales)[number]
