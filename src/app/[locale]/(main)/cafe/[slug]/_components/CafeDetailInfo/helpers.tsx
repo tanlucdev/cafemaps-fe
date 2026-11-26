@@ -15,11 +15,11 @@ export function getInstagramHref(value: string): string {
   if (/^https?:\/\//i.test(value)) return value;
 
   const withoutLeadingSlashes = value.replace(/^\/+/, "");
-  if (withoutLeadingSlashes.includes(".")) {
+  if (/^(?:[\w-]+\.)*instagram\.com(?:[/?#]|$)/i.test(withoutLeadingSlashes)) {
     return `https://${withoutLeadingSlashes}`;
   }
 
-  return `https://instagram.com/${withoutLeadingSlashes}`;
+  return `https://www.instagram.com/${withoutLeadingSlashes}`;
 }
 
 export function getInstagramLabel(href: string, value: string): string {
