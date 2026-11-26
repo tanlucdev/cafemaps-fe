@@ -1,5 +1,5 @@
 import type { Cafe, CafeFilter, CafesResponse, DiscoveryMeta } from "@/types/cafe";
-import { apiFetch, type NextRequestInit } from "@/apis/http";
+import { ApiError, apiFetch, type NextRequestInit } from "@/apis/http";
 import { mapApiCafe, type RawCafe } from "./mapper";
 import { buildQuery } from "./query";
 
@@ -102,13 +102,21 @@ export async function getCafesWithMeta(
   }
 }
 
-export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
+export async function getCafeBySlug(
+  slug: string,
+  locale?: string | null,
+  options?: Pick<NextRequestInit, "fallback">,
+): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`, {
+    const raw = await apiFetch<Cafe>(`/cafes/${encodeURIComponent(slug)}${buildQuery(undefined, locale)}`, {
       next: { tags: ["cafes", `cafe:${slug}`] },
     });
     return mapApiCafe(raw, locale);
   } catch (err) {
+    if (options?.fallback === false) {
+      if (err instanceof ApiError && err.status === 404) return null;
+      throw err;
+    }
     const fallback = await loadDevFallback();
     if (fallback) return fallback.fallbackCafeBySlug(slug);
     console.error("getCafeBySlug failed:", err);

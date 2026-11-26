@@ -59,19 +59,10 @@ export const metadata: Metadata = {
     },
   },
   metadataBase: getSiteUrl(),
-  alternates: {
-    canonical: `/${DEFAULT_LOCALE}`,
-    languages: {
-      "vi-VN": "/vi",
-      "en-US": "/en",
-      "x-default": `/${DEFAULT_LOCALE}`,
-    },
-  },
   openGraph: {
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
     siteName: SITE_NAME,
-    url: `/${DEFAULT_LOCALE}`,
     locale: "vi_VN",
     alternateLocale: ["en_US"],
     type: "website",

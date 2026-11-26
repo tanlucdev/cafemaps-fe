@@ -1,31 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { getTranslations } from "next-intl/server";
 import { getChainBySlug } from "@/apis/chains";
+import { ApiError } from "@/apis/http";
 import { getCafesWithMeta } from "@/apis/cafes";
 import CafeGrid from "@/components/cafe/CafeGrid";
 import { createLocalizedMetadata } from "@/lib/metadata";
 
 export const revalidate = 300;
+
+const getChain = cache(async (slug: string, locale: string) => {
+  try {
+    return await getChainBySlug(slug, locale);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) notFound();
+    throw error;
+  }
+});
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  try {
-    const chain = await getChainBySlug(slug, locale);
-    return createLocalizedMetadata({
-      locale,
-      pathname: `/chains/${slug}`,
-      title: chain.name,
-      description: chain.description ?? chain.descriptionEn ?? undefined,
-      image: chain.coverImage ?? undefined,
-    });
-  } catch {
-    return { robots: { index: false } };
-  }
+  const chain = await getChain(slug, locale);
+  return createLocalizedMetadata({
+    locale,
+    pathname: `/chains/${encodeURIComponent(chain.slug)}`,
+    title: chain.name,
+    description: chain.description ?? chain.descriptionEn ?? undefined,
+    image: chain.coverImage ?? undefined,
+  });
 }
 
 export default async function ChainDetailPage({
@@ -38,12 +46,7 @@ export default async function ChainDetailPage({
   const { locale, slug } = await params;
   const query = await searchParams;
   const page = Math.max(1, Number(query.page) || 1);
-  let chain;
-  try {
-    chain = await getChainBySlug(slug, locale);
-  } catch {
-    notFound();
-  }
+  const chain = await getChain(slug, locale);
   const data = await getCafesWithMeta(
     {
       chainId: chain.id,

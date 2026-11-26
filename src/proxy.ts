@@ -27,6 +27,7 @@ const LOCALIZED_ROUTE_PREFIXES = [
   "/about",
   "/blog",
   "/cafe",
+  "/chains",
   "/client",
   "/coffee-meetups",
   "/contribute",
@@ -145,11 +146,13 @@ export default function proxy(request: NextRequest) {
     });
   }
 
-  const duplicateLocaleRedirectPath = getDuplicateLocaleRedirectPath(pathname);
-  if (duplicateLocaleRedirectPath) {
+  const canonicalPath = pathname === "/"
+    ? `/${routing.defaultLocale}`
+    : getDuplicateLocaleRedirectPath(pathname);
+  if (canonicalPath) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = duplicateLocaleRedirectPath;
-    return NextResponse.redirect(redirectUrl);
+    redirectUrl.pathname = canonicalPath;
+    return NextResponse.redirect(redirectUrl, 308);
   }
 
   const hasAuthCookie = Boolean(request.cookies.get(AUTH_COOKIE_KEYS.accessToken)?.value);
