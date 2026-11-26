@@ -47,6 +47,8 @@ export interface Cafe {
   onlineEn?: string | null;
   description?: string | null;
   descriptionEn?: string | null;
+  experienceUrls?: string[] | null;
+  experience_urls?: string[] | null;
   vibes: string[];
   vibesEn?: string[];
   purposes: string[];

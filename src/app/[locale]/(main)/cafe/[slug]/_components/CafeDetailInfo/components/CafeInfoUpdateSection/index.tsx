@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MessageSquareText } from "lucide-react";
+import { Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createFeedback } from "@/apis/feedback";
 import { Button } from "@/components/ui/Button";
@@ -76,23 +76,18 @@ export default function CafeInfoUpdateSection({ cafeId }: CafeInfoUpdateSectionP
   return (
     <>
       <section className="border-t border-[#ffe3b7]/34 pt-3 dark:border-[#ffe3b7]/14">
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex min-w-0 items-start gap-2">
-            <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#ffe3b7]/50 bg-[#fffaf2]/58 text-[#a86d1e] dark:border-[#ffe3b7]/14 dark:bg-white/6 dark:text-[#e6c25e]">
-              <MessageSquareText size={14} aria-hidden="true" />
-            </span>
-            <p className="min-w-0 text-xs leading-5 font-medium text-[var(--foreground-muted)]">
-              {t("helper")}
-            </p>
-          </div>
+        <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <p className="flex min-w-0 items-start gap-2 text-xs leading-5 font-medium text-[var(--foreground-muted)]">
+            <Info size={14} className="mt-[3px] shrink-0" aria-hidden="true" />
+            <span>{t("helper")}</span>
+          </p>
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={openForm}
-            className="w-full text-[12.5px] font-bold text-[var(--accent-hover)] hover:bg-[#fff0dc]/60 sm:w-auto dark:text-[#f0b869] dark:hover:bg-white/8"
+            className="shrink-0 px-0 text-[12.5px] font-bold text-[var(--accent-hover)] hover:underline underline-offset-4 sm:px-2.5 dark:text-[#f0b869]"
           >
-            <MessageSquareText aria-hidden="true" />
             {t("cta")}
           </Button>
         </div>

@@ -243,7 +243,10 @@ export default function CafeDetailInfo({
           <DetailDivider />
         </motion.div>
         <motion.div variants={itemVariants} initial={false} animate="show">
-          <AboutSection paragraphs={aboutParagraphs} />
+          <AboutSection
+            paragraphs={aboutParagraphs}
+            experienceUrls={cafe.experienceUrls ?? cafe.experience_urls}
+          />
         </motion.div>
         <motion.div variants={itemVariants} initial={false} animate="show">
           <AmenitiesSection amenities={cafe.amenities} locale={locale} />
