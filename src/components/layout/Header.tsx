@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Bookmark, CalendarDays, PenLine, Compass, LogIn, Sparkles, User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { cafeDetailQuotaKey, getCafeDetailQuota } from "@/apis/cafes";
+import { Bookmark, CalendarDays, PenLine, Compass, LogIn, LockKeyhole, Sparkles, Ticket, User } from "lucide-react";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import UserMenu from "@/components/layout/UserMenu";
 import { useAuthState } from "@/components/layout/useAuthState";
@@ -16,6 +18,19 @@ export default function Header({ meetupEnabled }: { meetupEnabled: boolean }) {
   const pathname = usePathname();
   const [pendingPathname, setPendingPathname] = useState<string | null>(null);
   const { user, isAuthPending, isLoggedIn } = useAuthState();
+
+  const { data: quota } = useQuery({
+    queryKey: [...cafeDetailQuotaKey, user?.id ?? null],
+    queryFn: ({ signal }) => getCafeDetailQuota(signal),
+    enabled: !isAuthPending,
+    retry: false,
+    staleTime: 30_000,
+  });
+  const quotaLabel = quota?.status === "limited"
+    ? t("detailQuotaRemaining", { remaining: quota.remaining, limit: quota.limit })
+    : quota?.status === "unlimited"
+      ? t("detailQuotaUnlimited")
+      : t("detailQuotaLogin");
 
   useEffect(() => {
     setPendingPathname(null);
@@ -116,6 +131,27 @@ export default function Header({ meetupEnabled }: { meetupEnabled: boolean }) {
               "border-[var(--header-actions-surface-border)] bg-[var(--header-actions-surface-bg)] shadow-[var(--header-actions-surface-shadow)]",
             )}
           >
+            {quota && quota.status !== "measure" && (
+              <span
+                role="status"
+                title={quotaLabel}
+                className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-1.5 text-xs font-bold tabular-nums text-[var(--header-locale-text)] min-[390px]:px-2"
+              >
+                <span className="sr-only">{quotaLabel}</span>
+                {quota.status === "login-required" ? (
+                  <LockKeyhole size={13} aria-hidden />
+                ) : (
+                  <>
+                    <Ticket size={13} aria-hidden />
+                    <span aria-hidden>
+                      {quota.status === "limited"
+                        ? `${quota.remaining}/${quota.limit}`
+                        : t("detailQuotaUnlimitedShort")}
+                    </span>
+                  </>
+                )}
+              </span>
+            )}
             <ThemeToggle />
             <LocaleSwitcher
               className={cn(

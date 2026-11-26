@@ -1,0 +1,65 @@
+.plans {
+  --pricing-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ticket-edge: color-mix(in srgb, var(--accent) 48%, var(--border));
+}
+
+.ticket {
+  border-color: var(--ticket-edge);
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--accent) 21%, var(--surface)),
+    var(--surface) 70%
+  );
+  box-shadow: var(--shadow-warm);
+}
+
+.stub {
+  position: relative;
+  border-top: 1px dashed var(--ticket-edge);
+}
+
+.stub::before,
+.stub::after {
+  position: absolute;
+  top: -8px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--ticket-edge);
+  border-radius: 50%;
+  background: var(--background);
+  content: "";
+}
+
+.stub::before {
+  left: -8px;
+  clip-path: inset(0 0 0 50%);
+}
+
+.stub::after {
+  right: -8px;
+  clip-path: inset(0 50% 0 0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .explore {
+    transition: scale 160ms var(--pricing-ease-out);
+  }
+
+  .explore:active {
+    scale: 0.97;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .photo {
+    transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .photos:hover .photo:first-child {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+
+  .photos:hover .photo:last-child {
+    transform: translateX(5px) rotate(5deg);
+  }
+}

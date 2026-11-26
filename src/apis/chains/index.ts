@@ -59,7 +59,7 @@ export async function getSimilarCafes(
   locale?: string | null,
 ): Promise<SimilarCafe[]> {
   const data = await apiFetch<{ data: Array<{ cafe: RawCafe | Cafe; matchedVibe: string }> }>(
-    `/cafes/${encodeURIComponent(slug)}/similar?${localeQuery(locale)}`,
+    `/cafes/${encodeURIComponent(slug)}/similar?${localeQuery(locale)}&preview=1`,
     { next: { revalidate: 300, tags: ["cafes"] } },
   );
   return data.data.map((item) => ({

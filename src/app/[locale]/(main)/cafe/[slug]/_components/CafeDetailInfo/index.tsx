@@ -239,15 +239,10 @@ export default function CafeDetailInfo({
             vibeLabel={vibeLabel}
           />
         </motion.div>
-        <motion.div variants={itemVariants} initial={false} animate="show">
-          <DetailDivider />
-        </motion.div>
-        <motion.div variants={itemVariants} initial={false} animate="show">
-          <AboutSection
-            paragraphs={aboutParagraphs}
-            experienceUrls={cafe.experienceUrls ?? cafe.experience_urls}
-          />
-        </motion.div>
+        <AboutSection
+          paragraphs={aboutParagraphs}
+          experienceUrls={cafe.experienceUrls ?? cafe.experience_urls}
+        />
         <motion.div variants={itemVariants} initial={false} animate="show">
           <AmenitiesSection amenities={cafe.amenities} locale={locale} />
         </motion.div>

@@ -16,7 +16,8 @@ const API_TIMEOUT_MS = 12000
 export class ApiError extends Error {
   constructor(
     message: string,
-    public status: number
+    public status: number,
+    public code?: string
   ) {
     super(message)
     this.name = "ApiError"
@@ -115,7 +116,9 @@ export async function apiFetch<T>(
   }
 
   if (!res.ok) {
-    throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status)
+    const body = await res.json().catch(() => null)
+    const code = typeof body?.message === "string" ? body.message : undefined
+    throw new ApiError(`API error: ${res.status} ${res.statusText}`, res.status, code)
   }
 
   if (allowEmptyResponse) {

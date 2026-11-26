@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { getCafeBySlug } from "@/lib/api";
 import { createLocalizedMetadata, getSiteUrl } from "@/lib/metadata";
-import CafeDetailContent from "./_components/CafeDetailContent";
+import CafeDetailAccess from "./_components/CafeDetailAccess";
 import { getSimilarCafes } from "@/apis/chains";
 import CafeCard from "@/components/cafe/CafeCard";
 
@@ -17,7 +17,7 @@ export const revalidate = 300;
 export const dynamic = "force-dynamic";
 
 function getDescription(cafe: NonNullable<Awaited<ReturnType<typeof getCafeBySlug>>>) {
-  return cafe.oneLiner ?? cafe.description ?? undefined;
+  return cafe.oneLiner ?? undefined;
 }
 
 function getOpenGraphLocale(locale: string) {
@@ -46,7 +46,7 @@ function createCafeJsonLd(
       cafe.closingTime && {
         openingHours: `${cafe.openingTime.slice(0, 5)}-${cafe.closingTime.slice(0, 5)}`,
       }),
-    image: cafe.images,
+    image: cafe.coverImage ?? undefined,
     url: new URL(`/${locale}/cafe/${cafe.slug}`, getSiteUrl()).toString(),
   };
 }
@@ -105,8 +105,9 @@ export default async function CafeDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CafeDetailContent
-        cafe={cafe}
+      <CafeDetailAccess
+        key={`${locale}:${cafe.id}`}
+        preview={cafe}
         locale={locale}
         aboveReviews={
           similar.length ? (

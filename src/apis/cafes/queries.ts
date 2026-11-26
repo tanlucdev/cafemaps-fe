@@ -35,7 +35,7 @@ export async function getCafes(filter?: CafeFilter, locale?: string | null): Pro
     return raw.map((cafe) => mapApiCafe(cafe, locale));
   } catch (err) {
     const fallback = await loadDevFallback();
-    if (fallback) return fallback.fallbackCafes(filter);
+    if (fallback) return fallback.fallbackCafes(filter).map((cafe) => mapApiCafe(cafe, locale));
     console.error("getCafes failed:", err);
     return [];
   }
@@ -96,7 +96,10 @@ export async function getCafesWithMeta(
   } catch (err) {
     if (options?.fallback === false || options?.cache === "no-store") throw err;
     const fallback = await loadDevFallback(options);
-    if (fallback) return fallback.paginateFallbackCafes(filter);
+    if (fallback) {
+      const page = fallback.paginateFallbackCafes(filter);
+      return { ...page, cafes: page.cafes.map((cafe) => mapApiCafe(cafe, locale)) };
+    }
     console.error("getCafesWithMeta failed:", err);
     return emptyCafesPage(filter);
   }
@@ -104,13 +107,16 @@ export async function getCafesWithMeta(
 
 export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
   try {
-    const raw = await apiFetch<Cafe>(`/cafes/${slug}${buildQuery(undefined, locale)}`, {
-      next: { tags: ["cafes", `cafe:${slug}`] },
+    const params = new URLSearchParams(buildQuery(undefined, locale).slice(1));
+    params.set("preview", "1");
+    const raw = await apiFetch<RawCafe>(`/cafes/${encodeURIComponent(slug)}?${params}`, {
+      cache: "no-store",
     });
     return mapApiCafe(raw, locale);
   } catch (err) {
     const fallback = await loadDevFallback();
-    if (fallback) return fallback.fallbackCafeBySlug(slug);
+    const cafe = fallback?.fallbackCafeBySlug(slug);
+    if (cafe) return mapApiCafe(cafe, locale);
     console.error("getCafeBySlug failed:", err);
     return null;
   }
@@ -196,7 +202,7 @@ export async function getQuizMatchCafes(
     return raw.map((cafe) => mapApiCafe(cafe, locale));
   } catch (err) {
     const fallback = await loadDevFallback();
-    if (fallback) return fallback.fallbackCafes(filter);
+    if (fallback) return fallback.fallbackCafes(filter).map((cafe) => mapApiCafe(cafe, locale));
     console.error("getQuizMatchCafes failed:", err);
     return [];
   }

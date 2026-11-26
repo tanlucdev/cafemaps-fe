@@ -144,7 +144,7 @@ async function getMarkdown(pathname: string) {
 
     return `# ${cafe.name}
 
-${cafe.oneLiner ?? cafe.description ?? ""}
+${cafe.oneLiner ?? ""}
 
 - Khu vực: ${cafe.district ?? "TP.HCM"}
 - Địa chỉ: ${cafe.address ?? "Chưa công bố"}
@@ -162,6 +162,7 @@ export async function GET(request: Request) {
   const markdown = await getMarkdown(pathname);
   const headers = {
     "Content-Type": "text/markdown; charset=utf-8",
+    "Cache-Control": "no-store",
     Vary: "Accept, Accept-Encoding",
   };
 
