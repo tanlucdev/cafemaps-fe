@@ -118,7 +118,7 @@ export function PreviewPane({ draft, images, menuImages }: PreviewPaneProps) {
             purposeLabel="Phù hợp"
             vibeLabel="Vibe"
           />
-          {aboutParagraphs.length === 0 && (hasMiddle || hasFooter) && <DetailDivider />}
+          {(hasMiddle || hasFooter) && <DetailDivider />}
           <AboutSection paragraphs={aboutParagraphs} />
           <AmenitiesSection amenities={cafe.amenities} locale="vi" />
           <ParkingSection parkingLabel="Gửi xe" parkingTypeLabel="Chỗ để xe" parkingLocation={parkingLocation} />
