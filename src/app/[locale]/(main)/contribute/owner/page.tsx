@@ -11,12 +11,15 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contribute" });
-  return createLocalizedMetadata({
-    locale,
-    pathname: "/contribute/owner",
-    title: t("ownerPage.metadataTitle"),
-    description: t("ownerPage.metadataDescription"),
-  });
+  return {
+    ...createLocalizedMetadata({
+      locale,
+      pathname: "/contribute/owner",
+      title: t("ownerPage.metadataTitle"),
+      description: t("ownerPage.metadataDescription"),
+    }),
+    robots: { index: false },
+  };
 }
 
 export default async function OwnerContributePage({ params }: PageProps) {

@@ -8,7 +8,6 @@ export function GET() {
     "",
     "/quiz",
     "/contribute",
-    "/contribute/owner",
     "/contribute/suggest",
     ...(featureFlags.coffeeMeetupsEnabled ? ["/coffee-meetups"] : []),
   ])

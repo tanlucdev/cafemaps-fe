@@ -1,5 +1,5 @@
 import type { Cafe, CafeFilter, CafesResponse, DiscoveryMeta } from "@/types/cafe";
-import { apiFetch, type NextRequestInit } from "@/apis/http";
+import { ApiError, apiFetch, type NextRequestInit } from "@/apis/http";
 import { mapApiCafe, type RawCafe } from "./mapper";
 import { buildQuery } from "./query";
 
@@ -105,7 +105,11 @@ export async function getCafesWithMeta(
   }
 }
 
-export async function getCafeBySlug(slug: string, locale?: string | null): Promise<Cafe | null> {
+export async function getCafeBySlug(
+  slug: string,
+  locale?: string | null,
+  options?: Pick<NextRequestInit, "fallback">,
+): Promise<Cafe | null> {
   try {
     const params = new URLSearchParams(buildQuery(undefined, locale).slice(1));
     params.set("preview", "1");
@@ -114,6 +118,10 @@ export async function getCafeBySlug(slug: string, locale?: string | null): Promi
     });
     return mapApiCafe(raw, locale);
   } catch (err) {
+    if (options?.fallback === false) {
+      if (err instanceof ApiError && err.status === 404) return null;
+      throw err;
+    }
     const fallback = await loadDevFallback();
     const cafe = fallback?.fallbackCafeBySlug(slug);
     if (cafe) return mapApiCafe(cafe, locale);
