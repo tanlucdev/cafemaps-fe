@@ -131,13 +131,14 @@ export default function Header({ meetupEnabled }: { meetupEnabled: boolean }) {
               "border-[var(--header-actions-surface-border)] bg-[var(--header-actions-surface-bg)] shadow-[var(--header-actions-surface-shadow)]",
             )}
           >
-            {quota && quota.status !== "measure" && (
-              <span
-                role="status"
-                title={quotaLabel}
-                className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-1.5 text-xs font-bold tabular-nums text-[var(--header-locale-text)] min-[390px]:px-2"
+            {quota && (
+              <Link
+                href="/pricing#pass-plan"
+                prefetch={false}
+                aria-label={quota.status === "measure" ? t("pricing") : t("detailQuotaPricing", { quota: quotaLabel })}
+                title={quota.status === "measure" ? t("pricing") : quotaLabel}
+                className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full px-1.5 text-xs font-bold tabular-nums text-[var(--header-locale-text)] outline-none hover:bg-[var(--header-locale-hover-bg)] focus-visible:ring-2 focus-visible:ring-[var(--header-focus-ring)] min-[390px]:px-2"
               >
-                <span className="sr-only">{quotaLabel}</span>
                 {quota.status === "login-required" ? (
                   <LockKeyhole size={13} aria-hidden />
                 ) : (
@@ -146,11 +147,11 @@ export default function Header({ meetupEnabled }: { meetupEnabled: boolean }) {
                     <span aria-hidden>
                       {quota.status === "limited"
                         ? `${quota.remaining}/${quota.limit}`
-                        : t("detailQuotaUnlimitedShort")}
+                        : quota.status === "unlimited" ? t("detailQuotaUnlimitedShort") : t("pricing")}
                     </span>
                   </>
                 )}
-              </span>
+              </Link>
             )}
             <ThemeToggle />
             <LocaleSwitcher

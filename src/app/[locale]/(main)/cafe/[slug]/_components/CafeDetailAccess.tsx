@@ -128,7 +128,7 @@ export default function CafeDetailAccess({
         </Link>
       )}
       {(status === "quota" || status === "guest-quota") && (
-        <CafePaymentDialog key={status} requiresLogin={status === "guest-quota"} onPaid={retry} />
+        <CafePaymentDialog key={status} cafeSlug={preview.slug} cafeName={preview.name} coverImage={preview.coverImage} requiresLogin={status === "guest-quota"} onPaid={retry} />
       )}
       {(status === "cookie" || status === "failed") && (
         <Button type="button" onClick={retry}>{t("detailRetry")}</Button>

@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { ArrowRight, CalendarCheck, Check, Coffee, Images, Map, Store, Ticket } from "lucide-react";
+import { getCafePassPricing } from "@/apis/payments";
+import { ArrowLeft, ArrowRight, Check, Coffee, Heart, Images, Store, Ticket } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createLocalizedMetadata } from "@/lib/metadata";
 import styles from "./pricing.module.css";
@@ -7,9 +9,8 @@ import styles from "./pricing.module.css";
 const copy = {
   vi: {
     title: "Bảng giá Cafe Maps",
-    headline: "Chọn gói",
-    headlineAccent: "hợp gu cà phê.",
-    intro: "Từ tìm quán đi ngay đến lên kèo cà phê cùng cả nhóm.",
+    headline: "Khám phá nhiều hơn",
+    headlineAccent: "cùng Cafe Maps",
     free: "Miễn phí",
     freeDescription: "Cho những buổi cà phê hằng ngày.",
     freeFeatures: [
@@ -22,23 +23,27 @@ const copy = {
     freeAction: "Khám phá quán",
     passDescription: "Cho người thích khám phá và hay rủ bạn đi cà phê.",
     passPeriod: "/ 30 ngày",
+    standardPrice: "Giá thường",
+    launchPrice: "Giá ưu đãi",
+    launchSold: (sold: string, limit: string) => `${sold}/${limit} suất ưu đãi đã được mua`,
+    priceUnavailable: "Chưa tải được giá",
     passFeatures: [
       "Xem thêm ảnh và menu không giới hạn",
-      "Mở bản đồ tương tác của các quán đã đi",
-      "Tạo bình chọn quán cho buổi hẹn",
     ],
     included: "Gồm mọi quyền lợi của gói Miễn phí",
     payment: "Thanh toán một lần, không tự gia hạn",
     preview: "Sắp mở bán",
+    supportBody: "Tìm quán và xem lại những quán đã mở vẫn miễn phí. Pass dành cho lúc bạn muốn khám phá thêm ảnh và menu của nhiều quán hơn.",
+    planned: "Dự kiến thêm bản đồ quán đã đi và bình chọn quán cho buổi hẹn.",
+    backToCafe: "Quay lại quán đang xem",
     owner: "Bạn là chủ quán?",
     ownerDescription: "Dự kiến miễn phí gửi 3 hồ sơ quán mới mỗi tháng để duyệt. Cập nhật hồ sơ đã có vẫn miễn phí.",
     ownerAction: "Gửi hồ sơ quán",
   },
   en: {
     title: "Cafe Maps pricing",
-    headline: "A plan for",
-    headlineAccent: "your coffee habits.",
-    intro: "Find a spot for today or get the whole group together.",
+    headline: "Explore more",
+    headlineAccent: "with Cafe Maps",
     free: "Free",
     freeDescription: "For everyday coffee outings.",
     freeFeatures: [
@@ -51,35 +56,41 @@ const copy = {
     freeAction: "Explore cafés",
     passDescription: "For café explorers and the friends who bring everyone together.",
     passPeriod: "/ 30 days",
+    standardPrice: "Regular price",
+    launchPrice: "Launch price",
+    launchSold: (sold: string, limit: string) => `${sold}/${limit} launch offers purchased`,
+    priceUnavailable: "Pricing unavailable",
     passFeatures: [
       "Browse extended photos and menus without limits",
-      "Open the interactive map of cafés you’ve visited",
-      "Start a café poll for your meetup",
     ],
     included: "Everything in Free, plus",
     payment: "One-time payment, no automatic renewal",
     preview: "Coming soon",
+    supportBody: "Finding cafés and reopening ones you’ve already viewed are free. Get the Pass when you want to explore more photos and menus.",
+    planned: "Planned features include an interactive visited-café map and meetup polls.",
+    backToCafe: "Back to the café",
     owner: "Own a café?",
     ownerDescription: "Proposed free allowance of 3 new café submissions a month. Updates to existing listings stay free.",
     ownerAction: "Submit a café",
   },
 } as const;
 
-const passIcons = [Images, Map, CalendarCheck];
-
-type PageProps = { params: Promise<{ locale: string }> };
+type PageProps = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ cafe?: string | string[] }>;
+};
 
 export async function generateMetadata({ params }: PageProps) {
   const { locale } = await params;
   const t = copy[locale === "en" ? "en" : "vi"];
 
   return {
-    ...createLocalizedMetadata({ locale, pathname: "/pricing", title: t.title, description: t.intro }),
+    ...createLocalizedMetadata({ locale, pathname: "/pricing", title: t.title, description: t.supportBody }),
     robots: { index: false, follow: true },
   };
 }
 
-export default async function PricingPage({ params }: PageProps) {
+export default async function PricingPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
   const english = locale === "en";
   const t = copy[english ? "en" : "vi"];
@@ -88,6 +99,16 @@ export default async function PricingPage({ params }: PageProps) {
     currency: "VND",
     currencyDisplay: "narrowSymbol",
   });
+  const [pricing, messages, { cafe }] = await Promise.all([
+    getCafePassPricing().catch(() => null),
+    getTranslations({ locale, namespace: "cafe" }),
+    searchParams,
+  ]);
+  const cafeHref = typeof cafe === "string" && /^[\p{L}\p{N}-]{1,200}$/u.test(cafe)
+    ? `/cafe/${encodeURIComponent(cafe)}`
+    : null;
+  const launch = pricing && pricing.launchRemaining > 0 ? pricing : null;
+  const number = new Intl.NumberFormat(locale);
   const plans = [
     {
       name: t.free,
@@ -100,8 +121,8 @@ export default async function PricingPage({ params }: PageProps) {
     {
       name: "Cafe Maps Pass",
       description: t.passDescription,
-      price: currency.format(10_000),
-      period: t.passPeriod,
+      price: pricing ? currency.format(launch?.launchPrice ?? pricing.standardPrice) : t.priceUnavailable,
+      period: pricing ? t.passPeriod : null,
       features: t.passFeatures,
       icon: Ticket,
     },
@@ -117,8 +138,8 @@ export default async function PricingPage({ params }: PageProps) {
               {t.headline}{" "}
               <span className="block text-[var(--focus)] dark:text-[var(--accent)]">{t.headlineAccent}</span>
             </h1>
-            <p className="mt-4 text-sm leading-relaxed text-[var(--foreground-muted)] sm:text-base">
-              {t.intro}
+            <p className="mt-4 max-w-[52ch] text-sm leading-relaxed text-[var(--foreground-muted)] sm:text-base">
+              {t.supportBody}
             </p>
           </div>
           <div aria-hidden="true" className={`${styles.photos} relative mx-auto h-36 w-full max-w-[338px] sm:h-48 lg:h-52`}>
@@ -143,7 +164,7 @@ export default async function PricingPage({ params }: PageProps) {
               <section
                 key={plan.name}
                 aria-labelledby={paid ? "pass-plan" : "free-plan"}
-                className={`flex min-w-0 flex-col rounded-[1.6rem] border px-5 pt-5 sm:px-7 sm:pt-7 ${paid
+                className={`flex min-w-0 scroll-mt-24 flex-col rounded-[1.6rem] border px-5 pt-5 sm:px-7 sm:pt-7 ${paid
                   ? styles.ticket
                   : "border-[var(--border)] bg-[var(--surface-raised)]"}`}
               >
@@ -151,7 +172,7 @@ export default async function PricingPage({ params }: PageProps) {
                   <span className={`grid size-9 shrink-0 place-items-center rounded-[0.7rem] ${paid ? "bg-[color-mix(in_srgb,var(--accent)_22%,var(--surface))]" : "bg-[var(--accent-light)]"} text-[var(--focus)] dark:text-[var(--accent)]`}>
                     <Icon aria-hidden="true" size={19} strokeWidth={1.9} />
                   </span>
-                  <h2 id={paid ? "pass-plan" : "free-plan"} className="text-lg font-extrabold tracking-tight sm:text-xl">
+                  <h2 id={paid ? "pass-plan" : "free-plan"} className="scroll-mt-24 text-lg font-extrabold tracking-tight sm:text-xl">
                     {plan.name}
                   </h2>
                   {paid && (
@@ -163,10 +184,24 @@ export default async function PricingPage({ params }: PageProps) {
                 <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
                   {plan.description}
                 </p>
-                <p className="mt-4 flex flex-wrap items-baseline gap-x-2">
-                  <strong className="text-[clamp(2.45rem,5vw,3.85rem)] leading-tight font-extrabold tracking-[-0.06em]">{plan.price}</strong>
+                <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                  <strong className={paid && !pricing ? "text-xl font-bold" : "text-[clamp(2.45rem,5vw,3.85rem)] leading-tight font-extrabold tracking-[-0.06em]"}>
+                    {paid && launch && <span className="sr-only">{t.launchPrice} </span>}
+                    {plan.price}
+                  </strong>
+                  {paid && launch && (
+                    <span className="text-base font-semibold text-[var(--foreground-muted)] sm:text-lg">
+                      <span className="sr-only">{t.standardPrice} </span>
+                      <s>{currency.format(launch.standardPrice)}</s>
+                    </span>
+                  )}
                   {plan.period && <span className="text-sm font-medium text-[var(--foreground-muted)]">{plan.period}</span>}
                 </p>
+                {paid && pricing && (
+                  <p className="mt-2 text-sm font-semibold tabular-nums text-[var(--focus)] dark:text-[var(--accent)]">
+                    {t.launchSold(number.format(pricing.launchLimit - pricing.launchRemaining), number.format(pricing.launchLimit))}
+                  </p>
+                )}
                 <ul className="mt-4 flex-1 space-y-2.5 border-t border-[var(--border)] pt-4 text-sm leading-snug">
                   {paid && (
                     <li className="flex gap-2.5 font-bold">
@@ -174,8 +209,8 @@ export default async function PricingPage({ params }: PageProps) {
                       {t.included}
                     </li>
                   )}
-                  {plan.features.map((feature, featureIndex) => {
-                    const FeatureIcon = paid ? passIcons[featureIndex] ?? Check : Check;
+                  {plan.features.map((feature) => {
+                    const FeatureIcon = paid ? Images : Check;
                     return (
                       <li key={feature} className="flex gap-2.5">
                         <FeatureIcon aria-hidden="true" size={17} className="shrink-0 text-[var(--focus)] dark:text-[var(--accent)]" />
@@ -184,11 +219,21 @@ export default async function PricingPage({ params }: PageProps) {
                     );
                   })}
                 </ul>
+                {paid && <p className="mt-3 text-sm leading-relaxed text-[var(--foreground-muted)]">{t.planned}</p>}
                 {paid ? (
-                  <p className={`${styles.stub} mx-[-1.25rem] mt-6 flex min-h-16 items-center gap-2.5 px-5 py-3 text-sm font-semibold sm:mx-[-1.75rem] sm:px-7`}>
-                    <Ticket aria-hidden="true" size={17} className="shrink-0" />
-                    {t.payment}
-                  </p>
+                  <div className={`${styles.stub} mx-[-1.25rem] mt-6 space-y-2 px-5 py-4 text-sm sm:mx-[-1.75rem] sm:px-7`}>
+                    <p className="font-semibold">{t.payment}</p>
+                    <p className="flex items-start gap-2 text-[var(--foreground-muted)]">
+                      <Heart aria-hidden="true" size={15} className="mt-0.5 shrink-0 text-[var(--focus)] dark:text-[var(--accent)]" />
+                      {messages("paymentSupport")}
+                    </p>
+                    {cafeHref && (
+                      <Link href={cafeHref} prefetch={false} className="inline-flex min-h-10 items-center gap-2 rounded-sm font-semibold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]">
+                        <ArrowLeft aria-hidden="true" size={15} />
+                        {t.backToCafe}
+                      </Link>
+                    )}
+                  </div>
                 ) : (
                   <Link
                     href="/"
