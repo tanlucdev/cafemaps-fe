@@ -2,7 +2,7 @@
 
 ## Initial trial proposal
 
-Offer two plans for café visitors. **Free** covers discovering, choosing, and saving cafés and creating meetups. **Cafe Maps Pass** adds unlimited extended café details, an interactive map, and café polls for meetups. Trial price: **VND 10,000 for 30 days**, paid once through PayOS. The current branch supports payment for café detail access. If this flow is used to test demand first, advertise café detail access as the trial benefit.
+Offer two plans for café visitors. **Free** covers discovering, choosing, and saving cafés and creating meetups. **Cafe Maps Pass** adds unlimited extended café details, an interactive map, and café polls for meetups. The first five buyers pay **VND 10,000 for 30 days**. The standard price is **VND 19,000 for 30 days**, paid once through PayOS. Pending launch checkouts temporarily hold an offer. After all five offers are paid, new checkouts use the standard price. The current branch supports payment for café detail access. If this flow is used to test demand first, advertise café detail access as the trial benefit.
 
 | Feature | Free | Cafe Maps Pass |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ Additional photos and curated notes are benefits worth testing with frequent caf
 
 ## Backend rollout
 
-The frontend calls `POST /cafes/:slug/detail-access` to open full details. Deploy the backend with this endpoint and the access and payment migrations before the frontend. Verify that a new guest receives a cookie with a `428` response and receives full details with a `200` response on retry. Start with `measure` mode.
+The frontend calls `POST /cafes/:slug/detail-access` to open full details. Deploy the backend with this endpoint and the access and payment migrations before the frontend. `GET /payments/cafe-detail/pricing` provides the public price tiers. Pending checkouts return the exact amount in VND, and checkout returns `409` while all remaining launch offers are held by pending orders. Verify that a new guest receives a cookie with a `428` response and receives full details with a `200` response on retry. Start with `measure` mode.
 
 ## Before enforcing limits
 
